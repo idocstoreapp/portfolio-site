@@ -16,10 +16,55 @@ const { data: projectData } = project;
 ---
 
 <Layout 
-  title={`${projectData.title} | Proyectos`}
-  description={projectData.summary}
+  title={`${projectData.title} | Diseño Web y Desarrollo | Jonathan Guarirapa`}
+  description={`${projectData.summary} - Proyecto de diseño web y desarrollo por Jonathan Guarirapa. Especialista en diseño de páginas web, apps web, menús QR y sistemas de gestión.`}
   image={projectData.cover}
 >
+  <!-- Structured Data for Project -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "name": projectData.title,
+    "description": projectData.summary,
+    "image": projectData.cover ? new URL(projectData.cover, Astro.url).href : undefined,
+    "author": {
+      "@type": "Person",
+      "name": "Jonathan Guarirapa",
+      "email": "jonacrd@gmail.com"
+    },
+    "creator": {
+      "@type": "Person",
+      "name": "Jonathan Guarirapa"
+    },
+    "datePublished": projectData.publishedAt ? new Date(projectData.publishedAt).toISOString() : undefined,
+    "keywords": projectData.stack?.join(", ") || "",
+    "about": {
+      "@type": "Thing",
+      "name": "Diseño Web y Desarrollo"
+    },
+    "offers": {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "serviceType": "Diseño Web",
+        "description": projectData.summary
+      }
+    },
+    ...(projectData.demoUrl ? {
+      "url": projectData.demoUrl,
+      "mainEntity": {
+        "@type": "WebApplication",
+        "name": projectData.title,
+        "applicationCategory": "WebApplication",
+        "operatingSystem": "Web",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    } : {})
+  })} />
   <section style="max-width:1100px;margin:0 auto;padding:64px 20px;">
     <!-- Back Navigation -->
     <div class="mb-8">

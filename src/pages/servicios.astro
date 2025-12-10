@@ -4,9 +4,78 @@ import Button from '../components/Button.astro';
 ---
 
 <Layout 
-  title="Servicios de Desarrollo Web | Jonathan Guarirapa"
-  description="Servicios profesionales de desarrollo web: sitios web modernos, landing pages, aplicaciones web, diseño responsive y optimización SEO. Soluciones completas para tu negocio digital."
+  title="Servicios de Diseño Web | Diseñador de Páginas Web, Apps, Marca y Menús QR | Jonathan Guarirapa"
+  description="Servicios profesionales de diseño web: diseño de páginas web, diseño de apps web, diseño de marca, diseño de logos, menús QR para restaurantes, sistemas de gestión y más. Soluciones completas para tu negocio digital."
 >
+  <!-- Structured Data for Services -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Diseño Web y Desarrollo",
+    "provider": {
+      "@type": "Person",
+      "name": "Jonathan Guarirapa",
+      "email": "jonacrd@gmail.com"
+    },
+    "areaServed": {
+      "@type": "Country",
+      "name": "Chile"
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Servicios de Diseño Web",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Diseño de Páginas Web",
+            "description": "Diseño profesional de páginas web modernas, responsivas y optimizadas para SEO"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Diseño de Apps Web",
+            "description": "Desarrollo de aplicaciones web personalizadas con tecnologías modernas"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Diseño de Marca y Logo",
+            "description": "Creación de identidad visual completa, diseño de logos y branding"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Menús QR para Restaurantes",
+            "description": "Sistemas de menús digitales interactivos con código QR para restaurantes"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Sistemas de Gestión",
+            "description": "Desarrollo de sistemas de gestión personalizados para empresas"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Creación de Imágenes",
+            "description": "Diseño y creación de imágenes profesionales para web y marketing"
+          }
+        }
+      ]
+    }
+  })} />
   <!-- Hero Section -->
   <section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
     <!-- Background -->
@@ -19,14 +88,14 @@ import Button from '../components/Button.astro';
     <div class="relative z-10 max-w-6xl mx-auto px-4 text-center">
       <div class="animate-fade-in-up">
         <h1 class="text-5xl md:text-7xl font-bold mb-6">
-          <span class="text-white">Mis</span>
+          <span class="text-white">Servicios de</span>
           <br>
           <span class="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-            Servicios
+            Diseño Web
           </span>
         </h1>
         <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-          Soluciones completas de desarrollo web que impulsan tu negocio hacia el éxito digital
+          Diseño de páginas web, apps web, diseño de marca, logos, menús QR para restaurantes, sistemas de gestión y más. Soluciones completas que impulsan tu negocio digital.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <Button href="/contacto" size="lg">

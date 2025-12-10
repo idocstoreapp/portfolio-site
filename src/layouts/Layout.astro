@@ -31,10 +31,21 @@ const {
     <title>{title}</title>
     <meta name="title" content={title} />
     <meta name="description" content={description} />
-    <meta name="keywords" content="desarrollador web, freelance, frontend, react, astro, tailwind css, landing page, sitio web" />
-    <meta name="author" content="Tu Nombre" />
-    <meta name="robots" content="index, follow" />
+    <meta name="keywords" content="diseñador web, diseñador de páginas web, diseño de app web, diseño de marca, diseño de logo, diseño, creación de imágenes, menús QR para restaurantes, menú QR, sistemas de gestión, desarrollador web, programador, freelance, frontend, react, astro, tailwind css, landing page, sitio web, e-commerce, tienda online, automatizaciones, aplicaciones web, diseño UI/UX, optimización SEO" />
+    <meta name="author" content="Jonathan Guarirapa" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
     <link rel="canonical" href={canonical} />
+    
+    <!-- Geo Tags -->
+    <meta name="geo.region" content="CL" />
+    <meta name="geo.placename" content="Chile" />
+    
+    <!-- Language -->
+    <meta http-equiv="content-language" content="es" />
+    
+    <!-- Google Search Console Verification -->
+    <meta name="google-site-verification" content="v6eLTln2j2hG6XOMyHOCT1yP8QqudTQWrxHzcUXJRfI" />
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -70,6 +81,48 @@ const {
     <!-- Preconnect to external domains -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Jonathan Guarirapa",
+      "jobTitle": "Desarrollador Web y Diseñador",
+      "description": description,
+      "url": canonical,
+      "image": new URL(image, Astro.url).href,
+      "email": "jonacrd@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Santiago de Chile",
+        "addressCountry": "CL"
+      },
+      "sameAs": [
+        "https://github.com/jonadevel",
+        "https://linkedin.com/in/jonathan-guarirapa"
+      ],
+      "knowsAbout": [
+        "Desarrollo Web",
+        "Diseño de Páginas Web",
+        "Diseño de Apps Web",
+        "Diseño de Marca",
+        "Diseño de Logo",
+        "Creación de Imágenes",
+        "Menús QR para Restaurantes",
+        "Sistemas de Gestión",
+        "Programación",
+        "Frontend Development",
+        "UI/UX Design"
+      ],
+      "offers": {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "serviceType": "Desarrollo Web Profesional",
+          "description": "Servicios de desarrollo web, diseño de páginas web, aplicaciones web, diseño de marca y sistemas de gestión"
+        }
+      }
+    })} />
   <body class="bg-nextsite-bg-darker text-white antialiased min-h-screen">
     <Header />
     <main>

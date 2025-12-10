@@ -1,15 +1,34 @@
 User-agent: *
 Allow: /
 
-# Sitemap
+# Sitemap - Actualizar con tu dominio real
 Sitemap: https://tudominio.com/sitemap.xml
 
 # Crawl-delay
 Crawl-delay: 1
 
+# Permitir todos los recursos importantes
+Allow: /images/
+Allow: /demos/
+Allow: /projects/
+Allow: /proyectos/
+Allow: /servicios
+Allow: /contacto
+Allow: /sobre-mi
+
 # Disallow admin or private areas (if any)
 # Disallow: /admin/
 # Disallow: /private/
+
+# Googlebot específico
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bingbot
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
 
 
 

@@ -48,9 +48,94 @@ const testimonials = [
 ---
 
 <Layout 
-  title="Jonathan Guarirapa | Desarrollo Web, Apps y Automatizaciones Profesionales"
-  description="Soluciones reales para empresas, con resultados medibles. Desarrollo web profesional, aplicaciones móviles y automatizaciones que impulsan tu negocio."
+  title="Diseñador Web y Programador | Jonathan Guarirapa - Desarrollo Web, Apps y Automatizaciones"
+  description="Diseñador web profesional especializado en diseño de páginas web, apps web, diseño de marca, logos, menús QR para restaurantes y sistemas de gestión. Desarrollo web con resultados medibles."
+  image="/jonadevel.jpg"
 >
+  <!-- Structured Data for Homepage -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Jonathan Guarirapa - Diseñador Web y Programador",
+    "url": Astro.url.origin,
+    "description": "Diseñador web profesional especializado en diseño de páginas web, apps web, diseño de marca, logos, menús QR para restaurantes y sistemas de gestión",
+    "author": {
+      "@type": "Person",
+      "name": "Jonathan Guarirapa",
+      "email": "jonacrd@gmail.com"
+    },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": Astro.url.origin + "/proyectos?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    },
+    "mainEntity": {
+      "@type": "Person",
+      "name": "Jonathan Guarirapa",
+      "jobTitle": "Diseñador Web y Programador",
+      "description": "Especialista en diseño de páginas web, diseño de apps web, diseño de marca, diseño de logos, creación de imágenes, menús QR para restaurantes y sistemas de gestión",
+      "knowsAbout": [
+        "Diseño Web",
+        "Diseño de Páginas Web",
+        "Diseño de Apps Web",
+        "Diseño de Marca",
+        "Diseño de Logo",
+        "Creación de Imágenes",
+        "Menús QR para Restaurantes",
+        "Menú QR",
+        "Sistemas de Gestión",
+        "Programación",
+        "Desarrollo Web",
+        "Aplicaciones Web",
+        "Automatizaciones"
+      ],
+      "offers": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Diseño de Páginas Web",
+            "description": "Diseño profesional de páginas web modernas y responsivas"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Diseño de Apps Web",
+            "description": "Desarrollo de aplicaciones web personalizadas"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Diseño de Marca y Logo",
+            "description": "Creación de identidad visual y diseño de logos profesionales"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Menús QR para Restaurantes",
+            "description": "Sistemas de menús digitales con código QR para restaurantes"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Sistemas de Gestión",
+            "description": "Desarrollo de sistemas de gestión personalizados para empresas"
+          }
+        }
+      ]
+    }
+  })} />
   <!-- Hero Section with Device Mockups -->
   <section class="hero-section">
     <div class="hero-background"></div>
@@ -68,12 +153,12 @@ const testimonials = [
         <!-- Main Hero Content -->
         <div class="hero-main">
           <h1 class="hero-title">
-            Desarrollo Web, Apps y 
-            <span class="gradient-text">Automatizaciones Profesionales</span>
+            Diseñador Web y Programador | 
+            <span class="gradient-text">Diseño de Páginas Web, Apps, Marca y Menús QR</span>
           </h1>
           
           <p class="hero-subtitle">
-            Soluciones reales para empresas, con resultados medibles.
+            Especialista en diseño web, diseño de páginas web, apps web, diseño de marca, logos, menús QR para restaurantes y sistemas de gestión. Soluciones reales con resultados medibles.
           </p>
 
           <!-- Ratings & Reviews -->

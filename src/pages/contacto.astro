@@ -4,9 +4,21 @@ import Button from '../components/Button.astro';
 ---
 
 <Layout 
-  title="Contacto | Jonathan Guarirapa - Desarrollador Web"
-  description="¿Tienes un proyecto en mente? Contáctame para discutir tu idea y recibir una cotización personalizada. Respuesta garantizada en menos de 24 horas."
+  title="Contacto | Diseñador Web y Programador | Jonathan Guarirapa"
+  description="¿Necesitas diseño web, diseño de páginas web, apps web, diseño de marca, menús QR o sistemas de gestión? Contáctame para discutir tu proyecto y recibir una cotización personalizada. Respuesta garantizada en menos de 24 horas."
 >
+  <!-- Structured Data for Contact -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "mainEntity": {
+      "@type": "Person",
+      "name": "Jonathan Guarirapa",
+      "email": "jonacrd@gmail.com",
+      "jobTitle": "Diseñador Web y Programador",
+      "description": "Especialista en diseño web, diseño de páginas web, apps web, diseño de marca, logos, menús QR para restaurantes y sistemas de gestión"
+    }
+  })} />
   <!-- Hero Section -->
   <section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
     <!-- Background -->
