@@ -1,0 +1,286 @@
+---
+export interface Props {
+  image?: string;
+  alt?: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  rotation?: number;
+  glow?: boolean;
+}
+
+const { 
+  image = '/images/projects/tienda-online/cover.svg',
+  alt = 'App Preview',
+  size = 'lg',
+  rotation = -8,
+  glow = true
+} = Astro.props;
+
+const sizeClasses = {
+  sm: 'w-48 h-96',
+  md: 'w-56 h-[28rem]',
+  lg: 'w-64 h-[32rem]',
+  xl: 'w-80 h-[40rem]'
+};
+---
+
+<div class="mobile-mockup-3d" data-size={size} style={`--rotation: ${rotation}deg;`}>
+  <div class="phone-container">
+    <!-- Phone Frame -->
+    <div class="phone-frame">
+      <!-- Notch -->
+      <div class="phone-notch"></div>
+      
+      <!-- Screen -->
+      <div class="phone-screen">
+        {image ? (
+          <img 
+            src={image} 
+            alt={alt}
+            class="phone-content"
+            loading="lazy"
+          />
+        ) : (
+          <div class="phone-placeholder">
+            <div class="placeholder-grid">
+              <div class="placeholder-item"></div>
+              <div class="placeholder-item"></div>
+              <div class="placeholder-item"></div>
+              <div class="placeholder-item"></div>
+            </div>
+          </div>
+        )}
+      </div>
+      
+      <!-- Home Indicator (iOS style) -->
+      <div class="phone-home-indicator"></div>
+    </div>
+    
+    <!-- Glow Effect -->
+    {glow && <div class="phone-glow"></div>}
+  </div>
+</div>
+
+<style>
+  .mobile-mockup-3d {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+  
+  .phone-container {
+    position: relative;
+    transform: rotateY(var(--rotation, -8deg)) rotateX(2deg);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .mobile-mockup-3d:hover .phone-container {
+    transform: rotateY(calc(var(--rotation, -8deg) * 0.5)) rotateX(0deg) translateY(-10px);
+  }
+  
+  .phone-frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+    border-radius: 2.5rem;
+    padding: 0.5rem;
+    box-shadow: 
+      0 20px 60px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+  
+  .phone-notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px;
+    height: 24px;
+    background: var(--bg-primary);
+    border-radius: 0 0 1rem 1rem;
+    z-index: 10;
+  }
+  
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    border-radius: 2rem;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .phone-content {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .phone-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  
+  .placeholder-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    width: 100%;
+  }
+  
+  .placeholder-item {
+    aspect-ratio: 1;
+    background: rgba(88, 101, 242, 0.1);
+    border-radius: 0.75rem;
+    border: 1px solid rgba(88, 101, 242, 0.2);
+  }
+  
+  .phone-home-indicator {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+  }
+  
+  .phone-glow {
+    position: absolute;
+    inset: -20px;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(88, 101, 242, 0.3) 0%,
+      rgba(108, 71, 255, 0.2) 30%,
+      transparent 70%
+    );
+    border-radius: 3rem;
+    filter: blur(20px);
+    z-index: -1;
+    opacity: 0.6;
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) rotateY(var(--rotation, -8deg)) rotateX(2deg);
+    }
+    50% {
+      transform: translateY(-20px) rotateY(calc(var(--rotation, -8deg) * 0.8)) rotateX(2deg);
+    }
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.05);
+    }
+  }
+  
+  /* Size variants */
+  .mobile-mockup-3d[data-size="sm"] .phone-container {
+    width: 12rem;
+    height: 24rem;
+  }
+  
+  .mobile-mockup-3d[data-size="md"] .phone-container {
+    width: 14rem;
+    height: 28rem;
+  }
+  
+  .mobile-mockup-3d[data-size="lg"] .phone-container {
+    width: 16rem;
+    height: 32rem;
+  }
+  
+  .mobile-mockup-3d[data-size="xl"] .phone-container {
+    width: 20rem;
+    height: 40rem;
+  }
+  
+  /* Mobile responsive - Layout horizontal desde móviles pequeños */
+  @media (min-width: 320px) and (max-width: 479px) {
+    .mobile-mockup-3d[data-size="xl"] .phone-container {
+      width: 5rem;
+      height: 10rem;
+    }
+    
+    .phone-frame {
+      padding: 0.25rem;
+    }
+    
+    .phone-notch {
+      width: 60px;
+      height: 12px;
+    }
+    
+    .phone-container {
+      transform: rotateY(0deg) rotateX(0deg);
+      animation: float-mobile 6s ease-in-out infinite;
+    }
+    
+    .mobile-mockup-3d:hover .phone-container {
+      transform: rotateY(0deg) rotateX(0deg) translateY(-3px);
+    }
+  }
+  
+  @media (min-width: 480px) and (max-width: 767px) {
+    .mobile-mockup-3d[data-size="lg"] .phone-container,
+    .mobile-mockup-3d[data-size="xl"] .phone-container {
+      width: 6rem;
+      height: 12rem;
+    }
+    
+    .phone-frame {
+      padding: 0.3rem;
+    }
+    
+    .phone-notch {
+      width: 80px;
+      height: 15px;
+    }
+    
+    .phone-container {
+      transform: rotateY(0deg) rotateX(0deg);
+      animation: float-mobile 6s ease-in-out infinite;
+    }
+    
+    .mobile-mockup-3d:hover .phone-container {
+      transform: rotateY(0deg) rotateX(0deg) translateY(-5px);
+    }
+  }
+  
+  /* Tablet - Tamaño medio para layout horizontal */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .mobile-mockup-3d[data-size="xl"] .phone-container {
+      width: 8.5rem;
+      height: 17rem;
+    }
+    
+    .phone-container {
+      transform: rotateY(-5deg) rotateX(5deg);
+    }
+  }
+  
+  @keyframes float-mobile {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+</style>
+

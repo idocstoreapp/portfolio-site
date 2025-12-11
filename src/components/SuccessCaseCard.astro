@@ -1,0 +1,186 @@
+---
+export interface Props {
+  icon: string;
+  title: string;
+  problem: string;
+  solution: string;
+  result: string;
+  gradient?: 'primary' | 'secondary' | 'tertiary';
+}
+
+const {
+  icon,
+  title,
+  problem,
+  solution,
+  result,
+  gradient = 'primary'
+} = Astro.props;
+
+const gradientClasses = {
+  primary: 'gradient-primary',
+  secondary: 'gradient-secondary',
+  tertiary: 'gradient-tertiary'
+};
+---
+
+<article class={`success-case-card ${gradientClasses[gradient]}`}>
+  <div class="case-icon">
+    <span>{icon}</span>
+  </div>
+  
+  <h3 class="case-title">{title}</h3>
+  
+  <div class="case-content">
+    <div class="case-item">
+      <span class="case-label">Problema</span>
+      <p class="case-text">{problem}</p>
+    </div>
+    
+    <div class="case-divider"></div>
+    
+    <div class="case-item">
+      <span class="case-label">Solución</span>
+      <p class="case-text">{solution}</p>
+    </div>
+    
+    <div class="case-divider"></div>
+    
+    <div class="case-item case-result">
+      <span class="case-label">Resultado</span>
+      <p class="case-text">{result}</p>
+    </div>
+  </div>
+</article>
+
+<style>
+  .success-case-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--norm) var(--ease);
+  }
+  
+  .success-case-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity var(--norm) var(--ease);
+    pointer-events: none;
+  }
+  
+  .success-case-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: var(--shadow-xl);
+  }
+  
+  .gradient-primary::before {
+    background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(108, 71, 255, 0.1));
+  }
+  
+  .gradient-secondary::before {
+    background: linear-gradient(135deg, rgba(108, 71, 255, 0.1), rgba(59, 130, 246, 0.1));
+  }
+  
+  .gradient-tertiary::before {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(88, 101, 242, 0.1));
+  }
+  
+  .success-case-card:hover::before {
+    opacity: 1;
+  }
+  
+  .case-icon {
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(88, 101, 242, 0.1);
+    border: 1px solid rgba(88, 101, 242, 0.2);
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    transition: all var(--norm) var(--ease);
+  }
+  
+  .success-case-card:hover .case-icon {
+    background: rgba(88, 101, 242, 0.2);
+    border-color: rgba(88, 101, 242, 0.4);
+    transform: scale(1.1) rotate(5deg);
+  }
+  
+  .case-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 1.5rem 0;
+  }
+  
+  .case-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  
+  .case-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .case-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+  
+  .case-text {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  .case-result .case-text {
+    color: var(--accent-primary);
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+  
+  .case-divider {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    margin: 0.5rem 0;
+  }
+  
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .success-case-card {
+      padding: 2rem;
+    }
+    
+    .case-icon {
+      width: 3.5rem;
+      height: 3.5rem;
+      font-size: 1.75rem;
+    }
+    
+    .case-title {
+      font-size: 1.25rem;
+    }
+  }
+</style>
+

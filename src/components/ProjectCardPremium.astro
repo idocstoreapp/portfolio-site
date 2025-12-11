@@ -1,0 +1,320 @@
+---
+export interface Props {
+  title: string;
+  cover?: string;
+  slug: string;
+  problem?: string;
+  solution?: string;
+  result?: string;
+  featured?: boolean;
+}
+
+const {
+  title,
+  cover,
+  slug,
+  problem = "Gestión desactualizada",
+  solution = "Sistema completo moderno",
+  result = "+40% usuarios activos",
+  featured = false
+} = Astro.props;
+---
+
+<article class="project-card-premium" data-featured={featured}>
+  <!-- Project Image/Mockup -->
+  <div class="project-image-wrapper">
+    {cover ? (
+      <img 
+        src={cover} 
+        alt={title}
+        class="project-image"
+        loading="lazy"
+      />
+    ) : (
+      <div class="project-placeholder">
+        <div class="placeholder-icon">🌐</div>
+      </div>
+    )}
+    <div class="project-overlay">
+      <a href={`/projects/${slug}`} class="project-link-overlay">
+        Ver Detalle
+        <svg class="link-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+        </svg>
+      </a>
+    </div>
+    {featured && (
+      <div class="project-badge">
+        <span>Destacado</span>
+      </div>
+    )}
+  </div>
+  
+  <!-- Project Content -->
+  <div class="project-content">
+    <h3 class="project-title">{title}</h3>
+    
+    <!-- Problem → Solution → Result -->
+    <div class="project-flow">
+      <div class="flow-item">
+        <div class="flow-icon">📄</div>
+        <div class="flow-content">
+          <span class="flow-label">Problema</span>
+          <span class="flow-text">{problem}</span>
+        </div>
+      </div>
+      
+      <div class="flow-arrow">→</div>
+      
+      <div class="flow-item">
+        <div class="flow-icon">💡</div>
+        <div class="flow-content">
+          <span class="flow-label">Solución</span>
+          <span class="flow-text">{solution}</span>
+        </div>
+      </div>
+      
+      <div class="flow-arrow">→</div>
+      
+      <div class="flow-item">
+        <div class="flow-icon">📊</div>
+        <div class="flow-content">
+          <span class="flow-label">Resultado</span>
+          <span class="flow-text flow-result">{result}</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- CTA -->
+    <a href={`/projects/${slug}`} class="project-cta">
+      Ver Proyecto Completo
+      <svg class="cta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+      </svg>
+    </a>
+  </div>
+</article>
+
+<style>
+  .project-card-premium {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: all var(--norm) var(--ease);
+    position: relative;
+  }
+  
+  .project-card-premium:hover {
+    transform: translateY(-8px);
+    border-color: rgba(88, 101, 242, 0.3);
+    box-shadow: 
+      var(--shadow-xl),
+      0 0 40px rgba(88, 101, 242, 0.15);
+  }
+  
+  .project-card-premium[data-featured="true"] {
+    border-color: rgba(88, 101, 242, 0.4);
+    box-shadow: 
+      var(--shadow-lg),
+      0 0 30px rgba(88, 101, 242, 0.1);
+  }
+  
+  .project-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    background: var(--bg-tertiary);
+  }
+  
+  .project-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--slow) var(--ease);
+  }
+  
+  .project-card-premium:hover .project-image {
+    transform: scale(1.05);
+  }
+  
+  .project-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
+  }
+  
+  .placeholder-icon {
+    font-size: 4rem;
+    opacity: 0.5;
+  }
+  
+  .project-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--norm) var(--ease);
+    backdrop-filter: blur(4px);
+  }
+  
+  .project-card-premium:hover .project-overlay {
+    opacity: 1;
+  }
+  
+  .project-link-overlay {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--grad-primary);
+    color: #FFFFFF;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    text-decoration: none;
+    transform: translateY(10px);
+    transition: transform var(--norm) var(--ease);
+  }
+  
+  .project-card-premium:hover .project-link-overlay {
+    transform: translateY(0);
+  }
+  
+  .project-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    background: var(--grad-primary);
+    color: #FFFFFF;
+    border-radius: var(--radius-md);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: var(--shadow-md);
+  }
+  
+  .project-content {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .project-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
+  
+  .project-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .flow-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .flow-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  
+  .flow-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex: 1;
+  }
+  
+  .flow-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+  
+  .flow-text {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  
+  .flow-result {
+    color: var(--accent-primary);
+    font-weight: 600;
+  }
+  
+  .flow-arrow {
+    color: var(--text-muted);
+    font-size: 1.25rem;
+    text-align: center;
+    margin: -0.5rem 0;
+    opacity: 0.5;
+  }
+  
+  .project-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem;
+    background: rgba(88, 101, 242, 0.1);
+    color: var(--accent-primary);
+    border: 1px solid rgba(88, 101, 242, 0.2);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--norm) var(--ease);
+    margin-top: auto;
+  }
+  
+  .project-cta:hover {
+    background: rgba(88, 101, 242, 0.2);
+    border-color: rgba(88, 101, 242, 0.4);
+    transform: translateX(4px);
+  }
+  
+  .cta-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  .link-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .project-image-wrapper {
+      height: 240px;
+    }
+    
+    .project-content {
+      padding: 1.5rem;
+    }
+    
+    .project-flow {
+      gap: 0.75rem;
+    }
+    
+    .flow-arrow {
+      display: none;
+    }
+  }
+</style>
+

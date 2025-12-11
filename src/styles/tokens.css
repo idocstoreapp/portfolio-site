@@ -1,17 +1,72 @@
-:root{
-  --bg:#0E0F12; --text:#E6E6E6; --muted:#A5ACB8;
-  --accent:#00C2FF; --accent-2:#7C4DFF;
-  --grad: linear-gradient(90deg, var(--accent), var(--accent-2));
-  --radius:18px;
-  --shadow-1: 0 10px 30px rgba(0,0,0,.35);
-  --shadow-glow: 0 0 40px rgba(0,194,255,.15);
-  --fast:.18s; --norm:.30s;
-  --ease:cubic-bezier(.22,.61,.36,1);
+/* Premium Design Tokens - Paleta Oscura */
+:root {
+  /* Fondos Premium */
+  --bg-primary: #0A0A0A;
+  --bg-secondary: #121212;
+  --bg-tertiary: #0D0D21;
+  
+  /* Acentos Premium */
+  --accent-primary: #5865F2;
+  --accent-secondary: #6C47FF;
+  --accent-tertiary: #3B82F6;
+  
+  /* Texto */
+  --text-primary: #FFFFFF;
+  --text-secondary: #E5E7EB;
+  --text-muted: #9CA3AF;
+  
+  /* Gradientes */
+  --grad-primary: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  --grad-secondary: linear-gradient(135deg, var(--accent-secondary), var(--accent-tertiary));
+  --grad-accent: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+  
+  /* Sombras Premium */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.4);
+  --shadow-glow-primary: 0 0 40px rgba(88, 101, 242, 0.2);
+  --shadow-glow-secondary: 0 0 40px rgba(108, 71, 255, 0.2);
+  
+  /* Bordes */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-3xl: 48px;
+  
+  /* Transiciones */
+  --fast: 0.15s;
+  --norm: 0.3s;
+  --slow: 0.5s;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* Compatibilidad con código existente */
+  --bg: var(--bg-primary);
+  --text: var(--text-primary);
+  --muted: var(--text-muted);
+  --accent: var(--accent-primary);
+  --accent-2: var(--accent-secondary);
+  --grad: var(--grad-primary);
+  --radius: var(--radius-lg);
+  --shadow-1: var(--shadow-lg);
+  --shadow-glow: var(--shadow-glow-primary);
 }
-[data-theme="nextsite"]{
-  --accent:#00E5FF; --accent-2:#A3FF12;
-  --grad: linear-gradient(90deg, var(--accent), var(--accent-2));
-  --shadow-glow: 0 0 40px rgba(0,229,255,.18);
+
+/* Modo Claro (para toggle futuro) */
+[data-theme="light"] {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F9FAFB;
+  --bg-tertiary: #F3F4F6;
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-muted: #6B7280;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.15);
 }
 
 
