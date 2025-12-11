@@ -1,0 +1,391 @@
+---
+export interface Project {
+  title: string;
+  image: string;
+  category: 'web' | 'menu-qr' | 'admin' | 'sistema';
+  liveUrl?: string;
+  githubUrl?: string;
+  slug?: string;
+}
+
+export interface Props {
+  projects: Project[];
+}
+
+const { projects = [] } = Astro.props;
+---
+
+<div class="carousel-section">
+  <div class="carousel-inner">
+    <div class="carousel-track" id="carousel-track">
+      {projects.map((project, index) => (
+        <div class="carousel-item">
+          <a href={project.slug ? `/projects/${project.slug}` : '#'} class="carousel-link">
+            <div class="carousel-image-container" data-image-container>
+              <img 
+                src={project.image} 
+                alt={project.title}
+                class="carousel-image"
+                loading={index < 3 ? 'eager' : 'lazy'}
+                onload={(e) => {
+                  const img = e.target as HTMLImageElement;
+                  const container = img.closest('[data-image-container]') as HTMLElement;
+                  if (container && img.naturalWidth && img.naturalHeight) {
+                    const ratio = img.naturalWidth / img.naturalHeight;
+                    container.classList.remove('image-vertical', 'image-horizontal', 'image-square');
+                    
+                    if (ratio < 1) {
+                      container.classList.add('image-vertical');
+                    } else if (ratio >= 1.3) {
+                      container.classList.add('image-horizontal');
+                    } else {
+                      container.classList.add('image-square');
+                    }
+                  }
+                }}
+              />
+            </div>
+            <div class="carousel-info">
+              <span class="carousel-category">
+                {project.category === 'web' ? 'Web' : 
+                 project.category === 'menu-qr' ? 'Menú QR' : 
+                 project.category === 'sistema' ? 'Sistema' : 
+                 'Sistema Admin'}
+              </span>
+              <h3 class="carousel-title">{project.title}</h3>
+            </div>
+          </a>
+        </div>
+      ))}
+    </div>
+    
+    <button class="carousel-btn carousel-btn-prev" id="carousel-prev">‹</button>
+    <button class="carousel-btn carousel-btn-next" id="carousel-next">›</button>
+    
+    <div class="carousel-indicators" id="carousel-indicators">
+      {projects.map((_, index) => (
+        <button class="carousel-indicator" data-index={index}></button>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .carousel-section {
+    width: 100%;
+    padding: 2rem 0;
+  }
+  
+  .carousel-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    position: relative;
+  }
+  
+  .carousel-inner {
+    overflow: hidden;
+  }
+  
+  .carousel-track {
+    display: flex;
+    gap: 1.5rem;
+    transition: transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  
+  .carousel-item {
+    flex: 0 0 100%;
+    min-width: 0;
+  }
+  
+  @media (min-width: 768px) {
+    .carousel-item {
+      flex: 0 0 calc(50% - 0.75rem);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .carousel-item {
+      flex: 0 0 calc(33.333% - 1rem);
+    }
+  }
+  
+  .carousel-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .carousel-image-container {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    max-width: 300px;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .carousel-image-container.image-vertical {
+    aspect-ratio: 2 / 3 !important;
+    max-width: 300px !important;
+  }
+  
+  .carousel-image-container.image-horizontal {
+    aspect-ratio: 16 / 9 !important;
+    max-width: 500px !important;
+  }
+  
+  .carousel-image-container.image-square {
+    aspect-ratio: 4 / 3 !important;
+    max-width: 400px !important;
+  }
+  
+  @media (min-width: 768px) {
+    .carousel-image-container {
+      max-width: 350px;
+    }
+    
+    .carousel-image-container.image-vertical {
+      max-width: 350px !important;
+    }
+    
+    .carousel-image-container.image-horizontal {
+      max-width: 550px !important;
+    }
+    
+    .carousel-image-container.image-square {
+      max-width: 450px !important;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .carousel-image-container {
+      max-width: 400px;
+    }
+    
+    .carousel-image-container.image-vertical {
+      max-width: 400px !important;
+    }
+    
+    .carousel-image-container.image-horizontal {
+      max-width: 600px !important;
+    }
+    
+    .carousel-image-container.image-square {
+      max-width: 500px !important;
+    }
+  }
+  
+  .carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .carousel-info {
+    text-align: center;
+    padding: 0 0.5rem;
+  }
+  
+  .carousel-category {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    background: rgba(88, 101, 242, 0.15);
+    color: #5865F2;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+  
+  .carousel-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.3;
+  }
+  
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.3s ease;
+  }
+  
+  .carousel-btn:hover {
+    background: #5865F2;
+    border-color: #5865F2;
+  }
+  
+  .carousel-btn-prev {
+    left: 1rem;
+  }
+  
+  .carousel-btn-next {
+    right: 1rem;
+  }
+  
+  @media (max-width: 767px) {
+    .carousel-btn {
+      width: 2.5rem;
+      height: 2.5rem;
+      font-size: 1.25rem;
+    }
+    
+    .carousel-btn-prev {
+      left: 0.5rem;
+    }
+    
+    .carousel-btn-next {
+      right: 0.5rem;
+    }
+  }
+  
+  .carousel-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+  }
+  
+  .carousel-indicator {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+  
+  .carousel-indicator:hover,
+  .carousel-indicator.active {
+    background: #5865F2;
+    transform: scale(1.2);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const track = document.getElementById('carousel-track');
+    const prevBtn = document.getElementById('carousel-prev');
+    const nextBtn = document.getElementById('carousel-next');
+    const indicators = document.querySelectorAll('.carousel-indicator');
+    const items = document.querySelectorAll('.carousel-item');
+    
+    if (!track || !prevBtn || !nextBtn || items.length === 0) return;
+    
+    let currentIndex = 0;
+    const totalItems = items.length;
+    
+    function getItemsPerView() {
+      if (window.innerWidth >= 1024) return 3;
+      if (window.innerWidth >= 768) return 2;
+      return 1;
+    }
+    
+    function updateCarousel() {
+      if (items.length === 0) return;
+      const itemsPerView = getItemsPerView();
+      const itemWidth = items[0].offsetWidth;
+      const gap = 24; // 1.5rem = 24px
+      const translateX = -(currentIndex * (itemWidth + gap));
+      track.style.transform = `translateX(${translateX}px)`;
+      
+      indicators.forEach((indicator, index) => {
+        indicator.classList.toggle('active', index === currentIndex);
+      });
+    }
+    
+    function nextSlide() {
+      const itemsPerView = getItemsPerView();
+      currentIndex = (currentIndex + itemsPerView) % totalItems;
+      if (currentIndex + itemsPerView > totalItems) {
+        currentIndex = 0;
+      }
+      updateCarousel();
+    }
+    
+    function prevSlide() {
+      const itemsPerView = getItemsPerView();
+      currentIndex = currentIndex - itemsPerView < 0 ? Math.max(0, totalItems - itemsPerView) : currentIndex - itemsPerView;
+      updateCarousel();
+    }
+    
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      updateCarousel();
+    });
+    
+    nextBtn.addEventListener('click', nextSlide);
+    prevBtn.addEventListener('click', prevSlide);
+    
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => {
+        currentIndex = index;
+        updateCarousel();
+      });
+    });
+    
+    // Touch/swipe
+    let startX = 0;
+    let isDragging = false;
+    
+    track.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    });
+    
+    track.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+    });
+    
+    track.addEventListener('touchend', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      const endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
+      
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) nextSlide();
+        else prevSlide();
+      }
+    });
+    
+    // Autoplay
+    let autoplayInterval = setInterval(nextSlide, 5000);
+    
+    track.addEventListener('mouseenter', () => clearInterval(autoplayInterval));
+    track.addEventListener('mouseleave', () => {
+      autoplayInterval = setInterval(nextSlide, 5000);
+    });
+    
+    // Initialize
+    updateCarousel();
+  });
+</script>

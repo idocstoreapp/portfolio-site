@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import HeroPremium from '../components/HeroPremium.astro';
-import ProjectCardPremium from '../components/ProjectCardPremium.astro';
+import ProjectsCarousel from '../components/ProjectsCarousel.astro';
 import SuccessCaseCard from '../components/SuccessCaseCard.astro';
 import TestimonialCardPremium from '../components/TestimonialCardPremium.astro';
 import { getCollection } from 'astro:content';
@@ -12,6 +12,50 @@ const featuredProjects = allProjects
   .filter(project => project.data.featured)
   .sort((a, b) => b.data.order - a.data.order)
   .slice(0, 4);
+
+// Projects for carousel - using JPG images for carousel
+const carouselProjects = [
+  {
+    title: 'Mueblería Casa Blanca',
+    image: '/images/webs/muebleria1.jpeg',
+    category: 'web' as const,
+    liveUrl: 'https://mueblericacasablanca.cl',
+    githubUrl: 'https://github.com/idocstoreapp/redise-o-muebleriacasablanca',
+    slug: 'muebleria-casa-blanca'
+  },
+  {
+    title: 'Kubica Mobiliario',
+    image: '/images/webs/mobiliario.jpeg',
+    category: 'web' as const,
+    liveUrl: 'https://kubicamobiliario.cl',
+    githubUrl: 'https://github.com/idocstoreapp/nuevo-proyecto',
+    slug: 'kubica-mobiliario'
+  },
+  {
+    title: 'Gourmet Árabe - Menú QR',
+    image: '/images/menuqr/mockup-arabe.png',
+    category: 'menu-qr' as const,
+    liveUrl: 'https://sistema-restaurant-seven.vercel.app/',
+    githubUrl: 'https://github.com/idocstoreapp/sistema-restaurant',
+    slug: 'gourmet-arabe'
+  },
+  {
+    title: 'Sistema de Reparaciones',
+    image: '/images/sistemas/idocstore1.png',
+    category: 'sistema' as const,
+    liveUrl: 'https://sistema-reparaciones.vercel.app',
+    githubUrl: 'https://github.com/idocstoreapp/sistema-reparaciones',
+    slug: 'sistema-reparaciones'
+  },
+  {
+    title: 'Mueblería Cotizador',
+    image: '/images/sistemas/cotizador1.png',
+    category: 'sistema' as const,
+    liveUrl: '#',
+    githubUrl: '#',
+    slug: 'muebleria-cotizador'
+  }
+];
 
 // Testimonials data
 const testimonials = [
@@ -93,7 +137,7 @@ const successCases = [
     "author": {
       "@type": "Person",
       "name": "Jonathan Guarirapa",
-      "email": "jonacrd@gmail.com"
+      "email": "jona.develp@gmail.com"
     },
     "potentialAction": {
       "@type": "SearchAction",
@@ -178,7 +222,7 @@ const successCases = [
     mockupImage={featuredProjects[0]?.data.cover}
   />
 
-  <!-- Featured Projects Section -->
+  <!-- Featured Projects Section - Carrusel -->
   <section class="projects-section-premium">
     <div class="section-container">
       <div class="section-header">
@@ -186,19 +230,7 @@ const successCases = [
         <p class="section-subtitle">Soluciones reales con resultados medibles</p>
       </div>
 
-      <div class="projects-grid-premium">
-        {featuredProjects.map((project) => (
-          <ProjectCardPremium
-            title={project.data.title}
-            cover={project.data.cover}
-            slug={project.slug}
-            problem="Gestión desactualizada en App móvil"
-            solution="Sistema completo moderno"
-            result="+40% usuarios activos"
-            featured={project.data.featured}
-          />
-        ))}
-      </div>
+      <ProjectsCarousel projects={carouselProjects} />
     </div>
   </section>
 
