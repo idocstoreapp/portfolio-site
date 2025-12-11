@@ -116,3 +116,4 @@ Espera a que Vercel despliegue (1-2 minutos)
 - El error exacto que aparece en Search Console
 - Si el sitemap se ve bien en el navegador
 
+

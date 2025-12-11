@@ -115,3 +115,4 @@ Google Search Console
 2. Estés en la propiedad correcta (no en otra)
 3. Espera unos minutos si acabas de verificar la propiedad
 
+

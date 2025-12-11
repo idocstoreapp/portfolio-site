@@ -76,3 +76,4 @@ Si ves muchos archivos, entonces están en Git y el problema es solo de visualiz
 ✅ Repositorio desconectado del remoto anterior
 ✅ Listo para conectar a nuevo repositorio
 
+

@@ -194,3 +194,4 @@ Google puede mostrar estos elementos en los resultados de búsqueda:
 
 **¿Necesitas ayuda?** Revisa la documentación de [Astro SEO](https://docs.astro.build/en/guides/integrations-guide/astro-seo/) o [Google Search Central](https://developers.google.com/search/docs/beginner/seo-starter-guide)
 
+

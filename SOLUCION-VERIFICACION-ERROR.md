@@ -76,3 +76,4 @@ Prefijo de URL → Etiqueta HTML → ✅ Funciona
 - ✅ Elegiste "Etiqueta HTML" (no DNS/TXT)
 - ✅ La etiqueta está en tu código (ya confirmado ✅)
 
+

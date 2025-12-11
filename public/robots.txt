@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap - Actualizar con tu dominio real
-Sitemap: https://tudominio.com/sitemap.xml
+Sitemap: https://portfolio-site-blush-one.vercel.app/sitemap.xml
 
 # Crawl-delay
 Crawl-delay: 1
