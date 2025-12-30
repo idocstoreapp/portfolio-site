@@ -95,11 +95,12 @@ const {
     display: flex;
     align-items: center;
     padding: 4rem 0;
+    padding-top: calc(4rem + 5rem); /* 4rem original + altura del header */
     overflow: hidden;
     overflow-x: hidden !important;
     background: var(--bg-primary);
-    width: 100%;
-    max-width: 100vw;
+    width: 100vw !important;
+    max-width: 100vw !important;
     box-sizing: border-box;
   }
   
@@ -111,9 +112,10 @@ const {
       max-height: 100vh;
       align-items: flex-start;
       padding: 5rem 0 2rem;
+      padding-top: 5rem; /* 5rem original + altura del header fijo */
       overflow: visible;
       overflow-x: hidden !important;
-      width: 100% !important;
+      width: 100vw !important;
       max-width: 100vw !important;
       box-sizing: border-box;
     }
@@ -125,7 +127,7 @@ const {
       min-height: 100vh;
       padding: 1rem 1rem 6rem;
       align-items: flex-start;
-      padding-top: 0.5rem;
+      padding-top: calc(1rem + 5rem); /* 1rem original + altura del header sticky */
     }
   }
   
@@ -186,9 +188,9 @@ const {
   .hero-container {
     position: relative;
     z-index: 1;
-    max-width: 100%;
+    max-width: 100vw !important;
     margin: 0 auto;
-    width: 100%;
+    width: 100vw !important;
     padding: 0;
     height: 100%;
     display: flex;
@@ -205,7 +207,8 @@ const {
       padding-top: 0;
       width: 100vw !important;
       max-width: 100vw !important;
-
+      box-sizing: border-box;
+      overflow-x: hidden !important;
     }
   }
   
@@ -236,11 +239,11 @@ const {
       grid-template-rows: auto auto auto auto;
       gap: 0.25rem 0.1rem;
       align-items: start;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: flex-box;
-      padding: 0;
-  
+      width: 100vw !important;
+      max-width: 100vw !important;
+      box-sizing: border-box;
+      padding: 0 1.5vw;
+      overflow-x: hidden !important;
     }
     
     .hero-mockup {
@@ -251,9 +254,9 @@ const {
       justify-content: flex-start;
       flex-shrink: 0;
       margin-top: 0;
-      min-width: 200px;
-      max-width: 330px;
-      padding-right: 0.2rem;
+      min-width: 20vw;
+      max-width: 40vw;
+      padding-right: 0.5vw;
       padding-left: 0;
       z-index: 1;
       position: relative;
@@ -262,11 +265,15 @@ const {
     
     .hero-mockup .mockup-image {
       width: 100%;
-      max-width: 330px;
+      max-width: 40vw;
       height: auto;
       object-fit: contain;
     }
     
+    .hero-text {
+
+      max-width: 50vw;
+    }
     .hero-title {
       grid-column: 2;
       grid-row: 1;
@@ -274,15 +281,15 @@ const {
       margin-top: 0;
       margin-left: 0 !important;
       margin-right: 0 !important;
-      padding-left: 0.2rem;
-      padding-right: 0.5rem !important;
+      padding-left: 0.5vw;
+      padding-right: 1vw !important;
       padding-top: 0;
       align-self: start;
       text-align: right !important;
       font-size: clamp(0.75rem, 2.8vw, 1rem);
       line-height: 0.9;
-      max-width: 100% !important;
-      width: 77% !important;
+      max-width: 50vw !important;
+      width: 100vw !important;
       overflow: visible;
       display: block;
       box-sizing: border-box;
@@ -414,17 +421,17 @@ const {
       margin-bottom: 0;
       margin-left: 0 !important;
       margin-right: 0 !important;
-      padding-left: 0.3rem;
-      padding-right: 0.3rem;
+      padding-left: 1vw;
+      padding-right: 1vw;
       text-align: center !important;
       font-size: clamp(0.65rem, 2.2vw, 0.85rem);
       line-height: 1.3;
-      max-width: 100% !important;
-      width: 80%;
+      max-width: 50vw !important;
+      width: 90vw;
       display: flex;
       flex-direction: column;
       align-items: center;
-      position: relative;
+      position: 
       left: 0 !important;
       z-index: 10;
       box-sizing: border-box;
@@ -445,8 +452,8 @@ const {
       margin-bottom: 0;
       margin-left: 0 !important;
       margin-right: 0 !important;
-      padding-left: 0.3rem;
-      padding-right: 0.3rem;
+      padding-left: 1vw;
+      padding-right: 1vw;
       display: flex;
       justify-content: center;
       gap: 0.4rem;
@@ -454,8 +461,8 @@ const {
       flex-direction: row;
       align-items: center;
       box-sizing: border-box;
-      width: 40%;
-      max-width: 100%;
+      width: 20vw;
+      max-width: 90vw;
       position: relative;
       z-index: 10;
     }
@@ -476,7 +483,7 @@ const {
       white-space: nowrap;
       flex-shrink: 1;
       min-width: fit-content;
-      max-width: calc(50% - 0.25rem);
+      max-width: calc(45vw - 0.25rem);
       overflow: hidden;
       border: none;
       cursor: pointer;
@@ -587,18 +594,20 @@ const {
       margin-bottom: 0;
       margin-left: 0 !important;
       margin-right: 0 !important;
-      padding-left: 0.3rem !important;
-      padding-right: 0.3rem;
+      padding-left: 1vw !important;
+      padding-right: 1vw;
       display: flex !important;
       align-items: center;
       justify-content: center !important;
       gap: 0.3rem;
       font-size: 0.6rem;
       flex-wrap: wrap !important;
-      width: 80%;
-      max-width: 100%;
+      width: 70vw;
+      max-width: 70vw;
       box-sizing: border-box;
       position: relative;
+      white-space: nowrap;
+      overflow: visible;
       z-index: 10;
     }
     
@@ -942,13 +951,13 @@ const {
     .hero-mockup {
       flex-shrink: 0;
       width: auto;
-      min-width: 200px;
-      max-width: 330px;
+      min-width: 20vw;
+      max-width: 40vw;
     }
     
     .mockup-image {
       width: 100%;
-      max-width: 330px;
+      max-width: 40vw;
       height: auto;
     }
   }
@@ -957,13 +966,13 @@ const {
     .hero-mockup {
       flex-shrink: 0;
       width: auto;
-      min-width: 280px;
-      max-width: 420px;
+      min-width: 25vw;
+      max-width: 45vw;
     }
     
     .mockup-image {
       width: 100%;
-      max-width: 420px;
+      max-width: 45vw;
       height: auto;
     }
   }
@@ -972,13 +981,13 @@ const {
     .hero-mockup {
       flex-shrink: 0;
       width: auto;
-      min-width: 400px;
-      max-width: 600px;
+      min-width: 30vw;
+      max-width: 50vw;
     }
     
     .mockup-image {
       width: 100%;
-      max-width: 600px;
+      max-width: 50vw;
       height: auto;
     }
   }
