@@ -98,6 +98,17 @@ html {
   background: linear-gradient(135deg, var(--nextsite-light-blue) 0%, var(--nextsite-accent-blue) 100%);
 }
 
+/* High-Tech Gradient Backgrounds */
+.bg-gradient-dark {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+  background-attachment: fixed;
+}
+
+.bg-gradient-darker {
+  background: linear-gradient(135deg, #0a0a1a 0%, #1e1b4b 50%, #0a0a1a 100%);
+  background-attachment: fixed;
+}
+
 /* Glass morphism effect */
 .glass {
   background: rgba(255, 255, 255, 0.05);

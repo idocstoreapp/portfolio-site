@@ -15,19 +15,31 @@ html, body {
 body {
   margin: 0;
   background: var(--bg-primary);
+  background-attachment: fixed;
   color: var(--text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
+  min-height: 100vh;
 }
 
-/* Tipografía Premium */
+/* Tipografía Premium - Títulos Blancos con Acentos Naranjas */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Poppins', 'Inter', sans-serif;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.2;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+/* Acentos naranjas para palabras clave en títulos */
+h1 .accent, h2 .accent, h3 .accent {
+  color: var(--accent-orange);
+  background: var(--grad-orange);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 h1 { font-size: clamp(2rem, 5vw, 4rem); }

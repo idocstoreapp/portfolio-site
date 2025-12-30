@@ -1,14 +1,21 @@
-/* Premium Design Tokens - Paleta Oscura */
+/* Premium Design Tokens - Paleta High-Tech Azul/Morado */
 :root {
-  /* Fondos Premium */
-  --bg-primary: #0A0A0A;
-  --bg-secondary: #121212;
-  --bg-tertiary: #0D0D21;
+  /* Fondos Premium - Degradados Azules/Morados Profundos */
+  --bg-primary: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+  --bg-secondary: linear-gradient(135deg, #1e293b 0%, #312e81 50%, #1e293b 100%);
+  --bg-tertiary: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
   
-  /* Acentos Premium */
-  --accent-primary: #5865F2;
-  --accent-secondary: #6C47FF;
-  --accent-tertiary: #3B82F6;
+  /* Colores sólidos para compatibilidad */
+  --bg-primary-solid: #0f172a;
+  --bg-secondary-solid: #1e293b;
+  --bg-tertiary-solid: #1e1b4b;
+  
+  /* Acentos Premium - Azules y Naranjas */
+  --accent-primary: #3b82f6;
+  --accent-secondary: #6366f1;
+  --accent-tertiary: #8b5cf6;
+  --accent-orange: #f97316;
+  --accent-orange-light: #fb923c;
   
   /* Texto */
   --text-primary: #FFFFFF;
@@ -19,6 +26,8 @@
   --grad-primary: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
   --grad-secondary: linear-gradient(135deg, var(--accent-secondary), var(--accent-tertiary));
   --grad-accent: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+  --grad-orange: linear-gradient(135deg, var(--accent-orange), var(--accent-orange-light));
+  --grad-blue-purple: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
   
   /* Sombras Premium */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
