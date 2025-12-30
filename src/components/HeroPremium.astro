@@ -94,9 +94,9 @@ const {
     height: 100vh;
     display: flex;
     align-items: center;
-    padding: 4rem 1rem;
+    padding: 4rem 0;
     overflow: hidden;
-    overflow-x: hidden;
+    overflow-x: hidden !important;
     background: var(--bg-primary);
     width: 100%;
     max-width: 100vw;
@@ -112,7 +112,10 @@ const {
       align-items: flex-start;
       padding: 5rem 0 2rem;
       overflow: visible;
-      overflow-x: hidden;
+      overflow-x: hidden !important;
+      width: 100% !important;
+      max-width: 100vw !important;
+      box-sizing: border-box;
     }
   }
   
@@ -183,26 +186,26 @@ const {
   .hero-container {
     position: relative;
     z-index: 1;
-    max-width: 1400px;
+    max-width: 100%;
     margin: 0 auto;
     width: 100%;
-    padding: 0 1rem;
+    padding: 0;
     height: 100%;
     display: flex;
     align-items: center;
     box-sizing: border-box;
-    overflow-x: hidden;
+    overflow-x: hidden !important;
   }
   
   @media (min-width: 320px) and (max-width: 1023px) {
     .hero-container {
-      padding: 0;
+      padding: 0 !important;
       height: auto;
       align-items: flex-start;
       padding-top: 0;
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
+      width: 100% !important;
+      max-width: 100% !important;
+
     }
   }
   
@@ -229,30 +232,32 @@ const {
   @media (min-width: 320px) and (max-width: 1023px) {
     .hero-content {
       display: grid;
-      grid-template-columns: auto 1fr;
+      grid-template-columns: 1fr auto;
       grid-template-rows: auto auto auto auto;
       gap: 0.25rem 0.1rem;
       align-items: start;
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
-      padding: 0 0.3rem;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: flex-box;
+      padding: 0;
+  
     }
     
     .hero-mockup {
       grid-column: 1;
-      grid-row: 1;
+      grid-row: 1 / -1;
       display: flex;
       align-items: flex-start;
       justify-content: flex-start;
-      flex-shrink: 1;
+      flex-shrink: 0;
       margin-top: 0;
       min-width: 200px;
       max-width: 330px;
-      padding-right: 0.1rem;
+      padding-right: 0.2rem;
       padding-left: 0;
       z-index: 1;
       position: relative;
+      width: auto;
     }
     
     .hero-mockup .mockup-image {
@@ -263,21 +268,21 @@ const {
     }
     
     .hero-title {
-      grid-column: 1 / -1;
+      grid-column: 2;
       grid-row: 1;
       margin-bottom: 0;
       margin-top: 0;
-      margin-left: -4.5rem !important;
+      margin-left: 0 !important;
       margin-right: 0 !important;
-      padding-left: 0.3rem;
-      padding-right: 0.3rem !important;
+      padding-left: 0.2rem;
+      padding-right: 0.5rem !important;
       padding-top: 0;
       align-self: start;
       text-align: right !important;
-      font-size: clamp(0.85rem, 3.2vw, 1.2rem);
+      font-size: clamp(0.75rem, 2.8vw, 1rem);
       line-height: 0.9;
-      max-width: calc(100% + 4.5rem);
-      width: calc(100% + 4.5rem);
+      max-width: 100% !important;
+      width: 77% !important;
       overflow: visible;
       display: block;
       box-sizing: border-box;
@@ -294,8 +299,8 @@ const {
       padding-right: 0 !important;
       line-height: 0.9;
       margin-bottom: 0.05rem;
-      width: 100%;
-      max-width: 100%;
+      width: 100% !important;
+      max-width: 100% !important;
       direction: ltr;
       word-wrap: break-word;
       overflow-wrap: break-word;
@@ -407,15 +412,15 @@ const {
       grid-row: 2;
       margin-top: calc(0.25rem + 2rem);
       margin-bottom: 0;
-      margin-left: -4.5rem !important;
+      margin-left: 0 !important;
       margin-right: 0 !important;
       padding-left: 0.3rem;
       padding-right: 0.3rem;
       text-align: center !important;
       font-size: clamp(0.65rem, 2.2vw, 0.85rem);
       line-height: 1.3;
-      max-width: calc(100% + 4.5rem) !important;
-      width: calc(100% + 4.5rem);
+      max-width: 100% !important;
+      width: 80%;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -423,6 +428,8 @@ const {
       left: 0 !important;
       z-index: 10;
       box-sizing: border-box;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
     
     .subtitle-line {
@@ -436,18 +443,19 @@ const {
       grid-row: 3;
       margin-top: 0.25rem;
       margin-bottom: 0;
-      margin-left: -4.5rem !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
       padding-left: 0.3rem;
       padding-right: 0.3rem;
       display: flex;
       justify-content: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
       flex-wrap: nowrap;
       flex-direction: row;
       align-items: center;
       box-sizing: border-box;
-      width: calc(100% + 4.5rem);
-      max-width: calc(100% + 4.5rem);
+      width: 40%;
+      max-width: 100%;
       position: relative;
       z-index: 10;
     }
@@ -458,17 +466,17 @@ const {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.35rem;
-      padding: 0.7rem 1rem;
+      gap: 0.3rem;
+      padding: 0.6rem 0.85rem;
       border-radius: 12px;
       font-weight: 700;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       text-decoration: none;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       white-space: nowrap;
       flex-shrink: 1;
       min-width: fit-content;
-      max-width: calc(50% - 0.3rem);
+      max-width: calc(50% - 0.25rem);
       overflow: hidden;
       border: none;
       cursor: pointer;
@@ -577,7 +585,8 @@ const {
       grid-row: 4;
       margin-top: 0.25rem;
       margin-bottom: 0;
-      margin-left: -4.5rem !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
       padding-left: 0.3rem !important;
       padding-right: 0.3rem;
       display: flex !important;
@@ -586,7 +595,8 @@ const {
       gap: 0.3rem;
       font-size: 0.6rem;
       flex-wrap: wrap !important;
-      width: calc(100% + 4.5rem);
+      width: 80%;
+      max-width: 100%;
       box-sizing: border-box;
       position: relative;
       z-index: 10;
@@ -672,8 +682,8 @@ const {
       margin-top: 2rem;
       text-align: right !important;
       width: 100%;
-      padding-right: 1rem !important;
-      margin-right: 0 !important;
+      padding-right: 0.5rem !important;
+      margin-right: 0.5rem !important;
       max-width: 100%;
       box-sizing: border-box;
     }
@@ -681,7 +691,7 @@ const {
     .title-line {
       text-align: right !important;
       margin-right: 0 !important;
-      padding-right: 0 !important;
+      padding-right: 0.2rem !important;
       line-height: 1.1;
       margin-bottom: 0.2rem;
       word-wrap: break-word;
@@ -930,7 +940,7 @@ const {
   /* Ajustar tamaño del mockup en móvil horizontal */
   @media (min-width: 320px) and (max-width: 479px) {
     .hero-mockup {
-      flex-shrink: 1;
+      flex-shrink: 0;
       width: auto;
       min-width: 200px;
       max-width: 330px;
@@ -938,14 +948,14 @@ const {
     
     .mockup-image {
       width: 100%;
-      max-width: 330px !important;
+      max-width: 330px;
       height: auto;
     }
   }
   
   @media (min-width: 480px) and (max-width: 767px) {
     .hero-mockup {
-      flex-shrink: 1;
+      flex-shrink: 0;
       width: auto;
       min-width: 280px;
       max-width: 420px;
@@ -953,14 +963,14 @@ const {
     
     .mockup-image {
       width: 100%;
-      max-width: 420px !important;
+      max-width: 420px;
       height: auto;
     }
   }
   
   @media (min-width: 768px) and (max-width: 1023px) {
     .hero-mockup {
-      flex-shrink: 1;
+      flex-shrink: 0;
       width: auto;
       min-width: 400px;
       max-width: 600px;
@@ -968,7 +978,7 @@ const {
     
     .mockup-image {
       width: 100%;
-      max-width: 600px !important;
+      max-width: 600px;
       height: auto;
     }
   }
@@ -1021,7 +1031,8 @@ const {
     
     .hero-title {
       font-size: clamp(1.5rem, 4vw, 2.25rem);
-      padding-right: 1.5rem;
+      padding-right: 0.5rem !important;
+      margin-right: 0.5rem !important;
     }
     
     .hero-subtitle {
