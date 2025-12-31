@@ -362,7 +362,7 @@ const {
       padding-top: 0;
       align-self: start;
       text-align: right !important;
-      font-size: clamp(0.2rem, 4.3vw, 2rem) !important;
+      font-size: clamp(0.2rem, 4.8vw, 2.5rem) !important;
       line-height: 0.9;
       max-width: 100% !important;
       width: 100% !important;
@@ -491,20 +491,21 @@ const {
     .hero-subtitle {
       grid-column: 2;
       grid-row: 2;
-      margin-top: calc(0.25rem + 2rem);
+      margin-top: -1rem;
       margin-bottom: 0;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      padding-left: 1rem;
-      padding-right: 1rem;
-      text-align: center !important;
-      font-size: clamp(0.65rem, 2.2vw, 0.85rem);
-      line-height: 1.1 !important;
+      margin-left: 0rem !important;
+      margin-right: 0;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      text-align: left !important;
+      font-size: clamp(0.5rem, 1.8vw, 0.75rem);
+      font-style: italic;
+      line-height: 1.4;
       max-width: 100% !important;
       width: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
       position: relative;
       left: 0 !important;
       z-index: 10;
@@ -527,7 +528,7 @@ const {
     .hero-cta-primary {
       grid-column: 2;
       grid-row: 3;
-      margin-top: 0.5rem;
+      margin-top: 3rem;
       margin-bottom: 0;
       margin-left: -8rem !important;
       margin-right: 0 !important;
@@ -669,19 +670,19 @@ const {
     .hero-rating {
       grid-column: 2;
       grid-row: 4;
-      margin-top: 0.25rem;
+      margin-top: 1.25rem;
       margin-bottom: 0 !important;
       padding-bottom: 0 !important;
-      margin-left: -0.5rem !important;
+      margin-left: -10rem !important;
       margin-right: 0 !important;
       padding-left: 0.5rem !important;
       padding-right: 1rem;
       display: flex !important;
       align-items: center;
       justify-content: flex-start !important;
-      gap: 0.3rem;
+      gap: 0.5rem;
       font-size: 0.6rem;
-      flex-wrap: wrap !important;
+      flex-wrap: nowrap !important;
       width: 100%;
       max-width: 100%;
       box-sizing: border-box;
@@ -692,16 +693,12 @@ const {
     }
     
     .hero-rating .star {
-      font-size: 1rem !important;
+      font-size: 0.9rem !important;
       flex-shrink: 0;
       margin: 0;
-      margin-right: -1rem !important;
+      margin-right: -0.5rem !important;
       filter: grayscale(100%) brightness(2);
       opacity: 0.9;
-    }
-    
-    .hero-rating .star:last-of-type {
-      margin-right: 0.2rem !important;
     }
     
     .hero-rating .rating-score,
@@ -848,7 +845,7 @@ const {
     }
     
     .hero-subtitle {
-      margin-top: -1rem;
+      margin-top: -2rem !important;
       text-align: center;
       width: 100%;
       max-width: 100%;
@@ -859,7 +856,7 @@ const {
     }
     
     .hero-cta-primary {
-      margin-top: 1rem;
+      margin-top: 3rem;
       justify-content: center;
       width: 100%;
       max-width: 100%;
@@ -929,6 +926,7 @@ const {
     .hero-subtitle {
       flex-shrink: 1;
       margin-bottom: 0.25rem;
+      margin-top: -2rem !important;
       line-height: 1.3;
     }
     

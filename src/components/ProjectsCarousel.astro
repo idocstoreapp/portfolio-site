@@ -351,23 +351,46 @@ const { projects = [] } = Astro.props;
       });
     });
     
-    // Touch/swipe
+    // Touch/swipe - solo horizontal, permite scroll vertical
     let startX = 0;
+    let startY = 0;
     let isDragging = false;
+    let isHorizontalSwipe = false;
     
     track.addEventListener('touchstart', (e) => {
       startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
       isDragging = true;
+      isHorizontalSwipe = false;
     });
     
     track.addEventListener('touchmove', (e) => {
       if (!isDragging) return;
-      e.preventDefault();
+      
+      const currentX = e.touches[0].clientX;
+      const currentY = e.touches[0].clientY;
+      const diffX = Math.abs(currentX - startX);
+      const diffY = Math.abs(currentY - startY);
+      
+      // Si el movimiento es principalmente horizontal, prevenir scroll vertical
+      // Si es principalmente vertical, permitir scroll normal
+      if (diffX > diffY && diffX > 10) {
+        isHorizontalSwipe = true;
+        e.preventDefault();
+      } else if (diffY > diffX && diffY > 10) {
+        // Movimiento vertical - permitir scroll
+        isDragging = false;
+        return;
+      }
     });
     
     track.addEventListener('touchend', (e) => {
       if (!isDragging) return;
       isDragging = false;
+      
+      // Solo procesar swipe si fue horizontal
+      if (!isHorizontalSwipe) return;
+      
       const endX = e.changedTouches[0].clientX;
       const diff = startX - endX;
       
