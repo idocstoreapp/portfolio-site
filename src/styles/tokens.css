@@ -1,41 +1,56 @@
-/* Premium Design Tokens - Paleta High-Tech Azul/Morado */
+/* Premium Design Tokens - Paleta Empresarial Premium */
 :root {
-  /* Fondos Premium - Degradados Azules/Morados Profundos */
-  --bg-primary: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
-  --bg-secondary: linear-gradient(135deg, #1e293b 0%, #312e81 50%, #1e293b 100%);
-  --bg-tertiary: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  /* COLOR BASE - Blanco Elefante y Blanco Puro */
+  --color-elephant-white: #F6F5F2;
+  --color-white-pure: #FFFFFF;
+  
+  /* NEUTROS ESTRUCTURALES */
+  --color-grey-light: #E5E5E3;
+  --color-grey-medium: #9A9A97;
+  --color-graphite-dark: #2B2B2B;
+  
+  /* ACENTO PREMIUM (USO MUY MEDIDO) */
+  --color-black-deep: #111111;
+  
+  /* OPCIONAL - Micro-acento */
+  --color-sand-soft: #D8D3C8;
+  
+  /* Fondos Premium - Blanco Elefante como base */
+  --bg-primary: var(--color-elephant-white);
+  --bg-secondary: var(--color-white-pure);
+  --bg-tertiary: var(--color-grey-light);
   
   /* Colores sólidos para compatibilidad */
-  --bg-primary-solid: #0f172a;
-  --bg-secondary-solid: #1e293b;
-  --bg-tertiary-solid: #1e1b4b;
+  --bg-primary-solid: var(--color-elephant-white);
+  --bg-secondary-solid: var(--color-white-pure);
+  --bg-tertiary-solid: var(--color-grey-light);
   
-  /* Acentos Premium - Azules y Naranjas */
-  --accent-primary: #3b82f6;
-  --accent-secondary: #6366f1;
-  --accent-tertiary: #8b5cf6;
-  --accent-orange: #f97316;
-  --accent-orange-light: #fb923c;
+  /* Acentos Premium - Solo neutros */
+  --accent-primary: var(--color-black-deep);
+  --accent-secondary: var(--color-graphite-dark);
+  --accent-tertiary: var(--color-grey-medium);
+  --accent-orange: var(--color-graphite-dark); /* Sin naranja, usar grafito */
+  --accent-orange-light: var(--color-grey-medium);
   
-  /* Texto */
-  --text-primary: #FFFFFF;
-  --text-secondary: #E5E7EB;
-  --text-muted: #9CA3AF;
+  /* Texto - Invertido para fondo claro */
+  --text-primary: var(--color-graphite-dark);
+  --text-secondary: var(--color-grey-medium);
+  --text-muted: var(--color-grey-medium);
   
-  /* Gradientes */
-  --grad-primary: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-  --grad-secondary: linear-gradient(135deg, var(--accent-secondary), var(--accent-tertiary));
-  --grad-accent: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
-  --grad-orange: linear-gradient(135deg, var(--accent-orange), var(--accent-orange-light));
-  --grad-blue-purple: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+  /* Gradientes Sutiles - Solo neutros */
+  --grad-primary: linear-gradient(135deg, var(--color-graphite-dark), var(--color-black-deep));
+  --grad-secondary: linear-gradient(135deg, var(--color-grey-medium), var(--color-graphite-dark));
+  --grad-accent: linear-gradient(135deg, var(--color-black-deep), var(--color-graphite-dark));
+  --grad-orange: linear-gradient(135deg, var(--color-graphite-dark), var(--color-grey-medium)); /* Sin naranja */
+  --grad-blue-purple: linear-gradient(135deg, var(--color-graphite-dark), var(--color-black-deep));
   
-  /* Sombras Premium */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
-  --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.4);
-  --shadow-glow-primary: 0 0 40px rgba(88, 101, 242, 0.2);
-  --shadow-glow-secondary: 0 0 40px rgba(108, 71, 255, 0.2);
+  /* Sombras Premium - Suaves y elegantes */
+  --shadow-sm: 0 2px 8px rgba(43, 43, 43, 0.08);
+  --shadow-md: 0 4px 16px rgba(43, 43, 43, 0.12);
+  --shadow-lg: 0 8px 32px rgba(43, 43, 43, 0.15);
+  --shadow-xl: 0 16px 64px rgba(43, 43, 43, 0.18);
+  --shadow-glow-primary: 0 0 40px rgba(43, 43, 43, 0.1);
+  --shadow-glow-secondary: 0 0 40px rgba(17, 17, 17, 0.08);
   
   /* Bordes */
   --radius-sm: 8px;
@@ -64,21 +79,16 @@
   --shadow-glow: var(--shadow-glow-primary);
 }
 
-/* Modo Claro (para toggle futuro) */
-[data-theme="light"] {
-  --bg-primary: #FFFFFF;
-  --bg-secondary: #F9FAFB;
-  --bg-tertiary: #F3F4F6;
-  --text-primary: #111827;
-  --text-secondary: #374151;
-  --text-muted: #6B7280;
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
-  --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.15);
+/* Modo Oscuro (opcional, para futuro) */
+[data-theme="dark"] {
+  --bg-primary: var(--color-graphite-dark);
+  --bg-secondary: var(--color-black-deep);
+  --bg-tertiary: #1a1a1a;
+  --text-primary: var(--color-elephant-white);
+  --text-secondary: var(--color-grey-light);
+  --text-muted: var(--color-grey-medium);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 16px 64px rgba(0, 0, 0, 0.5);
 }
-
-
-
-
-

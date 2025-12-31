@@ -121,15 +121,23 @@ const { projects = [] } = Astro.props;
     aspect-ratio: 2 / 3;
     max-width: 300px;
     margin: 0 auto;
-    border-radius: 12px;
+    border-radius: 8px;
     overflow: hidden;
-    background: #1a1a1a;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 1rem;
+    background: var(--color-white-pure);
+    border: 1px solid var(--color-grey-light);
+    margin-bottom: 1.5rem;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--norm) var(--ease);
+  }
+  
+  .carousel-image-container:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+    border-color: var(--color-grey-medium);
   }
   
   .carousel-image-container.image-vertical {
@@ -197,22 +205,24 @@ const { projects = [] } = Astro.props;
   
   .carousel-category {
     display: inline-block;
-    padding: 0.25rem 0.6rem;
-    background: rgba(88, 101, 242, 0.15);
-    color: #5865F2;
-    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    background: var(--color-grey-light);
+    color: var(--color-graphite-dark);
+    border-radius: 4px;
     font-size: 0.7rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
     text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
   
   .carousel-title {
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
     margin: 0;
-    line-height: 1.3;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
   }
   
   .carousel-btn {
@@ -221,11 +231,10 @@ const { projects = [] } = Astro.props;
     transform: translateY(-50%);
     width: 3rem;
     height: 3rem;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--color-white-pure);
+    border: 1px solid var(--color-grey-light);
     border-radius: 50%;
-    color: #ffffff;
+    color: var(--color-graphite-dark);
     font-size: 1.5rem;
     cursor: pointer;
     display: flex;
@@ -233,11 +242,14 @@ const { projects = [] } = Astro.props;
     justify-content: center;
     z-index: 10;
     transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
   }
   
   .carousel-btn:hover {
-    background: #5865F2;
-    border-color: #5865F2;
+    background: var(--color-graphite-dark);
+    color: var(--color-white-pure);
+    border-color: var(--color-graphite-dark);
+    box-shadow: var(--shadow-md);
   }
   
   .carousel-btn-prev {
@@ -275,7 +287,7 @@ const { projects = [] } = Astro.props;
     width: 0.75rem;
     height: 0.75rem;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
+    background: var(--color-grey-light);
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -284,7 +296,7 @@ const { projects = [] } = Astro.props;
   
   .carousel-indicator:hover,
   .carousel-indicator.active {
-    background: #5865F2;
+    background: var(--color-graphite-dark);
     transform: scale(1.2);
   }
 </style>

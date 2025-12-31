@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
-/* Custom CSS Variables for NextSite Brand Colors */
+/* Custom CSS Variables - Actualizados a paleta empresarial */
 :root {
-  --nextsite-dark-blue: #1e3a8a;
-  --nextsite-light-blue: #3b82f6;
-  --nextsite-accent-blue: #60a5fa;
-  --nextsite-bg-dark: #0f172a;
-  --nextsite-bg-darker: #020617;
-  --nextsite-text-light: #f8fafc;
-  --nextsite-text-muted: #94a3b8;
+  --nextsite-dark-blue: var(--color-graphite-dark);
+  --nextsite-light-blue: var(--color-grey-medium);
+  --nextsite-accent-blue: var(--color-black-deep);
+  --nextsite-bg-dark: var(--color-elephant-white);
+  --nextsite-bg-darker: var(--color-white-pure);
+  --nextsite-text-light: var(--color-graphite-dark);
+  --nextsite-text-muted: var(--color-grey-medium);
 }
 
 /* Smooth scrolling */
@@ -122,14 +122,14 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--nextsite-bg-darker);
+  background: var(--color-elephant-white);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--nextsite-light-blue);
+  background: var(--color-grey-medium);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--nextsite-accent-blue);
+  background: var(--color-graphite-dark);
 }

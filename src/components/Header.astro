@@ -204,7 +204,7 @@ const currentPath = Astro.url.pathname;
   .nav-link {
     font-size: 0.95rem;
     font-weight: 500;
-    color: var(--text-muted);
+    color: #D4AF37; /* Color dorado */
     text-decoration: none;
     padding: 0.5rem 0;
     position: relative;
@@ -218,12 +218,12 @@ const currentPath = Astro.url.pathname;
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--grad-primary);
+    background: linear-gradient(90deg, #D4AF37, #F4D03F);
     transition: width var(--norm) var(--ease);
   }
   
   .nav-link:hover {
-    color: var(--text-primary);
+    color: #F4D03F; /* Dorado más claro al hover */
   }
   
   .nav-link:hover::after {
@@ -231,7 +231,7 @@ const currentPath = Astro.url.pathname;
   }
   
   .nav-link-active {
-    color: var(--accent-primary);
+    color: #F4D03F; /* Dorado más claro para activo */
   }
   
   .nav-link-active::after {
@@ -296,7 +296,7 @@ const currentPath = Astro.url.pathname;
   .mobile-nav-link {
     font-size: 1rem;
     font-weight: 500;
-    color: var(--text-muted);
+    color: #D4AF37; /* Color dorado */
     text-decoration: none;
     padding: 0.75rem 0;
     transition: color var(--fast) var(--ease);
@@ -304,11 +304,11 @@ const currentPath = Astro.url.pathname;
   }
   
   .mobile-nav-link:hover {
-    color: var(--text-primary);
+    color: #F4D03F; /* Dorado más claro al hover */
   }
   
   .mobile-nav-link-active {
-    color: var(--accent-primary);
+    color: #F4D03F; /* Dorado más claro para activo */
   }
 </style>
 
