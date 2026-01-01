@@ -149,7 +149,6 @@ const {
     width: 100vw !important;
     max-width: 100vw !important;
     box-sizing: border-box;
-    margin-top: -5rem;
   }
   
   /* Mobile: altura automática, máximo 50vh */
@@ -159,8 +158,8 @@ const {
       min-height: auto !important;
       max-height: none !important;
       align-items: flex-start;
-      padding: 5rem 0 0 !important;
-      padding-top: 5rem !important; /* 5rem original + altura del header fijo */
+      padding: 0 !important;
+      padding-top: 0 !important;
       padding-bottom: 0 !important;
       margin-bottom: 0 !important;
       overflow: visible;
@@ -178,7 +177,7 @@ const {
       max-height: 100vh;
       padding: 1rem 1rem 0;
       align-items: flex-start;
-      padding-top: calc(1rem + 5rem); /* 1rem original + altura del header sticky */
+      padding-top: calc(1rem + 5rem); /* 1rem original + altura del header fijo */
       overflow: hidden;
     }
   }
@@ -198,7 +197,7 @@ const {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(15, 23, 42, 0.3); /* Overlay oscuro para mejorar legibilidad */
+    background: rgba(15, 23, 42, 0.05); /* Overlay oscuro para mejorar legibilidad */
     z-index: 1;
   }
   

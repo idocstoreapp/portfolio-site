@@ -55,13 +55,15 @@ const gradientClasses = {
 
 <style>
   .success-case-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: var(--radius-xl);
     padding: 2.5rem;
     position: relative;
     overflow: hidden;
     transition: all var(--norm) var(--ease);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   }
   
   .success-case-card::before {
@@ -75,8 +77,8 @@ const gradientClasses = {
   
   .success-case-card:hover {
     transform: translateY(-4px);
-    border-color: rgba(255, 255, 255, 0.15);
-    box-shadow: var(--shadow-xl);
+    border-color: rgba(212, 175, 55, 0.4);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3), 0 0 20px rgba(212, 175, 55, 0.1);
   }
   
   .gradient-primary::before {
@@ -101,8 +103,8 @@ const gradientClasses = {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(88, 101, 242, 0.1);
-    border: 1px solid rgba(88, 101, 242, 0.2);
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.3);
     border-radius: var(--radius-lg);
     margin-bottom: 1.5rem;
     font-size: 2rem;
@@ -110,15 +112,15 @@ const gradientClasses = {
   }
   
   .success-case-card:hover .case-icon {
-    background: rgba(88, 101, 242, 0.2);
-    border-color: rgba(88, 101, 242, 0.4);
+    background: rgba(212, 175, 55, 0.25);
+    border-color: rgba(212, 175, 55, 0.5);
     transform: scale(1.1) rotate(5deg);
   }
   
   .case-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--color-white-pure);
     margin: 0 0 1.5rem 0;
   }
   
@@ -136,7 +138,7 @@ const gradientClasses = {
   
   .case-label {
     font-size: 0.75rem;
-    color: var(--text-muted);
+    color: rgba(212, 175, 55, 0.9);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-weight: 600;
@@ -144,13 +146,13 @@ const gradientClasses = {
   
   .case-text {
     font-size: 1rem;
-    color: var(--text-secondary);
+    color: var(--color-white-pure);
     line-height: 1.6;
     margin: 0;
   }
   
   .case-result .case-text {
-    color: var(--accent-primary);
+    color: rgba(212, 175, 55, 1);
     font-weight: 600;
     font-size: 1.125rem;
   }
@@ -160,7 +162,7 @@ const gradientClasses = {
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(255, 255, 255, 0.1),
+      rgba(212, 175, 55, 0.3),
       transparent
     );
     margin: 0.5rem 0;

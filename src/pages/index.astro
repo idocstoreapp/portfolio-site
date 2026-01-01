@@ -308,6 +308,31 @@ const successCases = [
     background: var(--bg-primary);
   }
   
+  /* Background de escritorio para la sección de proyectos */
+  @media (min-width: 1024px) {
+    .projects-section-premium {
+      background-image: url('/images/background-escritorio.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+      position: relative;
+    }
+    
+    .projects-section-premium::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.05);
+      z-index: 1;
+    }
+    
+    .projects-section-premium .section-container {
+      position: relative;
+      z-index: 2;
+    }
+  }
+  
   main {
     padding: 0;
     marging: 0;
@@ -360,8 +385,27 @@ const successCases = [
   /* Success Cases Section */
   .success-cases-section {
     padding: 6rem 0;
-    background: var(--bg-secondary);
-    background-color: var(--color-white-pure);
+    background: var(--bg-primary);
+    background-color: var(--color-elephant-white);
+    background-image: url('/images/background-hero.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative;
+  }
+  
+  .success-cases-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.05);
+    z-index: 1;
+  }
+  
+  .success-cases-section .section-container {
+    position: relative;
+    z-index: 2;
   }
   
   .success-cases-grid {
