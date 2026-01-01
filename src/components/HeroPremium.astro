@@ -123,55 +123,47 @@ const {
   
   .hero-premium {
     position: relative;
-    height: 100vh;
+    min-height: 100svh; /* Usar svh para mejor control del viewport */
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Cambiar de center a flex-start para mejor control */
     padding: 0;
-    padding-top: 0rem; /* 4rem original + altura del header */
+    padding-top: 0; /* El scroll-margin-top del header manejará el espacio */
     padding-bottom: 0;
     margin-bottom: 0;
-    overflow: hidden;
-    overflow-x: hidden !important;
+    overflow-x: hidden; /* Solo ocultar overflow horizontal */
     background: var(--bg-primary);
     background-color: var(--color-elephant-white);
     background-image: url("/images/background-hero.jpg");
     background-size: cover;
-    background-position: center top; /* Mover background más arriba */
+    background-position: center top;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    width: 100vw !important;
-    max-width: 100vw !important;
+    width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
+    scroll-margin-top: 5rem; /* Espacio para header sticky */
   }
   
-  /* Mobile: altura automática, máximo 50vh */
+  /* Mobile: altura automática, se adapta al contenido */
   @media (min-width: 320px) and (max-width: 1023px) {
     .hero-premium {
-      height: auto !important;
-      min-height: auto !important;
-      max-height: none !important;
+      min-height: auto;
       align-items: flex-start;
-      padding: 0 !important;
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
-      margin-bottom: 0 !important;
+      padding: 0;
       overflow: visible;
-      overflow-x: hidden !important;
-      width: 100vw !important;
-      max-width: 100vw !important;
-      box-sizing: border-box;
+      overflow-x: hidden;
     }
   }
   
+  /* Desktop: altura completa del viewport */
   @media (min-width: 1024px) {
     .hero-premium {
-      height: 100vh;
-      min-height: 100vh;
-      max-height: 100vh;
-      padding: 1rem 1rem 0;
+      min-height: 100svh;
+      height: 100svh; /* Altura fija del viewport */
+      padding: 0rem;
       align-items: flex-start;
-      padding-top: calc(1rem + 5rem); /* 1rem original + altura del header fijo */
-      overflow: hidden;
+      overflow: visible; /* Permitir que se vea todo el contenido */
+      box-sizing: border-box;
     }
   }
   
@@ -223,11 +215,10 @@ const {
   .hero-container {
     position: relative;
     z-index: 1;
-    max-width: 100vw !important;
-    margin: 0 auto;
-    width: 100vw !important;
+    max-width: 100%;
+    margin: 0;
+    width: 100%;
     padding: 0;
-    margin-top: -30px;
     height: auto;
     min-height: 0;
     display: flex;
@@ -243,7 +234,7 @@ const {
       margin-bottom: 0 !important;
       height: auto;
       min-height: auto;
-      align-items: flex-start;
+      align-items: flex-end;
       padding-top: 0;
       width: 100vw !important;
       max-width: 100vw !important;
@@ -255,58 +246,60 @@ const {
   @media (min-width: 1024px) {
     .hero-container {
       align-items: flex-start;
-      padding-top: 1rem;
-      height: 100%;
-      max-height: calc(100vh - 6rem); /* Altura del viewport menos header y padding */
-      overflow: hidden;
+      padding-top: 5rem; /* Espacio para header sticky (aprox 5rem) */
       display: flex;
       flex-direction: column;
+      height: calc(100% - 5rem); /* Altura disponible menos espacio del header */
+      min-height: 0;
+      box-sizing: border-box;
     }
   }
   
   .hero-content {
     display: grid;
     grid-template-columns: 1fr auto;
-    grid-template-rows: auto 1fr;
-    gap: 1rem 1rem;
+    grid-template-rows: auto auto; /* Cambiar de auto 1fr a auto auto para evitar espacios fantasmas */
+    gap: 1rem; /* Restaurar gap para espaciado natural */
     align-items: start;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    max-width: 100vw;
     min-height: 0;
     overflow: visible;
   }
 
     .hero-text {
-      max-width: 100vw;
+      max-width: 100%;
       width: 100%;
-      margin-top: -30px;
+      margin: 0;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
+      align-items: flex-end;
+      justify-content: flex-start; /* Cambiar de space-evenly a flex-start */
+      gap: 1rem; /* Usar gap para espaciado consistente */
       min-height: 0;
       overflow: visible;
+      /* Remover height: 100% para permitir expansión natural */
     }
     
-    .hero-title {
+    /* Estilos para hero-title cuando NO está en hero-text (grid layout) */
+    .hero-content > .hero-title {
       grid-column: 2;
       grid-row: 1;
       margin-bottom: 0;
       margin-top: 0;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      padding-left: 1vw;
-      padding-right: 1vw !important;
+      margin-left: 0;
+      margin-right: 0;
+      padding-left: 0;
+      padding-right: 0;
       padding-top: 0;
       align-self: start;
-      text-align: right !important;
-      font-size: clamp(0.3rem, 2vw, 0.5rem);
+      text-align: right;
+      font-size: clamp(0.3rem, 1vw, 0.5rem);
       line-height: 0.9;
-      max-width: 40vw !important;
-      width: 50vw !important;
+      max-width: 100%;
+      width: 100%;
       overflow: visible;
       display: block;
       box-sizing: border-box;
@@ -320,34 +313,33 @@ const {
   @media (min-width: 320px) and (max-width: 1023px) {
 
     .hero-container {
-      margin-top: 5rem;
-      margin-bottom: 0 !important;
-      padding-bottom: 0 !important;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-bottom: 0;
     }
     
-    /* Cambiar a layout de columna única para mejor orden visual */
+    /* Layout de columna única para mobile */
     .hero-content {
       display: grid;
-      grid-template-columns: 1fr; /* Una sola columna */
+      grid-template-columns: 1fr;
       grid-template-areas: 
         "title"
         "subtitle"
         "mockup"
         "ctas"
         "rating";
-      gap: 1.5rem 0; /* Espaciado vertical cómodo para lectura táctil */
+      gap: 1.5rem 0;
       align-items: center;
       justify-items: center;
-      width: 100vw !important;
-      max-width: 100vw !important;
-      height: auto !important;
-      min-height: auto !important;
-      max-height: none !important;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      min-height: auto;
       box-sizing: border-box;
-      padding: 0 1rem !important;
-      padding-bottom: 2rem !important;
-      margin-bottom: 0 !important;
-      overflow-x: hidden !important;
+      padding: 0 1rem;
+      padding-bottom: 2rem;
+      margin-bottom: 0;
+      overflow-x: hidden;
     }
     
     /* Asignar áreas del grid */
@@ -360,35 +352,33 @@ const {
       max-width: 100% !important;
     }
     
-    /* Subtítulo: Segundo en el orden visual - sin card azul */
+    /* Subtítulo: Segundo en el orden visual */
     .hero-subtitle {
       grid-area: subtitle;
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 !important;
-      padding: 0 0.5rem !important;
-      text-align: center !important;
-      font-size: clamp(1rem, 3vw, 1.25rem) !important;
-      color: var(--color-graphite-dark) !important;
-      line-height: 1.5 !important;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      padding: 0 0.5rem;
+      text-align: center;
+      font-size: clamp(1rem, 3vw, 1.25rem);
+      color: var(--color-graphite-dark);
+      line-height: 1.5;
       font-weight: 500;
     }
     
-    /* Mockup más a la derecha */
+    /* Mockup alineado a la derecha */
     .hero-mockup {
       grid-area: mockup;
       display: flex;
       align-items: center;
-      justify-content: flex-end !important; /* Alineado a la derecha */
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 !important;
-      margin-left: auto !important; /* Empujar hacia la derecha */
-      margin-right: -3.5rem !important; /* Mover 2.5rem más a la derecha (fuera del contenedor) */
-      padding: 0 !important;
+      justify-content: flex-end;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+      padding-right: clamp(0.5rem, 3vw, 2rem); /* Padding responsivo para moverlo a la derecha */
       z-index: 1;
       position: relative;
-      transform: translateX(-1rem); /* Ajuste adicional para moverlo más a la derecha */
     }
     
     .hero-mockup .mockup-image {
@@ -400,79 +390,57 @@ const {
       display: block;
     }
     
-    /* CTAs: Cuarto en el orden visual - apilados verticalmente */
+    /* CTAs: Apilados verticalmente, siempre visibles */
     .hero-cta-primary {
       grid-area: ctas;
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 !important;
-      margin-top: 1.3rem !important; /* Bajar los CTAs 1.3rem más */
-      padding: 0 1rem !important; /* Padding lateral para evitar que toquen bordes */
-      display: flex !important;
-      flex-direction: column !important; /* Apilar verticalmente */
-      gap: 2rem !important; /* Más separación entre CTAs */
-      align-items: center !important;
-      justify-content: center !important;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      padding: 0 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      align-items: center;
+      justify-content: center;
       box-sizing: border-box;
-      position: relative; /* Para posicionar elementos decorativos */
-    }
-    
-    /* Asegurar que los CTAs estén por encima del background */
-    .hero-content {
       position: relative;
+      z-index: 10;
     }
     
-    /* Los CTAs deben estar por encima de cualquier elemento del background */
-    .hero-cta-primary {
-      position: relative;
-      z-index: 10 !important; /* Por encima del background y sus rayas */
-      background: transparent; /* Mantener transparente para no ocultar completamente */
-    }
-    
-    /* Asegurar que los botones también estén por encima */
     .btn-neon {
       position: relative;
-      z-index: 11 !important;
+      z-index: 11;
     }
     
     .hero-rating {
       grid-area: rating;
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      justify-content: center !important;
-    }
-    
-    /* Resetear estilos de grid anteriores que puedan interferir */
-    .hero-text {
-      display: contents; /* Los hijos directos se posicionan en el grid padre */
-      max-width: 100% !important;
-      width: 100% !important;
-      margin: 0 !important;
-      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     
     /* Título: Primero en el orden visual */
     .hero-title {
-      grid-area: title; /* Usar grid-area en lugar de grid-column/row */
-      text-align: center !important; /* Centrado para mejor jerarquía */
-      margin: 0 !important;
-      padding: 0 0.5rem !important;
-      font-size: clamp(1.75rem, 8vw, 2.5rem) !important;
-      line-height: 1.2 !important;
-      max-width: 100% !important;
-      width: 100% !important;
+      grid-area: title;
+      text-align: center;
+      margin: 0;
+      padding: 0 0.5rem;
+      font-size: clamp(1.75rem, 6vw, 2.5rem);
+      line-height: 1.2;
+      max-width: 100%;
+      width: 100%;
       overflow: visible;
-      display: block !important;
+      display: block;
       box-sizing: border-box;
       position: relative;
       z-index: 10;
       word-wrap: break-word;
       overflow-wrap: break-word;
-      color: var(--text-primary) !important;
-      visibility: visible !important;
-      opacity: 1 !important;
+      color: var(--text-primary);
     }
     
     /* Ajustar alineación de líneas del título para layout centrado */
@@ -845,17 +813,19 @@ const {
   @media (min-width: 1024px) {
     .hero-content {
       grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: flex-start;
+      grid-template-rows: 1fr; /* Solo una fila: mockup y text lado a lado */
+      gap: 2rem;
+      align-items: stretch; /* Hacer que las columnas ocupen toda la altura */
       margin-top: 0;
-      height: 100%;
-      max-height: 100%;
-      overflow: hidden;
+      height: 100%; /* Ocupar toda la altura disponible del hero-container */
+      max-height: 100%; /* No exceder la altura del contenedor */
+      min-height: 0;
+      box-sizing: border-box;
     }
 
-     .hero-title {
-      margin-top: -1.8rem;
-     }
+    .hero-title {
+      margin: 0;
+    }
      
      .hero-title .title-accent {
        color: var(--accent-orange) !important;
@@ -866,27 +836,30 @@ const {
      }
     
     .hero-title .title-line-right {
-      text-align: right !important;
-      display: block !important;
-      width: 100% !important;
-      margin-left: -2rem;
-      margin-top: -1.8rem;
+      text-align: right;
+      display: block;
+      width: 100%;
+      margin: 0;
     }
     
     /* En desktop, mantener el orden: mockup primero, texto después */
     .hero-mockup {
       order: 1;
-      display: grid !important;
-      grid-template-columns: 1fr 1fr !important;
-      grid-template-rows: auto auto !important;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 120px; /* Mockups: ocupan espacio disponible (1fr), Banner: 120px fijo */
       gap: 1rem;
       align-items: flex-start;
       justify-content: flex-start;
-      padding-top: 0;
-      margin-top: 0rem;
-      transform: translateY(-3rem);
+      padding: 0;
+      margin: 0;
+      height: 100%; /* Ocupar toda la altura disponible */
+      max-height: 100%; /* No exceder la altura del contenedor */
+      box-sizing: border-box;
       width: 100%;
-      height: 100%;
+      height: 100%; /* Ocupar toda la altura disponible */
+      min-height: 0;
+      align-self: stretch; /* Estirar para ocupar toda la altura de la fila del grid */
     }
     
     .hero-mockup-mobile {
@@ -895,8 +868,9 @@ const {
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      height: auto;
+      height: 100%; /* Ocupar toda la altura de la fila 1 */
       min-height: 0;
+      align-self: stretch; /* Estirar para ocupar toda la altura */
     }
     
     .hero-mockup-desktop {
@@ -905,16 +879,16 @@ const {
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      height: auto;
+      height: 100%; /* Ocupar toda la altura de la fila 1 */
       min-height: 0;
+      align-self: stretch; /* Estirar para ocupar toda la altura */
     }
     
     .mockup-desktop-image {
       max-width: 100%;
       width: auto;
-      height: auto;
-      min-height: 60vh;
-      max-height: 70vh;
+      height: 100%; /* Ocupar toda la altura disponible de la fila 1 */
+      max-height: 100%; /* No exceder la altura de la fila */
       object-fit: contain;
       border-radius: 12px;
       box-shadow: none;
@@ -923,9 +897,8 @@ const {
     .hero-mockup-mobile .mockup-image {
       max-width: 100%;
       width: auto;
-      height: auto;
-      min-height: 60vh;
-      max-height: 70vh;
+      height: 100%; /* Ocupar toda la altura disponible de la fila 1 */
+      max-height: 100%; /* No exceder la altura de la fila */
       object-fit: contain;
     }
     
@@ -942,9 +915,11 @@ const {
       position: relative;
       height: 120px;
       min-height: 120px;
+      max-height: 120px; /* Altura fija para el banner */
       display: flex !important;
       align-items: center;
       justify-content: center;
+      align-self: flex-end; /* Alinear al final de la fila del grid */
     }
     
     .systems-slider {
@@ -979,33 +954,39 @@ const {
       display: flex;
       flex-direction: column;
       order: 2;
-      justify-content: flex-start;
+      justify-content: flex-start; /* Title al inicio */
+      gap: 1.5rem; /* Espaciado entre elementos */
       padding-top: 0rem;
-      align-items: center;
+      align-items: flex-start; /* Alinear al inicio horizontalmente */
       width: 100%;
-      height: 100%;
-      max-height: 100%;
-      overflow: hidden;
+      height: 100%; /* Ocupar toda la altura disponible del hero-content */
+      min-height: 0;
       flex-shrink: 1;
-      margin-top: 3rem;
+      margin-top: 0rem;
+      align-self: stretch; /* Estirar para igualar altura de hero-mockup */
     }
-    
-    .hero-title {
-      margin-top:-1rem !important;
-      text-align: left;
-      width: 100%;
-      padding-right: 0;
-      margin-right: 0;
-      padding-left: 0;
-      margin-left: 0;
-      max-width: 100%;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.1rem;
+
+    /* Estilos para hero-title dentro de hero-text en desktop - sobrescribir todo */
+    .hero-text .hero-title {
+      margin-top: 0 !important;
+      text-align: left !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 0.1rem !important;
       line-height: 0.9 !important;
-    }
+      flex-shrink: 0 !important;
+      overflow-wrap: break-word !important;
+      word-wrap: break-word !important;
+      grid-column: unset !important;
+      grid-row: unset !important;
+      align-self: unset !important;
+    } 
     
     .title-line {
       text-align: left;
@@ -1262,11 +1243,11 @@ const {
     
     .subtitle-line {
       display: block;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0rem;
     }
     
     .hero-cta-primary {
-      margin-top:-2rem !important;
+      margin-top:0rem !important;
       justify-content: center;
       width: 100%;
       max-width: 100%;
@@ -1293,50 +1274,105 @@ const {
   .hero-text {
     display: flex;
     flex-direction: column;
-    gap: 1rem; /* Reducido de 2rem a 1rem */
+    gap: 1rem;
     animation: fadeInUp 0.8s ease-out;
-    max-width: 100vw;
+    max-width: 100%;
     width: 100%;
     box-sizing: border-box;
     overflow: visible;
-    margin-bottom: 0;
-    padding-bottom: 0;
+    margin: 0;
+    padding: 0;
   }
   
-  /* Reset para mobile layout - Los elementos hijos se posicionan directamente en el grid */
+  /* Mobile: Los elementos hijos se posicionan directamente en el grid padre */
   @media (min-width: 320px) and (max-width: 1023px) {
     .hero-text {
-      display: contents;
-      gap: 0 !important;
-      max-width: 100vw;
-      width: 110%;
-      margin-bottom: 0 !important;
-      padding-bottom: 0 !important;
+      display: contents; /* Permite que los hijos se posicionen en el grid padre */
+      gap: 0;
     }
   }
   
-  /* Desktop: Asegurar que hero-text se adapte al viewport */
+  /* Desktop: hero-text usa flexbox con flex-start y margin-top: auto para CTA/rating */
   @media (min-width: 1024px) {
     .hero-text {
-      max-width: 100%;
-      width: 100%;
-      box-sizing: border-box;
-      overflow: visible;
-      gap: 0.75rem; /* Reducir gap aún más en desktop */
-      height: 100%;
-      max-height: 100%;
-  }
-  
-  .hero-title {
-      flex-shrink: 1;
-      margin-bottom: 0.25rem;
-    line-height: 1.1;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: flex-start !important; /* Title al inicio del viewport */
+      gap: 1.5rem !important; /* Espaciado moderado entre elementos */
+      max-width: 100% !important;
+      width: 100% !important;
+      height: 100% !important; /* Ocupar toda la altura disponible para distribuir elementos */
+      box-sizing: border-box !important;
+      align-items: flex-start !important; /* Alinear elementos al inicio */
+      align-self: stretch !important; /* Estirar para igualar altura de hero-mockup */
+      min-height: 0 !important;
     }
     
+    /* Title al inicio - sobrescribir TODOS los estilos cuando está en hero-text */
+    .hero-text .hero-title {
+      margin-top: 0 !important; /* Al inicio del flex */
+      margin-bottom: 0 !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      padding: 0 !important;
+      flex-shrink: 0 !important;
+      width: 100% !important; /* Forzar 100% para que se adapte al flex */
+      max-width: 100% !important; /* Forzar 100% para que se adapte al flex */
+      box-sizing: border-box !important;
+      grid-column: unset !important; /* Remover grid positioning cuando está en flex */
+      grid-row: unset !important;
+      align-self: unset !important;
+      text-align: left !important; /* Alinear al inicio */
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 0.1rem !important;
+      line-height: 0.9 !important;
+      position: relative !important;
+      z-index: 10 !important;
+      overflow-wrap: break-word !important;
+      word-wrap: break-word !important;
+    }
+    
+    /* Subtitle en el medio (se reparte naturalmente con gap) */
+    .hero-subtitle {
+      flex-shrink: 0;
+      width: 100%;
+      max-width: 100%;
+    }
+    
+    /* CTA y rating van abajo usando margin-top: auto */
+    .hero-text .hero-cta-primary {
+      margin-top: auto !important; /* Forzar margin-top: auto para empujar CTA hacia el final */
+      flex-shrink: 0 !important; /* No permitir que se encoja */
+      margin-bottom: 0 !important;
+    }
+    
+    .hero-text .hero-rating {
+      margin-top: 0.5rem !important; /* Pequeño espacio después de CTA */
+      flex-shrink: 0 !important; /* No permitir que se encoja */
+      margin-bottom: 0 !important; /* Sin espacio al final para que llegue hasta el banner */
+    }
+  }
+  
+  /* Estilos generales para hero-title */
+  .hero-title {
+    flex-shrink: 0; /* No permitir que se encoja */
+    margin-bottom: 0;
+    line-height: 1.1;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word; /* Permitir que el texto se ajuste */
+    word-wrap: break-word;
+  }
+  
+  /* Desktop: Estilos adicionales para hero-subtitle y CTA */
+  @media (min-width: 1024px) {
     .hero-subtitle-card {
       flex-shrink: 1;
       margin-bottom: 0.25rem;
-      margin-top: -1rem !important; /* Termina justo antes del banner */
+      margin-top: -1rem;
       background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(20px);
       border: 1px solid rgba(59, 130, 246, 0.2);
@@ -1348,37 +1384,35 @@ const {
     
     /* Ocultar slider en desktop */
     .subtitle-slider-mobile {
-      display: none !important;
+      display: none;
     }
     
     /* Mostrar contenido desktop */
     .subtitle-content-desktop {
-      display: block !important;
+      display: block;
     }
     
     .hero-subtitle {
-      color: rgba(212, 175, 55, 0.9) !important; /* Color dorado con opacidad */
+      color: rgba(212, 175, 55, 0.9);
       line-height: 1.3;
       margin: 0 0 1rem 0;
     }
     
     .hero-support-text {
-      color: rgba(212, 175, 55, 0.85) !important; /* Color dorado con opacidad */
+      color: rgba(212, 175, 55, 0.85);
       margin: 0;
     }
     
     .hero-cta-primary {
       flex-shrink: 0;
-      margin-bottom: -2rem !important;
-      margin-top:2rem !important; /* A la altura del banner */
-      display: flex !important;
+      margin: 0;
+      margin-top: auto; /* Empuja CTA hacia abajo en desktop */
+      display: flex;
       gap: 1rem;
       flex-wrap: nowrap;
       align-items: center;
       justify-content: center;
-      visibility: visible !important;
-      opacity: 1 !important;
-      z-index: 10 !important;
+      z-index: 10;
       position: relative;
     }
     
@@ -1451,23 +1485,23 @@ const {
     /* Mostrar elementos de desktop solo en desktop/ipad */
     .hero-mockup-desktop,
     .hero-systems-banner {
-    display: flex;
+      display: flex;
     }
     
     .hero-rating {
       flex-shrink: 0;
       margin-bottom: 0;
-      margin-top: 1.5rem;
+      margin-top: 0.5rem;
     }
   }
   
   .hero-title {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-size: clamp(2.5rem, 2vw, 4.5rem);
     font-weight: 800; /* Más peso visual para mejor jerarquía */
     line-height: 1.2; /* Mejor legibilidad */
     color: var(--text-primary);
     letter-spacing: -0.02em;
-    margin: 0 0 1.5rem 0;
+    margin: 0 0 0rem 0;
     /* Mejor contraste y legibilidad */
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   }
@@ -1548,7 +1582,7 @@ const {
   .hero-rating {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0rem;
     flex-wrap: wrap;
   }
   
