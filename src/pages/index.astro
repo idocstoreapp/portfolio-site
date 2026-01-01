@@ -323,6 +323,13 @@ const successCases = [
     margin-bottom: 4rem;
   }
   
+  /* Reducir espacio entre título y carrusel en móvil */
+  @media (max-width: 767px) {
+    .projects-section-premium .section-header {
+      margin-bottom: 1.5rem;
+    }
+  }
+  
   .section-title {
     font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 800;
@@ -496,7 +503,9 @@ const successCases = [
     }
     
     .section-header {
-      margin-bottom: 3rem;
+      margin-top:-2.5rem; 
+      margin-bottom:-7rem;
+      padding-bottom:-6rem;
     }
   }
 </style>

@@ -68,13 +68,13 @@ const {
         <div class="hero-subtitle-card">
           <!-- Slider para móvil -->
           <div class="subtitle-slider-mobile">
-            <div class="subtitle-slide active">
+            <div class="subtitle-column subtitle-column-left">
               <p class="hero-subtitle">
                 Maestro Digital es el socio estratégico de empresas que buscan evolucionar,
                 optimizar procesos y transformar su presencia digital en una ventaja competitiva.
               </p>
             </div>
-            <div class="subtitle-slide">
+            <div class="subtitle-column subtitle-column-right">
               <p class="hero-support-text">
                 No creamos sitios web.<br />
                 Construimos soluciones que ahorran tiempo, reducen fricción y generan resultados.
@@ -394,7 +394,7 @@ const {
       padding-top: 0;
       align-self: start;
       text-align: right !important;
-      font-size: clamp(1.5rem, 6.8vw, 2.5rem) !important;
+      font-size: clamp(1.5rem, 6.4vw, 2.5rem) !important;
       line-height: 1.2 !important;
       max-width: 100% !important;
       width: 100% !important;
@@ -584,19 +584,19 @@ const {
     }
     
     .hero-cta-primary {
-      grid-column: 2;
-      grid-row: 3;
-      margin-top: 1rem;
+      grid-column: 1;
+      grid-row: 2;
+      margin-top: 9rem;
       margin-bottom: 0;
-      margin-left: -8rem !important;
+      margin-left: 0 !important;
       margin-right: 0 !important;
       padding-left: 0.5rem;
-      padding-right: 1rem;
+      padding-right: 0.5rem;
       display: flex;
-      justify-content: flex-start;
-      gap: 0.4rem;
+      justify-content: center;
+      gap: 0.75rem;
       flex-wrap: nowrap;
-      flex-direction: row;
+      flex-direction: column;
       align-items: center;
       box-sizing: border-box;
       width: 100%;
@@ -619,9 +619,10 @@ const {
       text-decoration: none;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       white-space: nowrap;
-      flex-shrink: 1;
+      flex-shrink: 0;
       min-width: fit-content;
-      max-width: calc(50% - 0.25rem);
+      width: 100%;
+      max-width: 100%;
       overflow: hidden;
       border: none;
       cursor: pointer;
@@ -1115,9 +1116,7 @@ const {
       padding: 1.5rem !important;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
       position: relative !important;
-      overflow: hidden;
-      display: flex !important;
-      align-items: center !important;
+      overflow: hidden !important;
       min-height: auto;
       height: auto;
       visibility: visible !important;
@@ -1130,93 +1129,78 @@ const {
       display: none !important;
     }
     
-    /* Slider para móvil */
+    /* Slider para móvil - Solo un texto visible a la vez */
     .subtitle-slider-mobile {
       position: relative;
       width: 100%;
-      display: flex !important;
-      align-items: center !important;
-      overflow: hidden;
+      overflow: hidden !important;
       min-height: auto;
     }
     
-    .subtitle-slide {
+    /* Columnas del slider - Ocupan 100% del ancho, superpuestas */
+    .subtitle-column {
       width: 100%;
-      display: flex !important;
-      align-items: center !important;
-      opacity: 0;
-      transition: opacity 0.8s ease, transform 0.8s ease;
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      bottom: 0;
-      transform: translateX(100%);
-      visibility: hidden;
-      pointer-events: none;
-    }
-    
-    .subtitle-slide.active {
-      opacity: 1 !important;
-      transform: translateX(0) !important;
-      visibility: visible !important;
-      position: absolute !important;
-      pointer-events: auto;
-    }
-    
-    /* Slide saliendo (siguiente slide entrando) */
-    .subtitle-slide.leaving {
-      opacity: 0 !important;
-      transform: translateX(-100%) !important;
-      visibility: hidden !important;
-      position: absolute !important;
-    }
-    
-    /* Asegurar que cualquier slide con clase active sea visible */
-    .subtitle-slider-mobile .subtitle-slide.active {
+      transition: transform 0.8s ease, opacity 0.8s ease;
       display: flex !important;
-      align-items: center !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-      position: absolute !important;
-      transform: translateX(0) !important;
-    }
-    
-    /* Asegurar que slides sin clase active estén completamente ocultos */
-    .subtitle-slider-mobile .subtitle-slide:not(.active):not(.leaving) {
-      display: flex !important;
-      align-items: center !important;
-      opacity: 0 !important;
-      visibility: hidden !important;
-      position: absolute !important;
-      transform: translateX(100%) !important;
-    }
-    
-    /* El segundo slide (support-text) debe estar más arriba */
-    .subtitle-slider-mobile .subtitle-slide:nth-child(2).active {
       align-items: flex-start !important;
     }
     
-    /* Asegurar que el texto dentro del slide sea visible */
-    .subtitle-slide.active p,
-    .subtitle-slide.active .hero-subtitle,
-    .subtitle-slide.active .hero-support-text {
-      display: block !important;
+    /* Estado inicial: columna izquierda visible, derecha oculta fuera de la pantalla */
+    .subtitle-column-left {
+      transform: translateX(0);
+      opacity: 1;
+      visibility: visible;
+      position: relative;
+    }
+    
+    .subtitle-column-right {
+      transform: translateX(100%);
+      opacity: 0;
+      visibility: hidden !important;
+      position: absolute;
+    }
+    
+    /* Cuando el slider cambia a mostrar la columna derecha */
+    .subtitle-slider-mobile[data-slide="right"] .subtitle-column-left {
+      transform: translateX(-100%);
+      opacity: 0;
+      visibility: hidden !important;
+      position: absolute;
+    }
+    
+    .subtitle-slider-mobile[data-slide="right"] .subtitle-column-right {
+      transform: translateX(0);
+      opacity: 1;
       visibility: visible !important;
-      opacity: 1 !important;
-      color: rgba(212, 175, 55, 0.9) !important;
+      position: relative;
     }
     
-    .subtitle-slide.active .hero-support-text {
-      color: rgba(212, 175, 55, 0.85) !important;
+    /* Cuando vuelve a mostrar la columna izquierda */
+    .subtitle-slider-mobile[data-slide="left"] .subtitle-column-left {
+      transform: translateX(0);
+      opacity: 1;
+      visibility: visible !important;
+      position: relative;
     }
     
-    .subtitle-slide .hero-subtitle,
-    .subtitle-slide .hero-support-text {
+    .subtitle-slider-mobile[data-slide="left"] .subtitle-column-right {
+      transform: translateX(100%);
+      opacity: 0;
+      visibility: hidden !important;
+      position: absolute;
+    }
+    
+    /* Asegurar que el texto dentro de las columnas sea visible */
+    .subtitle-column .hero-subtitle,
+    .subtitle-column .hero-support-text {
       color: rgba(212, 175, 55, 0.9) !important; /* Color dorado con opacidad */
       font-size: clamp(1rem, 2vw, 1.25rem);
       line-height: 1.6;
-      margin: 0;
+      margin: 0 !important;
       display: block !important;
       visibility: visible !important;
       opacity: 1 !important;
@@ -1224,19 +1208,8 @@ const {
       text-align: left;
     }
     
-    .subtitle-slide .hero-support-text {
+    .subtitle-column .hero-support-text {
       color: rgba(212, 175, 55, 0.85) !important; /* Color dorado con opacidad */
-      margin-top: -1.5rem !important; /* Mover más arriba dentro del card */
-    }
-    
-    /* Ajustar alineación del segundo slide (support-text) */
-    .subtitle-slide:nth-child(2) {
-      align-items: flex-start !important;
-      padding-top: 0 !important;
-    }
-    
-    .subtitle-slide:nth-child(2).active {
-      align-items: flex-start !important;
     }
     
     /* Establecer altura del slider basada en hero-subtitle */
@@ -1821,37 +1794,30 @@ const {
       }
     }
     
-    // Slider de subtítulos para móvil
-    const subtitleSlides = document.querySelectorAll('.subtitle-slide');
-    if (subtitleSlides.length > 1) {
+    // Slider de subtítulos para móvil - Nueva estructura de columnas
+    const subtitleSlider = document.querySelector('.subtitle-slider-mobile');
+    if (subtitleSlider) {
       // Verificar si estamos en móvil
       function isMobile() {
         return window.innerWidth <= 1023;
       }
       
-      let currentSubtitleSlide = 0;
+      let isShowingLeft = true; // true = izquierda (subtitle), false = derecha (support-text)
       let subtitleInterval: ReturnType<typeof setInterval> | null = null;
       
-      function showSubtitleSlide(index: number) {
-        subtitleSlides.forEach((slide, i) => {
-          slide.classList.remove('active', 'leaving');
-          (slide as HTMLElement).style.display = 'block';
-          
-          if (i === index) {
-            slide.classList.add('active');
-            (slide as HTMLElement).style.visibility = 'visible';
-          } else {
-            (slide as HTMLElement).style.visibility = 'hidden';
-          }
-        });
+      function showSubtitleColumn(side: 'left' | 'right') {
+        if (subtitleSlider) {
+          (subtitleSlider as HTMLElement).setAttribute('data-slide', side);
+          isShowingLeft = (side === 'left');
+        }
       }
       
       function nextSubtitleSlide() {
         if (!isMobile()) {
           return;
         }
-        currentSubtitleSlide = (currentSubtitleSlide + 1) % subtitleSlides.length;
-        showSubtitleSlide(currentSubtitleSlide);
+        // Alternar entre izquierda y derecha
+        showSubtitleColumn(isShowingLeft ? 'right' : 'left');
       }
       
       function startSubtitleSlider() {
@@ -1862,9 +1828,9 @@ const {
         }
         
         if (isMobile()) {
-          // Asegurar que el slider esté visible
           const sliderContainer = document.querySelector('.subtitle-slider-mobile');
           const desktopContent = document.querySelector('.subtitle-content-desktop');
+          
           if (sliderContainer) {
             (sliderContainer as HTMLElement).style.display = 'block';
           }
@@ -1872,26 +1838,8 @@ const {
             (desktopContent as HTMLElement).style.display = 'none';
           }
           
-          // Establecer altura del card basada en hero-subtitle
-          const firstSlide = subtitleSlides[0];
-          if (firstSlide && sliderContainer) {
-            // Temporarily show first slide to measure its height
-            firstSlide.classList.add('active');
-            (firstSlide as HTMLElement).style.position = 'relative';
-            (firstSlide as HTMLElement).style.opacity = '1';
-            (firstSlide as HTMLElement).style.visibility = 'visible';
-            const tempHeight = (firstSlide as HTMLElement).offsetHeight;
-            firstSlide.classList.remove('active');
-            (firstSlide as HTMLElement).style.position = '';
-            (firstSlide as HTMLElement).style.opacity = '';
-            (firstSlide as HTMLElement).style.visibility = '';
-            
-            // Set the height
-            (sliderContainer as HTMLElement).style.height = tempHeight + 'px';
-          }
-          
-          // Mostrar solo el primer slide (subtitle)
-          showSubtitleSlide(0);
+          // Mostrar la columna izquierda primero (subtitle)
+          showSubtitleColumn('left');
           
           // Cambiar cada 4 segundos
           subtitleInterval = setInterval(nextSubtitleSlide, 4000);
@@ -1905,7 +1853,6 @@ const {
           if (desktopContent) {
             (desktopContent as HTMLElement).style.display = 'block';
           }
-          subtitleSlides.forEach(slide => slide.classList.remove('active'));
         }
       }
       
