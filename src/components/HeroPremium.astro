@@ -32,12 +32,12 @@ const {
       <!-- Mockup Image -->
       <div class="hero-mockup">
         <div class="hero-mockup-mobile">
-          <img 
-            src="/images/mockup-hero.png" 
-            alt="Mockup de aplicación móvil"
-            class="mockup-image"
-            loading="eager"
-          />
+        <img 
+          src="/images/mockup-hero.png" 
+          alt="Mockup de aplicación móvil"
+          class="mockup-image"
+          loading="eager"
+        />
         </div>
         <div class="hero-mockup-desktop">
           <img 
@@ -62,39 +62,13 @@ const {
       <!-- Text Content -->
       <div class="hero-text">
         <h1 class="hero-title">
-          Diseñamos plataformas digitales que hacen crecer empresas reales.
+          Plataformas digitales que convierten crecimiento en resultados reales
         </h1>
         
-        <div class="hero-subtitle-card">
-          <!-- Slider para móvil -->
-          <div class="subtitle-slider-mobile">
-            <div class="subtitle-column subtitle-column-left">
-              <p class="hero-subtitle">
-                Maestro Digital es el socio estratégico de empresas que buscan evolucionar,
-                optimizar procesos y transformar su presencia digital en una ventaja competitiva.
-              </p>
-            </div>
-            <div class="subtitle-column subtitle-column-right">
-              <p class="hero-support-text">
-                No creamos sitios web.<br />
-                Construimos soluciones que ahorran tiempo, reducen fricción y generan resultados.
-              </p>
-            </div>
-          </div>
-          
-          <!-- Contenido normal para desktop -->
-          <div class="subtitle-content-desktop">
-            <p class="hero-subtitle">
-              Maestro Digital es el socio estratégico de empresas que buscan evolucionar,
-              optimizar procesos y transformar su presencia digital en una ventaja competitiva.
-            </p>
-            
-            <p class="hero-support-text">
-              No creamos sitios web.<br />
-              Construimos soluciones que ahorran tiempo, reducen fricción y generan resultados.
-            </p>
-          </div>
-        </div>
+        <!-- Subtítulo sin card azul -->
+        <p class="hero-subtitle">
+          Diseñamos sistemas web que optimizan procesos y generan ventas.
+        </p>
         
         <!-- CTA Buttons con efecto neón -->
         <div class="hero-cta-primary">
@@ -128,6 +102,25 @@ const {
 </section>
 
 <style>
+  /* Override header transparente solo cuando está sobre el hero */
+  :global(.header-premium) {
+    transition: background 0.3s ease, backdrop-filter 0.3s ease;
+  }
+  
+  /* Cuando el hero está visible, hacer header más transparente */
+  .hero-premium:has(+ *) ~ :global(.header-premium),
+  body:has(.hero-premium:first-child) :global(.header-premium) {
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Asegurar legibilidad de links en header transparente */
+  body:has(.hero-premium:first-child) :global(.header-premium) :global(.nav-link),
+  body:has(.hero-premium:first-child) :global(.header-premium) :global(.mobile-nav-link) {
+    color: var(--color-graphite-dark) !important;
+  }
+  
   .hero-premium {
     position: relative;
     height: 100vh;
@@ -143,7 +136,7 @@ const {
     background-color: var(--color-elephant-white);
     background-image: url("/images/background-hero.jpg");
     background-size: cover;
-    background-position: center;
+    background-position: center top; /* Mover background más arriba */
     background-repeat: no-repeat;
     background-attachment: fixed;
     width: 100vw !important;
@@ -189,16 +182,20 @@ const {
     z-index: 0;
     background-image: url("/images/background-hero.jpg");
     background-size: cover;
-    background-position: center;
+    background-position: center top; /* Mover background más arriba */
     background-repeat: no-repeat;
+    /* Filtros CSS para hacer el fondo más claro y luminoso */
+    filter: brightness(1.15) contrast(0.95);
   }
   
   .hero-background::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(15, 23, 42, 0.05); /* Overlay oscuro para mejorar legibilidad */
+    /* Overlay blanco translúcido para mayor claridad */
+    background: rgba(255, 255, 255, 0.25);
     z-index: 1;
+    mix-blend-mode: overlay;
   }
   
   .gradient-orb {
@@ -293,7 +290,7 @@ const {
       min-height: 0;
       overflow: visible;
     }
-
+    
     .hero-title {
       grid-column: 2;
       grid-row: 1;
@@ -319,7 +316,7 @@ const {
       overflow-wrap: break-word;
     }
   
-  /* Mobile: Mockup a la izquierda, título a la derecha (desde 320px) */
+  /* Mobile: Reordenamiento vertical optimizado para conversión */
   @media (min-width: 320px) and (max-width: 1023px) {
 
     .hero-container {
@@ -327,73 +324,142 @@ const {
       margin-bottom: 0 !important;
       padding-bottom: 0 !important;
     }
+    
+    /* Cambiar a layout de columna única para mejor orden visual */
     .hero-content {
       display: grid;
-      grid-template-columns: minmax(0, 50vw) minmax(0, 1fr);
-      grid-template-rows: auto auto auto auto;
-      gap: 0.25rem 0.5rem;
-      row-gap: 0.25rem;
-      align-items: start;
+      grid-template-columns: 1fr; /* Una sola columna */
+      grid-template-areas: 
+        "title"
+        "subtitle"
+        "mockup"
+        "ctas"
+        "rating";
+      gap: 1.5rem 0; /* Espaciado vertical cómodo para lectura táctil */
+      align-items: center;
+      justify-items: center;
       width: 100vw !important;
       max-width: 100vw !important;
       height: auto !important;
       min-height: auto !important;
       max-height: none !important;
       box-sizing: border-box;
-      padding: 0 0.5rem !important;
-      padding-bottom: 0 !important;
+      padding: 0 1rem !important;
+      padding-bottom: 2rem !important;
       margin-bottom: 0 !important;
       overflow-x: hidden !important;
     }
     
+    /* Asignar áreas del grid */
+    .hero-title {
+      grid-area: title;
+      text-align: center !important; /* Centrado para mejor jerarquía */
+      margin: 0 !important;
+      padding: 0 0.5rem !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+    
+    /* Subtítulo: Segundo en el orden visual - sin card azul */
+    .hero-subtitle {
+      grid-area: subtitle;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 0.5rem !important;
+      text-align: center !important;
+      font-size: clamp(1rem, 3vw, 1.25rem) !important;
+      color: var(--color-graphite-dark) !important;
+      line-height: 1.5 !important;
+      font-weight: 500;
+    }
+    
+    /* Mockup más a la derecha */
     .hero-mockup {
-      grid-column: 1;
-      grid-row: 1 / -1;
+      grid-area: mockup;
       display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-      flex-shrink: 0;
-      margin-top: 0rem;
-      min-width: fit-content;
-      max-width: 50vw;
-      padding-right: 0.5rem;
-      padding-left: 0;
+      align-items: center;
+      justify-content: flex-end !important; /* Alineado a la derecha */
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      margin-left: auto !important; /* Empujar hacia la derecha */
+      margin-right: -3.5rem !important; /* Mover 2.5rem más a la derecha (fuera del contenedor) */
+      padding: 0 !important;
       z-index: 1;
       position: relative;
-      width: 50vw;
-      overflow: visible;
+      transform: translateX(-1rem); /* Ajuste adicional para moverlo más a la derecha */
     }
     
     .hero-mockup .mockup-image {
-      width: 50vw;
-      max-width: 50vw !important;
-      height: 35vh;
+      width: 100% !important;
+      max-width: 290px !important; /* Mockup más pequeño */
+      max-height: 45vh !important; /* Máximo 35vh de altura */
+      height: auto !important;
       object-fit: contain;
       display: block;
     }
     
+    /* CTAs: Cuarto en el orden visual - apilados verticalmente */
+    .hero-cta-primary {
+      grid-area: ctas;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      margin-top: 1.3rem !important; /* Bajar los CTAs 1.3rem más */
+      padding: 0 1rem !important; /* Padding lateral para evitar que toquen bordes */
+      display: flex !important;
+      flex-direction: column !important; /* Apilar verticalmente */
+      gap: 2rem !important; /* Más separación entre CTAs */
+      align-items: center !important;
+      justify-content: center !important;
+      box-sizing: border-box;
+      position: relative; /* Para posicionar elementos decorativos */
+    }
+    
+    /* Asegurar que los CTAs estén por encima del background */
+    .hero-content {
+      position: relative;
+    }
+    
+    /* Los CTAs deben estar por encima de cualquier elemento del background */
+    .hero-cta-primary {
+      position: relative;
+      z-index: 10 !important; /* Por encima del background y sus rayas */
+      background: transparent; /* Mantener transparente para no ocultar completamente */
+    }
+    
+    /* Asegurar que los botones también estén por encima */
+    .btn-neon {
+      position: relative;
+      z-index: 11 !important;
+    }
+    
+    .hero-rating {
+      grid-area: rating;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      justify-content: center !important;
+    }
+    
+    /* Resetear estilos de grid anteriores que puedan interferir */
     .hero-text {
-      grid-column: 2;
+      display: contents; /* Los hijos directos se posicionan en el grid padre */
       max-width: 100% !important;
       width: 100% !important;
-      margin-top: 3rem;
-      margin-right: 0;
+      margin: 0 !important;
       box-sizing: border-box;
     }
     
+    /* Título: Primero en el orden visual */
     .hero-title {
-      grid-column: 2;
-      grid-row: 1;
-      margin-bottom: 0;
-      margin-top: 0;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      padding-left: 0.5rem;
-      padding-right: 0.5rem !important;
-      padding-top: 0;
-      align-self: start;
-      text-align: right !important;
-      font-size: clamp(1.5rem, 6.4vw, 2.5rem) !important;
+      grid-area: title; /* Usar grid-area en lugar de grid-column/row */
+      text-align: center !important; /* Centrado para mejor jerarquía */
+      margin: 0 !important;
+      padding: 0 0.5rem !important;
+      font-size: clamp(1.75rem, 8vw, 2.5rem) !important;
       line-height: 1.2 !important;
       max-width: 100% !important;
       width: 100% !important;
@@ -409,13 +475,14 @@ const {
       opacity: 1 !important;
     }
     
+    /* Ajustar alineación de líneas del título para layout centrado */
     .title-line {
       display: block;
-      text-align: right !important;
+      text-align: center !important; /* Centrado para nuevo layout vertical */
       margin-right: 0 !important;
       padding-right: 0 !important;
-      line-height: 0.85 !important;
-      margin-bottom: 0 !important;
+      line-height: 1.3 !important; /* Mejor espaciado para legibilidad */
+      margin-bottom: 0.25rem !important;
       margin-top: 0 !important;
       width: 100% !important;
       max-width: 100% !important;
@@ -527,43 +594,19 @@ const {
    .title-large {
     margin-top: 0.2rem !important;}
     
-    .hero-subtitle-card {
-      grid-column: 2;
-      grid-row: 2;
-      margin-top: 0rem;
-      margin-bottom: 0;
-      margin-left: 0rem !important;
-      margin-right: 0;
-      padding: 1.5rem !important;
-      text-align: left !important;
-      max-width: 100% !important;
-      width: 100%;
-      background: rgba(15, 23, 42, 0.85) !important;
-      backdrop-filter: blur(20px) !important;
-      border: 1px solid rgba(59, 130, 246, 0.2) !important;
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      position: relative;
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      z-index: 10;
-      left: 0 !important;
-      box-sizing: border-box;
-      overflow: hidden;
-      min-height: auto;
-      height: auto;
-    }
-    
+    /* Subtítulo: Segundo en el orden visual */
+    /* Subtítulo ya está definido arriba con grid-area: subtitle */
     .hero-subtitle {
-      font-size: clamp(0.5rem, 1.2vw, 0.75rem);
-      color: rgba(212, 175, 55, 0.9) !important; /* Color dorado con opacidad */
-      font-style: italic;
-      line-height: 1.4;
-      margin: 0 0 0rem 0;
+      font-size: clamp(1rem, 5vw, 1.25rem) !important;
+      color: var(--color-graphite-dark) !important;
+      font-style: normal;
+      line-height: 1.5 !important;
+      margin: 0 !important;
+      padding: 0 0.5rem !important;
       display: block;
       word-wrap: break-word;
       overflow-wrap: break-word;
+      text-align: center !important;
     }
     
     .hero-support-text {
@@ -573,7 +616,7 @@ const {
     
     
  
-  
+    
     .subtitle-line {
       display: block;
       text-align: center;
@@ -582,21 +625,15 @@ const {
       line-height: 1.1 !important;
     }
     
+    /* CTAs: Cuarto en el orden visual - ya definido arriba con grid-area: ctas */
     .hero-cta-primary {
-      grid-column: 1;
-      grid-row: 2;
-      margin-top: 9rem;
-      margin-bottom: 0;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
-      display: flex;
-      justify-content: center;
+      /* grid-area: ctas ya definido arriba */
+      display: flex !important;
+      justify-content: space-between !important;
       gap: 0.75rem;
-      flex-wrap: nowrap;
-      flex-direction: column;
-      align-items: center;
+      flex-wrap: wrap; /* Permitir wrap si es necesario */
+      flex-direction: row; /* Botones lado a lado */
+      align-items: space-between;
       box-sizing: border-box;
       width: 100%;
       max-width: 100%;
@@ -604,24 +641,24 @@ const {
       z-index: 10;
     }
     
-    /* Botones con efecto neón */
+    /* Botones con efecto neón - más pequeños para mobile */
     .btn-neon {
       position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 0.3rem;
-      padding: 0.6rem 0.85rem;
+      padding: 0.5rem 1rem !important; /* Padding más pequeño */
       border-radius: 12px;
-      font-weight: 700;
-      font-size: 0.75rem;
+      font-weight: 600 !important; /* Peso ligeramente menor */
+      font-size: 0.875rem !important; /* Tamaño de fuente más pequeño */
       text-decoration: none;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       white-space: nowrap;
       flex-shrink: 0;
       min-width: fit-content;
-      width: 100%;
-      max-width: 100%;
+      width: 100% !important; /* Ancho completo del contenedor */
+      max-width: 280px !important; /* Limitar ancho máximo para evitar desbordamiento */
       overflow: hidden;
       border: none;
       cursor: pointer;
@@ -631,7 +668,12 @@ const {
     .btn-text {
       position: relative;
       z-index: 2;
-      color: #FFFFFF;
+      color: #FFFFFF; /* Color por defecto para botón primario */
+    }
+    
+    /* Texto negro para CTA secundario (Ver casos reales) */
+    .btn-neon-orange .btn-text {
+      color: var(--color-black-deep) !important; /* Negro para mejor legibilidad */
     }
     
     .btn-neon .btn-icon {
@@ -669,10 +711,11 @@ const {
     }
     
     .btn-neon-orange {
-      background: transparent;
+      background: rgba(255, 255, 255, 0.95) !important; /* Fondo blanco semi-transparente para cubrir rayas del background */
       color: var(--color-black-deep);
       box-shadow: none;
       border: 2px solid var(--color-graphite-dark);
+      backdrop-filter: blur(5px); /* Efecto blur para suavizar */
     }
     
     .btn-neon-orange:hover {
@@ -733,19 +776,14 @@ const {
       box-shadow: var(--shadow-xl), var(--shadow-glow-primary);
     }
     
+    /* Rating: Quinto en el orden visual */
     .hero-rating {
-      grid-column: 2;
-      grid-row: 4;
-      margin-top: 1.25rem;
-      margin-bottom: 0 !important;
-      padding-bottom: 0 !important;
-      margin-left: -10rem !important;
-      margin-right: 0 !important;
-      padding-left: 0.5rem !important;
-      padding-right: 1rem;
+      /* grid-area: rating ya definido arriba */
+      margin: 0 !important;
+      padding: 0 !important;
       display: flex !important;
       align-items: center;
-      justify-content: flex-start !important;
+      justify-content: center !important; /* Centrado para nuevo layout */
       gap: 0.5rem;
       font-size: 0.6rem;
       flex-wrap: nowrap !important;
@@ -763,8 +801,9 @@ const {
       flex-shrink: 0;
       margin: 0;
       margin-right: -0.5rem !important;
-      filter: grayscale(100%) brightness(2);
-      opacity: 0.9;
+      filter: grayscale(100%) brightness(0.3); /* Oscuro en lugar de brillante */
+      opacity: 1;
+      color: #1a1a1a !important; /* Color oscuro para las estrellas */
     }
     
     .hero-rating .rating-score,
@@ -773,6 +812,7 @@ const {
       flex-shrink: 0;
       white-space: nowrap;
       font-size: 0.65rem;
+      color: #1a1a1a !important; /* Gris muy oscuro pero no negro puro */
     }
     
     
@@ -787,7 +827,7 @@ const {
       text-decoration: none;
       transition: all var(--norm) var(--ease);
       background: rgba(255, 255, 255, 0.05);
-      color: var(--text-primary);
+      color: var(--text-secondary);
       border: 1px solid rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
       white-space: nowrap;
@@ -1285,12 +1325,12 @@ const {
       gap: 0.75rem; /* Reducir gap aún más en desktop */
       height: 100%;
       max-height: 100%;
-    }
-    
-    .hero-title {
+  }
+  
+  .hero-title {
       flex-shrink: 1;
       margin-bottom: 0.25rem;
-      line-height: 1.1;
+    line-height: 1.1;
     }
     
     .hero-subtitle-card {
@@ -1364,20 +1404,22 @@ const {
       box-sizing: border-box;
     }
     
+    /* CTA Primario: Sólido azul (mejor conversión) */
     .btn-neon-blue {
-      background: var(--color-black-deep) !important;
+      background: #3b82f6 !important; /* Azul sólido para mejor conversión */
       color: var(--color-white-pure) !important;
-      box-shadow: var(--shadow-md);
-      border: 1px solid var(--color-graphite-dark);
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+      border: 1px solid #3b82f6;
     }
     
     .btn-neon-blue .btn-text {
       color: var(--color-white-pure) !important;
+      font-weight: 600;
     }
     
     .btn-neon-blue:hover {
-      background: var(--color-graphite-dark) !important;
-      box-shadow: var(--shadow-lg);
+      background: #2563eb !important; /* Azul más oscuro en hover */
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
       transform: translateY(-2px);
     }
     
@@ -1409,7 +1451,7 @@ const {
     /* Mostrar elementos de desktop solo en desktop/ipad */
     .hero-mockup-desktop,
     .hero-systems-banner {
-      display: flex;
+    display: flex;
     }
     
     .hero-rating {
@@ -1421,11 +1463,13 @@ const {
   
   .hero-title {
     font-size: clamp(2.5rem, 6vw, 4.5rem);
-    font-weight: 700;
-    line-height: 0.2;
+    font-weight: 800; /* Más peso visual para mejor jerarquía */
+    line-height: 1.2; /* Mejor legibilidad */
     color: var(--text-primary);
     letter-spacing: -0.02em;
     margin: 0 0 1.5rem 0;
+    /* Mejor contraste y legibilidad */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   }
   
   .hero-support-text {
@@ -1445,9 +1489,10 @@ const {
   /* En móvil, hacer el título más grande y con líneas específicas */
   @media (min-width: 320px) and (max-width: 1023px) {
     .hero-content .hero-title {
-      font-size: clamp(1.5rem, 6vw, 2rem);
-      line-height: 0.9;
+      font-size: clamp(1.75rem, 6.5vw, 2.25rem); /* Ligeramente más grande */
+      line-height: 1.2; /* Mejor legibilidad en móvil */
       font-weight: 800;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
     
     .hero-content .title-line {
@@ -1486,9 +1531,10 @@ const {
   
   .hero-subtitle {
     font-size: clamp(1.125rem, 2vw, 1.5rem);
-    color: rgba(212, 175, 55, 0.9); /* Color dorado con opacidad */
-    line-height: 1.0;
+    color: var(--color-graphite-dark); /* Color más oscuro para mejor contraste */
+    line-height: 1.4; /* Mejor legibilidad */
     margin: 0 0 0rem 0;
+    font-weight: 500; /* Peso medio para diferenciarse del título */
   }
   
   .hero-support-text {
@@ -1513,7 +1559,8 @@ const {
   
   .star {
     font-size: 1.5rem;
-    filter: drop-shadow(0 2px 4px rgba(255, 215, 0, 0.3));
+    filter: grayscale(100%) brightness(0.3); /* Oscuro en lugar de dorado */
+    color: #1a1a1a; /* Color oscuro para las estrellas */
   }
   
   .rating-text {
@@ -1526,15 +1573,15 @@ const {
   
   .rating-score {
     font-weight: 700;
-    color: var(--text-primary);
+    color: #1a1a1a; /* Gris muy oscuro pero no negro puro */
   }
   
   .rating-separator {
-    color: var(--text-muted);
+    color: #1a1a1a; /* Gris muy oscuro pero no negro puro */
   }
   
   .rating-count {
-    color: var(--text-muted);
+    color: #1a1a1a; /* Gris muy oscuro pero no negro puro */
   }
   
   .hero-cta {
@@ -1867,6 +1914,7 @@ const {
         }, 100);
       });
     }
+    
   });
 </script>
 

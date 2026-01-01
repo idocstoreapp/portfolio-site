@@ -102,15 +102,15 @@ const currentPath = Astro.url.pathname;
     right: 0;
     width: 100%;
     z-index: 100;
-    background: rgba(15, 23, 42, 0.85);
+    background: rgba(229, 229, 227, 0.9); /* Gris claro (#E5E5E3) más claro */
     backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+    border-bottom: 1px solid rgba(154, 154, 151, 0.2);
     transition: all var(--norm) var(--ease);
   }
   
   /* Cuando el menú móvil está abierto, asegurar que el header tenga fondo sólido */
   .header-premium:has(.mobile-menu[style*="flex"]) {
-    background: rgba(15, 23, 42, 0.95);
+    background: rgba(229, 229, 227, 0.95); /* Gris claro más opaco */
     backdrop-filter: blur(20px);
   }
   
