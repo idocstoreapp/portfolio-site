@@ -484,7 +484,7 @@ const {
       width: 100% !important;
       max-width: 100% !important;
       margin: 0 !important;
-      margin-top: 1.3rem !important; /* Bajar el carrusel un poco */
+      margin-top: 0 !important; /* Sin margen superior, el gap del grid lo maneja */
       padding: 0.5rem 0.25rem !important; /* Reducir padding para que no se salga */
       display: flex;
       flex-direction: column;
@@ -545,6 +545,63 @@ const {
     
     .logo-item img:hover {
       filter: grayscale(0%) opacity(1);
+    }
+    
+    /* Ajustes específicos para pantallas pequeñas (360px) */
+    @media (max-width: 360px) {
+      /* Mockup más pequeño */
+      .hero-mockup .mockup-image {
+        max-width: 220px !important;
+        max-height: 35vh !important;
+      }
+      
+      /* CTAs más pequeños */
+      .hero-cta-primary {
+        gap: 1.5rem !important;
+      }
+      
+      .btn-neon-blue {
+        padding: 0.6rem 1.2rem !important;
+        font-size: 0.875rem !important;
+      }
+      
+      .btn-neon-orange {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.8rem !important;
+      }
+      
+      /* Carrusel más pequeño y más arriba */
+      .hero-logos-carousel-mobile {
+        margin-top: 0.5rem !important;
+        padding: 0.3rem 0.25rem !important;
+        gap: 0.3rem !important; /* Menos espacio entre título y carrusel */
+      }
+      
+      .logos-title {
+        font-size: 0.65rem !important;
+        margin-bottom: 0.2rem !important;
+      }
+      
+      .logo-item {
+        height: 28px !important;
+      }
+      
+      .logo-item img {
+        max-width: 55px !important;
+      }
+      
+      .logos-track {
+        gap: 1rem !important;
+      }
+      
+      /* Reseñas más pequeñas */
+      .hero-rating {
+        font-size: 0.75rem !important;
+      }
+      
+      .hero-rating .star {
+        font-size: 0.75rem !important;
+      }
     }
     
     /* Ocultar carrusel de logos en desktop */
