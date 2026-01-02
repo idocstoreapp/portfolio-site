@@ -255,12 +255,12 @@ const {
     }
   }
   
-  .hero-content {
-    display: grid;
+    .hero-content {
+      display: grid;
     grid-template-columns: 1fr auto;
     grid-template-rows: auto auto; /* Cambiar de auto 1fr a auto auto para evitar espacios fantasmas */
     gap: 1rem; /* Restaurar gap para espaciado natural */
-    align-items: start;
+      align-items: start;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -347,9 +347,10 @@ const {
       grid-area: title;
       text-align: center !important; /* Centrado para mejor jerarquía */
       margin: 0 !important;
-      padding: 0 0.5rem !important;
+      padding: 1rem 1rem .5rem 1rem !important;
       width: 100% !important;
       max-width: 100% !important;
+      font-family: 'Libre Baskerville', serif !important; /* Fuente serif elegante */
     }
     
     /* Subtítulo: Segundo en el orden visual */
@@ -388,6 +389,7 @@ const {
       height: auto !important;
       object-fit: contain;
       display: block;
+      filter: drop-shadow(-30px 20px 30px rgba(0, 0, 0, 0.7)) !important; /* Sombra solo en la imagen PNG */
     }
     
     /* CTAs: Apilados verticalmente, siempre visibles */
@@ -405,6 +407,16 @@ const {
       box-sizing: border-box;
       position: relative;
       z-index: 10;
+    }
+    
+    /* En móvil: botón primario (grande) arriba, secundario (pequeño) abajo */
+    .btn-neon-blue {
+      order: 1; /* Primero (arriba) */
+    }
+    
+    .btn-neon-orange {
+      order: 2; /* Segundo (abajo) */
+      margin-top: 1rem !important; /* Espacio adicional para que esté claramente en la siguiente línea */
     }
     
     .btn-neon {
@@ -434,6 +446,7 @@ const {
       max-width: 100%;
       width: 100%;
       overflow: visible;
+      font-family: 'Libre Baskerville', serif; /* Fuente serif elegante */
       display: block;
       box-sizing: border-box;
       position: relative;
@@ -597,11 +610,11 @@ const {
     .hero-cta-primary {
       /* grid-area: ctas ya definido arriba */
       display: flex !important;
-      justify-content: space-between !important;
-      gap: 0.75rem;
-      flex-wrap: wrap; /* Permitir wrap si es necesario */
-      flex-direction: row; /* Botones lado a lado */
-      align-items: space-between;
+      justify-content: center !important; /* Centrar botones */
+      gap:0rem !important; /* Espacio entre botones */
+      flex-wrap: nowrap !important; /* No permitir wrap */
+      flex-direction: column !important; /* Botones apilados verticalmente */
+      align-items: center !important;
       box-sizing: border-box;
       width: 100%;
       max-width: 100%;
@@ -616,10 +629,8 @@ const {
       align-items: center;
       justify-content: center;
       gap: 0.3rem;
-      padding: 0.5rem 1rem !important; /* Padding más pequeño */
       border-radius: 12px;
-      font-weight: 600 !important; /* Peso ligeramente menor */
-      font-size: 0.875rem !important; /* Tamaño de fuente más pequeño */
+      font-weight: 600 !important;
       text-decoration: none;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       white-space: nowrap;
@@ -631,6 +642,18 @@ const {
       border: none;
       cursor: pointer;
       box-sizing: border-box;
+    }
+    
+    /* Botón primario (grande) - arriba en móvil */
+    .btn-neon-blue {
+      padding: 0.75rem 1.5rem !important; /* Padding más grande */
+      font-size: 1rem !important; /* Tamaño de fuente más grande */
+    }
+    
+    /* Botón secundario (pequeño) - abajo en móvil */
+    .btn-neon-orange {
+      padding: 0.5rem 1rem !important; /* Padding más pequeño */
+      font-size: 0.875rem !important; /* Tamaño de fuente más pequeño */
     }
     
     .btn-text {
@@ -768,10 +791,15 @@ const {
       font-size: 0.9rem !important;
       flex-shrink: 0;
       margin: 0;
-      margin-right: -0.5rem !important;
+      margin-right: 0.15rem !important; /* Espacio pequeño entre estrellas (antes -0.5rem) */
       filter: grayscale(100%) brightness(0.3); /* Oscuro en lugar de brillante */
       opacity: 1;
       color: #1a1a1a !important; /* Color oscuro para las estrellas */
+    }
+    
+    /* Separar las estrellas del texto de las reseñas */
+    .hero-rating .rating-score {
+      margin-left: 0.5rem !important; /* Espacio entre estrellas y el score */
     }
     
     .hero-rating .rating-score,
@@ -1297,8 +1325,8 @@ const {
     .hero-text {
       display: flex !important;
       flex-direction: column !important;
-      justify-content: flex-start !important; /* Title al inicio del viewport */
-      gap: 1.5rem !important; /* Espaciado moderado entre elementos */
+      justify-content: flex-start !important; /* Title al inicio */
+      gap: 0 !important; /* Sin gap, usar margin-top para control preciso */
       max-width: 100% !important;
       width: 100% !important;
       height: 100% !important; /* Ocupar toda la altura disponible para distribuir elementos */
@@ -1332,26 +1360,39 @@ const {
       z-index: 10 !important;
       overflow-wrap: break-word !important;
       word-wrap: break-word !important;
+      font-size: clamp(2.5rem, 8vw, 4rem) !important; /* Título más grande */
+      font-family: 'Libre Baskerville', serif !important; /* Fuente serif elegante */
     }
     
-    /* Subtitle en el medio (se reparte naturalmente con gap) */
-    .hero-subtitle {
+    /* Subtitle en el medio - usar margin-top para posicionarlo más abajo */
+    .hero-text .hero-subtitle {
       flex-shrink: 0;
       width: 100%;
       max-width: 100%;
+      margin-top: 3rem !important; /* Espacio después del título para centrarlo más */
+      margin-bottom: 0 !important;
     }
     
-    /* CTA y rating van abajo usando margin-top: auto */
+    /* CTA y rating van abajo usando margin-top: auto - FORZAR que el DIV completo se mueva */
     .hero-text .hero-cta-primary {
-      margin-top: auto !important; /* Forzar margin-top: auto para empujar CTA hacia el final */
+      margin-top: auto !important; /* Forzar margin-top: auto para empujar el DIV completo hacia el final */
       flex-shrink: 0 !important; /* No permitir que se encoja */
       margin-bottom: 0 !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+      align-self: flex-start !important; /* Alinear el div al inicio horizontalmente */
     }
     
     .hero-text .hero-rating {
       margin-top: 0.5rem !important; /* Pequeño espacio después de CTA */
       flex-shrink: 0 !important; /* No permitir que se encoja */
       margin-bottom: 0 !important; /* Sin espacio al final para que llegue hasta el banner */
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      width: 100% !important;
+      align-self: flex-start !important; /* Alinear el div al inicio horizontalmente */
     }
   }
   
@@ -1407,7 +1448,7 @@ const {
       flex-shrink: 0;
       margin: 0;
       margin-top: auto; /* Empuja CTA hacia abajo en desktop */
-      display: flex;
+    display: flex;
       gap: 1rem;
       flex-wrap: nowrap;
       align-items: center;
