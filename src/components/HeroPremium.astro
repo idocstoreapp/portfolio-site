@@ -85,6 +85,44 @@ const {
           </a>
         </div>
         
+        <!-- Logos Carousel (Solo móvil) -->
+        <div class="hero-logos-carousel-mobile">
+          <h3 class="logos-title">Confían en nosotros</h3>
+          <div class="logos-track" id="logos-track">
+            <div class="logo-item">
+              <img src="/images/projects/logo-gourmetarabe.png" alt="Gourmet Árabe" />
+            </div>
+            <div class="logo-item">
+              <img src="/images/projects/logo-idocstore.png" alt="IDoc Store" />
+            </div>
+            <div class="logo-item">
+              <img src="/images/projects/logo-kubica.png" alt="Kubica" />
+            </div>
+            <div class="logo-item">
+              <img src="/images/projects/logo-mimoto.png" alt="Mimoto" />
+            </div>
+            <div class="logo-item">
+              <img src="/images/projects/logo-muebleriacadablanca.png" alt="Mueblería Casa Blanca" />
+            </div>
+            <!-- Duplicar logos para efecto infinito -->
+            <div class="logo-item">
+              <img src="/images/projects/logo-gourmetarabe.png" alt="Gourmet Árabe" />
+            </div>
+            <div class="logo-item">
+              <img src="/images/projects/logo-idocstore.png" alt="IDoc Store" />
+            </div>
+            <div class="logo-item">
+              <img src="/images/projects/logo-kubica.png" alt="Kubica" />
+            </div>
+            <div class="logo-item">
+              <img src="/images/projects/logo-mimoto.png" alt="Mimoto" />
+            </div>
+            <div class="logo-item">
+              <img src="/images/projects/logo-muebleriacadablanca.png" alt="Mueblería Casa Blanca" />
+            </div>
+          </div>
+        </div>
+        
         <!-- Rating -->
         <div class="hero-rating">
           <span class="star">⭐</span>
@@ -149,9 +187,13 @@ const {
     .hero-premium {
       min-height: auto;
       align-items: flex-start;
-      padding: 0;
+      padding: 0 !important;
+      margin: 0 !important;
       overflow: visible;
-      overflow-x: hidden;
+      overflow-x: hidden !important;
+      width: 100% !important;
+      max-width: 100vw !important;
+      box-sizing: border-box;
     }
   }
   
@@ -255,12 +297,12 @@ const {
     }
   }
   
-    .hero-content {
-      display: grid;
+  .hero-content {
+    display: grid;
     grid-template-columns: 1fr auto;
     grid-template-rows: auto auto; /* Cambiar de auto 1fr a auto auto para evitar espacios fantasmas */
     gap: 1rem; /* Restaurar gap para espaciado natural */
-      align-items: start;
+    align-items: start;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -276,7 +318,7 @@ const {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      justify-content: flex-start; /* Cambiar de space-evenly a flex-start */
+      justify-content: space-evenly; /* Cambiar de space-evenly a flex-start */
       gap: 1rem; /* Usar gap para espaciado consistente */
       min-height: 0;
       overflow: visible;
@@ -313,9 +355,13 @@ const {
   @media (min-width: 320px) and (max-width: 1023px) {
 
     .hero-container {
-      margin-top: 0;
-      margin-bottom: 0;
+      margin: 0 !important;
+      padding: 0 !important;
       padding-bottom: 0;
+      width: 100% !important;
+      max-width: 100vw !important;
+      box-sizing: border-box;
+      overflow-x: hidden !important;
     }
     
     /* Layout de columna única para mobile */
@@ -327,8 +373,9 @@ const {
         "subtitle"
         "mockup"
         "ctas"
+        "logos"
         "rating";
-      gap: 1.5rem 0;
+      gap: 0.5rem 0; /* Reducir gap para que todo quepa en el viewport */
       align-items: center;
       justify-items: center;
       width: 100%;
@@ -336,10 +383,12 @@ const {
       height: auto;
       min-height: auto;
       box-sizing: border-box;
-      padding: 0 1rem;
-      padding-bottom: 2rem;
-      margin-bottom: 0;
-      overflow-x: hidden;
+      padding: 0 0.5rem !important; /* Reducir aún más el padding horizontal */
+      padding-bottom: 1rem !important;
+      margin: 0 !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      overflow-x: hidden !important;
     }
     
     /* Asignar áreas del grid */
@@ -347,7 +396,7 @@ const {
       grid-area: title;
       text-align: center !important; /* Centrado para mejor jerarquía */
       margin: 0 !important;
-      padding: 1rem 1rem .5rem 1rem !important;
+      padding: 1rem 0.5rem 0.5rem 0.5rem !important; /* Reducir padding para que no se salga */
       width: 100% !important;
       max-width: 100% !important;
       font-family: 'Libre Baskerville', serif !important; /* Fuente serif elegante */
@@ -359,12 +408,15 @@ const {
       width: 100%;
       max-width: 100%;
       margin: 0;
-      padding: 0 0.5rem;
+      margin-top: -0.5rem !important; /* Más cerca del título */
+      padding: 0 0.25rem !important; /* Reducir padding para que no se salga */
       text-align: center;
       font-size: clamp(1rem, 3vw, 1.25rem);
-      color: var(--color-graphite-dark);
+      color: #1a1a1a !important; /* Gris más oscuro */
       line-height: 1.5;
       font-weight: 500;
+      font-style: italic !important; /* Cursiva */
+      box-sizing: border-box;
     }
     
     /* Mockup alineado a la derecha */
@@ -372,14 +424,14 @@ const {
       grid-area: mockup;
       display: flex;
       align-items: center;
-      justify-content: flex-end;
-      width: 100%;
-      max-width: 100%;
-      margin: 0;
-      padding: 0;
-      padding-right: clamp(0.5rem, 3vw, 2rem); /* Padding responsivo para moverlo a la derecha */
+      justify-content: center !important; /* Centrar en lugar de flex-end */
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
       z-index: 1;
       position: relative;
+      box-sizing: border-box;
     }
     
     .hero-mockup .mockup-image {
@@ -389,6 +441,7 @@ const {
       height: auto !important;
       object-fit: contain;
       display: block;
+      margin: 0 auto !important; /* Centrar la imagen */
       filter: drop-shadow(-30px 20px 30px rgba(0, 0, 0, 0.7)) !important; /* Sombra solo en la imagen PNG */
     }
     
@@ -398,11 +451,12 @@ const {
       width: 100%;
       max-width: 100%;
       margin: 0;
-      padding: 0 1rem;
+      padding: 0 0.25rem !important; /* Reducir aún más el padding */
       display: flex;
       flex-direction: column;
       gap: 2rem;
       align-items: center;
+      box-sizing: border-box;
       justify-content: center;
       box-sizing: border-box;
       position: relative;
@@ -424,15 +478,92 @@ const {
       z-index: 11;
     }
     
+    /* Carrusel de logos (solo móvil) */
+    .hero-logos-carousel-mobile {
+      grid-area: logos;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      margin-top: 1.3rem !important; /* Bajar el carrusel un poco */
+      padding: 0.5rem 0.25rem !important; /* Reducir padding para que no se salga */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      box-sizing: border-box;
+      overflow: hidden !important; /* Ocultar cualquier desbordamiento */
+      /* Forzar que el contenedor no se expanda más allá del viewport */
+      min-width: 0;
+      position: relative;
+    }
+    
+    .logos-title {
+      font-size: 0.7rem !important;
+      color: var(--color-grey-medium) !important;
+      font-weight: 500;
+      margin: 0;
+      text-align: center;
+      font-family: 'Inter', sans-serif !important;
+    }
+    
+    .logos-track {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      overflow: hidden !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      position: relative;
+      will-change: transform;
+      box-sizing: border-box;
+      margin: 0 !important;
+      padding: 0 !important;
+      /* Forzar que el track no expanda el contenedor padre */
+      min-width: 0;
+      flex-shrink: 1;
+    }
+    
+    .logo-item {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 35px;
+      width: auto;
+      max-width: 70px; /* Limitar ancho máximo de cada logo */
+      box-sizing: border-box;
+    }
+    
+    .logo-item img {
+      height: 100%;
+      width: auto;
+      max-width: 70px;
+      object-fit: contain;
+      filter: grayscale(100%) opacity(0.6);
+      transition: filter 0.3s ease;
+    }
+    
+    .logo-item img:hover {
+      filter: grayscale(0%) opacity(1);
+    }
+    
+    /* Ocultar carrusel de logos en desktop */
+    @media (min-width: 1024px) {
+      .hero-logos-carousel-mobile {
+        display: none !important;
+      }
+    }
+    
     .hero-rating {
       grid-area: rating;
-      width: 100%;
-      max-width: 100%;
-      margin: 0;
-      padding: 0;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 0.25rem !important; /* Reducir padding para que no se salga */
       display: flex;
       justify-content: center;
       align-items: center;
+      box-sizing: border-box;
     }
     
     /* Título: Primero en el orden visual */
@@ -579,10 +710,11 @@ const {
     /* Subtítulo ya está definido arriba con grid-area: subtitle */
     .hero-subtitle {
       font-size: clamp(1rem, 5vw, 1.25rem) !important;
-      color: var(--color-graphite-dark) !important;
-      font-style: normal;
+      color: #616161 !important; /* Gris más oscuro */
+      font-style: italic !important; /* Cursiva */
       line-height: 1.5 !important;
       margin: 0 !important;
+      margin-top: -0.5rem !important; /* Más cerca del título */
       padding: 0 0.5rem !important;
       display: block;
       word-wrap: break-word;
@@ -687,7 +819,7 @@ const {
     .btn-neon-blue {
       background: var(--color-black-deep);
       color: var(--color-white-pure);
-      box-shadow: var(--shadow-md);
+      box-shadow: 0 6px 19px rgba(0, 0, 0, 0.3), 0 4px 9px rgba(0, 0, 0, 0.2) !important; /* Sombra para CTA */
       border: 1px solid var(--color-graphite-dark);
     }
     
@@ -704,7 +836,7 @@ const {
     .btn-neon-orange {
       background: rgba(255, 255, 255, 0.95) !important; /* Fondo blanco semi-transparente para cubrir rayas del background */
       color: var(--color-black-deep);
-      box-shadow: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 2px 5px rgba(0, 0, 0, 0.15) !important; /* Sombra para CTA */
       border: 2px solid var(--color-graphite-dark);
       backdrop-filter: blur(5px); /* Efecto blur para suavizar */
     }
@@ -919,15 +1051,16 @@ const {
       max-height: 100%; /* No exceder la altura de la fila */
       object-fit: contain;
       border-radius: 12px;
-      box-shadow: none;
+      filter: drop-shadow(-10px 30px 30px rgba(0, 0, 0, 0.7)) !important; /* Sombra solo en la imagen PNG */
     }
     
     .hero-mockup-mobile .mockup-image {
-      max-width: 100%;
+      max-width: 120% !important; /* Mockup móvil más grande en desktop */
       width: auto;
       height: 100%; /* Ocupar toda la altura disponible de la fila 1 */
       max-height: 100%; /* No exceder la altura de la fila */
       object-fit: contain;
+      filter: drop-shadow(-30px 20px 30px rgba(0, 0, 0, 0.7)) !important; /* Sombra solo en la imagen PNG */
     }
     
     .hero-systems-banner {
@@ -982,7 +1115,7 @@ const {
       display: flex;
       flex-direction: column;
       order: 2;
-      justify-content: flex-start; /* Title al inicio */
+      justify-content: space-evenly; /* Title al inicio */
       gap: 1.5rem; /* Espaciado entre elementos */
       padding-top: 0rem;
       align-items: flex-start; /* Alinear al inicio horizontalmente */
@@ -1369,7 +1502,7 @@ const {
       flex-shrink: 0;
       width: 100%;
       max-width: 100%;
-      margin-top: 3rem !important; /* Espacio después del título para centrarlo más */
+      margin-top: 5rem !important; /* Más espacio después del título para bajarlo más */
       margin-bottom: 0 !important;
     }
     
@@ -1377,7 +1510,7 @@ const {
     .hero-text .hero-cta-primary {
       margin-top: auto !important; /* Forzar margin-top: auto para empujar el DIV completo hacia el final */
       flex-shrink: 0 !important; /* No permitir que se encoja */
-      margin-bottom: 0 !important;
+      margin-bottom: 2rem !important; /* Espacio adicional para subir los CTAs */
       margin-left: 0 !important;
       margin-right: 0 !important;
       padding: 0 !important;
@@ -1393,6 +1526,26 @@ const {
       margin-right: 0 !important;
       width: 100% !important;
       align-self: flex-start !important; /* Alinear el div al inicio horizontalmente */
+    }
+    
+    /* Desktop: Asegurar que los CTAs tengan los mismos estilos que en móvil */
+    .hero-text .hero-cta-primary .btn-neon-blue {
+      background: var(--color-black-deep) !important;
+      color: var(--color-white-pure) !important;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+      border: 1px solid var(--color-graphite-dark) !important;
+    }
+    
+    .hero-text .hero-cta-primary .btn-neon-orange {
+      background: rgba(255, 255, 255, 0.95) !important;
+      color: var(--color-black-deep) !important;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 2px 5px rgba(0, 0, 0, 0.15) !important;
+      border: 2px solid var(--color-graphite-dark) !important;
+      backdrop-filter: blur(5px) !important;
+    }
+    
+    .hero-text .hero-cta-primary .btn-neon-orange .btn-text {
+      color: var(--color-black-deep) !important;
     }
   }
   
@@ -1990,6 +2143,67 @@ const {
       });
     }
     
+    // Carrusel infinito de logos (solo móvil)
+    const logosTrack = document.getElementById('logos-track');
+    if (logosTrack && window.innerWidth <= 1023) {
+      let position = 0;
+      const speed = 0.5; // Velocidad de desplazamiento (px por frame)
+      let animationId: number;
+      
+      function animateLogos() {
+        if (!logosTrack) return;
+        
+        if (window.innerWidth > 1023) {
+          if (animationId) {
+            cancelAnimationFrame(animationId);
+          }
+          logosTrack.style.transform = 'translateX(0)';
+          return;
+        }
+        
+        position -= speed;
+        
+        const logos = logosTrack.querySelectorAll('.logo-item');
+        if (logos.length > 0) {
+          const firstLogo = logos[0] as HTMLElement;
+          const logoWidth = firstLogo.offsetWidth + 24; // 24px es el gap
+          const totalLogos = 5; // Número original de logos (sin duplicados)
+          const halfWidth = logoWidth * totalLogos;
+          
+          // Resetear posición cuando llegue a la mitad (donde empiezan los logos duplicados)
+          if (Math.abs(position) >= halfWidth) {
+            position = 0;
+          }
+        }
+        
+        logosTrack.style.transform = `translateX(${position}px)`;
+        animationId = requestAnimationFrame(animateLogos);
+      }
+      
+      // Iniciar animación
+      animateLogos();
+      
+      // Reiniciar animación al cambiar tamaño de ventana
+      let resizeTimeout: ReturnType<typeof setTimeout>;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          if (!logosTrack) return;
+          if (window.innerWidth <= 1023) {
+            position = 0;
+            if (animationId) {
+              cancelAnimationFrame(animationId);
+            }
+            animateLogos();
+          } else {
+            if (animationId) {
+              cancelAnimationFrame(animationId);
+            }
+            logosTrack.style.transform = 'translateX(0)';
+          }
+        }, 250);
+      });
+    }
   });
 </script>
 
