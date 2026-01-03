@@ -1,0 +1,139 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SolutionHero from '../../components/SolutionHero.astro';
+import ProblemCards from '../../components/ProblemCards.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
+import ProcessTimeline from '../../components/ProcessTimeline.astro';
+import RelatedProjects from '../../components/RelatedProjects.astro';
+import SolutionCTA from '../../components/SolutionCTA.astro';
+---
+
+<Layout 
+  title="Sistema para Restaurantes | Menú QR, POS y Gestión | Maestro Digital"
+  description="Sistema completo para restaurantes: Menú QR, POS, gestión de mesas y comandas. Deja el papel atrás y controla todo desde el celular."
+  image="/images/menuqr/mockup-arabe.png"
+>
+  <SolutionHero
+    title="Sistema completo para restaurantes que quieren dejar el papel atrás"
+    subtitle="Menú QR, POS, gestión de mesas y comandas. Todo en un solo sistema que funciona desde el celular."
+    image="/images/menuqr/mockup-arabe.png"
+    ctaText="Ver cómo funciona"
+    ctaLink="#caracteristicas"
+  />
+
+  <ProblemCards
+    problems={[
+      {
+        icon: "📝",
+        title: "Pierdes órdenes porque los meseros olvidan anotar",
+        description: "Los pedidos se pierden entre papelitos y WhatsApp. No hay registro de lo que realmente pidió el cliente."
+      },
+      {
+        icon: "⏱️",
+        title: "Los clientes esperan mucho porque la cocina no sabe qué hacer",
+        description: "Las comandas llegan tarde o mal escritas. La cocina no sabe qué priorizar y los tiempos se alargan."
+      },
+      {
+        icon: "💰",
+        title: "No sabes cuánto vendiste hoy hasta que cierras la caja",
+        description: "No tienes control en tiempo real. No sabes qué platos se venden más ni cuánto ganaste realmente."
+      },
+      {
+        icon: "📄",
+        title: "Los menús impresos se desactualizan y cuestan dinero",
+        description: "Cada cambio de precio o plato nuevo significa imprimir menús nuevos. Es caro y poco práctico."
+      }
+    ]}
+  />
+
+  <FeatureGrid
+    features={[
+      {
+        title: "Menú QR para clientes",
+        description: "Los clientes escanean el código y ven el menú actualizado en su celular. Sin contacto, siempre actualizado, sin costos de impresión.",
+        image: "/images/menuqr/menu-bar.jpeg"
+      },
+      {
+        title: "POS integrado",
+        description: "Cobro rápido desde cualquier dispositivo. Control en tiempo real de ventas, productos más vendidos y ganancias del día.",
+        icon: "💳"
+      },
+      {
+        title: "Comandas directas a cocina",
+        description: "Los pedidos llegan instantáneamente a la cocina. Sin papel, sin errores de lectura, sin pérdidas de órdenes.",
+        icon: "🍳"
+      },
+      {
+        title: "Gestión de mesas",
+        description: "Sabes qué mesa está ocupada, qué pidió cada mesa, cuánto tiempo lleva esperando. Control total del restaurante.",
+        icon: "🪑"
+      },
+      {
+        title: "Uso desde celular",
+        description: "Los meseros no necesitan tablet. Todo funciona desde su celular: tomar pedidos, cobrar, ver estado de comandas.",
+        icon: "📱"
+      },
+      {
+        title: "Impresión automática",
+        description: "Comandas y boletas se imprimen automáticamente cuando las necesites. Integración con impresoras térmicas.",
+        icon: "🖨️"
+      }
+    ]}
+  />
+
+  <ProcessTimeline
+    steps={[
+      {
+        number: 1,
+        title: "Cliente escanea QR y hace pedido",
+        description: "El cliente escanea el código QR de su mesa y ve el menú completo en su celular. Selecciona lo que quiere y confirma el pedido.",
+        image: "/images/menuqr/mockup-arabe.png"
+      },
+      {
+        number: 2,
+        title: "Pedido llega a cocina",
+        description: "El pedido llega instantáneamente a la cocina. Los cocineros ven qué preparar, para qué mesa y pueden marcar cuando está listo.",
+        image: "/images/menuqr/restaurant-arabe.jpeg"
+      },
+      {
+        number: 3,
+        title: "Mesero cobra desde su celular",
+        description: "Cuando el cliente termina, el mesero cobra directamente desde su celular. El sistema calcula totales, propinas y genera la boleta.",
+        image: "/images/menuqr/menu-cafeteria.jpeg"
+      },
+      {
+        number: 4,
+        title: "Admin ve todo en tiempo real",
+        description: "Como dueño, ves en tiempo real cuánto se vendió, qué platos son más populares, cuántas mesas están ocupadas y reportes automáticos.",
+        icon: "📊"
+      }
+    ]}
+  />
+
+  <RelatedProjects
+    projects={[
+      {
+        title: "Gourmet Árabe",
+        image: "/images/menuqr/mockup-arabe.png",
+        problem: "Restaurante con menú impreso que se desactualizaba constantemente y pérdida de órdenes",
+        solution: "Sistema completo con menú QR, POS y gestión de mesas",
+        result: "Reducción de costos de impresión y cero pérdida de órdenes",
+        link: "/projects/gourmet-arabe"
+      }
+    ]}
+  />
+
+  <SolutionCTA
+    title="¿Listo para modernizar tu restaurante?"
+    description="Agenda una demo y descubre cómo este sistema puede transformar tu operación"
+    primaryCta={{
+      text: "Agendar llamada estratégica",
+      link: "/contacto?solucion=restaurantes"
+    }}
+    secondaryCta={{
+      text: "Ver más proyectos",
+      link: "/projects"
+    }}
+  />
+</Layout>
+

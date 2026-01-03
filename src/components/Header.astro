@@ -18,12 +18,21 @@ const currentPath = Astro.url.pathname;
         >
           Inicio
         </a>
-        <a 
-          href="/servicios" 
-          class={`nav-link ${currentPath === '/servicios' ? 'nav-link-active' : ''}`}
-        >
-          Servicios
-        </a>
+        <div class="nav-dropdown">
+          <a 
+            href="/soluciones/restaurantes" 
+            class={`nav-link ${currentPath.startsWith('/soluciones') ? 'nav-link-active' : ''}`}
+          >
+            Soluciones
+          </a>
+          <div class="dropdown-menu">
+            <a href="/soluciones/restaurantes" class="dropdown-link">Restaurantes</a>
+            <a href="/soluciones/servicio-tecnico" class="dropdown-link">Servicio Técnico</a>
+            <a href="/soluciones/taller-mecanico" class="dropdown-link">Taller Mecánico</a>
+            <a href="/soluciones/cotizador-fabrica" class="dropdown-link">Cotizador / Fábrica</a>
+            <a href="/soluciones/desarrollo-web" class="dropdown-link">Desarrollo Web</a>
+          </div>
+        </div>
         <a 
           href="/projects" 
           class={`nav-link ${currentPath === '/projects' || currentPath.startsWith('/projects/') ? 'nav-link-active' : ''}`}
@@ -42,6 +51,14 @@ const currentPath = Astro.url.pathname;
         >
           Contacto
         </a>
+        {currentPath.startsWith('/admin') && (
+          <a 
+            href="/admin" 
+            class={`nav-link ${currentPath === '/admin' || currentPath === '/admin/' ? 'nav-link-active' : ''}`}
+          >
+            Admin
+          </a>
+        )}
       </div>
 
       <!-- Mobile Menu Button -->
@@ -66,10 +83,40 @@ const currentPath = Astro.url.pathname;
           Inicio
         </a>
         <a 
-          href="/servicios" 
-          class={`mobile-nav-link ${currentPath === '/servicios' ? 'mobile-nav-link-active' : ''}`}
+          href="/soluciones/restaurantes" 
+          class={`mobile-nav-link ${currentPath.startsWith('/soluciones') ? 'mobile-nav-link-active' : ''}`}
         >
-          Servicios
+          Soluciones
+        </a>
+        <a 
+          href="/soluciones/restaurantes" 
+          class="mobile-nav-link mobile-nav-sublink"
+        >
+          → Restaurantes
+        </a>
+        <a 
+          href="/soluciones/servicio-tecnico" 
+          class="mobile-nav-link mobile-nav-sublink"
+        >
+          → Servicio Técnico
+        </a>
+        <a 
+          href="/soluciones/taller-mecanico" 
+          class="mobile-nav-link mobile-nav-sublink"
+        >
+          → Taller Mecánico
+        </a>
+        <a 
+          href="/soluciones/cotizador-fabrica" 
+          class="mobile-nav-link mobile-nav-sublink"
+        >
+          → Cotizador / Fábrica
+        </a>
+        <a 
+          href="/soluciones/desarrollo-web" 
+          class="mobile-nav-link mobile-nav-sublink"
+        >
+          → Desarrollo Web
         </a>
         <a 
           href="/projects" 
@@ -204,6 +251,42 @@ const currentPath = Astro.url.pathname;
     position: relative;
     transition: color var(--fast) var(--ease);
   }
+
+  .nav-dropdown {
+    position: relative;
+  }
+
+  .nav-dropdown:hover .dropdown-menu {
+    display: block;
+  }
+
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    min-width: 220px;
+    z-index: 1000;
+  }
+
+  .dropdown-link {
+    display: block;
+    padding: 0.75rem 1.5rem;
+    color: var(--color-graphite-dark, #2B2B2B);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+  }
+
+  .dropdown-link:hover {
+    background: var(--color-elephant-white, #F6F5F2);
+    color: var(--color-graphite-dark, #2B2B2B);
+  }
   
   .nav-link::after {
     content: '';
@@ -303,6 +386,16 @@ const currentPath = Astro.url.pathname;
   
   .mobile-nav-link-active {
     color: #F4D03F; /* Dorado más claro para activo */
+  }
+
+  .mobile-nav-sublink {
+    padding-left: 2.5rem;
+    font-size: 0.9rem;
+    color: rgba(212, 175, 55, 0.8); /* Dorado más claro */
+  }
+
+  .mobile-nav-sublink:hover {
+    color: #F4D03F;
   }
 </style>
 

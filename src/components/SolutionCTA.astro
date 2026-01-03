@@ -1,0 +1,134 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  primaryCta: {
+    text: string;
+    link: string;
+  };
+  secondaryCta?: {
+    text: string;
+    link: string;
+  };
+}
+
+const { 
+  title = "¿Listo para transformar tu negocio?",
+  description = "Agenda una llamada estratégica y descubre cómo podemos ayudarte",
+  primaryCta,
+  secondaryCta
+} = Astro.props;
+---
+
+<section class="solution-cta-section">
+  <div class="solution-cta-container">
+    <h2 class="cta-title">{title}</h2>
+    {description && <p class="cta-description">{description}</p>}
+    <div class="cta-buttons">
+      <a href={primaryCta.link} class="cta-primary">
+        {primaryCta.text}
+        <svg class="cta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+        </svg>
+      </a>
+      {secondaryCta && (
+        <a href={secondaryCta.link} class="cta-secondary">
+          {secondaryCta.text}
+        </a>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .solution-cta-section {
+    padding: 4rem 1rem;
+    background: var(--color-graphite-dark, #2B2B2B);
+    color: white;
+  }
+
+  .solution-cta-container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .cta-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1rem;
+  }
+
+  .cta-description {
+    font-size: 1.125rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cta-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: white;
+    color: var(--color-graphite-dark, #2B2B2B);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .cta-secondary:hover {
+    background: white;
+    color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .cta-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  @media (max-width: 768px) {
+    .cta-buttons {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .cta-primary,
+    .cta-secondary {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+

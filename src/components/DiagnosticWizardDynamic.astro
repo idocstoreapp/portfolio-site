@@ -1,0 +1,331 @@
+---
+// Wizard de Diagnóstico Dinámico
+// Usa el componente React que genera preguntas según el tipo de negocio
+import DynamicDiagnosticWizard from './DynamicDiagnosticWizard';
+---
+
+<section id="diagnostico-estrategico" class="diagnostic-wizard-section">
+  <div class="diagnostic-container">
+    <div class="diagnostic-header">
+      <h2 class="diagnostic-title">Diagnóstico Estratégico</h2>
+      <p class="diagnostic-subtitle">Evalúa tu empresa y descubre cómo podemos ayudarte</p>
+    </div>
+
+    <div class="wizard-container" id="wizard-container">
+      <DynamicDiagnosticWizard client:load />
+    </div>
+
+    <!-- Barra de progreso general -->
+    <div class="wizard-progress">
+      <div class="progress-steps">
+        <div class="progress-step active" data-progress="1"></div>
+        <div class="progress-step" data-progress="2"></div>
+        <div class="progress-step" data-progress="3"></div>
+        <div class="progress-step" data-progress="4"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .diagnostic-wizard-section {
+    padding: 4rem 1rem;
+    background: var(--color-elephant-white, #F6F5F2);
+    min-height: 100vh;
+    position: relative;
+  }
+
+  .diagnostic-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .diagnostic-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .diagnostic-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1rem;
+  }
+
+  .diagnostic-subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: var(--color-grey-medium, #9A9A97);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .wizard-container {
+    position: relative;
+    min-height: 500px;
+  }
+
+  .wizard-step {
+    display: none;
+    animation: fadeIn 0.4s ease-in-out;
+  }
+
+  .wizard-step.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .step-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .step-number {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--color-graphite-dark, #2B2B2B);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 50px;
+    margin-bottom: 1rem;
+  }
+
+  .step-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 0.5rem;
+  }
+
+  .step-description {
+    font-size: 1.125rem;
+    color: var(--color-grey-medium, #9A9A97);
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .option-card {
+    background: white;
+    border: 2px solid #E5E5E3;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .option-card:hover {
+    border-color: var(--color-graphite-dark, #2B2B2B);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .option-card.selected {
+    border-color: var(--color-graphite-dark, #2B2B2B);
+    background: #F6F5F2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .option-card.multi-select {
+    padding-right: 3rem;
+  }
+
+  .card-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 0.5rem;
+  }
+
+  .card-description {
+    font-size: 0.95rem;
+    color: var(--color-grey-medium, #9A9A97);
+    line-height: 1.5;
+  }
+
+  .check-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--color-graphite-dark, #2B2B2B);
+    color: white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .option-card.multi-select.selected .check-icon {
+    display: flex;
+  }
+
+  .step-footer {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .btn-continue {
+    background: var(--color-graphite-dark, #2B2B2B);
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 8px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .btn-continue:hover:not(:disabled) {
+    background: #1A1A1A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(43, 43, 43, 0.3);
+  }
+
+  .btn-continue:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .contact-form {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 0.5rem;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid #E5E5E3;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .analysis-container {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .analysis-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .analysis-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 0.5rem;
+  }
+
+  .analysis-text {
+    font-size: 1.125rem;
+    color: var(--color-grey-medium, #9A9A97);
+    margin-bottom: 2rem;
+  }
+
+  .progress-bar {
+    width: 100%;
+    max-width: 400px;
+    height: 8px;
+    background: #E5E5E3;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--color-graphite-dark, #2B2B2B);
+    transition: width 0.3s ease;
+  }
+
+  .wizard-progress {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .progress-steps {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .progress-step {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #E5E5E3;
+    transition: background 0.3s ease;
+  }
+
+  .progress-step.active {
+    background: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .error-message {
+    background: #FEE2E2;
+    border: 1px solid #FCA5A5;
+    color: #991B1B;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .cards-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .diagnostic-wizard-section {
+      padding: 2rem 1rem;
+    }
+  }
+</style>
+

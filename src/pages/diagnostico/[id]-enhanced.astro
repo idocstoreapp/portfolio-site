@@ -1,0 +1,741 @@
+---
+// Página de Resultados Mejorada del Diagnóstico
+// Muestra el "diagnostic envelope" completo con oportunidad, pain points y benefits
+export const prerender = false;
+
+import Layout from '../../layouts/Layout.astro';
+import { getDiagnosticResult } from '../../utils/backendClient';
+
+const { id } = Astro.params;
+
+let diagnosticResult: any = null;
+let diagnosticData: any = null;
+let error: string | null = null;
+let isEnhanced = false;
+
+try {
+  if (!id) {
+    throw new Error('ID de diagnóstico no proporcionado');
+  }
+
+  const response = await getDiagnosticResult(id);
+  
+  if (response.success && response.data) {
+    diagnosticResult = response.data;
+    
+    // Verificar si es un envelope mejorado
+    isEnhanced = diagnosticResult.opportunity !== undefined && 
+                 diagnosticResult.recommendation !== undefined;
+    
+    // Obtener datos del diagnóstico para información de contacto
+    const backendUrl = import.meta.env.PUBLIC_BACKEND_URL || 'http://localhost:3000';
+    const diagnosticResponse = await fetch(`${backendUrl}/api/diagnostic/${id}`);
+    
+    if (diagnosticResponse.ok) {
+      const diagnosticResponseData = await diagnosticResponse.json();
+      if (diagnosticResponseData.success) {
+        diagnosticData = diagnosticResponseData.data;
+      }
+    }
+  } else {
+    throw new Error('No se pudo obtener el resultado del diagnóstico');
+  }
+} catch (e: any) {
+  error = e.message || 'Error desconocido';
+}
+---
+
+<Layout 
+  title={error ? `Error | Diagnóstico` : `Resultado de tu Diagnóstico | Maestro Digital`}
+  description={error ? "Error al cargar el diagnóstico" : "Descubre la solución digital perfecta para tu negocio basada en tu diagnóstico estratégico."}
+  image="/images/background-hero.jpg"
+>
+  {error ? (
+    <section class="diagnostic-result">
+      <div class="result-container">
+        <div class="result-header">
+          <div class="result-icon-large">⚠️</div>
+          <h1 class="result-title">Error al cargar el diagnóstico</h1>
+          <p class="result-subtitle">{error}</p>
+        </div>
+        <div class="cta-group">
+          <a href="/#diagnostico-estrategico" class="btn-cta-primary">
+            Realizar nuevo diagnóstico
+          </a>
+          <a href="/soluciones" class="btn-cta-secondary">
+            Ver todas las soluciones
+          </a>
+        </div>
+      </div>
+    </section>
+  ) : diagnosticResult ? (
+    <section class="diagnostic-result">
+      <div class="result-container">
+        {isEnhanced ? (
+          <!-- Vista mejorada con envelope completo -->
+          <>
+            <!-- Header con mensaje personalizado -->
+            <div class="result-header">
+              <div class="result-icon-large">💡</div>
+              <h1 class="result-title">{diagnosticResult.personalizedMessage.title}</h1>
+              <p class="result-subtitle">{diagnosticResult.personalizedMessage.subtitle}</p>
+            </div>
+
+            <!-- Insight personalizado -->
+            <div class="result-insight">
+              <p>{diagnosticResult.personalizedMessage.insight}</p>
+            </div>
+
+            <!-- Oportunidad Detectada -->
+            <div class="opportunity-section">
+              <div class="opportunity-header">
+                <h2 class="opportunity-title">{diagnosticResult.opportunity.title}</h2>
+                <p class="opportunity-description">{diagnosticResult.opportunity.description}</p>
+              </div>
+
+              <div class="opportunity-details">
+                <div class="pain-points">
+                  <h3 class="section-title">Problemas Identificados</h3>
+                  <ul class="points-list">
+                    {diagnosticResult.opportunity.painPoints.map((point: string, index: number) => (
+                      <li key={index}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div class="benefits">
+                  <h3 class="section-title">Beneficios de la Solución</h3>
+                  <ul class="points-list">
+                    {diagnosticResult.opportunity.benefits.map((benefit: string, index: number) => (
+                      <li key={index}>{benefit}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Solución Principal -->
+            <div class="primary-solution">
+              <div class="solution-badge">Solución Recomendada</div>
+              <div class="solution-card-primary">
+                <div class="solution-icon-large">{diagnosticResult.recommendation.primarySolution.icon}</div>
+                <h2 class="solution-title">{diagnosticResult.recommendation.primarySolution.title}</h2>
+                <p class="solution-description">{diagnosticResult.recommendation.primarySolution.description}</p>
+                <div class="solution-reason">
+                  <span class="reason-icon">💡</span>
+                  <span>{diagnosticResult.recommendation.primarySolution.reason}</span>
+                </div>
+                <a href={diagnosticResult.nextSteps.primary.link} class="btn-primary-large">
+                  {diagnosticResult.nextSteps.primary.text} →
+                </a>
+              </div>
+            </div>
+
+            <!-- Soluciones Complementarias -->
+            {diagnosticResult.recommendation.complementarySolutions.length > 0 && (
+              <div class="complementary-solutions">
+                <h3 class="complementary-title">También te puede interesar</h3>
+                <p class="complementary-subtitle">Estas soluciones pueden complementar tu estrategia digital</p>
+                <div class="solutions-grid">
+                  {diagnosticResult.recommendation.complementarySolutions.map((solution: any, index: number) => (
+                    <a href={solution.link} class="solution-card-complementary" key={index}>
+                      <div class="solution-icon">{solution.icon}</div>
+                      <h4 class="solution-card-title">{solution.title}</h4>
+                      <p class="solution-card-description">{solution.description}</p>
+                      <div class="solution-card-reason">
+                        <span class="reason-icon-small">💡</span>
+                        <span>{solution.reason}</span>
+                      </div>
+                      <span class="solution-link">Ver solución →</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <!-- Módulos Recomendados -->
+            {diagnosticResult.resultProfile?.recommendedModules && (
+              <div class="modules-section">
+                <h3 class="modules-title">Módulos Recomendados</h3>
+                <p class="modules-subtitle">Estos módulos están incluidos en la solución recomendada</p>
+                <div class="modules-grid">
+                  {diagnosticResult.resultProfile.recommendedModules.map((module: string, index: number) => (
+                    <div class="module-card" key={index}>
+                      <span class="module-name">{module.replace(/-/g, ' ')}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <!-- Urgencia y CTA Final -->
+            <div class="result-cta-section">
+              <div class="urgency-indicator" data-urgency={diagnosticResult.urgency}>
+                {diagnosticResult.urgency === 'high' && (
+                  <>
+                    <span class="urgency-icon">⚡</span>
+                    <span class="urgency-text">Tu negocio necesita esta solución ahora</span>
+                  </>
+                )}
+                {diagnosticResult.urgency === 'medium' && (
+                  <>
+                    <span class="urgency-icon">📈</span>
+                    <span class="urgency-text">Esta solución puede acelerar tu crecimiento</span>
+                  </>
+                )}
+                {diagnosticResult.urgency === 'low' && (
+                  <>
+                    <span class="urgency-icon">✨</span>
+                    <span class="urgency-text">Esta solución puede optimizar tu operación</span>
+                  </>
+                )}
+              </div>
+              <div class="cta-group">
+                <a href={diagnosticResult.nextSteps.primary.link} class="btn-cta-primary">
+                  {diagnosticResult.nextSteps.primary.text}
+                </a>
+                {diagnosticResult.nextSteps.secondary && (
+                  <a href={diagnosticResult.nextSteps.secondary.link} class="btn-cta-secondary">
+                    {diagnosticResult.nextSteps.secondary.text}
+                  </a>
+                )}
+                {(() => {
+                  const contactName = diagnosticData?.nombre || '';
+                  const contactCompany = diagnosticData?.empresa || '';
+                  const contactParams = contactName || contactCompany 
+                    ? `?name=${encodeURIComponent(contactName)}&company=${encodeURIComponent(contactCompany)}` 
+                    : '';
+                  return (
+                    <a href={`/contacto${contactParams}`} class="btn-cta-tertiary">
+                      Solicitar validación operativa
+                    </a>
+                  );
+                })()}
+              </div>
+            </div>
+          </>
+        ) : (
+          <!-- Vista legacy (compatibilidad con diagnósticos antiguos) -->
+          <>
+            <div class="result-header">
+              <div class="result-icon-large">{diagnosticResult.qualifies ? '✅' : '💡'}</div>
+              <h1 class="result-title">{diagnosticResult.personalizedMessage.title}</h1>
+              <p class="result-subtitle">{diagnosticResult.personalizedMessage.subtitle}</p>
+            </div>
+            <div class="result-insight">
+              <p>{diagnosticResult.personalizedMessage.insight}</p>
+            </div>
+            <div class="primary-solution">
+              <div class="solution-badge">Solución Recomendada</div>
+              <div class="solution-card-primary">
+                <div class="solution-icon-large">{diagnosticResult.primarySolution.icon}</div>
+                <h2 class="solution-title">{diagnosticResult.primarySolution.title}</h2>
+                <p class="solution-description">{diagnosticResult.primarySolution.description}</p>
+                <div class="solution-reason">
+                  <span class="reason-icon">💡</span>
+                  <span>{diagnosticResult.primarySolution.reason}</span>
+                </div>
+                <a href={diagnosticResult.nextSteps.primary.link} class="btn-primary-large">
+                  {diagnosticResult.nextSteps.primary.text} →
+                </a>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </section>
+  ) : (
+    <section class="diagnostic-result">
+      <div class="result-container">
+        <div class="loading-state">
+          <div class="loading-spinner"></div>
+          <p>Cargando tu diagnóstico...</p>
+        </div>
+      </div>
+    </section>
+  )}
+</Layout>
+
+<style>
+  .diagnostic-result {
+    min-height: 100vh;
+    padding: 6rem 2rem 4rem;
+    background: var(--color-elephant-white, #F6F5F2);
+  }
+
+  .result-container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  /* Loading State */
+  .loading-state {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #E5E5E3;
+    border-top-color: #2B2B2B;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1.5rem;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Header */
+  .result-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .result-icon-large {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .result-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .result-subtitle {
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    color: var(--color-grey-medium, #9A9A97);
+    line-height: 1.6;
+  }
+
+  /* Insight */
+  .result-insight {
+    background: #FFFFFF;
+    border-left: 4px solid #2B2B2B;
+    padding: 1.5rem 2rem;
+    margin-bottom: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .result-insight p {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0;
+  }
+
+  /* Opportunity Section */
+  .opportunity-section {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 3rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .opportunity-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .opportunity-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1rem;
+  }
+
+  .opportunity-description {
+    font-size: 1.125rem;
+    color: var(--color-grey-medium, #9A9A97);
+    line-height: 1.6;
+  }
+
+  .opportunity-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .pain-points, .benefits {
+    background: #F6F5F2;
+    padding: 2rem;
+    border-radius: 12px;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1.5rem;
+  }
+
+  .points-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .points-list li {
+    padding: 0.75rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .pain-points .points-list li::before {
+    content: '⚠️';
+    position: absolute;
+    left: 0;
+  }
+
+  .benefits .points-list li::before {
+    content: '✅';
+    position: absolute;
+    left: 0;
+  }
+
+  /* Primary Solution */
+  .primary-solution {
+    margin-bottom: 4rem;
+  }
+
+  .solution-badge {
+    display: inline-block;
+    background: #2B2B2B;
+    color: #FFFFFF;
+    padding: 0.5rem 1.5rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+  }
+
+  .solution-card-primary {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 3rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+  }
+
+  .solution-icon-large {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .solution-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1rem;
+  }
+
+  .solution-description {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--color-grey-medium, #9A9A97);
+    margin-bottom: 1.5rem;
+  }
+
+  .solution-reason {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #F6F5F2;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .reason-icon {
+    font-size: 1.25rem;
+  }
+
+  .btn-primary-large {
+    display: inline-block;
+    background: #2B2B2B;
+    color: #FFFFFF;
+    padding: 1rem 2.5rem;
+    border-radius: 8px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary-large:hover {
+    background: #1A1A1A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(43, 43, 43, 0.3);
+  }
+
+  /* Complementary Solutions */
+  .complementary-solutions {
+    margin-bottom: 4rem;
+  }
+
+  .complementary-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .complementary-subtitle {
+    text-align: center;
+    color: var(--color-grey-medium, #9A9A97);
+    margin-bottom: 2rem;
+  }
+
+  .solutions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .solution-card-complementary {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: block;
+  }
+
+  .solution-card-complementary:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .solution-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .solution-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 0.75rem;
+  }
+
+  .solution-card-description {
+    font-size: 0.95rem;
+    color: var(--color-grey-medium, #9A9A97);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .solution-card-reason {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1rem;
+  }
+
+  .reason-icon-small {
+    font-size: 1rem;
+  }
+
+  .solution-link {
+    display: inline-block;
+    color: #2B2B2B;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  /* Modules Section */
+  .modules-section {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 3rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .modules-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .modules-subtitle {
+    text-align: center;
+    color: var(--color-grey-medium, #9A9A97);
+    margin-bottom: 2rem;
+  }
+
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .module-card {
+    background: #F6F5F2;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .module-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-graphite-dark, #2B2B2B);
+    text-transform: capitalize;
+  }
+
+  /* Urgencia y CTA */
+  .result-cta-section {
+    text-align: center;
+    padding-top: 3rem;
+    border-top: 1px solid #E5E5E3;
+  }
+
+  .urgency-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    font-weight: 600;
+  }
+
+  .urgency-indicator[data-urgency="high"] {
+    background: #FEE2E2;
+    color: #991B1B;
+  }
+
+  .urgency-indicator[data-urgency="medium"] {
+    background: #FEF3C7;
+    color: #92400E;
+  }
+
+  .urgency-indicator[data-urgency="low"] {
+    background: #DBEAFE;
+    color: #1E40AF;
+  }
+
+  .urgency-icon {
+    font-size: 1.5rem;
+  }
+
+  .urgency-text {
+    font-size: 1.125rem;
+  }
+
+  .cta-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .btn-cta-primary {
+    display: inline-block;
+    background: #2B2B2B;
+    color: #FFFFFF;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .btn-cta-primary:hover {
+    background: #1A1A1A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(43, 43, 43, 0.3);
+  }
+
+  .btn-cta-secondary {
+    display: inline-block;
+    background: transparent;
+    color: #2B2B2B;
+    border: 2px solid #2B2B2B;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .btn-cta-secondary:hover {
+    background: #2B2B2B;
+    color: #FFFFFF;
+  }
+
+  .btn-cta-tertiary {
+    display: inline-block;
+    color: var(--color-grey-medium, #9A9A97);
+    padding: 1rem 2rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .btn-cta-tertiary:hover {
+    color: #2B2B2B;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .diagnostic-result {
+      padding: 4rem 1rem 2rem;
+    }
+
+    .solution-card-primary {
+      padding: 2rem 1.5rem;
+    }
+
+    .opportunity-details {
+      grid-template-columns: 1fr;
+    }
+
+    .solutions-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .modules-grid {
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+
+    .cta-group {
+      flex-direction: column;
+    }
+
+    .btn-cta-primary, .btn-cta-secondary, .btn-cta-tertiary {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
+

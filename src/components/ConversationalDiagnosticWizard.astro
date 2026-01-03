@@ -1,0 +1,471 @@
+---
+import ConversationalWizard from './ConversationalDiagnosticWizard';
+---
+
+<section id="diagnostico-estrategico" class="diagnostic-wizard-section">
+  <div class="diagnostic-container">
+  
+
+    <div class="wizard-container">
+      <ConversationalWizard client:load />
+    </div>
+
+    <!-- Barra de progreso general -->
+    <div class="wizard-progress">
+      <div class="progress-steps">
+        <!-- Los pasos se gestionan internamente en el componente React -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .diagnostic-wizard-section {
+    padding: 4rem 1rem;
+    background: var(--color-elephant-white, #F6F5F2);
+    min-height: 100vh;
+    position: relative;
+  }
+
+  .diagnostic-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .diagnostic-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .diagnostic-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1rem;
+  }
+
+  .diagnostic-subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: var(--color-grey-medium, #9A9A97);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .wizard-container {
+    position: relative;
+    min-height: 500px;
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Estilos globales para el componente React */
+  :global(.wizard-step) {
+    display: none;
+    animation: fadeIn 0.4s ease-in-out;
+  }
+
+  :global(.wizard-step.active) {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Step Header - Global para React */
+  :global(.step-header) {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  :global(.conversational-intro),
+  :global(.conversational-question) {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  :global(.step-number) {
+    display: inline-block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-grey-medium, #9A9A97);
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background: #F6F5F2;
+    border-radius: 20px;
+  }
+
+  :global(.conversational-intro .step-title),
+  :global(.conversational-question .step-title),
+  :global(.step-title) {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  :global(.conversational-intro .step-description),
+  :global(.conversational-question .step-description),
+  :global(.step-description) {
+    font-size: clamp(1rem, 2vw, 1.125rem);
+    color: var(--color-grey-medium, #9A9A97);
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Cards Grid - Global para React */
+  :global(.cards-grid) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  :global(.option-card) {
+    background: #FFFFFF !important;
+    border: 2px solid #E5E5E3 !important;
+    border-radius: 16px !important;
+    padding: 2rem 1.5rem !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    min-height: 200px !important;
+    position: relative !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  :global(.option-card:hover) {
+    border-color: var(--color-graphite-dark, #2B2B2B) !important;
+    transform: translateY(-4px) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+    background: #F6F5F2 !important;
+  }
+
+  :global(.option-card.selected) {
+    border-color: var(--color-graphite-dark, #2B2B2B) !important;
+    background: var(--color-graphite-dark, #2B2B2B) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 8px 24px rgba(43, 43, 43, 0.2) !important;
+  }
+
+  :global(.option-card.selected .card-title),
+  :global(.option-card.selected .card-description) {
+    color: #FFFFFF !important;
+  }
+
+  :global(.option-card.multi-select) {
+    padding-right: 3rem !important;
+  }
+
+  :global(.card-icon) {
+    font-size: 3.5rem !important;
+    margin-bottom: 0.5rem !important;
+    line-height: 1 !important;
+  }
+
+  :global(.card-title) {
+    font-family: 'Libre Baskerville', serif !important;
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    color: var(--color-graphite-dark, #2B2B2B) !important;
+    margin: 0 !important;
+    line-height: 1.3 !important;
+  }
+
+  :global(.card-description) {
+    font-size: 0.875rem !important;
+    color: var(--color-grey-medium, #9A9A97) !important;
+    margin: 0 !important;
+    line-height: 1.5 !important;
+  }
+
+  :global(.check-icon) {
+    position: absolute !important;
+    top: 1rem !important;
+    right: 1rem !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    background: #E5E5E3 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.875rem !important;
+    font-weight: bold !important;
+    color: transparent !important;
+    transition: all 0.3s ease !important;
+  }
+
+  :global(.option-card.selected .check-icon) {
+    background: #FFFFFF !important;
+    color: var(--color-graphite-dark, #2B2B2B) !important;
+  }
+
+  :global(.option-card.multi-select.selected .check-icon) {
+    background: var(--color-graphite-dark, #2B2B2B) !important;
+    color: #FFFFFF !important;
+  }
+
+  /* Inputs - Global para React */
+  :global(.input-container) {
+    max-width: 500px;
+    margin: 2rem auto;
+  }
+
+  :global(.number-input),
+  :global(.text-input) {
+    width: 100% !important;
+    padding: 1rem 1.5rem !important;
+    font-size: 1.125rem !important;
+    border: 2px solid #E5E5E3 !important;
+    border-radius: 12px !important;
+    background: #FFFFFF !important;
+    color: var(--color-graphite-dark, #2B2B2B) !important;
+    transition: all 0.3s ease !important;
+    margin-bottom: 1rem !important;
+    font-family: inherit !important;
+    box-sizing: border-box !important;
+  }
+
+  :global(.number-input:focus),
+  :global(.text-input:focus) {
+    outline: none !important;
+    border-color: var(--color-graphite-dark, #2B2B2B) !important;
+    box-shadow: 0 0 0 3px rgba(43, 43, 43, 0.1) !important;
+  }
+
+  /* Botones - Global para React */
+  :global(.btn-continue),
+  :global(.btn-submit) {
+    display: block !important;
+    width: 100% !important;
+    padding: 1rem 2rem !important;
+    background: var(--color-graphite-dark, #2B2B2B) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-size: 1.125rem !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    margin-top: 1rem !important;
+    font-family: inherit !important;
+  }
+
+  :global(.btn-continue:hover:not(:disabled)),
+  :global(.btn-submit:hover:not(:disabled)) {
+    background: #1A1A1A !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(43, 43, 43, 0.3) !important;
+  }
+
+  :global(.btn-continue:disabled),
+  :global(.btn-submit:disabled) {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+  }
+
+  :global(.continue-container) {
+    max-width: 500px;
+    margin: 2rem auto 0;
+  }
+
+  /* Información de contacto - Global para React */
+  :global(.contact-section) {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #E5E5E3;
+  }
+
+  :global(.contact-title) {
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    color: var(--color-graphite-dark, #2B2B2B) !important;
+    margin-bottom: 1.5rem !important;
+    text-align: center !important;
+    font-family: 'Libre Baskerville', serif !important;
+  }
+
+  :global(.contact-inputs) {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+    max-width: 500px !important;
+    margin: 0 auto 1.5rem !important;
+  }
+
+  :global(.contact-input) {
+    width: 100% !important;
+    padding: 0.875rem 1.25rem !important;
+    font-size: 1rem !important;
+    border: 2px solid #E5E5E3 !important;
+    border-radius: 12px !important;
+    background: #FFFFFF !important;
+    color: var(--color-graphite-dark, #2B2B2B) !important;
+    transition: all 0.3s ease !important;
+    font-family: inherit !important;
+    box-sizing: border-box !important;
+  }
+
+  :global(.contact-input:focus) {
+    outline: none !important;
+    border-color: var(--color-graphite-dark, #2B2B2B) !important;
+    box-shadow: 0 0 0 3px rgba(43, 43, 43, 0.1) !important;
+  }
+
+  /* Error - Global para React */
+  :global(.error-container) {
+    text-align: center !important;
+    padding: 3rem 2rem !important;
+    background: #FFFFFF !important;
+    border-radius: 16px !important;
+  }
+
+  :global(.error-icon) {
+    font-size: 4rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  :global(.error-title) {
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+    color: var(--color-graphite-dark, #2B2B2B) !important;
+    margin-bottom: 1rem !important;
+    font-family: 'Libre Baskerville', serif !important;
+  }
+
+  :global(.error-message) {
+    font-size: 1rem !important;
+    color: var(--color-grey-medium, #9A9A97) !important;
+    margin-bottom: 2rem !important;
+  }
+
+  :global(.btn-retry) {
+    padding: 0.875rem 2rem !important;
+    background: var(--color-graphite-dark, #2B2B2B) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    font-family: inherit !important;
+  }
+
+  :global(.btn-retry:hover) {
+    background: #1A1A1A !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(43, 43, 43, 0.3) !important;
+  }
+
+  /* Wizard progress */
+  .wizard-progress {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #E5E5E3;
+    display: flex;
+    justify-content: center;
+  }
+
+  .progress-steps {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .progress-step {
+    width: 20px;
+    height: 5px;
+    background: #E5E5E3;
+    border-radius: 999px;
+    transition: background 0.3s ease;
+  }
+
+  .progress-step.active {
+    background: #2B2B2B;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .diagnostic-wizard-section {
+      padding: 2rem 1rem;
+    }
+
+    .wizard-container {
+      padding: 2rem 1.5rem;
+    }
+
+    :global(.cards-grid.sector-selection-grid) {
+      grid-template-columns: 1fr !important;
+      gap: 0.75rem !important;
+      margin-top: 1.5rem !important;
+    }
+
+    :global(.option-card.sector-option-card) {
+      min-height: auto !important;
+      height: auto !important;
+      padding: 1rem 1.25rem !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      text-align: left !important;
+      border-radius: 12px !important;
+    }
+    
+    :global(.sector-option-card .card-icon) {
+      font-size: 2rem !important;
+      margin-bottom: 0 !important;
+      margin-right: 0 !important;
+      flex-shrink: 0 !important;
+    }
+    
+    :global(.sector-option-card .card-title) {
+      font-size: 1rem !important;
+      text-align: left !important;
+      margin: 0 !important;
+    }
+    
+    :global(.sector-option-card .card-description) {
+      font-size: 0.75rem !important;
+      text-align: left !important;
+      margin-top: 0.25rem !important;
+      line-height: 1.4 !important;
+    }
+
+    :global(.option-card:not(.sector-option-card)) {
+      min-height: 180px !important;
+      padding: 1.5rem 1rem !important;
+    }
+
+    :global(.input-container),
+    :global(.continue-container),
+    :global(.contact-inputs) {
+      max-width: 100% !important;
+    }
+
+    :global(.conversational-intro .step-title),
+    :global(.conversational-question .step-title),
+    :global(.step-title) {
+      font-size: clamp(1.5rem, 5vw, 2rem) !important;
+    }
+  }
+</style>

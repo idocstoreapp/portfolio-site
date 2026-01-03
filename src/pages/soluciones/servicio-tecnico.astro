@@ -1,0 +1,139 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SolutionHero from '../../components/SolutionHero.astro';
+import ProblemCards from '../../components/ProblemCards.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
+import ProcessTimeline from '../../components/ProcessTimeline.astro';
+import RelatedProjects from '../../components/RelatedProjects.astro';
+import SolutionCTA from '../../components/SolutionCTA.astro';
+---
+
+<Layout 
+  title="Sistema para Servicio Técnico | Gestión de Reparaciones | Maestro Digital"
+  description="Sistema completo para servicios técnicos: órdenes de servicio, inventario, clientes y pagos. Organiza tu negocio y aumenta tu productividad."
+  image="/images/sistemas/idocstore-hero.png"
+>
+  <SolutionHero
+    title="Sistema completo para servicios técnicos que quieren organizarse"
+    subtitle="Gestiona reparaciones, inventario, clientes y pagos desde un solo sistema. Deja de perder órdenes y aumenta tu productividad."
+    image="/images/sistemas/idocstore-hero.png"
+    ctaText="Ver cómo funciona"
+    ctaLink="#caracteristicas"
+  />
+
+  <ProblemCards
+    problems={[
+      {
+        icon: "📝",
+        title: "Pierdes órdenes porque anotas todo en papel",
+        description: "Los papeles se pierden, se mojan o se olvidan. No sabes qué reparaciones están pendientes ni cuánto debes cobrar."
+      },
+      {
+        icon: "📦",
+        title: "No sabes qué repuestos tienes en stock",
+        description: "Compras repuestos que ya tienes o te faltan los que necesitas. No hay control de inventario."
+      },
+      {
+        icon: "⏱️",
+        title: "Los clientes preguntan constantemente por su equipo",
+        description: "No sabes en qué estado está cada reparación. Los clientes llaman todo el tiempo y pierdes tiempo explicando."
+      },
+      {
+        icon: "💰",
+        title: "No sabes cuánto ganaste este mes",
+        description: "No tienes control de ingresos y egresos. No sabes qué servicios son más rentables ni cuánto debes cobrar."
+      }
+    ]}
+  />
+
+  <FeatureGrid
+    features={[
+      {
+        title: "Órdenes de servicio digitales",
+        description: "Crea órdenes de servicio desde tu celular. Registra el problema, toma fotos, establece precio y tiempo estimado. Todo organizado.",
+        image: "/images/sistemas/idocstore1-7.png"
+      },
+      {
+        title: "Control de inventario",
+        description: "Sabe qué repuestos tienes, cuántos y dónde están. Recibe alertas cuando se acaban y controla tus compras.",
+        icon: "📦"
+      },
+      {
+        title: "Seguimiento de reparaciones",
+        description: "Marca el estado de cada reparación: recibido, en diagnóstico, en reparación, listo, entregado. Los clientes pueden ver el progreso.",
+        icon: "📊"
+      },
+      {
+        title: "Gestión de clientes",
+        description: "Historial completo de cada cliente: qué equipos ha traído, qué reparaciones se hicieron, garantías y pagos pendientes.",
+        icon: "👥"
+      },
+      {
+        title: "Control de pagos",
+        description: "Registra pagos, cobros pendientes y genera reportes de ingresos. Sabe cuánto ganaste y qué servicios son más rentables.",
+        icon: "💳"
+      },
+      {
+        title: "Reportes y estadísticas",
+        description: "Ve cuántas reparaciones hiciste, cuánto ganaste, qué servicios son más solicitados y cómo mejorar tu negocio.",
+        icon: "📈"
+      }
+    ]}
+  />
+
+  <ProcessTimeline
+    steps={[
+      {
+        number: 1,
+        title: "Cliente trae su equipo",
+        description: "Registras el equipo, el problema y tomas fotos. El sistema crea una orden de servicio con precio y tiempo estimado.",
+        image: "/images/sistemas/idocstore1-7.png"
+      },
+      {
+        number: 2,
+        title: "Diagnóstico y reparación",
+        description: "Marcas el estado de la reparación. El sistema te muestra qué repuestos necesitas y si los tienes en stock.",
+        image: "/images/sistemas/idocstorepc1-2.PNG"
+      },
+      {
+        number: 3,
+        title: "Cliente consulta el estado",
+        description: "El cliente puede ver en tiempo real el estado de su reparación sin necesidad de llamar.",
+        icon: "📱"
+      },
+      {
+        number: 4,
+        title: "Cobro y entrega",
+        description: "Registras el pago, generas la boleta y entregas el equipo. El sistema actualiza automáticamente tus reportes.",
+        icon: "✅"
+      }
+    ]}
+  />
+
+  <RelatedProjects
+    projects={[
+      {
+        title: "IDoc Store",
+        image: "/images/sistemas/idocstore-hero.png",
+        problem: "Servicio técnico con órdenes en papel y sin control de inventario",
+        solution: "Sistema completo con órdenes digitales, inventario y gestión de clientes",
+        result: "Organización total y aumento de productividad",
+        link: "/projects/sistema-reparaciones"
+      }
+    ]}
+  />
+
+  <SolutionCTA
+    title="¿Listo para organizar tu servicio técnico?"
+    description="Agenda una demo y descubre cómo este sistema puede transformar tu negocio"
+    primaryCta={{
+      text: "Agendar llamada estratégica",
+      link: "/contacto?solucion=servicio-tecnico"
+    }}
+    secondaryCta={{
+      text: "Ver más proyectos",
+      link: "/projects"
+    }}
+  />
+</Layout>
+

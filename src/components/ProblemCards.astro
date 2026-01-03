@@ -1,0 +1,107 @@
+---
+interface Props {
+  problems: Array<{
+    icon: string;
+    title: string;
+    description: string;
+  }>;
+}
+
+const { problems } = Astro.props;
+---
+
+<section class="problems-section" id="problema">
+  <div class="problems-container">
+    <div class="problems-header">
+      <h2 class="problems-title">Problemas que resolvemos</h2>
+      <p class="problems-subtitle">Situaciones comunes que enfrentan empresas como la tuya</p>
+    </div>
+    <div class="problems-grid">
+      {problems.map((problem) => (
+        <div class="problem-card">
+          <div class="problem-icon">{problem.icon}</div>
+          <h3 class="problem-title">{problem.title}</h3>
+          <p class="problem-description">{problem.description}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .problems-section {
+    padding: 4rem 1rem;
+    background: white;
+  }
+
+  .problems-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .problems-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .problems-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1rem;
+  }
+
+  .problems-subtitle {
+    font-size: 1.125rem;
+    color: var(--color-grey-medium, #9A9A97);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .problems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .problem-card {
+    padding: 2rem;
+    background: var(--color-elephant-white, #F6F5F2);
+    border-radius: 16px;
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+
+  .problem-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .problem-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .problem-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 0.75rem;
+  }
+
+  .problem-description {
+    font-size: 1rem;
+    color: var(--color-grey-medium, #9A9A97);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .problems-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+</style>
+

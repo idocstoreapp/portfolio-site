@@ -1,0 +1,119 @@
+---
+interface Props {
+  title: string;
+  subtitle: string;
+  image: string;
+  ctaText?: string;
+  ctaLink?: string;
+}
+
+const { title, subtitle, image, ctaText = "Ver cómo funciona", ctaLink = "#caracteristicas" } = Astro.props;
+---
+
+<section class="solution-hero">
+  <div class="solution-hero-container">
+    <div class="solution-hero-content">
+      <h1 class="solution-hero-title">{title}</h1>
+      <p class="solution-hero-subtitle">{subtitle}</p>
+      {ctaText && ctaLink && (
+        <a href={ctaLink} class="solution-hero-cta">
+          {ctaText}
+          <svg class="cta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+          </svg>
+        </a>
+      )}
+    </div>
+    <div class="solution-hero-image">
+      <img src={image} alt={title} loading="eager" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .solution-hero {
+    padding: 4rem 1rem;
+    background: var(--color-elephant-white, #F6F5F2);
+  }
+
+  .solution-hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .solution-hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .solution-hero-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .solution-hero-subtitle {
+    font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+    color: var(--color-grey-medium, #9A9A97);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .solution-hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: var(--color-graphite-dark, #2B2B2B);
+    color: white;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    width: fit-content;
+    margin-top: 0.5rem;
+  }
+
+  .solution-hero-cta:hover {
+    background: var(--color-black-deep, #111111);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .cta-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .solution-hero-image {
+    position: relative;
+  }
+
+  .solution-hero-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    .solution-hero-container {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .solution-hero-image {
+      order: -1;
+    }
+  }
+</style>
+

@@ -1,0 +1,155 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SolutionHero from '../../components/SolutionHero.astro';
+import ProblemCards from '../../components/ProblemCards.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
+import ProcessTimeline from '../../components/ProcessTimeline.astro';
+import RelatedProjects from '../../components/RelatedProjects.astro';
+import SolutionCTA from '../../components/SolutionCTA.astro';
+---
+
+<Layout 
+  title="Desarrollo Web Profesional | Páginas Web y Ecommerce | Maestro Digital"
+  description="Páginas web profesionales, ecommerce y sistemas web personalizados. Presencia digital que convierte visitantes en clientes."
+  image="/images/webs/muebleria1.png"
+>
+  <SolutionHero
+    title="Páginas web que convierten visitantes en clientes"
+    subtitle="Diseñamos y desarrollamos sitios web profesionales, ecommerce y sistemas web personalizados. No solo hacemos webs, construimos soluciones que generan resultados."
+    image="/images/webs/muebleria1.png"
+    ctaText="Ver proyectos"
+    ctaLink="#proyectos"
+  />
+
+  <ProblemCards
+    problems={[
+      {
+        icon: "🌐",
+        title: "No tienes presencia en internet",
+        description: "Los clientes te buscan en Google y no te encuentran. Pierdes oportunidades porque no estás donde tus clientes te buscan."
+      },
+      {
+        icon: "📱",
+        title: "Tu página web está desactualizada",
+        description: "Tu sitio web es viejo, no se ve bien en el celular o no funciona. Los clientes se van a la competencia."
+      },
+      {
+        icon: "💰",
+        title: "Tu web no genera ventas",
+        description: "Tienes visitantes pero no compran. Tu página no convierte porque no está diseñada para vender."
+      },
+      {
+        icon: "⚙️",
+        title: "Necesitas un sistema específico",
+        description: "Tu negocio necesita algo personalizado: un sistema de gestión, un portal de clientes o una plataforma única."
+      }
+    ]}
+  />
+
+  <FeatureGrid
+    features={[
+      {
+        title: "Páginas web profesionales",
+        description: "Diseñamos sitios web modernos, rápidos y optimizados para convertir. Tu negocio se ve profesional y genera confianza.",
+        image: "/images/webs/muebleria1-2.png"
+      },
+      {
+        title: "Ecommerce y tiendas online",
+        description: "Vende tus productos en línea con una tienda completa: catálogo, carrito, pagos y gestión de pedidos.",
+        icon: "🛒"
+      },
+      {
+        title: "Diseño responsive",
+        description: "Tu sitio se ve perfecto en celular, tablet y computadora. Los clientes pueden comprar desde cualquier dispositivo.",
+        icon: "📱"
+      },
+      {
+        title: "Optimización SEO",
+        description: "Tu página aparece en Google cuando los clientes te buscan. Optimizamos para que te encuentren fácilmente.",
+        icon: "🔍"
+      },
+      {
+        title: "Sistemas web personalizados",
+        description: "Desarrollamos sistemas específicos para tu negocio: portales de clientes, dashboards, sistemas de gestión y más.",
+        icon: "⚙️"
+      },
+      {
+        title: "Mantenimiento y soporte",
+        description: "No te dejamos solo. Ofrecemos mantenimiento, actualizaciones y soporte para que tu web siempre funcione perfecto.",
+        icon: "🛠️"
+      }
+    ]}
+  />
+
+  <ProcessTimeline
+    steps={[
+      {
+        number: 1,
+        title: "Análisis y estrategia",
+        description: "Entendemos tu negocio, tus clientes y tus objetivos. Definimos qué necesitas para lograr tus metas.",
+        icon: "📊"
+      },
+      {
+        number: 2,
+        title: "Diseño y desarrollo",
+        description: "Creamos un diseño único para tu marca y desarrollamos tu sitio web con las mejores tecnologías.",
+        image: "/images/webs/muebleria1.png"
+      },
+      {
+        number: 3,
+        title: "Optimización y pruebas",
+        description: "Optimizamos velocidad, SEO y experiencia de usuario. Probamos en todos los dispositivos para asegurar que funcione perfecto.",
+        icon: "✅"
+      },
+      {
+        number: 4,
+        title: "Lanzamiento y seguimiento",
+        description: "Lanzamos tu sitio web y te enseñamos a usarlo. Hacemos seguimiento para asegurar que genere resultados.",
+        icon: "🚀"
+      }
+    ]}
+  />
+
+  <RelatedProjects
+    projects={[
+      {
+        title: "Kubica Mobiliario",
+        image: "/images/webs/muebleria1.png",
+        problem: "Necesidad de presencia profesional en internet",
+        solution: "Página web moderna con cotizador integrado",
+        result: "Mayor visibilidad y más clientes",
+        link: "/projects/kubica-mobiliario"
+      },
+      {
+        title: "Mueblería Casa Blanca",
+        image: "/images/webs/mobiliario1.png",
+        problem: "Falta de presencia digital profesional",
+        solution: "Sitio web corporativo y moderno",
+        result: "Imagen profesional y más consultas",
+        link: "/projects/muebleria-casa-blanca"
+      },
+      {
+        title: "Portfolio Web",
+        image: "/images/projects/portfolio-web/cover.jpg",
+        problem: "Necesidad de mostrar trabajos de forma profesional",
+        solution: "Portfolio web moderno y elegante",
+        result: "Presentación profesional de proyectos",
+        link: "/projects/portfolio-web"
+      }
+    ]}
+  />
+
+  <SolutionCTA
+    title="¿Listo para tener presencia digital profesional?"
+    description="Agenda una consulta y descubre cómo podemos ayudarte a crecer en internet"
+    primaryCta={{
+      text: "Agendar llamada estratégica",
+      link: "/contacto?solucion=desarrollo-web"
+    }}
+    secondaryCta={{
+      text: "Ver más proyectos",
+      link: "/projects"
+    }}
+  />
+</Layout>
+

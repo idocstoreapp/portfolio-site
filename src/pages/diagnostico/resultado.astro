@@ -1,0 +1,602 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout 
+  title="Resultado de tu Diagnóstico | Maestro Digital"
+  description="Descubre la solución digital perfecta para tu negocio basada en tu diagnóstico estratégico."
+  image="/images/background-hero.jpg"
+>
+  <div id="diagnostic-result-container">
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Cargando tu diagnóstico...</p>
+    </div>
+  </div>
+  
+  <script>
+    // Ejecutar cuando el DOM esté listo
+    (async function() {
+      // Leer parámetros de la URL en el cliente
+      const urlParams = new URLSearchParams(window.location.search);
+      console.log('=== PÁGINA DE RESULTADO (CLIENTE) ===');
+      console.log('URL completa:', window.location.href);
+      console.log('URL search:', window.location.search);
+      console.log('Search params entries:', Array.from(urlParams.entries()));
+      
+      const container = document.getElementById('diagnostic-result-container');
+      if (!container) {
+        console.error('Container not found');
+        return;
+      }
+      
+      // Construir objeto con los parámetros para enviar como POST
+      const paramsObject: Record<string, string | string[]> = {};
+      for (const [key, value] of urlParams.entries()) {
+        // Decodificar el valor primero
+        const decodedValue = decodeURIComponent(value);
+        if (decodedValue.includes(',')) {
+          paramsObject[key] = decodedValue.split(',').map(s => s.trim()).filter(s => s.length > 0);
+        } else {
+          paramsObject[key] = decodedValue;
+        }
+      }
+      
+      console.log('Sending params as URL query string:', paramsObject);
+      
+      try {
+        // Construir la URL con los parámetros como query string
+        // Esto funciona mejor con Astro en modo estático
+        const queryParams = new URLSearchParams();
+        
+        Object.entries(paramsObject).forEach(([key, value]) => {
+          if (Array.isArray(value)) {
+            queryParams.append(key, value.join(','));
+          } else if (value !== null && value !== undefined) {
+            queryParams.append(key, String(value));
+          }
+        });
+        
+        const apiUrl = `/api/diagnostico?${queryParams.toString()}`;
+        console.log('Sending GET request to:', apiUrl);
+        
+        // Usar GET con query parameters en lugar de POST
+        // Esto evita problemas con el body en Astro estático
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+          credentials: 'same-origin'
+        });
+        
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+        const data = await response.json();
+        
+        console.log('API Response:', data);
+        
+        if (!response.ok) {
+          throw new Error(data.error || `Error ${response.status}: ${response.statusText}`);
+        }
+        
+        if (!data.success || !data.result) {
+          throw new Error(data.error || 'No se pudo procesar el diagnóstico');
+        }
+        
+        // Renderizar resultado completo
+        container.innerHTML = renderResult(data.result, data.contactInfo.name || '', data.contactInfo.company || '');
+      } catch (error) {
+        console.error('Error processing diagnostic:', error);
+        container.innerHTML = `
+          <section class="diagnostic-result">
+            <div class="result-container">
+              <div class="result-header">
+                <div class="result-icon-large">⚠️</div>
+                <h1 class="result-title">Error al procesar el diagnóstico</h1>
+                <p class="result-subtitle">${error.message || 'Error desconocido'}</p>
+                <details style="margin-top: 1rem; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto; padding: 1rem; background: #f5f5f5; border-radius: 8px;">
+                  <summary style="cursor: pointer; font-weight: 600;">Detalles técnicos</summary>
+                  <pre style="margin-top: 0.5rem; white-space: pre-wrap; font-size: 0.75rem; overflow-x: auto;">${error.stack || JSON.stringify(error, null, 2)}</pre>
+                </details>
+              </div>
+              <div class="cta-group">
+                <a href="/#diagnostico-estrategico" class="btn-cta-primary">
+                  Intentar de nuevo
+                </a>
+                <a href="/soluciones" class="btn-cta-secondary">
+                  Ver todas las soluciones
+                </a>
+              </div>
+            </div>
+          </section>
+        `;
+      }
+    
+    function renderResult(result, name, company) {
+      const contactParams = name || company 
+        ? `?name=${encodeURIComponent(name)}&company=${encodeURIComponent(company)}`
+        : '';
+      
+      return `
+        <section class="diagnostic-result">
+          <div class="result-container">
+            <!-- Header con mensaje personalizado -->
+            <div class="result-header">
+              <div class="result-icon-large">${result.qualifies ? '✅' : '💡'}</div>
+              <h1 class="result-title">${escapeHtml(result.personalizedMessage.title)}</h1>
+              <p class="result-subtitle">${escapeHtml(result.personalizedMessage.subtitle)}</p>
+            </div>
+
+            <!-- Insight personalizado -->
+            <div class="result-insight">
+              <p>${escapeHtml(result.personalizedMessage.insight)}</p>
+            </div>
+
+            <!-- Solución Principal -->
+            <div class="primary-solution">
+              <div class="solution-badge">Solución Recomendada</div>
+              <div class="solution-card-primary">
+                <div class="solution-icon-large">${result.primarySolution.icon}</div>
+                <h2 class="solution-title">${escapeHtml(result.primarySolution.title)}</h2>
+                <p class="solution-description">${escapeHtml(result.primarySolution.description)}</p>
+                <div class="solution-reason">
+                  <span class="reason-icon">💡</span>
+                  <span>${escapeHtml(result.primarySolution.reason)}</span>
+                </div>
+                <div class="solution-match">
+                  <div class="match-bar">
+                    <div class="match-fill" style="width: ${result.primarySolution.matchScore}%"></div>
+                  </div>
+                  <span class="match-text">Coincidencia: ${result.primarySolution.matchScore}%</span>
+                </div>
+                <a href="${result.nextSteps.primary.link}" class="btn-primary-large">
+                  ${escapeHtml(result.nextSteps.primary.text)} →
+                </a>
+              </div>
+            </div>
+
+            <!-- Soluciones Complementarias -->
+            ${result.complementarySolutions.length > 0 ? `
+              <div class="complementary-solutions">
+                <h3 class="complementary-title">También te puede interesar</h3>
+                <p class="complementary-subtitle">Estas soluciones pueden complementar tu estrategia digital</p>
+                <div class="solutions-grid">
+                  ${result.complementarySolutions.map(solution => `
+                    <a href="${solution.link}?from=diagnostico" class="solution-card-complementary">
+                      <div class="solution-icon">${solution.icon}</div>
+                      <h4 class="solution-card-title">${escapeHtml(solution.title)}</h4>
+                      <p class="solution-card-description">${escapeHtml(solution.description)}</p>
+                      <div class="solution-card-reason">
+                        <span class="reason-icon-small">💡</span>
+                        <span>${escapeHtml(solution.reason)}</span>
+                      </div>
+                      <span class="solution-link">Ver solución →</span>
+                    </a>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- Urgencia y CTA Final -->
+            <div class="result-cta-section">
+              <div class="urgency-indicator" data-urgency="${result.urgency}">
+                ${result.urgency === 'high' ? `
+                  <span class="urgency-icon">⚡</span>
+                  <span class="urgency-text">Tu negocio necesita esta solución ahora</span>
+                ` : ''}
+                ${result.urgency === 'medium' ? `
+                  <span class="urgency-icon">📈</span>
+                  <span class="urgency-text">Esta solución puede acelerar tu crecimiento</span>
+                ` : ''}
+                ${result.urgency === 'low' ? `
+                  <span class="urgency-icon">✨</span>
+                  <span class="urgency-text">Esta solución puede optimizar tu operación</span>
+                ` : ''}
+              </div>
+              
+              <div class="cta-group">
+                <a href="${result.nextSteps.primary.link}" class="btn-cta-primary">
+                  ${escapeHtml(result.nextSteps.primary.text)}
+                </a>
+                ${result.nextSteps.secondary ? `
+                  <a href="${result.nextSteps.secondary.link}" class="btn-cta-secondary">
+                    ${escapeHtml(result.nextSteps.secondary.text)}
+                  </a>
+                ` : ''}
+                <a href="/contacto${contactParams}" class="btn-cta-tertiary">
+                  Hablar con un especialista
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+    
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+    })();
+  </script>
+</Layout>
+
+<style>
+  .diagnostic-result {
+    min-height: 100vh;
+    padding: 6rem 2rem 4rem;
+    background: var(--color-elephant-white, #F6F5F2);
+  }
+
+  .result-container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  /* Loading State */
+  .loading-state {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #E5E5E3;
+    border-top-color: #2B2B2B;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1.5rem;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Header */
+  .result-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .result-icon-large {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .result-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .result-subtitle {
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    color: var(--color-grey-medium, #9A9A97);
+    line-height: 1.6;
+  }
+
+  /* Insight */
+  .result-insight {
+    background: #FFFFFF;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 3rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .result-insight p {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0;
+  }
+
+  /* Primary Solution */
+  .primary-solution {
+    margin-bottom: 4rem;
+  }
+
+  .solution-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--color-graphite-dark, #2B2B2B);
+    color: #FFFFFF;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  .solution-card-primary {
+    background: #FFFFFF;
+    padding: 3rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    text-align: center;
+  }
+
+  .solution-icon-large {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .solution-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1rem;
+  }
+
+  .solution-description {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--color-grey-medium, #9A9A97);
+    margin-bottom: 1.5rem;
+  }
+
+  .solution-reason {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .reason-icon {
+    font-size: 1.25rem;
+  }
+
+  .solution-match {
+    margin-bottom: 2rem;
+  }
+
+  .match-bar {
+    width: 100%;
+    height: 8px;
+    background: #E5E5E3;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+
+  .match-fill {
+    height: 100%;
+    background: var(--color-graphite-dark, #2B2B2B);
+    transition: width 0.5s ease;
+  }
+
+  .match-text {
+    font-size: 0.875rem;
+    color: var(--color-grey-medium, #9A9A97);
+  }
+
+  .btn-primary-large {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: var(--color-graphite-dark, #2B2B2B);
+    color: #FFFFFF;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.125rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary-large:hover {
+    background: var(--color-deep-black, #111111);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Complementary Solutions */
+  .complementary-solutions {
+    margin-bottom: 4rem;
+  }
+
+  .complementary-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .complementary-subtitle {
+    text-align: center;
+    color: var(--color-grey-medium, #9A9A97);
+    margin-bottom: 2rem;
+  }
+
+  .solutions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .solution-card-complementary {
+    background: #FFFFFF;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .solution-card-complementary:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .solution-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .solution-card-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 0.5rem;
+  }
+
+  .solution-card-description {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-grey-medium, #9A9A97);
+    margin-bottom: 1rem;
+    flex-grow: 1;
+  }
+
+  .solution-card-reason {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1rem;
+  }
+
+  .reason-icon-small {
+    font-size: 1rem;
+  }
+
+  .solution-link {
+    color: var(--color-graphite-dark, #2B2B2B);
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+
+  /* Urgency and CTA Section */
+  .result-cta-section {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .urgency-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  .urgency-indicator[data-urgency="high"] {
+    background: #FFF3E0;
+    color: #E65100;
+  }
+
+  .urgency-indicator[data-urgency="medium"] {
+    background: #E3F2FD;
+    color: #1565C0;
+  }
+
+  .urgency-indicator[data-urgency="low"] {
+    background: #F1F8E9;
+    color: #558B2F;
+  }
+
+  .urgency-icon {
+    font-size: 1.5rem;
+  }
+
+  .urgency-text {
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+
+  .cta-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .btn-cta-primary,
+  .btn-cta-secondary,
+  .btn-cta-tertiary {
+    display: inline-block;
+    padding: 0.875rem 1.75rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-cta-primary {
+    background: var(--color-graphite-dark, #2B2B2B);
+    color: #FFFFFF;
+  }
+
+  .btn-cta-primary:hover {
+    background: var(--color-deep-black, #111111);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .btn-cta-secondary {
+    background: transparent;
+    color: var(--color-graphite-dark, #2B2B2B);
+    border: 2px solid var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .btn-cta-secondary:hover {
+    background: var(--color-graphite-dark, #2B2B2B);
+    color: #FFFFFF;
+  }
+
+  .btn-cta-tertiary {
+    background: transparent;
+    color: var(--color-grey-medium, #9A9A97);
+    border: 2px solid var(--color-grey-medium, #9A9A97);
+  }
+
+  .btn-cta-tertiary:hover {
+    background: var(--color-grey-medium, #9A9A97);
+    color: #FFFFFF;
+  }
+
+  @media (max-width: 768px) {
+    .diagnostic-result {
+      padding: 4rem 1rem 2rem;
+    }
+
+    .solution-card-primary {
+      padding: 2rem 1.5rem;
+    }
+
+    .solutions-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cta-group {
+      flex-direction: column;
+    }
+
+    .btn-cta-primary,
+    .btn-cta-secondary,
+    .btn-cta-tertiary {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>

@@ -1,4 +1,15 @@
 ---
+import ProjectsCarousel from './ProjectsCarousel.astro';
+
+export interface Project {
+  title: string;
+  image: string;
+  category: 'web' | 'menu-qr' | 'admin' | 'sistema';
+  liveUrl?: string;
+  githubUrl?: string;
+  slug?: string;
+}
+
 export interface Props {
   title?: string;
   subtitle?: string;
@@ -6,6 +17,7 @@ export interface Props {
   secondaryCta?: { text: string; href: string };
   rating?: { score: string; count: string };
   mockupImage?: string;
+  carouselProjects?: Project[];
 }
 
 const {
@@ -14,11 +26,12 @@ const {
   primaryCta = { text: "Ver Portafolio", href: "/projects" },
   secondaryCta = { text: "Solicitar Diagnóstico", href: "/contacto" },
   rating = { score: "4.9/5.0", count: "250+ Reseñas en Google" },
-  mockupImage
+  mockupImage,
+  carouselProjects = []
 } = Astro.props;
 ---
 
-<section class="hero-premium">
+<section class="hero-premium" style="margin: 0 auto; width: 100%; max-width: 100%; box-sizing: border-box;">
   <!-- Background Effects -->
   <div class="hero-background">
     <div class="gradient-orb orb-1"></div>
@@ -70,23 +83,8 @@ const {
           Diseñamos sistemas web que optimizan procesos y generan ventas.
         </p>
         
-        <!-- CTA Buttons con efecto neón -->
-        <div class="hero-cta-primary">
-          <a href={primaryCta.href} class="btn-neon btn-neon-blue">
-            <span class="btn-text">{primaryCta.text}</span>
-            <span class="btn-glow btn-glow-blue"></span>
-            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-            </svg>
-          </a>
-          <a href={secondaryCta.href} class="btn-neon btn-neon-orange">
-            <span class="btn-text">{secondaryCta.text}</span>
-            <span class="btn-glow btn-glow-orange"></span>
-          </a>
-        </div>
-        
-        <!-- Logos Carousel (Solo móvil) -->
-        <div class="hero-logos-carousel-mobile">
+        <!-- Carrusel de logos (visible en escritorio y móvil) -->
+        <div class="hero-logos-carousel">
           <h3 class="logos-title">Confían en nosotros</h3>
           <div class="logos-track" id="logos-track">
             <div class="logo-item">
@@ -114,13 +112,22 @@ const {
             <div class="logo-item">
               <img src="/images/projects/logo-kubica.png" alt="Kubica" />
             </div>
-            <div class="logo-item">
-              <img src="/images/projects/logo-mimoto.png" alt="Mimoto" />
-            </div>
-            <div class="logo-item">
-              <img src="/images/projects/logo-muebleriacadablanca.png" alt="Mueblería Casa Blanca" />
-            </div>
           </div>
+        </div>
+        
+        <!-- CTA Buttons con efecto neón -->
+        <div class="hero-cta-primary">
+          <a href={primaryCta.href} class="btn-neon btn-neon-blue">
+            <span class="btn-text">{primaryCta.text}</span>
+            <span class="btn-glow btn-glow-blue"></span>
+            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+            </svg>
+          </a>
+          <a href={secondaryCta.href} class="btn-neon btn-neon-orange">
+            <span class="btn-text">{secondaryCta.text}</span>
+            <span class="btn-glow btn-glow-orange"></span>
+          </a>
         </div>
         
         <!-- Rating -->
@@ -167,6 +174,7 @@ const {
     padding: 0;
     padding-top: 0; /* El scroll-margin-top del header manejará el espacio */
     padding-bottom: 0;
+    margin: 0 auto;
     margin-bottom: 0;
     overflow-x: hidden; /* Solo ocultar overflow horizontal */
     background: var(--bg-primary);
@@ -185,15 +193,74 @@ const {
   /* Mobile: altura automática, se adapta al contenido */
   @media (min-width: 320px) and (max-width: 1023px) {
     .hero-premium {
-      min-height: auto;
-      align-items: flex-start;
+      min-height: auto !important;
+      align-items: center !important;
+      justify-content: center !important;
       padding: 0 !important;
-      margin: 0 !important;
-      overflow: visible;
+      margin: 0 auto !important;
+      overflow: visible !important;
       overflow-x: hidden !important;
+      overflow-y: visible !important;
       width: 100% !important;
-      max-width: 100vw !important;
-      box-sizing: border-box;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      position: relative !important;
+      height: auto !important;
+      left: 0 !important;
+      right: 0 !important;
+      transform: none !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    
+    /* Forzar que todos los elementos hijos estén centrados */
+    .hero-premium > * {
+      margin-left: auto !important;
+      margin-right: auto !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+    
+    .hero-container {
+      overflow: visible !important;
+      height: auto !important;
+      min-height: auto !important;
+      max-height: none !important;
+      margin: 0 auto !important;
+      padding: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-direction: column !important;
+      left: 0 !important;
+      right: 0 !important;
+      transform: none !important;
+      position: relative !important;
+    }
+    
+    .hero-content {
+      overflow: visible !important;
+      height: auto !important;
+      max-height: none !important;
+      margin: 0 auto !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      left: 0 !important;
+      right: 0 !important;
+      transform: none !important;
+      position: relative !important;
+    }
+    
+    .hero-text {
+      margin: 0 auto !important;
+      padding: 0 1rem !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      left: 0 !important;
+      right: 0 !important;
+      transform: none !important;
     }
   }
   
@@ -273,15 +340,18 @@ const {
     .hero-container {
       padding: 0 !important;
       padding-bottom: 0 !important;
+      margin: 0 auto !important;
       margin-bottom: 0 !important;
       height: auto;
       min-height: auto;
-      align-items: flex-end;
+      align-items: center !important;
+      justify-content: center !important;
       padding-top: 0;
-      width: 100vw !important;
-      max-width: 100vw !important;
+      width: 100% !important;
+      max-width: 100% !important;
       box-sizing: border-box;
       overflow-x: hidden !important;
+      overflow-y: visible !important;
     }
   }
   
@@ -309,20 +379,45 @@ const {
     min-height: 0;
     overflow: visible;
   }
+  
+  /* En móvil, forzar grid de una columna centrada */
+  @media (min-width: 320px) and (max-width: 1023px) {
+    .hero-content {
+      grid-template-columns: 1fr !important;
+      align-items: center !important;
+      justify-items: center !important;
+      margin: 0 auto !important;
+      padding: 0 1rem !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+  }
 
     .hero-text {
       max-width: 100%;
       width: 100%;
-      margin: 0;
+      margin: 0 auto;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
+      align-items: center; /* Centrado en lugar de flex-end */
       justify-content: space-evenly; /* Cambiar de space-evenly a flex-start */
       gap: 1rem; /* Usar gap para espaciado consistente */
       min-height: 0;
       overflow: visible;
       /* Remover height: 100% para permitir expansión natural */
+    }
+    
+    /* En móvil, asegurar que hero-text esté centrado */
+    @media (min-width: 320px) and (max-width: 1023px) {
+      .hero-text {
+        align-items: center !important;
+        text-align: center !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 1rem !important;
+        box-sizing: border-box !important;
+      }
     }
     
     /* Estilos para hero-title cuando NO está en hero-text (grid layout) */
@@ -350,24 +445,41 @@ const {
       word-wrap: break-word;
       overflow-wrap: break-word;
     }
+    
+    /* En móvil, forzar que hero-title esté centrado */
+    @media (min-width: 320px) and (max-width: 1023px) {
+      .hero-content > .hero-title {
+        grid-column: 1 !important;
+        text-align: center !important;
+        align-self: center !important;
+        margin: 0 auto !important;
+        padding: 0 1rem !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+    }
   
   /* Mobile: Reordenamiento vertical optimizado para conversión */
   @media (min-width: 320px) and (max-width: 1023px) {
 
     .hero-container {
-      margin: 0 !important;
+      margin: 0 auto !important;
       padding: 0 !important;
       padding-bottom: 0;
       width: 100% !important;
-      max-width: 100vw !important;
+      max-width: 100% !important;
       box-sizing: border-box;
       overflow-x: hidden !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-direction: column !important;
     }
     
     /* Layout de columna única para mobile */
     .hero-content {
-      display: grid;
-      grid-template-columns: 1fr;
+      display: grid !important;
+      grid-template-columns: 1fr !important;
       grid-template-areas: 
         "title"
         "subtitle"
@@ -376,47 +488,70 @@ const {
         "logos"
         "rating";
       gap: 0.5rem 0; /* Reducir gap para que todo quepa en el viewport */
-      align-items: center;
-      justify-items: center;
-      width: 100%;
-      max-width: 100%;
+      align-items: center !important;
+      justify-items: center !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      padding: 0 1rem !important;
+      box-sizing: border-box !important;
       height: auto;
       min-height: auto;
-      box-sizing: border-box;
-      padding: 0 0.5rem !important; /* Reducir aún más el padding horizontal */
-      padding-bottom: 1rem !important;
-      margin: 0 !important;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
+      margin: 0 auto !important;
       overflow-x: hidden !important;
+      position: relative !important;
+      left: 0 !important;
+      right: 0 !important;
+      transform: none !important;
     }
     
     /* Asignar áreas del grid */
     .hero-title {
       grid-area: title;
       text-align: center !important; /* Centrado para mejor jerarquía */
-      margin: 0 !important;
-      padding: 1rem 0.5rem 0.5rem 0.5rem !important; /* Reducir padding para que no se salga */
+      margin: 0 auto !important;
+      padding: 1rem 1rem 0.5rem 1rem !important;
       width: 100% !important;
       max-width: 100% !important;
+      box-sizing: border-box !important;
       font-family: 'Libre Baskerville', serif !important; /* Fuente serif elegante */
+    }
+    
+    /* Asegurar que las líneas del título estén centradas en móvil */
+    .hero-title .title-line,
+    .hero-title .title-line * {
+      text-align: center !important;
+      margin: 0 auto !important;
+      padding: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      left: 0 !important;
+      right: 0 !important;
+      transform: none !important;
+      display: block !important;
     }
     
     /* Subtítulo: Segundo en el orden visual */
     .hero-subtitle {
       grid-area: subtitle;
-      width: 100%;
-      max-width: 100%;
-      margin: 0;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 auto !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
       margin-top: -0.5rem !important; /* Más cerca del título */
-      padding: 0 0.25rem !important; /* Reducir padding para que no se salga */
-      text-align: center;
+      padding: 0 1rem !important;
+      text-align: center !important;
       font-size: clamp(1rem, 3vw, 1.25rem);
       color: #1a1a1a !important; /* Gris más oscuro */
       line-height: 1.5;
       font-weight: 500;
       font-style: italic !important; /* Cursiva */
-      box-sizing: border-box;
+      box-sizing: border-box !important;
+      left: 0 !important;
+      right: 0 !important;
+      transform: none !important;
+      position: relative !important;
     }
     
     /* Mockup alineado a la derecha */
@@ -604,10 +739,61 @@ const {
       }
     }
     
-    /* Ocultar carrusel de logos en desktop */
+    /* Ocultar carrusel de logos en desktop - FORZAR COMPLETAMENTE */
     @media (min-width: 1024px) {
       .hero-logos-carousel-mobile {
         display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        width: 0 !important;
+        max-height: 0 !important;
+        max-width: 0 !important;
+        min-height: 0 !important;
+        min-width: 0 !important;
+        overflow: hidden !important;
+        position: fixed !important;
+        left: -9999px !important;
+        top: -9999px !important;
+        opacity: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        pointer-events: none !important;
+        z-index: -1 !important;
+        grid-area: unset !important;
+      }
+      
+      .hero-logos-carousel-mobile *,
+      .hero-logos-carousel-mobile *::before,
+      .hero-logos-carousel-mobile *::after {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        width: 0 !important;
+        max-height: 0 !important;
+        max-width: 0 !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        position: fixed !important;
+        left: -9999px !important;
+        top: -9999px !important;
+      }
+      
+      .logos-track,
+      .logos-title,
+      .logo-item,
+      .logo-item img {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        width: 0 !important;
+        max-height: 0 !important;
+        max-width: 0 !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        position: fixed !important;
+        left: -9999px !important;
+        top: -9999px !important;
       }
     }
     
@@ -648,8 +834,8 @@ const {
     .title-line {
       display: block;
       text-align: center !important; /* Centrado para nuevo layout vertical */
-      margin-right: 0 !important;
-      padding-right: 0 !important;
+      margin: 0 auto !important;
+      padding: 0 !important;
       line-height: 1.3 !important; /* Mejor espaciado para legibilidad */
       margin-bottom: 0.25rem !important;
       margin-top: 0 !important;
@@ -659,7 +845,24 @@ const {
       word-wrap: break-word;
       overflow-wrap: break-word;
       white-space: normal;
-      box-sizing: border-box;
+      box-sizing: border-box !important;
+    }
+    
+    /* En móvil, forzar que todas las líneas del título estén centradas */
+    @media (min-width: 320px) and (max-width: 1023px) {
+      .title-line,
+      .title-line .title-align-right,
+      .title-line .title-align-left,
+      .title-line-compact,
+      .title-line-compact .title-align-right,
+      .title-line-compact .title-align-left {
+        text-align: center !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+      }
     }
     
     .title-align-right {
@@ -1031,6 +1234,8 @@ const {
     .hero-content {
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr; /* Solo una fila: mockup y text lado a lado */
+      grid-template-areas: 
+        "mockup text"; /* Solo mockup y text en desktop, sin logos */
       gap: 2rem;
       align-items: stretch; /* Hacer que las columnas ocupen toda la altura */
       margin-top: 0;
@@ -1507,6 +1712,46 @@ const {
     .hero-text {
       display: contents; /* Permite que los hijos se posicionen en el grid padre */
       gap: 0;
+      align-items: center !important;
+      text-align: center !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 auto !important;
+      padding: 0 1rem !important;
+      box-sizing: border-box !important;
+    }
+    
+    /* Forzar que todas las líneas del título estén centradas en móvil */
+    .hero-title .title-line,
+    .hero-title .title-line .title-align-right,
+    .hero-title .title-line .title-align-left,
+    .hero-title .title-line-compact,
+    .hero-title .title-line-compact .title-align-right,
+    .hero-title .title-line-compact .title-align-left {
+      text-align: center !important;
+      margin: 0 auto !important;
+      padding: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      display: block !important;
+      justify-content: center !important;
+    }
+    
+    /* Anular los estilos flex que alinean a la derecha */
+    .hero-title .title-line:has(.title-align-right) {
+      display: block !important;
+      text-align: center !important;
+      justify-content: center !important;
+    }
+    
+    .hero-title .title-line-compact:has(.title-align-right) {
+      text-align: center !important;
+    }
+    
+    .hero-title .title-line-compact:has(.title-align-right) ~ .title-line-compact {
+      text-align: center !important;
+      padding: 0 !important;
+      margin: 0 auto !important;
     }
   }
   
@@ -1560,12 +1805,155 @@ const {
       width: 100%;
       max-width: 100%;
       margin-top: 5rem !important; /* Más espacio después del título para bajarlo más */
-      margin-bottom: 0 !important;
+      margin-bottom: 2rem !important; /* Espacio para el carrusel */
+    }
+    
+    /* Carrusel de logos (visible en escritorio y móvil) */
+    .hero-logos-carousel {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 2rem 0 !important;
+      padding: 0.5rem 0 !important;
+      display: flex !important;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+      z-index: 10;
+      visibility: visible !important;
+      position: relative !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+      overflow-x: hidden !important;
+    }
+    
+    .hero-logos-carousel .logos-title {
+      font-size: 0.875rem;
+      color: var(--color-grey-medium);
+      font-weight: 500;
+      margin: 0;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .hero-logos-carousel .logos-track {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      overflow: hidden;
+      width: 100%;
+      max-width: 100%;
+      position: relative;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      will-change: transform;
+      contain: layout style paint;
+    }
+    
+    .hero-logos-carousel .logo-item {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      width: auto;
+      max-width: 100px;
+    }
+    
+    .hero-logos-carousel .logo-item img {
+      height: 100%;
+      width: auto;
+      max-width: 100px;
+      object-fit: contain;
+      filter: grayscale(100%) opacity(0.6);
+      transition: filter 0.3s ease;
+    }
+    
+    .hero-logos-carousel .logo-item img:hover {
+      filter: grayscale(0%) opacity(1);
+    }
+    
+    /* Ocultar completamente el carrusel móvil antiguo */
+    .hero-logos-carousel-mobile {
+      display: none !important;
+      visibility: hidden !important;
+      height: 0 !important;
+      width: 0 !important;
+      overflow: hidden !important;
+      position: absolute !important;
+      left: -9999px !important;
+    }
+    
+    @media (min-width: 1024px) {
+      .hero-logos-carousel {
+        margin: 2rem 0 !important;
+      }
+      
+      .hero-logos-carousel .logos-title {
+        font-size: 1rem;
+      }
+      
+      .hero-logos-carousel .logo-item {
+        height: 50px;
+        max-width: 120px;
+      }
+      
+      .hero-logos-carousel .logo-item img {
+        max-width: 120px;
+      }
+    }
+    
+    /* En móvil, asegurar que no tape el viewport */
+    @media (max-width: 1023px) {
+      .hero-logos-carousel {
+        margin: 1.5rem 0 !important;
+        padding: 0.5rem 1rem !important;
+        max-height: 80px;
+        overflow: hidden !important;
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        position: relative !important;
+        left: 0 !important;
+        right: 0 !important;
+        transform: none !important;
+        contain: layout style paint !important;
+      }
+      
+      .hero-logos-carousel .logos-track {
+        overflow: hidden !important;
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: relative !important;
+        will-change: transform;
+        contain: layout style paint !important;
+      }
+      
+      .hero-logos-carousel .logo-item {
+        height: 35px;
+        max-width: 80px;
+        flex-shrink: 0;
+        box-sizing: border-box;
+      }
+      
+      .hero-logos-carousel .logo-item img {
+        max-width: 80px;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        box-sizing: border-box;
+      }
     }
     
     /* CTA y rating van abajo usando margin-top: auto - FORZAR que el DIV completo se mueva */
     .hero-text .hero-cta-primary {
-      margin-top: auto !important; /* Forzar margin-top: auto para empujar el DIV completo hacia el final */
+      margin-top: 2rem !important; /* Espacio después del carrusel */
       flex-shrink: 0 !important; /* No permitir que se encoja */
       margin-bottom: 2rem !important; /* Espacio adicional para subir los CTAs */
       margin-left: 0 !important;
@@ -1603,6 +1991,39 @@ const {
     
     .hero-text .hero-cta-primary .btn-neon-orange .btn-text {
       color: var(--color-black-deep) !important;
+    }
+    
+    /* Ocultar completamente el carrusel de logos dentro de hero-text en desktop */
+    .hero-text .hero-logos-carousel-mobile {
+      display: none !important;
+      visibility: hidden !important;
+      height: 0 !important;
+      width: 0 !important;
+      max-height: 0 !important;
+      max-width: 0 !important;
+      min-height: 0 !important;
+      min-width: 0 !important;
+      overflow: hidden !important;
+      position: absolute !important;
+      left: -9999px !important;
+      top: -9999px !important;
+      opacity: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+      pointer-events: none !important;
+      z-index: -1 !important;
+      grid-area: unset !important;
+      order: 999 !important; /* Moverlo al final del flex order */
+    }
+    
+    .hero-text .hero-logos-carousel-mobile * {
+      display: none !important;
+      visibility: hidden !important;
+      height: 0 !important;
+      width: 0 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
     }
   }
   
@@ -2077,16 +2498,29 @@ const {
   @media (min-width: 768px) and (max-width: 1023px) {
     .hero-premium {
       padding: 0.5rem 1rem 1rem;
+      margin: 0 auto !important;
+      width: 100% !important;
+      max-width: 100% !important;
     }
     
     .hero-content {
       gap: 0.75rem 1rem;
+      margin: 0 auto !important;
+      width: 100% !important;
+      max-width: 100% !important;
     }
     
     .hero-title {
       font-size: clamp(1.5rem, 4vw, 2.25rem);
-      padding-right: 0.5rem !important;
-      margin-right: 0.5rem !important;
+      padding: 1rem !important;
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+      margin: 0 auto !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      text-align: center !important;
+      width: 100% !important;
+      max-width: 100% !important;
     }
     
     .hero-subtitle {
@@ -2201,8 +2635,23 @@ const {
     }
     
     // Carrusel infinito de logos (solo móvil)
+    // NO ejecutar en desktop bajo ninguna circunstancia
+    if (window.innerWidth > 1023) {
+      return; // Salir inmediatamente si estamos en desktop
+    }
+    
     const logosTrack = document.getElementById('logos-track');
-    if (logosTrack && window.innerWidth <= 1023) {
+    if (!logosTrack) {
+      return; // Si no existe el elemento, salir
+    }
+    
+    // Verificar que el elemento sea visible (no oculto por CSS)
+    const computedStyle = window.getComputedStyle(logosTrack);
+    if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden') {
+      return; // Si está oculto, no ejecutar
+    }
+    
+    if (window.innerWidth <= 1023) {
       let position = 0;
       const speed = 0.5; // Velocidad de desplazamiento (px por frame)
       let animationId: number;
@@ -2233,7 +2682,17 @@ const {
           }
         }
         
+        // Asegurar que el transform no cause overflow
         logosTrack.style.transform = `translateX(${position}px)`;
+        logosTrack.style.willChange = 'transform';
+        // Forzar que el contenedor padre mantenga su ancho
+        const parent = logosTrack.parentElement;
+        if (parent) {
+          parent.style.overflow = 'hidden';
+          parent.style.overflowX = 'hidden';
+          parent.style.width = '100%';
+          parent.style.maxWidth = '100%';
+        }
         animationId = requestAnimationFrame(animateLogos);
       }
       
@@ -2263,4 +2722,51 @@ const {
     }
   });
 </script>
+
+<style>
+  /* Estilos adicionales para forzar centrado en móvil */
+  @media (min-width: 320px) and (max-width: 1023px) {
+    /* Forzar centrado absoluto de todos los elementos del hero */
+    .hero-premium,
+    .hero-premium *,
+    .hero-container,
+    .hero-container *,
+    .hero-content,
+    .hero-content *,
+    .hero-text,
+    .hero-text * {
+      margin-left: auto !important;
+      margin-right: auto !important;
+      text-align: center !important;
+    }
+    
+    /* Específicamente para el título y subtítulo */
+    .hero-title,
+    .hero-subtitle {
+      text-align: center !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+    
+    /* Forzar que todas las líneas del título estén centradas */
+    .hero-title .title-line,
+    .hero-title .title-line *,
+    .hero-title .title-align-right,
+    .hero-title .title-align-left,
+    .hero-title .title-line-compact,
+    .hero-title .title-line-compact * {
+      text-align: center !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+  }
+</style>
 

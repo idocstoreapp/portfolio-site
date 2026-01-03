@@ -1,0 +1,147 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SolutionHero from '../../components/SolutionHero.astro';
+import ProblemCards from '../../components/ProblemCards.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
+import ProcessTimeline from '../../components/ProcessTimeline.astro';
+import RelatedProjects from '../../components/RelatedProjects.astro';
+import SolutionCTA from '../../components/SolutionCTA.astro';
+---
+
+<Layout 
+  title="Sistema Cotizador para Fábricas | Cotizaciones Personalizadas | Maestro Digital"
+  description="Sistema de cotizaciones personalizadas para fábricas y mueblerías. Controla costos, materiales y tiempos de producción desde un solo sistema."
+  image="/images/sistemas/cotizador-hero.png"
+>
+  <SolutionHero
+    title="Sistema de cotizaciones que calcula costos reales"
+    subtitle="Crea cotizaciones personalizadas, controla costos de materiales, horas de trabajo y tiempos de producción. Cotiza con precisión y gana más."
+    image="/images/sistemas/cotizador-hero.png"
+    ctaText="Ver cómo funciona"
+    ctaLink="#caracteristicas"
+  />
+
+  <ProblemCards
+    problems={[
+      {
+        icon: "📝",
+        title: "Cotizas a ojo y pierdes dinero",
+        description: "No sabes cuánto cuesta realmente hacer un mueble o producto. Cotizas muy bajo y pierdes o muy alto y no vendes."
+      },
+      {
+        icon: "⏱️",
+        title: "No controlas las horas de trabajo",
+        description: "No sabes cuánto tiempo realmente toma hacer cada producto. Pierdes dinero en horas no contabilizadas."
+      },
+      {
+        icon: "📦",
+        title: "No sabes qué materiales necesitas",
+        description: "Compras materiales de más o te faltan. No hay control de inventario ni cálculo preciso de materiales por producto."
+      },
+      {
+        icon: "💰",
+        title: "Los clientes piden cambios y no sabes cómo recalcular",
+        description: "El cliente quiere cambiar medidas o materiales y no sabes cómo afecta el precio. Pierdes tiempo recalculando a mano."
+      }
+    ]}
+  />
+
+  <FeatureGrid
+    features={[
+      {
+        title: "Cotizaciones personalizadas",
+        description: "Crea cotizaciones con medidas exactas, materiales específicos y tiempos de producción. El sistema calcula el costo real automáticamente.",
+        image: "/images/sistemas/cotizador1-3.png"
+      },
+      {
+        title: "Control de costos",
+        description: "Sabe cuánto cuesta cada material, cada hora de trabajo y cada proceso. Calcula el precio real de cada producto.",
+        icon: "💰"
+      },
+      {
+        title: "Gestión de materiales",
+        description: "Controla qué materiales tienes, cuántos y cuánto cuestan. El sistema calcula automáticamente qué necesitas para cada cotización.",
+        icon: "📦"
+      },
+      {
+        title: "Control de horas y empleados",
+        description: "Registra horas trabajadas por empleado y por proyecto. Sabe cuánto tiempo realmente toma hacer cada producto.",
+        icon: "⏱️"
+      },
+      {
+        title: "Recálculo automático",
+        description: "Si el cliente cambia medidas o materiales, el sistema recalcula automáticamente el precio. Sin errores, sin pérdida de tiempo.",
+        icon: "🔄"
+      },
+      {
+        title: "Reportes y ganancias",
+        description: "Ve cuánto ganaste en cada proyecto, qué productos son más rentables y cómo optimizar tus precios.",
+        icon: "📈"
+      }
+    ]}
+  />
+
+  <ProcessTimeline
+    steps={[
+      {
+        number: 1,
+        title: "Cliente solicita cotización",
+        description: "Registras las medidas, materiales y especificaciones del producto. El sistema calcula materiales necesarios y horas de trabajo.",
+        image: "/images/sistemas/cotizador1-3.png"
+      },
+      {
+        number: 2,
+        title: "Sistema calcula costo real",
+        description: "El sistema suma materiales, horas de trabajo y costos indirectos. Obtienes el costo real del producto.",
+        image: "/images/sistemas/cotizadorpc1-4.PNG"
+      },
+      {
+        number: 3,
+        title: "Generas la cotización",
+        description: "Agregas tu margen de ganancia y generas una cotización profesional que puedes enviar al cliente.",
+        icon: "📄"
+      },
+      {
+        number: 4,
+        title: "Control de producción",
+        description: "Si el cliente acepta, el sistema te guía en la producción: qué materiales usar, cuántas horas asignar y cuánto deberías ganar.",
+        icon: "✅"
+      }
+    ]}
+  />
+
+  <RelatedProjects
+    projects={[
+      {
+        title: "Mueblería Cotizador",
+        image: "/images/sistemas/cotizador-hero.png",
+        problem: "Fábrica cotizando a ojo y perdiendo dinero en proyectos",
+        solution: "Sistema de cotizaciones con cálculo automático de costos",
+        result: "Cotizaciones precisas y aumento de ganancias",
+        link: "/projects/muebleria-cotizador"
+      },
+      {
+        title: "Kubica Mobiliario",
+        image: "/images/webs/muebleria1.png",
+        problem: "Necesidad de cotizar muebles personalizados con precisión",
+        solution: "Sistema web con cotizador integrado",
+        result: "Proceso de cotización profesional y eficiente",
+        link: "/projects/kubica-mobiliario"
+      }
+    ]}
+  />
+
+  <SolutionCTA
+    title="¿Listo para cotizar con precisión?"
+    description="Agenda una demo y descubre cómo este sistema puede aumentar tus ganancias"
+    primaryCta={{
+      text: "Agendar llamada estratégica",
+      link: "/contacto?solucion=cotizador-fabrica"
+    }}
+    secondaryCta={{
+      text: "Ver más proyectos",
+      link: "/projects"
+    }}
+  />
+</Layout>
+

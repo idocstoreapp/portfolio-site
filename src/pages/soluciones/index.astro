@@ -1,0 +1,208 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout 
+  title="Soluciones Digitales para Empresas | Maestro Digital"
+  description="Sistemas web personalizados para restaurantes, talleres, fábricas y más. Digitalizamos y automatizamos tus procesos para que trabajes mejor."
+  image="/images/background-hero.jpg"
+>
+  <section class="solutions-hero">
+    <div class="container">
+      <h1>Soluciones que transforman tu negocio</h1>
+      <p class="subtitle">Digitalizamos y automatizamos tus procesos para que trabajes mejor, con más control y menos esfuerzo.</p>
+    </div>
+  </section>
+
+  <section class="solutions-grid">
+    <div class="container">
+      <div class="solutions-list">
+        <a href="/soluciones/restaurantes" class="solution-card">
+          <div class="solution-icon">🍽️</div>
+          <h2>Restaurantes</h2>
+          <p>Menú QR, POS y gestión completa. Deja el papel atrás y controla todo desde el celular.</p>
+          <span class="solution-link">Ver solución →</span>
+        </a>
+
+        <a href="/soluciones/servicio-tecnico" class="solution-card">
+          <div class="solution-icon">🔧</div>
+          <h2>Servicio Técnico</h2>
+          <p>Sistema completo para reparaciones: órdenes, inventario, clientes y pagos. Todo organizado.</p>
+          <span class="solution-link">Ver solución →</span>
+        </a>
+
+        <a href="/soluciones/taller-mecanico" class="solution-card">
+          <div class="solution-icon">🚗</div>
+          <h2>Taller Mecánico</h2>
+          <p>Gestiona reparaciones, inventario de repuestos, clientes y pagos desde un solo sistema.</p>
+          <span class="solution-link">Ver solución →</span>
+        </a>
+
+        <a href="/soluciones/cotizador-fabrica" class="solution-card">
+          <div class="solution-icon">🏭</div>
+          <h2>Cotizador / Fábrica</h2>
+          <p>Crea cotizaciones personalizadas, controla costos, materiales y tiempos de producción.</p>
+          <span class="solution-link">Ver solución →</span>
+        </a>
+
+        <a href="/soluciones/desarrollo-web" class="solution-card">
+          <div class="solution-icon">🌐</div>
+          <h2>Desarrollo Web</h2>
+          <p>Páginas web profesionales, ecommerce y sistemas web personalizados para tu negocio.</p>
+          <span class="solution-link">Ver solución →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="solutions-cta">
+    <div class="container">
+      <h2>¿No encuentras tu solución?</h2>
+      <p>Cada negocio es único. Podemos crear una solución personalizada para ti.</p>
+      <a href="/contacto" class="btn-primary">Solicitar diagnóstico estratégico</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .solutions-hero {
+    padding: 8rem 2rem 4rem;
+    text-align: center;
+    background: var(--color-elephant-white, #F6F5F2);
+  }
+
+  .solutions-hero h1 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1.5rem;
+  }
+
+  .solutions-hero .subtitle {
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    color: var(--color-grey-medium, #9A9A97);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .solutions-grid {
+    padding: 4rem 2rem;
+  }
+
+  .solutions-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .solution-card {
+    display: flex;
+    flex-direction: column;
+    padding: 2.5rem;
+    background: var(--color-white-pure, #FFFFFF);
+    border: 1px solid var(--color-grey-light, #E5E5E3);
+    border-radius: 16px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .solution-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .solution-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .solution-card h2 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1rem;
+  }
+
+  .solution-card p {
+    color: var(--color-grey-medium, #9A9A97);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+  }
+
+  .solution-link {
+    color: var(--color-graphite-dark, #2B2B2B);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .solution-card:hover .solution-link {
+    color: var(--color-black-deep, #111111);
+  }
+
+  .solutions-cta {
+    padding: 4rem 2rem;
+    text-align: center;
+    background: var(--color-elephant-white, #F6F5F2);
+  }
+
+  .solutions-cta h2 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1rem;
+  }
+
+  .solutions-cta p {
+    font-size: 1.25rem;
+    color: var(--color-grey-medium, #9A9A97);
+    margin-bottom: 2rem;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: var(--color-black-deep, #111111);
+    color: var(--color-white-pure, #FFFFFF);
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background: var(--color-graphite-dark, #2B2B2B);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  @media (max-width: 768px) {
+    .solutions-hero {
+      padding: 6rem 1rem 3rem;
+    }
+
+    .solutions-grid {
+      padding: 3rem 1rem;
+    }
+
+    .solutions-list {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .solution-card {
+      padding: 2rem;
+    }
+  }
+</style>
+

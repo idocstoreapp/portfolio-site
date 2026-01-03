@@ -1,0 +1,39 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AdminGuard from '../../components/admin/AdminGuard';
+import AdminSidebar from '../../components/admin/AdminSidebar';
+import DiagnosticosList from '../../components/admin/DiagnosticosList';
+
+export const prerender = false;
+const currentPath = Astro.url.pathname;
+---
+
+<Layout 
+  title="Diagnósticos | Panel de Administración"
+  description="Gestiona todos los diagnósticos realizados"
+>
+  <AdminGuard client:load>
+    <div className="flex min-h-screen bg-gray-50">
+      <AdminSidebar client:load currentPath={currentPath} />
+      <div className="flex-1 ml-64">
+        <header className="bg-white shadow-sm border-b border-gray-200">
+          <div className="px-6 py-4">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Sistema de Gestión de Diagnósticos
+            </h2>
+          </div>
+        </header>
+        <main className="p-6">
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-gray-900">Diagnósticos</h1>
+            <p className="text-gray-600 mt-2">
+              Gestiona todos los diagnósticos realizados
+            </p>
+          </div>
+          <DiagnosticosList client:load />
+        </main>
+      </div>
+    </div>
+  </AdminGuard>
+</Layout>
+

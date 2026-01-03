@@ -1,0 +1,185 @@
+---
+interface Props {
+  steps: Array<{
+    number: number;
+    title: string;
+    description: string;
+    image?: string;
+  }>;
+}
+
+const { steps } = Astro.props;
+---
+
+<section class="process-section" id="como-funciona">
+  <div class="process-container">
+    <div class="process-header">
+      <h2 class="process-title">Cómo funciona</h2>
+      <p class="process-subtitle">Proceso simple y claro paso a paso</p>
+    </div>
+    <div class="process-timeline">
+      {steps.map((step, index) => (
+        <div class={`process-step ${index % 2 === 0 ? 'step-left' : 'step-right'}`}>
+          <div class="step-number">{step.number}</div>
+          <div class="step-content">
+            {step.image && (
+              <div class="step-image">
+                <img src={step.image} alt={step.title} loading="lazy" />
+              </div>
+            )}
+            <div class="step-text">
+              <h3 class="step-title">{step.title}</h3>
+              <p class="step-description">{step.description}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .process-section {
+    padding: 4rem 1rem;
+    background: white;
+  }
+
+  .process-container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .process-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .process-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1rem;
+  }
+
+  .process-subtitle {
+    font-size: 1.125rem;
+    color: var(--color-grey-medium, #9A9A97);
+  }
+
+  .process-timeline {
+    position: relative;
+    padding: 2rem 0;
+  }
+
+  .process-timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    background: var(--color-grey-light, #E5E5E3);
+  }
+
+  .process-step {
+    position: relative;
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .step-left {
+    flex-direction: row;
+  }
+
+  .step-right {
+    flex-direction: row-reverse;
+  }
+
+  .step-number {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--color-graphite-dark, #2B2B2B);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+
+  .step-content {
+    flex: 1;
+    max-width: 45%;
+    background: var(--color-elephant-white, #F6F5F2);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .step-left .step-content {
+    margin-right: auto;
+  }
+
+  .step-right .step-content {
+    margin-left: auto;
+  }
+
+  .step-image {
+    width: 100%;
+    height: 200px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    background: var(--color-grey-light, #E5E5E3);
+  }
+
+  .step-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .step-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 0.75rem;
+  }
+
+  .step-description {
+    font-size: 1rem;
+    color: var(--color-grey-medium, #9A9A97);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .process-timeline::before {
+      left: 30px;
+    }
+
+    .process-step {
+      flex-direction: row !important;
+      padding-left: 4rem;
+    }
+
+    .step-number {
+      left: 30px;
+    }
+
+    .step-content {
+      max-width: 100%;
+      margin: 0 !important;
+    }
+  }
+</style>
+
