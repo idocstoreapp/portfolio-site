@@ -137,7 +137,7 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
 
   :global(.option-card) {
     background: #FFFFFF !important;
-    border: 2px solid #E5E5E3 !important;
+    border: none !important;
     border-radius: 16px !important;
     padding: 2rem 1.5rem !important;
     text-align: center !important;
@@ -150,17 +150,18 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
     min-height: 200px !important;
     position: relative !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    outline: none !important;
   }
 
   :global(.option-card:hover) {
-    border-color: var(--color-graphite-dark, #2B2B2B) !important;
+    border: none !important;
     transform: translateY(-4px) !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
     background: #F6F5F2 !important;
   }
 
   :global(.option-card.selected) {
-    border-color: var(--color-graphite-dark, #2B2B2B) !important;
+    border: none !important;
     background: var(--color-graphite-dark, #2B2B2B) !important;
     color: #FFFFFF !important;
     box-shadow: 0 8px 24px rgba(43, 43, 43, 0.2) !important;
@@ -429,6 +430,40 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
       justify-content: flex-start !important;
       text-align: left !important;
       border-radius: 12px !important;
+      background: #FFFFFF !important;
+      border: none !important;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      transform: scale(1) !important;
+      transform-origin: center !important;
+      position: relative !important;
+      outline: none !important;
+    }
+    
+    :global(.option-card.sector-option-card:active) {
+      transform: scale(0.98) !important;
+    }
+    
+    :global(.option-card.sector-option-card.selected) {
+      border: none !important;
+      background: #FFFFFF !important;
+      transform: scale(1.03) !important;
+      box-shadow: 
+        0 12px 24px rgba(0, 0, 0, 0.15),
+        0 6px 12px rgba(0, 0, 0, 0.12),
+        0 3px 6px rgba(0, 0, 0, 0.08),
+        0 1px 2px rgba(0, 0, 0, 0.04) !important;
+      z-index: 10 !important;
+      outline: none !important;
+    }
+    
+    :global(.option-card.sector-option-card.selected .card-title) {
+      color: #2B2B2B !important;
+      font-weight: 700 !important;
+    }
+    
+    :global(.option-card.sector-option-card.selected .card-description) {
+      color: #2B2B2B !important;
     }
     
     :global(.sector-option-card .card-icon) {

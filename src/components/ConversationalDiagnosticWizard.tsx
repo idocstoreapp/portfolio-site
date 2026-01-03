@@ -83,15 +83,15 @@ export default function ConversationalDiagnosticWizard() {
           {BUSINESS_SECTORS.map((sector) => (
             <button
               key={sector.value}
-              className="option-card sector-option-card"
+              className={`option-card sector-option-card ${selectedSector === sector.value ? 'selected' : ''}`}
               style={{
                 background: '#FFFFFF',
-                border: '2px solid #E5E5E3',
+                border: isMobile ? 'none' : '2px solid #E5E5E3',
                 borderRadius: isMobile ? '12px' : '16px',
                 padding: isMobile ? '1rem 1.25rem' : '2rem 1.5rem',
                 textAlign: 'left',
                 cursor: 'pointer',
-                transition: 'all 0.3s ease',
+                transition: isMobile ? 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' : 'all 0.3s ease',
                 display: 'flex',
                 flexDirection: isMobile ? 'row' : 'column',
                 alignItems: 'center',
@@ -100,20 +100,38 @@ export default function ConversationalDiagnosticWizard() {
                 minHeight: isMobile ? 'auto' : '200px',
                 height: isMobile ? 'auto' : 'auto',
                 position: 'relative',
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
-                width: '100%'
+                boxShadow: isMobile 
+                  ? '0 2px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04)' 
+                  : '0 2px 8px rgba(0, 0, 0, 0.05)',
+                width: '100%',
+                transform: 'scale(1)',
+                transformOrigin: 'center'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#2B2B2B';
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.12)';
-                e.currentTarget.style.background = '#F6F5F2';
+                if (!isMobile) {
+                  e.currentTarget.style.borderColor = '#2B2B2B';
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.12)';
+                  e.currentTarget.style.background = '#F6F5F2';
+                }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#E5E5E3';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.05)';
-                e.currentTarget.style.background = '#FFFFFF';
+                if (!isMobile) {
+                  e.currentTarget.style.borderColor = '#E5E5E3';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.05)';
+                  e.currentTarget.style.background = '#FFFFFF';
+                }
+              }}
+              onTouchStart={(e) => {
+                if (isMobile) {
+                  e.currentTarget.style.transform = 'scale(0.98)';
+                }
+              }}
+              onTouchEnd={(e) => {
+                if (isMobile) {
+                  e.currentTarget.style.transform = 'scale(1)';
+                }
               }}
               onClick={() => {
                 setSelectedSector(sector.value);
