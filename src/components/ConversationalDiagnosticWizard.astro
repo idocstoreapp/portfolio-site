@@ -149,7 +149,7 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
     gap: 1rem !important;
     min-height: 200px !important;
     position: relative !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 3px 5px 16px rgba(0, 0, 0, 0.05) !important;
     outline: none !important;
   }
 
@@ -177,25 +177,38 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
   }
 
   :global(.card-icon) {
-    font-size: 3.5rem !important;
+    width: 56px !important;
+    height: 56px !important;
     margin-bottom: 0.5rem !important;
     line-height: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  :global(.card-icon img) {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
   }
 
   :global(.card-title) {
-    font-family: 'Libre Baskerville', serif !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
     font-size: 1.25rem !important;
-    font-weight: 700 !important;
+    font-weight: 600 !important;
     color: var(--color-graphite-dark, #2B2B2B) !important;
     margin: 0 !important;
-    line-height: 1.3 !important;
+    line-height: 1.4 !important;
+    letter-spacing: -0.01em !important;
   }
 
   :global(.card-description) {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
     font-size: 0.875rem !important;
-    color: var(--color-grey-medium, #9A9A97) !important;
+    color: #6B7280 !important;
     margin: 0 !important;
     line-height: 1.5 !important;
+    font-weight: 400 !important;
   }
 
   :global(.check-icon) {
@@ -432,7 +445,7 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
       border-radius: 12px !important;
       background: #FFFFFF !important;
       border: none !important;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+      box-shadow: 4px 2px 8px rgba(0, 0, 0, 0.08), 4px 3px 13px rgba(0, 0, 0, 0.06) !important;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
       transform: scale(1) !important;
       transform-origin: center !important;
@@ -467,23 +480,39 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
     }
     
     :global(.sector-option-card .card-icon) {
-      font-size: 2rem !important;
+      width: 40px !important;
+      height: 40px !important;
       margin-bottom: 0 !important;
       margin-right: 0 !important;
       flex-shrink: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    
+    :global(.sector-option-card .card-icon img) {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain !important;
     }
     
     :global(.sector-option-card .card-title) {
       font-size: 1rem !important;
+      font-weight: 600 !important;
       text-align: left !important;
       margin: 0 !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+      letter-spacing: -0.01em !important;
     }
     
     :global(.sector-option-card .card-description) {
-      font-size: 0.75rem !important;
+      font-size: 0.8125rem !important;
+      font-weight: 400 !important;
       text-align: left !important;
       margin-top: 0.25rem !important;
-      line-height: 1.4 !important;
+      line-height: 1.5 !important;
+      color: #6B7280 !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
     }
 
     :global(.option-card:not(.sector-option-card)) {

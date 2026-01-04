@@ -18,12 +18,12 @@ import {
 import { createDiagnostic } from '../utils/backendClient';
 
 const BUSINESS_SECTORS: Array<{ value: BusinessSector; label: string; description: string; icon: string }> = [
-  { value: 'restaurante', label: 'Restaurante / Bar / Café', description: 'Negocio de comida y bebidas', icon: '🍽️' },
-  { value: 'servicio-tecnico', label: 'Servicio Técnico', description: 'Reparación de celulares, electrodomésticos, etc.', icon: '🔧' },
-  { value: 'taller', label: 'Taller Mecánico', description: 'Reparación de autos, motos, etc.', icon: '🚗' },
-  { value: 'fabrica', label: 'Fábrica / Mueblería', description: 'Producción y cotizaciones a medida', icon: '🏭' },
-  { value: 'comercio', label: 'Comercio / Tienda', description: 'Venta de productos', icon: '🏪' },
-  { value: 'servicios', label: 'Servicios Profesionales', description: 'Consultoría, diseño, etc.', icon: '💼' }
+  { value: 'restaurante', label: 'Restaurante / Bar / Café', description: 'Negocio de comida y bebidas', icon: '/images/icons/restaurante.png' },
+  { value: 'servicio-tecnico', label: 'Servicio Técnico', description: 'Reparación de celulares, electrodomésticos, etc.', icon: '/images/icons/servicio-tecnico.png' },
+  { value: 'taller', label: 'Taller Mecánico', description: 'Reparación de autos, motos, etc.', icon: '/images/icons/taller.png' },
+  { value: 'fabrica', label: 'Fábrica / Mueblería', description: 'Producción y cotizaciones a medida', icon: '/images/icons/fabrica.png' },
+  { value: 'comercio', label: 'Comercio / Tienda', description: 'Venta de productos', icon: '/images/icons/tienda.png' },
+  { value: 'servicios', label: 'Servicios Profesionales', description: 'Consultoría, diseño, etc.', icon: '/images/icons/servicios-profesionales.png' }
 ];
 
 interface DiagnosticAnswers {
@@ -140,12 +140,25 @@ export default function ConversationalDiagnosticWizard() {
               }}
             >
               <div className="card-icon" style={{ 
-                fontSize: isMobile ? '2rem' : '3.5rem', 
+                width: isMobile ? '40px' : '56px',
+                height: isMobile ? '40px' : '56px',
                 marginBottom: isMobile ? '0' : '0.5rem', 
+                marginRight: isMobile ? '0' : '0',
                 lineHeight: 1,
-                flexShrink: 0
+                flexShrink: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}>
-                {sector.icon}
+                <img 
+                  src={sector.icon} 
+                  alt={sector.label}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain'
+                  }}
+                />
               </div>
               <div style={{ 
                 display: 'flex', 
@@ -155,22 +168,25 @@ export default function ConversationalDiagnosticWizard() {
                 textAlign: isMobile ? 'left' : 'center'
               }}>
                 <h4 className="card-title" style={{
-                  fontFamily: "'Libre Baskerville', serif",
+                  fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif",
                   fontSize: isMobile ? '1rem' : '1.25rem',
-                  fontWeight: 700,
+                  fontWeight: 600,
                   color: '#2B2B2B',
                   margin: 0,
                   textAlign: isMobile ? 'left' : 'center',
-                  lineHeight: 1.3
+                  lineHeight: 1.4,
+                  letterSpacing: '-0.01em'
                 }}>
                   {sector.label}
                 </h4>
                 <p className="card-description" style={{
-                  fontSize: isMobile ? '0.75rem' : '0.875rem',
-                  color: '#9A9A97',
+                  fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif",
+                  fontSize: isMobile ? '0.8125rem' : '0.875rem',
+                  color: '#6B7280',
                   margin: 0,
                   marginTop: isMobile ? '0.25rem' : '0',
-                  lineHeight: 1.4
+                  lineHeight: 1.5,
+                  fontWeight: 400
                 }}>
                   {sector.description}
                 </p>
@@ -354,9 +370,9 @@ export default function ConversationalDiagnosticWizard() {
                     </div>
                   )}
                   <h4 className="card-title" style={{
-                    fontFamily: "'Libre Baskerville', serif",
+                    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif",
                     fontSize: '1.25rem',
-                    fontWeight: 700,
+                    fontWeight: 600,
                     color: isSelected ? '#FFFFFF' : '#2B2B2B',
                     margin: 0,
                     lineHeight: 1.3
