@@ -66,3 +66,4 @@ Después de ejecutar el schema:
    - Ejecuta `npm run start:dev`
    - Prueba crear un diagnóstico con Postman
 
+

@@ -492,3 +492,4 @@ El problema principal es que **el frontend no está usando el backend**. La solu
 
 Esto resuelve todos los problemas actuales y crea una arquitectura escalable y mantenible.
 
+

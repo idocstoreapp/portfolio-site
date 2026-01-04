@@ -132,3 +132,4 @@ export async function getDiagnosticResult(id: string) {
   return response.json();
 }
 
+

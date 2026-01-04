@@ -20,3 +20,4 @@ COMMENT ON COLUMN diagnosticos.situacion_actual IS 'Situación actual del negoci
 COMMENT ON COLUMN diagnosticos.tipo_negocio IS 'Tipo específico de negocio para web (servicios, productos, portfolio, etc.)';
 COMMENT ON COLUMN diagnosticos.envelope_data IS 'Diagnostic envelope completo en formato JSON para referencia futura';
 
+

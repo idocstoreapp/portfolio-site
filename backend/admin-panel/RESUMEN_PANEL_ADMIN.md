@@ -188,3 +188,4 @@ VALUES ('user_id', 'Tu Nombre', 'tu@email.com', 'admin', true, true, true);
 
 Sigue las instrucciones en `INSTRUCCIONES_INSTALACION.md` para configurarlo.
 
+

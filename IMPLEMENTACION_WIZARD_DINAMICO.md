@@ -112,3 +112,4 @@ O mantén ambos y permite al usuario elegir.
 - El sistema es extensible: fácil agregar nuevos tipos de negocio o preguntas
 - El motor de diagnóstico es consultivo, no comercial agresivo
 
+

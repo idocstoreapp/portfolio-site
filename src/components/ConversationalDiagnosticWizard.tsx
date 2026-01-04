@@ -39,6 +39,7 @@ export default function ConversationalDiagnosticWizard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isMobile, setIsMobile] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false); // Flag para saber si se completó
 
   useEffect(() => {
     const checkMobile = () => {
@@ -49,6 +50,24 @@ export default function ConversationalDiagnosticWizard() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Prevenir envío si se abandona el wizard antes de completarlo
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      // Solo mostrar advertencia si el wizard está en progreso pero no completado
+      if (!isCompleted && selectedSector && currentStep >= 0) {
+        e.preventDefault();
+        e.returnValue = ''; // Chrome requiere returnValue
+        return ''; // Algunos navegadores requieren return string
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isCompleted, selectedSector, currentStep]);
+
   // Obtener todas las preguntas en orden
   const getAllQuestions = (): ConversationalQuestion[] => {
     if (!selectedSector) return [];
@@ -57,10 +76,25 @@ export default function ConversationalDiagnosticWizard() {
     return [...sectorQuestions, ...TRANSVERSAL_QUESTIONS];
   };
 
-  const allQuestions = getAllQuestions();
-  const currentQuestion = allQuestions[currentStep];
-  const isLastQuestion = currentStep === allQuestions.length - 1;
   const isSectorSelection = currentStep === -1;
+  
+  // Obtener todas las preguntas si hay sector seleccionado
+  const allQuestions = selectedSector ? getAllQuestions() : [];
+  
+  // Calcular currentQuestion de forma segura
+  let currentQuestion: ConversationalQuestion | undefined = undefined;
+  if (selectedSector && allQuestions.length > 0) {
+    if (currentStep >= 0 && currentStep < allQuestions.length) {
+      currentQuestion = allQuestions[currentStep];
+    } else {
+      // Si currentStep está fuera de rango, ajustarlo
+      console.warn('currentStep fuera de rango:', { currentStep, allQuestionsLength: allQuestions.length });
+    }
+  }
+  
+  const isLastQuestion = selectedSector && allQuestions.length > 0 && currentStep >= 0
+    ? currentStep === allQuestions.length - 1 
+    : false;
 
   // Paso inicial: Selección de sector
   if (isSectorSelection) {
@@ -208,12 +242,40 @@ export default function ConversationalDiagnosticWizard() {
     );
   }
 
-  // Si no hay sector seleccionado, mostrar selección
-  if (!selectedSector || !currentQuestion) {
+  // Si no hay sector seleccionado, no debería llegar aquí (ya se maneja en isSectorSelection)
+  if (!selectedSector) {
+    return null;
+  }
+
+  // Obtener la pregunta actual de forma segura
+  // Si currentQuestion es undefined pero hay preguntas disponibles, obtenerla directamente
+  let questionToRender = currentQuestion;
+  if (!questionToRender && allQuestions.length > 0 && currentStep >= 0 && currentStep < allQuestions.length) {
+    questionToRender = allQuestions[currentStep];
+  }
+  
+  // Verificar que tenemos una pregunta válida para mostrar
+  if (!questionToRender) {
+    // Si no hay preguntas disponibles, mostrar error
+    if (allQuestions.length === 0) {
+      console.error('No se encontraron preguntas para el sector:', selectedSector);
+      return (
+        <div className="wizard-step active">
+          <div className="step-header">
+            <h3 className="step-title">Error</h3>
+            <p className="step-description">No se encontraron preguntas para este sector. Por favor, intenta de nuevo.</p>
+          </div>
+        </div>
+      );
+    }
+    
+    // Si hay preguntas pero no podemos obtener la actual, mostrar estado de carga
+    console.warn('No se pudo obtener la pregunta actual:', { currentStep, allQuestionsLength: allQuestions.length, selectedSector });
     return (
       <div className="wizard-step active">
         <div className="step-header">
-          <h3 className="step-title">Cargando...</h3>
+          <h3 className="step-title">Cargando preguntas...</h3>
+          <p className="step-description">Por favor espera un momento</p>
         </div>
       </div>
     );
@@ -221,19 +283,22 @@ export default function ConversationalDiagnosticWizard() {
 
   // Renderizar pregunta actual
   const renderQuestion = () => {
-    const isMultiple = currentQuestion.type === 'multiple';
-    const isNumber = currentQuestion.type === 'number';
-    const isText = currentQuestion.type === 'text';
-    const selectedValue = answers[currentQuestion.id];
+    // Usar questionToRender que ya está validado
+    const question = questionToRender;
+    const isMultiple = question.type === 'multiple';
+    const isNumber = question.type === 'number';
+    const isText = question.type === 'text';
+    const selectedValue = answers[question.id];
+    const isFirstQuestion = currentStep === 0;
 
     return (
       <div className="wizard-step active">
         <div className="step-header">
           <div className="conversational-question">
             <span className="step-number">{currentStep + 1} / {allQuestions.length}</span>
-            <h3 className="step-title">{currentQuestion.title}</h3>
-            {currentQuestion.subtitle && (
-              <p className="step-description">{currentQuestion.subtitle}</p>
+            <h3 className="step-title">{question.title}</h3>
+            {question.subtitle && (
+              <p className="step-description">{question.subtitle}</p>
             )}
           </div>
         </div>
@@ -243,28 +308,49 @@ export default function ConversationalDiagnosticWizard() {
             <input
               type="number"
               className="number-input"
-              placeholder={currentQuestion.placeholder || 'Ingresa un número'}
+              placeholder={question.placeholder || 'Ingresa un número'}
               value={selectedValue || ''}
               onChange={(e) => {
                 const value = parseInt(e.target.value) || 0;
-                setAnswers({ ...answers, [currentQuestion.id]: value });
+                setAnswers({ ...answers, [question.id]: value });
               }}
-              min={currentQuestion.validation?.min}
-              max={currentQuestion.validation?.max}
+              min={question.validation?.min}
+              max={question.validation?.max}
             />
-            <button
-              className="btn-continue"
-              onClick={() => {
-                if (isLastQuestion) {
-                  handleSubmit();
-                } else {
-                  setCurrentStep(currentStep + 1);
-                }
-              }}
-              disabled={!selectedValue || selectedValue < (currentQuestion.validation?.min || 1)}
-            >
-              Continuar →
-            </button>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1.5rem' }}>
+              {!isFirstQuestion && (
+                <button
+                  className="btn-back"
+                  onClick={() => setCurrentStep(currentStep - 1)}
+                  style={{
+                    padding: '0.75rem 1.5rem',
+                    background: '#F6F5F2',
+                    border: '2px solid #E5E5E3',
+                    borderRadius: '8px',
+                    color: '#2B2B2B',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    fontWeight: 500,
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  ← Anterior
+                </button>
+              )}
+              <button
+                className="btn-continue"
+                onClick={() => {
+                  if (isLastQuestion) {
+                    handleSubmit();
+                  } else {
+                    setCurrentStep(currentStep + 1);
+                  }
+                }}
+                disabled={!selectedValue || selectedValue < (question.validation?.min || 1)}
+              >
+                Continuar →
+              </button>
+            </div>
           </div>
         )}
 
@@ -273,36 +359,57 @@ export default function ConversationalDiagnosticWizard() {
             <input
               type="text"
               className="text-input"
-              placeholder={currentQuestion.placeholder || 'Escribe tu respuesta'}
+              placeholder={question.placeholder || 'Escribe tu respuesta'}
               value={selectedValue || ''}
               onChange={(e) => {
-                setAnswers({ ...answers, [currentQuestion.id]: e.target.value });
+                setAnswers({ ...answers, [question.id]: e.target.value });
               }}
             />
-            <button
-              className="btn-continue"
-              onClick={() => {
-                if (isLastQuestion) {
-                  handleSubmit();
-                } else {
-                  setCurrentStep(currentStep + 1);
-                }
-              }}
-              disabled={!selectedValue}
-            >
-              Continuar →
-            </button>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1.5rem' }}>
+              {!isFirstQuestion && (
+                <button
+                  className="btn-back"
+                  onClick={() => setCurrentStep(currentStep - 1)}
+                  style={{
+                    padding: '0.75rem 1.5rem',
+                    background: '#F6F5F2',
+                    border: '2px solid #E5E5E3',
+                    borderRadius: '8px',
+                    color: '#2B2B2B',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    fontWeight: 500,
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  ← Anterior
+                </button>
+              )}
+              <button
+                className="btn-continue"
+                onClick={() => {
+                  if (isLastQuestion) {
+                    handleSubmit();
+                  } else {
+                    setCurrentStep(currentStep + 1);
+                  }
+                }}
+                disabled={!selectedValue}
+              >
+                Continuar →
+              </button>
+            </div>
           </div>
         )}
 
-        {currentQuestion.options && (
+        {question.options && (
           <div className="cards-grid" style={{ 
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
             gap: '1.5rem',
             marginTop: '2rem'
           }}>
-            {currentQuestion.options.map((option) => {
+            {question.options.map((option) => {
               const isSelected = isMultiple
                 ? Array.isArray(selectedValue) && selectedValue.includes(option.value)
                 : selectedValue === option.value;
@@ -350,23 +457,35 @@ export default function ConversationalDiagnosticWizard() {
                       const newValue = isSelected
                         ? currentArray.filter(v => v !== option.value)
                         : [...currentArray, option.value];
-                      setAnswers({ ...answers, [currentQuestion.id]: newValue });
+                      setAnswers({ ...answers, [question.id]: newValue });
                     } else {
-                      setAnswers({ ...answers, [currentQuestion.id]: option.value });
-                      // Auto-avanzar después de un breve delay para mejor UX
-                      setTimeout(() => {
-                        if (isLastQuestion) {
-                          handleSubmit();
-                        } else {
+                      setAnswers({ ...answers, [question.id]: option.value });
+                      // Auto-avanzar después de un breve delay para mejor UX (solo si no es la última pregunta)
+                      if (!isLastQuestion) {
+                        setTimeout(() => {
                           setCurrentStep(currentStep + 1);
-                        }
-                      }, 300);
+                        }, 300);
+                      }
                     }
                   }}
                 >
                   {option.icon && (
-                    <div className="card-icon" style={{ fontSize: '3.5rem', marginBottom: '0.5rem', lineHeight: 1 }}>
-                      {option.icon}
+                    <div 
+                      className="card-icon" 
+                      style={{ 
+                        fontSize: '3.5rem', 
+                        marginBottom: '0.5rem', 
+                        lineHeight: 1,
+                        // Asegurar que los emojis se rendericen como texto, no como URLs
+                        display: 'inline-block',
+                        userSelect: 'none'
+                      }}
+                      // Prevenir que se trate como URL
+                      data-icon={option.icon}
+                    >
+                      {typeof option.icon === 'string' && !option.icon.startsWith('http') && !option.icon.startsWith('/') 
+                        ? option.icon 
+                        : null}
                     </div>
                   )}
                   <h4 className="card-title" style={{
@@ -414,8 +533,60 @@ export default function ConversationalDiagnosticWizard() {
           </div>
         )}
 
+        {/* Botón Anterior para preguntas de tipo single (no múltiples) */}
+        {!isMultiple && question.options && !isLastQuestion && (
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2rem' }}>
+            {!isFirstQuestion && (
+              <button
+                className="btn-back"
+                onClick={() => setCurrentStep(currentStep - 1)}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: '#F6F5F2',
+                  border: '2px solid #E5E5E3',
+                  borderRadius: '8px',
+                  color: '#2B2B2B',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 500,
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#E5E5E3';
+                  e.currentTarget.style.borderColor = '#2B2B2B';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#F6F5F2';
+                  e.currentTarget.style.borderColor = '#E5E5E3';
+                }}
+              >
+                ← Anterior
+              </button>
+            )}
+          </div>
+        )}
+
         {isMultiple && (
-          <div className="continue-container">
+          <div className="continue-container" style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2rem' }}>
+            {!isFirstQuestion && (
+              <button
+                className="btn-back"
+                onClick={() => setCurrentStep(currentStep - 1)}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: '#F6F5F2',
+                  border: '2px solid #E5E5E3',
+                  borderRadius: '8px',
+                  color: '#2B2B2B',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 500,
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                ← Anterior
+              </button>
+            )}
             <button
               className="btn-continue"
               onClick={() => {
@@ -459,23 +630,86 @@ export default function ConversationalDiagnosticWizard() {
                 onChange={(e) => setContactInfo({ ...contactInfo, email: e.target.value })}
               />
             </div>
-            <button
-              className="btn-submit"
-              onClick={handleSubmit}
-              disabled={loading}
-            >
-              {loading ? 'Generando tu diagnóstico...' : 'Generar mi diagnóstico personalizado'}
-            </button>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '1.5rem' }}>
+              {!isFirstQuestion && (
+                <button
+                  className="btn-back"
+                  onClick={() => setCurrentStep(currentStep - 1)}
+                  style={{
+                    padding: '0.75rem 1.5rem',
+                    background: '#F6F5F2',
+                    border: '2px solid #E5E5E3',
+                    borderRadius: '8px',
+                    color: '#2B2B2B',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    fontWeight: 500,
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#E5E5E3';
+                    e.currentTarget.style.borderColor = '#2B2B2B';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#F6F5F2';
+                    e.currentTarget.style.borderColor = '#E5E5E3';
+                  }}
+                >
+                  ← Anterior
+                </button>
+              )}
+              <button
+                className="btn-submit"
+                onClick={handleSubmit}
+                disabled={loading || !isAllQuestionsAnswered()}
+              >
+                {loading ? 'Generando tu diagnóstico...' : 'Generar mi diagnóstico personalizado'}
+              </button>
+            </div>
+            {!isAllQuestionsAnswered() && (
+              <p style={{ 
+                marginTop: '1rem', 
+                color: '#9A9A97', 
+                fontSize: '0.875rem',
+                textAlign: 'center'
+              }}>
+                Por favor, completa todas las preguntas para generar tu diagnóstico
+              </p>
+            )}
           </div>
         )}
       </div>
     );
   };
 
-  // Manejar envío final
+  // Verificar si todas las preguntas están respondidas
+  const isAllQuestionsAnswered = () => {
+    if (!selectedSector) return false;
+    
+    const allQuestions = getAllQuestions();
+    
+    // Verificar que todas las preguntas tengan respuesta
+    for (const question of allQuestions) {
+      const answer = answers[question.id];
+      if (!answer || (Array.isArray(answer) && answer.length === 0)) {
+        return false;
+      }
+    }
+    
+    return true;
+  };
+
+  // Manejar envío final - SOLO si se completó todo el test
   const handleSubmit = async () => {
+    // Verificar que todas las preguntas estén respondidas
+    if (!isAllQuestionsAnswered()) {
+      setError('Por favor, completa todas las preguntas antes de enviar el diagnóstico.');
+      return;
+    }
+
     setLoading(true);
     setError('');
+    setIsCompleted(true); // Marcar como completado antes de enviar
 
     try {
       // Calcular costos y ahorros
@@ -507,6 +741,7 @@ export default function ConversationalDiagnosticWizard() {
       const response = await createDiagnostic(diagnosticData);
 
       if (response.success && response.data?.id) {
+        // Redirigir solo si se completó exitosamente
         window.location.href = `/diagnostico/${response.data.id}`;
       } else {
         throw new Error('No se recibió ID del diagnóstico');
@@ -515,6 +750,7 @@ export default function ConversationalDiagnosticWizard() {
       console.error('Error creating diagnostic:', err);
       setError(err.message || 'Error al procesar el diagnóstico');
       setLoading(false);
+      setIsCompleted(false); // Resetear si hay error
     }
   };
 

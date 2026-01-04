@@ -138,3 +138,4 @@ Agregar el nuevo wizard como opción adicional o en una sección separada.
 - El sistema es retrocompatible con diagnósticos antiguos
 - El envelope completo se guarda en JSONB para referencia futura
 
+

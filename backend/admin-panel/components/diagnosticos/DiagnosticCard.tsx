@@ -102,3 +102,4 @@ export default function DiagnosticCard({ diagnostic }: DiagnosticCardProps) {
   );
 }
 
+

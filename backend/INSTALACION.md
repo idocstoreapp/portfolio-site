@@ -91,3 +91,4 @@ npm run start:prod
 - El Service Role Key solo debe usarse en el backend, nunca en el frontend
 - Configura CORS correctamente para producción
 
+

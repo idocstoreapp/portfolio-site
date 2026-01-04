@@ -130,3 +130,4 @@ Cada problema detectado genera un insight con:
 - Los ahorros se calculan asumiendo 80% reducción de tiempo y 85% de costos
 - El ROI se calcula comparando ahorros vs. costo del sistema (estimado en $300/mes)
 
+

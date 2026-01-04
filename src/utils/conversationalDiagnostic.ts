@@ -731,13 +731,33 @@ export const TRANSVERSAL_QUESTIONS: ConversationalQuestion[] = [
     id: 'empleados',
     title: '¿Cuántos empleados tienes?',
     subtitle: 'Esto me ayuda a entender el tamaño de tu operación',
-    type: 'number',
-    placeholder: 'Ej: 5',
-    validation: {
-      min: 1,
-      max: 1000,
-      required: true
-    }
+    type: 'single',
+    options: [
+      {
+        value: '1-5',
+        label: '1-5 empleados',
+        description: 'Negocio pequeño',
+        icon: '👤'
+      },
+      {
+        value: '6-15',
+        label: '6-15 empleados',
+        description: 'Negocio mediano',
+        icon: '👥'
+      },
+      {
+        value: '16-50',
+        label: '16-50 empleados',
+        description: 'Negocio grande',
+        icon: '🏢'
+      },
+      {
+        value: '50+',
+        label: 'Más de 50 empleados',
+        description: 'Empresa grande',
+        icon: '🏭'
+      }
+    ]
   },
   {
     id: 'sucursales',
@@ -1052,7 +1072,7 @@ export function generatePersonalizedMessage(
   sector: BusinessSector,
   summary: ConversationalDiagnosticResult['summary']
 ): ConversationalDiagnosticResult['personalizedMessage'] {
-  const employeeCount = answers['empleados'] || 1;
+  const employeeRange = answers['empleados'] || '1-5';
   const hasMultipleLocations = answers['sucursales'] === 'varias';
   
   const greeting = `Hola${answers.nombre ? `, ${answers.nombre}` : ''}`;
@@ -1082,4 +1102,5 @@ function getSectorName(sector: BusinessSector): string {
   };
   return names[sector] || 'negocio';
 }
+
 

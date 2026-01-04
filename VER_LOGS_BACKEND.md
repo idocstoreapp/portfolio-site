@@ -71,3 +71,4 @@ Inmediatamente después de hacer clic, deberías ver en la terminal del backend:
 
 **Los logs son la clave para resolver el problema. Sin ellos, no puedo saber qué está fallando exactamente.**
 
+

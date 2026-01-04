@@ -516,3 +516,4 @@ Cada página de solución debe tener:
 - Priorizar conversión sobre estética
 - Cada página debe tener un propósito claro
 
+

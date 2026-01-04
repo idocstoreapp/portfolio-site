@@ -144,3 +144,4 @@ npm run start:dev
 
 **Una vez que el backend esté corriendo, vuelve al diagnóstico y recarga la página.**
 
+

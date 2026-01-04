@@ -357,3 +357,4 @@ El motor actual (`diagnosticEngine.ts`) necesita mejoras basadas en proyectos re
 5. **Conectar frontend con backend**
 6. **Crear panel administrativo**
 
+

@@ -128,3 +128,4 @@ export default function CostosReales({ diagnostic, onUpdate }: CostosRealesProps
   );
 }
 
+

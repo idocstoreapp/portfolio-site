@@ -135,3 +135,4 @@ ORDER BY created_at DESC;
 
 Si no quieres usar Supabase ahora, el sistema funciona igual. Solo no se guardarán los diagnósticos. Puedes agregarlo más tarde sin romper nada.
 
+

@@ -148,3 +148,4 @@ npm install @supabase/supabase-js date-fns jspdf html2canvas
 
 **¡Ahora puedes gestionar diagnósticos desde el mismo frontend principal!** 🎉
 
+

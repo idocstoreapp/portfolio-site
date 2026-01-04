@@ -85,3 +85,4 @@
 - Todos los endpoints tienen validación y manejo de errores
 - CORS configurado para desarrollo local
 
+

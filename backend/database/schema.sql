@@ -312,3 +312,4 @@ COMMENT ON TABLE clientes IS 'Información de clientes y leads';
 COMMENT ON TABLE proyectos IS 'Proyectos asociados a clientes y diagnósticos';
 COMMENT ON TABLE usuarios_admin IS 'Usuarios administrativos del sistema';
 
+

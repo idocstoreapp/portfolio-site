@@ -135,3 +135,4 @@ Para verificar que todo funciona:
 - Las **páginas de soluciones no se modifican**
 - El sistema es **extensible**: fácil agregar nuevos tipos de negocio
 
+

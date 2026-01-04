@@ -9,3 +9,4 @@ ADD COLUMN IF NOT EXISTS aprobado_por UUID REFERENCES auth.users(id);
 CREATE INDEX IF NOT EXISTS idx_diagnosticos_fecha_aprobacion ON diagnosticos(fecha_aprobacion DESC);
 CREATE INDEX IF NOT EXISTS idx_diagnosticos_aprobado_por ON diagnosticos(aprobado_por);
 
+
