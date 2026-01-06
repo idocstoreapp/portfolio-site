@@ -1,0 +1,141 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import AdminSidebar from '../../components/admin/AdminSidebar';
+import { ICON_MAPPINGS, getUniqueIcons } from '../../utils/iconMapping';
+
+const uniqueIcons = getUniqueIcons();
+
+// Agrupar por pregunta
+const iconsByQuestion = ICON_MAPPINGS.reduce((acc, mapping) => {
+  if (!acc[mapping.questionId]) {
+    acc[mapping.questionId] = [];
+  }
+  acc[mapping.questionId].push(mapping);
+  return acc;
+}, {} as Record<string, typeof ICON_MAPPINGS>);
+---
+
+<AdminLayout>
+  <div style="position: relative; min-height: 100vh; background: #f9fafb;">
+    <AdminSidebar client:load />
+    
+    <main style="margin-left: 16rem; min-height: 100vh; width: calc(100% - 16rem);">
+      <div style="padding: 2rem; max-width: 1400px; margin: 0 auto;">
+        <div style="margin-bottom: 2rem;">
+          <h1 style="font-size: 2rem; font-weight: 700; color: #1f2937; margin-bottom: 0.5rem;">
+            Iconos para el Wizard
+          </h1>
+          <p style="color: #6b7280; font-size: 1rem;">
+            Lista de todos los iconos necesarios para las opciones del wizard.
+            Busca estos iconos en <a href="https://www.flaticon.es/" target="_blank" style="color: #3b82f6; text-decoration: underline;">Flaticon.es</a> con el estilo negro y premium.
+          </p>
+          <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">
+            Total: {ICON_MAPPINGS.length} opciones | {uniqueIcons.length} iconos únicos necesarios
+          </p>
+        </div>
+
+        <!-- Instrucciones -->
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 2rem;">
+          <h2 style="font-size: 1.25rem; font-weight: 600; color: #1e40af; margin-bottom: 0.75rem;">
+            📋 Instrucciones
+          </h2>
+          <ol style="list-style: decimal; padding-left: 1.5rem; color: #1e3a8a; line-height: 1.75;">
+            <li style="margin-bottom: 0.5rem;">
+              <strong>Busca en Flaticon:</strong> Ve a <a href="https://www.flaticon.es/" target="_blank" style="color: #3b82f6; text-decoration: underline;">flaticon.es</a> y busca cada término sugerido
+            </li>
+            <li style="margin-bottom: 0.5rem;">
+              <strong>Filtra por estilo:</strong> Busca iconos con estilo "line", "outline" o "filled" en color negro
+            </li>
+            <li style="margin-bottom: 0.5rem;">
+              <strong>Descarga:</strong> Descarga en formato PNG, tamaño 512x512 o mayor, color negro
+            </li>
+            <li style="margin-bottom: 0.5rem;">
+              <strong>Guarda:</strong> Guarda cada icono en <code style="background: #dbeafe; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875rem;">public/images/icons/</code> con el nombre sugerido
+            </li>
+            <li style="margin-bottom: 0.5rem;">
+              <strong>Estilo:</strong> Los iconos deben ser negros, premium, estilo minimalista, similar a los que ya tienes
+            </li>
+          </ol>
+        </div>
+
+        <!-- Iconos únicos necesarios -->
+        <div style="margin-bottom: 3rem;">
+          <h2 style="font-size: 1.75rem; font-weight: 700; color: #111827; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 2px solid #e5e7eb;">
+            Iconos Únicos Necesarios
+            <span style="font-size: 1rem; font-weight: 400; color: #6b7280; margin-left: 0.75rem;">
+              ({uniqueIcons.length} iconos)
+            </span>
+          </h2>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+            {uniqueIcons.map((icon, index) => (
+              <div style="background: white; border-radius: 0.75rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); border: 1px solid #e5e7eb; padding: 1.5rem;">
+                <div style="display: flex; align-items: start; gap: 1rem; margin-bottom: 1rem;">
+                  <div style="flex: 1;">
+                    <div style="font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                      {icon.fileName}
+                    </div>
+                    <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.75rem;">
+                      {icon.description}
+                    </div>
+                    <div style="background: #f3f4f6; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.75rem;">
+                      <div style="font-size: 0.75rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">
+                        Buscar en Flaticon:
+                      </div>
+                      <div style="font-size: 0.95rem; color: #111827; font-weight: 500;">
+                        "{icon.searchTerm}"
+                      </div>
+                    </div>
+                    <a 
+                      href={`https://www.flaticon.es/search?word=${encodeURIComponent(icon.searchTerm)}`}
+                      target="_blank"
+                      style="display: inline-block; background: #3b82f6; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500; text-decoration: none; transition: background 0.2s;"
+                      onmouseover="this.style.background = '#2563eb'"
+                      onmouseout="this.style.background = '#3b82f6'"
+                    >
+                      🔍 Buscar en Flaticon
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Mapeo completo por pregunta -->
+        <div style="margin-bottom: 3rem;">
+          <h2 style="font-size: 1.75rem; font-weight: 700; color: #111827; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 2px solid #e5e7eb;">
+            Mapeo Completo por Pregunta
+          </h2>
+
+          {Object.entries(iconsByQuestion).map(([questionId, mappings]) => (
+            <div style="margin-bottom: 2.5rem;">
+              <h3 style="font-size: 1.25rem; font-weight: 600; color: #374151; margin-bottom: 1rem; padding: 0.75rem; background: #f3f4f6; border-radius: 0.5rem;">
+                {questionId}
+              </h3>
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1rem;">
+                {mappings.map((mapping) => (
+                  <div style="background: white; border-radius: 0.5rem; border: 1px solid #e5e7eb; padding: 1.25rem;">
+                    <div style="font-weight: 600; color: #111827; margin-bottom: 0.5rem;">
+                      {mapping.optionLabel}
+                    </div>
+                    <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.75rem;">
+                      {mapping.description}
+                    </div>
+                    <div style="font-size: 0.8125rem; color: #4b5563; font-family: 'Courier New', monospace; background: #f9fafb; padding: 0.5rem; border-radius: 0.375rem; margin-bottom: 0.5rem;">
+                      📁 {mapping.suggestedFileName}
+                    </div>
+                    <div style="font-size: 0.8125rem; color: #4b5563;">
+                      🔍 "{mapping.suggestedFlaticonSearch}"
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </main>
+  </div>
+</AdminLayout>
+

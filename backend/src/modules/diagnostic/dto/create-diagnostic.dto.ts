@@ -84,6 +84,23 @@ export class CreateDiagnosticDto {
   @IsOptional()
   personalizedMessage?: any; // Permitir cualquier estructura para personalizedMessage
 
+  // Estructura mejorada de resultados
+  @IsOptional()
+  @IsObject()
+  currentSituation?: any; // Situación actual con imagen
+
+  @IsOptional()
+  @IsArray()
+  opportunities?: any[]; // Oportunidades detectadas
+
+  @IsOptional()
+  @IsObject()
+  operationalImpact?: any; // Impacto operativo
+
+  @IsOptional()
+  @IsObject()
+  futureVision?: any; // Visión futura
+
   // Permitir campos adicionales dinámicos (para todas las respuestas específicas)
   [key: string]: any;
 }

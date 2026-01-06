@@ -235,8 +235,42 @@ const successCases = [
         <p class="section-subtitle">Cada proyecto es una decisión estratégica. Cada solución, una mejora medible.</p>
       </div>
 
+      <!-- Carousel para móvil, Grid para escritorio -->
       <div class="projects-carousel-mobile-only">
         <ProjectsCarousel projects={carouselProjects} />
+      </div>
+      <div class="projects-grid-desktop-only">
+        <div class="projects-grid-wrapper">
+          <button class="projects-nav-btn projects-nav-prev" id="projects-prev" aria-label="Proyectos anteriores">
+            ‹
+          </button>
+          <div class="projects-grid" id="projects-grid">
+            {carouselProjects.map((project) => (
+              <a href={project.slug ? `/projects/${project.slug}` : '#'} class="project-card">
+                <div class="project-image-container">
+                  <img 
+                    src={project.image} 
+                    alt={project.title}
+                    class="project-image"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="project-info">
+                  <span class="project-category">
+                    {project.category === 'web' ? 'Web' : 
+                     project.category === 'menu-qr' ? 'Menú QR' : 
+                     project.category === 'sistema' ? 'Sistema' : 
+                     'Sistema Admin'}
+                  </span>
+                  <h3 class="project-title">{project.title}</h3>
+                </div>
+              </a>
+            ))}
+          </div>
+          <button class="projects-nav-btn projects-nav-next" id="projects-next" aria-label="Siguientes proyectos">
+            ›
+          </button>
+        </div>
       </div>
     </div>
   </section>
@@ -366,13 +400,185 @@ const successCases = [
     }
   }
   
-  /* Ocultar carrusel de proyectos en escritorio (solo se muestra en el Hero) */
+  /* Grid de proyectos para escritorio */
+  .projects-grid-desktop-only {
+    display: none;
+  }
+  
   @media (min-width: 1024px) {
     .projects-carousel-mobile-only {
       display: none !important;
       visibility: hidden !important;
       height: 0 !important;
       overflow: hidden !important;
+    }
+    
+    .projects-grid-desktop-only {
+      display: block !important;
+      visibility: visible !important;
+    }
+    
+    .projects-grid-wrapper {
+      position: relative;
+      max-width: 100%;
+    }
+    
+    .projects-grid {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 1rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-grey-medium) transparent;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      cursor: grab;
+      user-select: none;
+    }
+    
+    .projects-grid:active {
+      cursor: grabbing;
+    }
+    
+    .projects-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3rem;
+      height: 3rem;
+      background: var(--color-white-pure);
+      border: 1px solid var(--color-grey-light);
+      border-radius: 50%;
+      color: var(--color-graphite-dark);
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      opacity: 0.9;
+    }
+    
+    .projects-nav-btn:hover {
+      background: var(--color-graphite-dark);
+      color: var(--color-white-pure);
+      border-color: var(--color-graphite-dark);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      opacity: 1;
+    }
+    
+    .projects-nav-btn:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+    
+    .projects-nav-prev {
+      left: -1.5rem;
+    }
+    
+    .projects-nav-next {
+      right: -1.5rem;
+    }
+    
+    .projects-nav-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    
+    .projects-nav-btn:disabled:hover {
+      background: var(--color-white-pure);
+      color: var(--color-graphite-dark);
+      border-color: var(--color-grey-light);
+    }
+    
+    .projects-grid::-webkit-scrollbar {
+      height: 8px;
+    }
+    
+    .projects-grid::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .projects-grid::-webkit-scrollbar-thumb {
+      background: var(--color-grey-medium);
+      border-radius: 4px;
+    }
+    
+    .projects-grid::-webkit-scrollbar-thumb:hover {
+      background: var(--color-graphite-dark);
+    }
+    
+    .project-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: #FFFFFF;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+      flex: 0 0 auto;
+      width: 400px;
+      min-width: 400px;
+      height: auto;
+    }
+    
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+    
+    .project-image-container {
+      width: 100%;
+      height: 500px;
+      overflow: hidden;
+      background: var(--color-white-pure);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .project-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+    
+    .project-card:hover .project-image {
+      transform: scale(1.02);
+    }
+    
+    .project-info {
+      padding: 1.5rem;
+      text-align: center;
+    }
+    
+    .project-category {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: var(--color-grey-light);
+      color: var(--color-graphite-dark);
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.19em;
+    }
+    
+    .project-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      font-family: 'Libre Baskerville', serif;
     }
     
     .projects-section-premium {
@@ -393,11 +599,16 @@ const successCases = [
     }
   }
   
-  /* Mostrar carrusel en móvil */
+  /* Mostrar carrusel en móvil, ocultar grid */
   @media (max-width: 1023px) {
     .projects-carousel-mobile-only {
       display: block !important;
       visibility: visible !important;
+    }
+    
+    .projects-grid-desktop-only {
+      display: none !important;
+      visibility: hidden !important;
     }
   }
   
@@ -626,5 +837,72 @@ const successCases = [
       htmlCard.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
       observer.observe(card);
     });
+    
+    // Funcionalidad de scroll horizontal para proyectos en escritorio
+    const projectsGrid = document.getElementById('projects-grid');
+    const projectsPrev = document.getElementById('projects-prev');
+    const projectsNext = document.getElementById('projects-next');
+    
+    if (projectsGrid && projectsPrev && projectsNext) {
+      const updateNavButtons = () => {
+        const { scrollLeft, scrollWidth, clientWidth } = projectsGrid;
+        const isAtStart = scrollLeft <= 0;
+        const isAtEnd = scrollLeft >= scrollWidth - clientWidth - 10; // 10px de margen
+        
+        projectsPrev.disabled = isAtStart;
+        projectsNext.disabled = isAtEnd;
+      };
+      
+      // Scroll con botones
+      projectsPrev.addEventListener('click', () => {
+        projectsGrid.scrollBy({ left: -450, behavior: 'smooth' });
+      });
+      
+      projectsNext.addEventListener('click', () => {
+        projectsGrid.scrollBy({ left: 450, behavior: 'smooth' });
+      });
+      
+      // Actualizar botones al hacer scroll
+      projectsGrid.addEventListener('scroll', updateNavButtons);
+      
+      // Actualizar botones al redimensionar
+      window.addEventListener('resize', updateNavButtons);
+      
+      // Inicializar estado de botones
+      updateNavButtons();
+      
+      // Scroll horizontal con mouse drag
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+      
+      projectsGrid.addEventListener('mousedown', (e) => {
+        isDown = true;
+        projectsGrid.style.cursor = 'grabbing';
+        startX = e.pageX - projectsGrid.offsetLeft;
+        scrollLeft = projectsGrid.scrollLeft;
+      });
+      
+      projectsGrid.addEventListener('mouseleave', () => {
+        isDown = false;
+        projectsGrid.style.cursor = 'grab';
+      });
+      
+      projectsGrid.addEventListener('mouseup', () => {
+        isDown = false;
+        projectsGrid.style.cursor = 'grab';
+      });
+      
+      projectsGrid.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - projectsGrid.offsetLeft;
+        const walk = (x - startX) * 2; // Velocidad del scroll
+        projectsGrid.scrollLeft = scrollLeft - walk;
+      });
+      
+      // Cursor grab cuando se pasa el mouse
+      projectsGrid.style.cursor = 'grab';
+    }
   });
 </script>

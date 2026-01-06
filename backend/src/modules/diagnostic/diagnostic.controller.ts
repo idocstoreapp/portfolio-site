@@ -30,7 +30,28 @@ export class DiagnosticController {
   ) {
     try {
       console.log('📥 POST /api/diagnostic - Request received');
-      console.log('📥 Request body:', JSON.stringify(createDiagnosticDto, null, 2));
+      console.log('📥 Request body keys:', Object.keys(createDiagnosticDto));
+      console.log('📥 Request body (first 5000 chars):', JSON.stringify(createDiagnosticDto, null, 2).substring(0, 5000));
+      
+      // Log específico de campos de estructura mejorada
+      const dto = createDiagnosticDto as any;
+      console.log('📥 [CONTROLLER] Enhanced structure fields:', {
+        hasCurrentSituation: !!dto.currentSituation,
+        currentSituationType: typeof dto.currentSituation,
+        currentSituationIsNull: dto.currentSituation === null,
+        currentSituationIsUndefined: dto.currentSituation === undefined,
+        hasOpportunities: !!dto.opportunities,
+        opportunitiesIsArray: Array.isArray(dto.opportunities),
+        opportunitiesCount: dto.opportunities?.length || 0,
+        hasOperationalImpact: !!dto.operationalImpact,
+        operationalImpactType: typeof dto.operationalImpact,
+        hasFutureVision: !!dto.futureVision,
+        futureVisionType: typeof dto.futureVision,
+        currentSituationImageUrl: dto.currentSituation?.imageUrl || 'MISSING',
+        firstOpportunityImageUrl: dto.opportunities?.[0]?.imageUrl || 'MISSING',
+        futureVisionImageUrl: dto.futureVision?.imageUrl || 'MISSING',
+        allDtoKeys: Object.keys(dto)
+      });
       
       // Agregar información de la petición
       createDiagnosticDto.ipAddress = req.ip || req.headers['x-forwarded-for'] || 'unknown';

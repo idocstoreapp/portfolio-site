@@ -186,10 +186,47 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
     justify-content: center !important;
   }
   
-  :global(.card-icon img) {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain !important;
+  /* Convertir todos los iconos a negro - Enfoque más agresivo */
+  :global(.card-icon) img,
+  :global(.option-card) img,
+  :global(.sector-option-card) img,
+  :global(.sector-selection-grid) img,
+  :global(.card-icon img),
+  :global(.option-card .card-icon img),
+  :global(.option-card img),
+  :global(.card-icon img[src*="icons"]),
+  :global(.option-card img[src*="icons"]),
+  :global(img.black-icon),
+  :global(.black-icon),
+  :global(.wizard-container img),
+  :global(.wizard-step img) {
+    filter: grayscale(100%) brightness(0) !important; /* Convertir a escala de grises y luego a negro */
+    -webkit-filter: grayscale(100%) brightness(0) !important; /* Safari */
+    opacity: 1 !important;
+  }
+  
+  /* Asegurar que los iconos de sector también sean negros */
+  :global(.sector-selection-grid img),
+  :global(.sector-option-card img),
+  :global(.sector-option-card .card-icon img) {
+    filter: grayscale(100%) brightness(0) !important;
+    -webkit-filter: grayscale(100%) brightness(0) !important;
+  }
+  
+  /* Convertir emojis a negro - Los emojis son texto, así que usamos filtros en el contenedor */
+  :global(.black-emoji-icon),
+  :global(.card-icon span:not([data-icon-fallback])),
+  :global(.option-card .card-icon span:not([data-icon-fallback])) {
+    filter: grayscale(100%) brightness(0) contrast(200%) !important;
+    -webkit-filter: grayscale(100%) brightness(0) contrast(200%) !important;
+    display: inline-block !important;
+  }
+  
+  /* Aplicar filtro también al contenedor de emojis */
+  :global(.card-icon:has(span:not([data-icon-fallback]))),
+  :global(.option-card .card-icon:has(span:not([data-icon-fallback]))) {
+    filter: grayscale(100%) brightness(0) contrast(200%) !important;
+    -webkit-filter: grayscale(100%) brightness(0) contrast(200%) !important;
   }
 
   :global(.card-title) {
@@ -494,6 +531,7 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
       width: 100% !important;
       height: 100% !important;
       object-fit: contain !important;
+      filter: brightness(0) saturate(0) !important; /* Convertir iconos a negro */
     }
     
     :global(.sector-option-card .card-title) {

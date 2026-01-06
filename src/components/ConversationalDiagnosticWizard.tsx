@@ -13,9 +13,11 @@ import {
   calculateCostsAndSavings,
   generateInsights,
   generatePersonalizedMessage,
+  generateEnhancedResultStructure,
   type ConversationalQuestion
 } from '../utils/conversationalDiagnostic';
 import { createDiagnostic } from '../utils/backendClient';
+import { getIconFileName } from '../utils/iconMapping';
 
 const BUSINESS_SECTORS: Array<{ value: BusinessSector; label: string; description: string; icon: string }> = [
   { value: 'restaurante', label: 'Restaurante / Bar / Café', description: 'Negocio de comida y bebidas', icon: '/images/icons/restaurante.png' },
@@ -67,6 +69,108 @@ export default function ConversationalDiagnosticWizard() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, [isCompleted, selectedSector, currentStep]);
+
+  // Aplicar filtro negro a todos los iconos después de renderizar
+  useEffect(() => {
+    const applyBlackFilter = () => {
+      // Buscar todas las imágenes de iconos
+      const iconImages = document.querySelectorAll('.card-icon img, .option-card img, .sector-option-card img, .sector-selection-grid img');
+      iconImages.forEach((img: Element) => {
+        const imgElement = img as HTMLImageElement;
+        // Aplicar filtro directamente con máxima prioridad
+        imgElement.style.setProperty('filter', 'grayscale(100%) brightness(0)', 'important');
+        imgElement.style.setProperty('-webkit-filter', 'grayscale(100%) brightness(0)', 'important');
+        // También agregar clase para CSS
+        imgElement.classList.add('black-icon');
+      });
+      
+      // Buscar todos los spans que contienen emojis y aplicar filtro
+      const emojiSpans = document.querySelectorAll('.card-icon span:not([data-icon-fallback]), .option-card .card-icon span:not([data-icon-fallback])');
+      emojiSpans.forEach((span: Element) => {
+        const spanElement = span as HTMLElement;
+        // Aplicar filtro a emojis (aunque no funcionará perfectamente)
+        spanElement.style.setProperty('filter', 'grayscale(100%) brightness(0) contrast(200%)', 'important');
+        spanElement.style.setProperty('-webkit-filter', 'grayscale(100%) brightness(0) contrast(200%)', 'important');
+        spanElement.classList.add('black-emoji-icon');
+      });
+    };
+
+    // Aplicar inmediatamente
+    applyBlackFilter();
+
+    // Aplicar después de delays para imágenes que se cargan después
+    const timeouts = [
+      setTimeout(applyBlackFilter, 50),
+      setTimeout(applyBlackFilter, 100),
+      setTimeout(applyBlackFilter, 300),
+      setTimeout(applyBlackFilter, 500)
+    ];
+    
+    // Agregar listener para cuando las imágenes se carguen
+    const handleImageLoad = (e: Event) => {
+      const img = e.target as HTMLImageElement;
+      if (img) {
+        img.style.setProperty('filter', 'brightness(0) saturate(0)', 'important');
+        img.style.setProperty('-webkit-filter', 'brightness(0) saturate(0)', 'important');
+        img.classList.add('black-icon');
+      }
+    };
+
+    // Agregar listener a todas las imágenes existentes
+    const allImages = document.querySelectorAll('img');
+    allImages.forEach(img => {
+      if (img.complete) {
+        applyBlackFilter();
+      } else {
+        img.addEventListener('load', handleImageLoad);
+      }
+    });
+    
+    // Observar cambios en el DOM para aplicar a nuevas imágenes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) { // Element node
+            const element = node as Element;
+            // Buscar imágenes en el nodo agregado
+            const images = element.querySelectorAll ? element.querySelectorAll('img') : [];
+            images.forEach((img: HTMLImageElement) => {
+              img.style.setProperty('filter', 'brightness(0) saturate(0)', 'important');
+              img.style.setProperty('-webkit-filter', 'brightness(0) saturate(0)', 'important');
+              img.classList.add('black-icon');
+              if (!img.complete) {
+                img.addEventListener('load', handleImageLoad);
+              }
+            });
+            // Si el nodo mismo es una imagen
+            if (element.tagName === 'IMG') {
+              const img = element as HTMLImageElement;
+              img.style.setProperty('filter', 'brightness(0) saturate(0)', 'important');
+              img.style.setProperty('-webkit-filter', 'brightness(0) saturate(0)', 'important');
+              img.classList.add('black-icon');
+              if (!img.complete) {
+                img.addEventListener('load', handleImageLoad);
+              }
+            }
+          }
+        });
+      });
+      applyBlackFilter();
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+
+    return () => {
+      timeouts.forEach(timeout => clearTimeout(timeout));
+      observer.disconnect();
+      allImages.forEach(img => {
+        img.removeEventListener('load', handleImageLoad);
+      });
+    };
+  }, [currentStep, selectedSector]); // Re-ejecutar cuando cambie el paso o sector
 
   // Obtener todas las preguntas en orden
   const getAllQuestions = (): ConversationalQuestion[] => {
@@ -187,10 +291,12 @@ export default function ConversationalDiagnosticWizard() {
                 <img 
                   src={sector.icon} 
                   alt={sector.label}
+                  className="black-icon"
                   style={{
                     width: '100%',
                     height: '100%',
-                    objectFit: 'contain'
+                    objectFit: 'contain',
+                    filter: 'grayscale(100%) brightness(0)' // Convertir iconos a negro
                   }}
                 />
               </div>
@@ -473,19 +579,95 @@ export default function ConversationalDiagnosticWizard() {
                     <div 
                       className="card-icon" 
                       style={{ 
-                        fontSize: '3.5rem', 
-                        marginBottom: '0.5rem', 
+                        fontSize: isMobile ? '2rem' : '3rem',
+                        marginBottom: isMobile ? '0.5rem' : '1rem',
                         lineHeight: 1,
-                        // Asegurar que los emojis se rendericen como texto, no como URLs
-                        display: 'inline-block',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         userSelect: 'none'
                       }}
-                      // Prevenir que se trate como URL
                       data-icon={option.icon}
                     >
-                      {typeof option.icon === 'string' && !option.icon.startsWith('http') && !option.icon.startsWith('/') 
-                        ? option.icon 
-                        : null}
+                      {(() => {
+                        // Intentar usar icono de imagen si existe
+                        const iconFileName = currentQuestion ? getIconFileName(currentQuestion.id, option.value) : null;
+                        const iconPath = iconFileName ? `/images/icons/${iconFileName}` : null;
+                        
+                        // Si es una ruta de imagen (http, /, o archivo de icono)
+                        if (typeof option.icon === 'string' && (option.icon.startsWith('http') || option.icon.startsWith('/'))) {
+                          return <img 
+                            src={option.icon} 
+                            alt={option.label}
+                            className="black-icon"
+                            style={{ 
+                              width: isMobile ? '2rem' : '3rem', 
+                              height: isMobile ? '2rem' : '3rem', 
+                              objectFit: 'contain',
+                              filter: 'grayscale(100%) brightness(0)' // Convertir iconos a negro
+                            }}
+                          />;
+                        }
+                        
+                        // Si tenemos un icono mapeado, intentar usarlo
+                        if (iconPath) {
+                          return <img 
+                            src={iconPath} 
+                            alt={option.label}
+                            className="black-icon"
+                            style={{ 
+                              width: isMobile ? '2rem' : '3rem', 
+                              height: isMobile ? '2rem' : '3rem', 
+                              objectFit: 'contain',
+                              filter: 'grayscale(100%) brightness(0)' // Convertir iconos a negro
+                            }}
+                            onError={(e) => {
+                              // Silenciar el error y ocultar la imagen
+                              e.currentTarget.style.display = 'none';
+                              const parent = e.currentTarget.parentElement;
+                              if (parent && option.icon) {
+                                // Verificar que no sea una URL antes de usar como emoji
+                                const iconStr = option.icon as string;
+                                if (!iconStr.startsWith('http') && !iconStr.startsWith('/') && !iconStr.includes('.')) {
+                                  // Solo agregar fallback si no existe ya
+                                  if (!parent.querySelector('span[data-icon-fallback]')) {
+                                    const fallback = document.createElement('span');
+                                    fallback.setAttribute('data-icon-fallback', 'true');
+                                    fallback.style.fontSize = isMobile ? '2rem' : '3rem';
+                                    fallback.style.display = 'inline-block';
+                                    fallback.style.lineHeight = '1';
+                                    fallback.textContent = iconStr;
+                                    parent.appendChild(fallback);
+                                  }
+                                }
+                              }
+                            }}
+                          />;
+                        }
+                        
+                        // Fallback a emoji (solo si no es una URL)
+                        if (option.icon && typeof option.icon === 'string') {
+                          const iconStr = option.icon;
+                          // Si es una URL, no mostrar nada
+                          if (iconStr.startsWith('http') || iconStr.startsWith('/') || iconStr.includes('.')) {
+                            return <span style={{ fontSize: isMobile ? '2rem' : '3rem', display: 'inline-block', opacity: 0.3 }}>●</span>;
+                          }
+                          // Si es un emoji, mostrarlo con filtro para hacerlo negro
+                          return <span 
+                            className="black-emoji-icon"
+                            style={{ 
+                              fontSize: isMobile ? '2rem' : '3rem', 
+                              lineHeight: 1,
+                              display: 'inline-block',
+                              filter: 'grayscale(100%) brightness(0) contrast(200%)',
+                              WebkitFilter: 'grayscale(100%) brightness(0) contrast(200%)'
+                            }}
+                          >{option.icon}</span>;
+                        }
+                        
+                        // Si no hay icono, mostrar placeholder
+                        return <span style={{ fontSize: isMobile ? '2rem' : '3rem', display: 'inline-block', opacity: 0.3 }}>●</span>;
+                      })()}
                     </div>
                   )}
                   <h4 className="card-title" style={{
@@ -716,6 +898,100 @@ export default function ConversationalDiagnosticWizard() {
       const summary = calculateCostsAndSavings(answers, selectedSector!);
       const insights = generateInsights(answers, selectedSector!);
       const personalizedMessage = generatePersonalizedMessage(answers, selectedSector!, summary);
+      
+      // Log para depuración - verificar insights
+      console.log('🔍 [FRONTEND] Insights generated:', {
+        count: insights.length,
+        insightsWithOpportunity: insights.filter(i => i.opportunity).length,
+        insightsDetails: insights.map(i => ({
+          title: i.title,
+          hasOpportunity: !!i.opportunity,
+          opportunityTitle: i.opportunity?.title
+        }))
+      });
+      
+      // Generar estructura mejorada de resultados
+      // Obtener nombre y empresa de las respuestas o del contacto
+      const nombre = answers.nombre || contactInfo.name || '';
+      const empresa = answers.empresa || contactInfo.company || '';
+      
+      const enhancedStructure = generateEnhancedResultStructure(
+        { ...answers, nombre, empresa },
+        selectedSector!,
+        insights,
+        summary
+      );
+      
+      // Log para depuración - verificar estructura generada
+      console.log('🔍 [FRONTEND] Enhanced structure generated:', {
+        hasCurrentSituation: !!enhancedStructure.currentSituation,
+        currentSituationTitle: enhancedStructure.currentSituation?.title,
+        opportunitiesCount: enhancedStructure.opportunities?.length || 0,
+        hasOperationalImpact: !!enhancedStructure.operationalImpact,
+        operationalImpactConsequences: enhancedStructure.operationalImpact?.consequences?.length || 0,
+        hasFutureVision: !!enhancedStructure.futureVision,
+        futureVisionTitle: enhancedStructure.futureVision?.title
+      });
+
+      // Log detallado para depuración
+      console.log('🖼️ [FRONTEND] Enhanced structure COMPLETE:', JSON.stringify(enhancedStructure, null, 2));
+      console.log('🖼️ [FRONTEND] Enhanced structure imageUrls:', {
+        currentSituation: {
+          exists: !!enhancedStructure.currentSituation,
+          hasImageUrl: !!enhancedStructure.currentSituation?.imageUrl,
+          imageUrl: enhancedStructure.currentSituation?.imageUrl || 'MISSING',
+          title: enhancedStructure.currentSituation?.title
+        },
+        opportunities: {
+          count: enhancedStructure.opportunities?.length || 0,
+          items: enhancedStructure.opportunities?.map(opp => ({ 
+            title: opp.title, 
+            hasImageUrl: !!opp.imageUrl,
+            imageUrl: opp.imageUrl || 'MISSING' 
+          })) || []
+        },
+        operationalImpact: {
+          exists: !!enhancedStructure.operationalImpact,
+          hasConsequences: !!enhancedStructure.operationalImpact?.consequences,
+          consequencesCount: enhancedStructure.operationalImpact?.consequences?.length || 0,
+          consequences: enhancedStructure.operationalImpact?.consequences?.map(c => ({ 
+            area: c.area, 
+            hasImageUrl: !!c.imageUrl,
+            imageUrl: c.imageUrl || 'MISSING' 
+          })) || []
+        },
+        futureVision: {
+          exists: !!enhancedStructure.futureVision,
+          hasImageUrl: !!enhancedStructure.futureVision?.imageUrl,
+          imageUrl: enhancedStructure.futureVision?.imageUrl || 'MISSING',
+          title: enhancedStructure.futureVision?.title
+        },
+        summary: {
+          exists: !!enhancedStructure.summary,
+          hasImageUrl: !!enhancedStructure.summary?.imageUrl,
+          imageUrl: enhancedStructure.summary?.imageUrl || 'MISSING'
+        }
+      });
+      
+      // Verificar que los imageUrl se estén generando
+      if (!enhancedStructure.currentSituation?.imageUrl) {
+        console.error('❌ [FRONTEND] currentSituation.imageUrl is MISSING!', enhancedStructure.currentSituation);
+      }
+      if (!enhancedStructure.summary?.imageUrl) {
+        console.error('❌ [FRONTEND] summary.imageUrl is MISSING!', enhancedStructure.summary);
+      }
+      if (!enhancedStructure.futureVision?.imageUrl) {
+        console.error('❌ [FRONTEND] futureVision.imageUrl is MISSING!', enhancedStructure.futureVision);
+      }
+      if (!enhancedStructure.opportunities || enhancedStructure.opportunities.length === 0) {
+        console.warn('⚠️ [FRONTEND] No opportunities generated!', { insights, insightsWithOpportunity: insights.filter(i => i.opportunity) });
+      }
+      if (!enhancedStructure.operationalImpact?.consequences || enhancedStructure.operationalImpact.consequences.length === 0) {
+        console.warn('⚠️ [FRONTEND] No operational impact consequences generated!', { 
+          operationalImpact: enhancedStructure.operationalImpact,
+          summary: enhancedStructure.summary 
+        });
+      }
 
       // Preparar datos para el backend
       const diagnosticData = {
@@ -731,14 +1007,76 @@ export default function ConversationalDiagnosticWizard() {
         empresa: contactInfo.company || undefined,
         email: contactInfo.email || undefined,
         // Datos calculados
-        summary,
+        summary: enhancedStructure.summary, // Usar el summary con imageUrl
         insights,
-        personalizedMessage
+        personalizedMessage,
+        // Estructura mejorada de resultados - Asegurar que siempre existan
+        currentSituation: enhancedStructure.currentSituation || null,
+        opportunities: enhancedStructure.opportunities || [],
+        operationalImpact: enhancedStructure.operationalImpact || null,
+        futureVision: enhancedStructure.futureVision || null
       };
+      
+      // Log crítico antes de enviar
+      console.log('🚨 [FRONTEND] CRITICAL CHECK before sending:', {
+        hasCurrentSituation: !!diagnosticData.currentSituation,
+        currentSituationType: typeof diagnosticData.currentSituation,
+        currentSituationKeys: diagnosticData.currentSituation ? Object.keys(diagnosticData.currentSituation) : 'NULL',
+        hasOpportunities: !!diagnosticData.opportunities,
+        opportunitiesIsArray: Array.isArray(diagnosticData.opportunities),
+        opportunitiesLength: diagnosticData.opportunities?.length || 0,
+        hasOperationalImpact: !!diagnosticData.operationalImpact,
+        operationalImpactType: typeof diagnosticData.operationalImpact,
+        hasFutureVision: !!diagnosticData.futureVision,
+        futureVisionType: typeof diagnosticData.futureVision,
+        allKeys: Object.keys(diagnosticData)
+      });
 
-      console.log('📤 Sending diagnostic data:', JSON.stringify(diagnosticData, null, 2));
+      console.log('📤 [FRONTEND] Sending diagnostic data:', JSON.stringify(diagnosticData, null, 2));
+      
+      // Log detallado de la estructura mejorada antes de enviar
+      console.log('📤 [FRONTEND] Enhanced structure being sent:', {
+        currentSituation: diagnosticData.currentSituation ? {
+          hasImageUrl: !!diagnosticData.currentSituation.imageUrl,
+          imageUrl: diagnosticData.currentSituation.imageUrl,
+          title: diagnosticData.currentSituation.title
+        } : 'MISSING',
+        opportunities: diagnosticData.opportunities ? {
+          count: diagnosticData.opportunities.length,
+          first: diagnosticData.opportunities[0] ? {
+            title: diagnosticData.opportunities[0].title,
+            hasImageUrl: !!diagnosticData.opportunities[0].imageUrl,
+            imageUrl: diagnosticData.opportunities[0].imageUrl
+          } : 'empty'
+        } : 'MISSING',
+        operationalImpact: diagnosticData.operationalImpact ? {
+          hasConsequences: !!diagnosticData.operationalImpact.consequences,
+          consequencesCount: diagnosticData.operationalImpact.consequences?.length || 0,
+          firstConsequence: diagnosticData.operationalImpact.consequences?.[0] ? {
+            area: diagnosticData.operationalImpact.consequences[0].area,
+            hasImageUrl: !!diagnosticData.operationalImpact.consequences[0].imageUrl,
+            imageUrl: diagnosticData.operationalImpact.consequences[0].imageUrl
+          } : 'empty'
+        } : 'MISSING',
+        futureVision: diagnosticData.futureVision ? {
+          hasImageUrl: !!diagnosticData.futureVision.imageUrl,
+          imageUrl: diagnosticData.futureVision.imageUrl,
+          title: diagnosticData.futureVision.title
+        } : 'MISSING',
+        summary: diagnosticData.summary ? {
+          hasImageUrl: !!diagnosticData.summary.imageUrl,
+          imageUrl: diagnosticData.summary.imageUrl
+        } : 'MISSING'
+      });
 
       const response = await createDiagnostic(diagnosticData);
+      
+      // Log de la respuesta del backend
+      console.log('📥 [FRONTEND] Response from backend:', {
+        success: response.success,
+        diagnosticId: response.data?.id,
+        hasData: !!response.data
+      });
 
       if (response.success && response.data?.id) {
         // Redirigir solo si se completó exitosamente

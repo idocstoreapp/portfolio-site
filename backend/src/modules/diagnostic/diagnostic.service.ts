@@ -230,15 +230,104 @@ export class DiagnosticService {
 
       // Guardar datos del sistema conversacional si existen
       if (useConversationalEngine) {
-        // Guardar summary, insights y personalizedMessage en envelope_data
+        // Guardar summary, insights, personalizedMessage y estructura mejorada en envelope_data
         // El sector se guarda dentro del envelope, no como columna separada
-        diagnosticData.envelope_data = JSON.stringify({
+        const dto = createDiagnosticDto as any;
+        
+        // Log para depuración - verificar qué datos están llegando
+        console.log('🔍 [BACKEND] Received DTO fields:', {
+          hasCurrentSituation: !!dto.currentSituation,
+          hasOpportunities: !!dto.opportunities,
+          hasOperationalImpact: !!dto.operationalImpact,
+          hasFutureVision: !!dto.futureVision,
+          currentSituationType: typeof dto.currentSituation,
+          opportunitiesType: Array.isArray(dto.opportunities) ? 'array' : typeof dto.opportunities,
+          opportunitiesLength: Array.isArray(dto.opportunities) ? dto.opportunities.length : 'not array',
+          operationalImpactType: typeof dto.operationalImpact,
+          futureVisionType: typeof dto.futureVision
+        });
+        
+        // Asegurar que los campos existan antes de guardar
+        const envelopeData: any = {
           type: 'conversational',
-          summary: createDiagnosticDto.summary,
+          summary: dto.summary || createDiagnosticDto.summary, // Usar dto.summary que puede tener imageUrl
           insights: createDiagnosticDto.insights,
           personalizedMessage: createDiagnosticDto.personalizedMessage,
-          sector: createDiagnosticDto.sector || createDiagnosticDto.businessType || createDiagnosticDto.tipoEmpresa
+          sector: createDiagnosticDto.sector || createDiagnosticDto.businessType || createDiagnosticDto.tipoEmpresa,
+        };
+        
+        // Incluir estructura mejorada de resultados - Solo si existen
+        if (dto.currentSituation !== undefined && dto.currentSituation !== null) {
+          envelopeData.currentSituation = dto.currentSituation;
+        }
+        if (dto.opportunities !== undefined && dto.opportunities !== null) {
+          envelopeData.opportunities = Array.isArray(dto.opportunities) ? dto.opportunities : [];
+        }
+        if (dto.operationalImpact !== undefined && dto.operationalImpact !== null) {
+          envelopeData.operationalImpact = dto.operationalImpact;
+        }
+        if (dto.futureVision !== undefined && dto.futureVision !== null) {
+          envelopeData.futureVision = dto.futureVision;
+        }
+        
+        // Log crítico antes de guardar
+        console.log('🚨 [BACKEND] CRITICAL CHECK before saving envelope_data:', {
+          envelopeDataKeys: Object.keys(envelopeData),
+          hasCurrentSituation: 'currentSituation' in envelopeData,
+          currentSituationValue: envelopeData.currentSituation,
+          hasOpportunities: 'opportunities' in envelopeData,
+          opportunitiesValue: envelopeData.opportunities,
+          hasOperationalImpact: 'operationalImpact' in envelopeData,
+          operationalImpactValue: envelopeData.operationalImpact,
+          hasFutureVision: 'futureVision' in envelopeData,
+          futureVisionValue: envelopeData.futureVision
         });
+        
+        // Log para depuración
+        console.log('🖼️ [BACKEND] Saving envelope_data with imageUrls:', {
+          summaryImageUrl: envelopeData.summary?.imageUrl || 'MISSING',
+          currentSituationImageUrl: envelopeData.currentSituation?.imageUrl || 'MISSING',
+          currentSituationExists: !!envelopeData.currentSituation,
+          currentSituationTitle: envelopeData.currentSituation?.title || 'MISSING',
+          opportunitiesCount: envelopeData.opportunities?.length || 0,
+          opportunitiesExists: !!envelopeData.opportunities,
+          firstOpportunityImageUrl: envelopeData.opportunities?.[0]?.imageUrl || 'MISSING',
+          firstOpportunityTitle: envelopeData.opportunities?.[0]?.title || 'MISSING',
+          futureVisionImageUrl: envelopeData.futureVision?.imageUrl || 'MISSING',
+          futureVisionExists: !!envelopeData.futureVision,
+          futureVisionTitle: envelopeData.futureVision?.title || 'MISSING',
+          operationalImpactConsequences: envelopeData.operationalImpact?.consequences?.length || 0,
+          operationalImpactExists: !!envelopeData.operationalImpact,
+          operationalImpactTitle: envelopeData.operationalImpact?.title || 'MISSING'
+        });
+        
+        // Log completo de la estructura antes de guardar
+        console.log('🔍 [BACKEND] Full envelope_data structure before saving:', {
+          type: envelopeData.type,
+          hasSummary: !!envelopeData.summary,
+          hasCurrentSituation: !!envelopeData.currentSituation,
+          hasOpportunities: !!envelopeData.opportunities,
+          hasOperationalImpact: !!envelopeData.operationalImpact,
+          hasFutureVision: !!envelopeData.futureVision,
+          currentSituation: envelopeData.currentSituation ? {
+            title: envelopeData.currentSituation.title,
+            hasImageUrl: !!envelopeData.currentSituation.imageUrl
+          } : null,
+          opportunities: envelopeData.opportunities?.map((opp: any) => ({
+            title: opp.title,
+            hasImageUrl: !!opp.imageUrl
+          })) || [],
+          operationalImpact: envelopeData.operationalImpact ? {
+            title: envelopeData.operationalImpact.title,
+            consequencesCount: envelopeData.operationalImpact.consequences?.length || 0
+          } : null,
+          futureVision: envelopeData.futureVision ? {
+            title: envelopeData.futureVision.title,
+            hasImageUrl: !!envelopeData.futureVision.imageUrl
+          } : null
+        });
+        
+        diagnosticData.envelope_data = JSON.stringify(envelopeData);
       }
 
       // Intentar guardar en Supabase si está configurado
@@ -383,9 +472,83 @@ export class DiagnosticService {
         try {
           const envelope = JSON.parse(diagnosticRaw.envelope_data);
           
+          // Log para ver qué hay en el envelope
+          console.log('🔍 [BACKEND] Parsed envelope_data keys:', Object.keys(envelope));
+          console.log('🔍 [BACKEND] Parsed envelope_data structure:', {
+            type: envelope.type,
+            hasSummary: !!envelope.summary,
+            hasCurrentSituation: !!envelope.currentSituation,
+            hasOpportunities: !!envelope.opportunities,
+            hasOperationalImpact: !!envelope.operationalImpact,
+            hasFutureVision: !!envelope.futureVision,
+            currentSituation: envelope.currentSituation ? 'EXISTS' : 'MISSING',
+            opportunities: envelope.opportunities ? `EXISTS (${envelope.opportunities.length} items)` : 'MISSING',
+            operationalImpact: envelope.operationalImpact ? 'EXISTS' : 'MISSING',
+            futureVision: envelope.futureVision ? 'EXISTS' : 'MISSING'
+          });
+          
           // Verificar si es conversacional dentro del envelope
           if (envelope.type === 'conversational' || envelope.summary || envelope.insights || envelope.personalizedMessage) {
             const sector = envelope.sector || diagnosticRaw.sector || diagnosticRaw.tipo_empresa;
+            
+            // Log para depuración - VERIFICAR imageUrls
+            console.log('🖼️ [BACKEND] Returning envelope_data with imageUrls:', {
+              summaryImageUrl: envelope.summary?.imageUrl || 'MISSING',
+              currentSituationImageUrl: envelope.currentSituation?.imageUrl || 'MISSING',
+              currentSituationExists: !!envelope.currentSituation,
+              opportunitiesCount: envelope.opportunities?.length || 0,
+              opportunitiesExists: !!envelope.opportunities,
+              firstOpportunityImageUrl: envelope.opportunities?.[0]?.imageUrl || 'MISSING',
+              futureVisionImageUrl: envelope.futureVision?.imageUrl || 'MISSING',
+              futureVisionExists: !!envelope.futureVision,
+              operationalImpactConsequences: envelope.operationalImpact?.consequences?.length || 0,
+              operationalImpactExists: !!envelope.operationalImpact,
+              firstConsequenceImageUrl: envelope.operationalImpact?.consequences?.[0]?.imageUrl || 'MISSING'
+            });
+            
+            // Log completo del envelope para depuración
+            console.log('🔍 [BACKEND] Full envelope structure:', {
+              hasCurrentSituation: !!envelope.currentSituation,
+              currentSituation: envelope.currentSituation ? {
+                title: envelope.currentSituation.title,
+                hasImageUrl: !!envelope.currentSituation.imageUrl,
+                imageUrl: envelope.currentSituation.imageUrl
+              } : null,
+              hasOpportunities: !!envelope.opportunities,
+              opportunitiesCount: envelope.opportunities?.length || 0,
+              opportunities: envelope.opportunities?.map((opp: any) => ({
+                title: opp.title,
+                hasImageUrl: !!opp.imageUrl,
+                imageUrl: opp.imageUrl
+              })) || [],
+              hasOperationalImpact: !!envelope.operationalImpact,
+              operationalImpact: envelope.operationalImpact ? {
+                hasConsequences: !!envelope.operationalImpact.consequences,
+                consequencesCount: envelope.operationalImpact.consequences?.length || 0,
+                consequences: envelope.operationalImpact.consequences?.map((c: any) => ({
+                  area: c.area,
+                  hasImageUrl: !!c.imageUrl,
+                  imageUrl: c.imageUrl
+                })) || []
+              } : null,
+              hasFutureVision: !!envelope.futureVision,
+              futureVision: envelope.futureVision ? {
+                title: envelope.futureVision.title,
+                hasImageUrl: !!envelope.futureVision.imageUrl,
+                imageUrl: envelope.futureVision.imageUrl
+              } : null
+            });
+            
+            // Log final antes de devolver
+            console.log('📤 [BACKEND] Final result structure being returned:', {
+              hasCurrentSituation: !!envelope.currentSituation,
+              hasOpportunities: !!envelope.opportunities,
+              opportunitiesCount: envelope.opportunities?.length || 0,
+              hasOperationalImpact: !!envelope.operationalImpact,
+              hasFutureVision: !!envelope.futureVision,
+              hasSummary: !!envelope.summary
+            });
+            
             const result = {
               id,
               sector,
@@ -393,6 +556,11 @@ export class DiagnosticService {
               insights: envelope.insights,
               personalizedMessage: envelope.personalizedMessage,
               type: 'conversational',
+              // Incluir estructura mejorada de resultados - Asegurar que siempre existan
+              currentSituation: envelope.currentSituation || null,
+              opportunities: envelope.opportunities || [],
+              operationalImpact: envelope.operationalImpact || null,
+              futureVision: envelope.futureVision || null,
               // Generar primarySolution y nextSteps basados en el sector
               primarySolution: {
                 id: `sistema-${sector}`,

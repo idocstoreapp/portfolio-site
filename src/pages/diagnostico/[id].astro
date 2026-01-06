@@ -4,6 +4,16 @@ export const prerender = false;
 
 import Layout from '../../layouts/Layout.astro';
 import { getDiagnosticResult } from '../../utils/backendClient';
+import { 
+  getCurrentSituationImageUrl, 
+  getOpportunityImageUrl, 
+  getOperationalImpactImageUrl, 
+  getFutureVisionImageUrl, 
+  getSummaryImageUrl,
+  getOpportunitySectionImageUrl,
+  getInsightImageUrl
+} from '../../utils/getResultImageUrl';
+import type { BusinessSector } from '../../utils/conversationalDiagnostic';
 
 interface Props {
   id: string;
@@ -28,10 +38,48 @@ try {
   // Obtener el resultado procesado del backend
   const response = await getDiagnosticResult(id);
   console.log('📥 Response from getDiagnosticResult:', response);
+  console.log('📥 Response.data keys:', response.data ? Object.keys(response.data) : 'NO DATA');
   
   if (response.success && response.data) {
     diagnosticResult = response.data;
     console.log('✅ Diagnostic result loaded:', diagnosticResult);
+    console.log('✅ Diagnostic result keys:', Object.keys(diagnosticResult));
+    console.log('✅ Diagnostic result type:', diagnosticResult.type);
+    console.log('✅ Full diagnostic result:', JSON.stringify(diagnosticResult, null, 2));
+    console.log('🔍 [RESULT PAGE] Sector:', diagnosticResult?.sector);
+    console.log('🔍 [RESULT PAGE] Type:', diagnosticResult?.type);
+    
+    // Verificar estructura mejorada
+    console.log('🔍 [RESULT PAGE] Has currentSituation:', !!diagnosticResult.currentSituation);
+    console.log('🔍 [RESULT PAGE] Has opportunities:', !!diagnosticResult.opportunities, 'Count:', diagnosticResult.opportunities?.length || 0);
+    console.log('🔍 [RESULT PAGE] Has operationalImpact:', !!diagnosticResult.operationalImpact);
+    console.log('🔍 [RESULT PAGE] Has futureVision:', !!diagnosticResult.futureVision);
+    console.log('🔍 [RESULT PAGE] Has summary:', !!diagnosticResult.summary);
+    
+    // Verificar imageUrls
+    if (diagnosticResult.currentSituation) {
+      console.log('🖼️ [RESULT PAGE] currentSituation.imageUrl:', diagnosticResult.currentSituation.imageUrl || 'MISSING');
+    }
+    if (diagnosticResult.summary) {
+      console.log('🖼️ [RESULT PAGE] summary.imageUrl:', diagnosticResult.summary.imageUrl || 'MISSING');
+    }
+    if (diagnosticResult.opportunities && diagnosticResult.opportunities.length > 0) {
+      console.log('🖼️ [RESULT PAGE] Opportunities imageUrls:', diagnosticResult.opportunities.map((opp: any) => ({ 
+        title: opp.title, 
+        imageUrl: opp.imageUrl || 'MISSING',
+        willGenerate: !opp.imageUrl 
+      })));
+    }
+    if (diagnosticResult.operationalImpact?.consequences && diagnosticResult.operationalImpact.consequences.length > 0) {
+      console.log('🖼️ [RESULT PAGE] Consequences imageUrls:', diagnosticResult.operationalImpact.consequences.map((c: any) => ({ 
+        area: c.area, 
+        imageUrl: c.imageUrl || 'MISSING',
+        willGenerate: !c.imageUrl 
+      })));
+    }
+    if (diagnosticResult.futureVision) {
+      console.log('🖼️ [RESULT PAGE] futureVision.imageUrl:', diagnosticResult.futureVision.imageUrl || 'MISSING');
+    }
     
     // También obtener los datos del diagnóstico para información de contacto
     const backendUrl = import.meta.env.PUBLIC_BACKEND_URL || 'http://localhost:3000';
@@ -110,125 +158,469 @@ try {
               <>
                 <!-- Mensaje Personalizado -->
                 <div class="result-header">
-                  <div class="result-icon-large">📊</div>
                   <h1 class="result-title">{diagnosticResult.personalizedMessage?.greeting || 'Hola'}</h1>
                   <p class="result-subtitle">{diagnosticResult.personalizedMessage?.context || 'He analizado tu negocio'}</p>
                 </div>
 
-                <!-- Resumen de Costos y Ahorros -->
-                {diagnosticResult.summary && (
-                  <div class="cost-summary-section">
-                    <h2 class="section-title">Resumen de tu Situación Actual</h2>
-                    <div class="cost-comparison">
-                      <div class="cost-card current">
-                        <div class="cost-label">Costo Actual</div>
-                        <div class="cost-value time">
-                          {Math.round(diagnosticResult.summary.totalCurrentCost?.timeHours || 0)} horas/semana
-                        </div>
-                        <div class="cost-value money">
-                          ${Math.round(diagnosticResult.summary.totalCurrentCost?.moneyCost || 0)}/mes
-                        </div>
-                        <div class="cost-description">Tiempo y dinero que estás perdiendo en procesos manuales</div>
+                <!-- Situación Actual - Rediseñada -->
+                {diagnosticResult.currentSituation && (
+                  <div class="current-situation-section-modern">
+                    <div class="current-situation-content">
+                      <div class="current-situation-text">
+                        <h2 class="current-situation-title">{diagnosticResult.currentSituation.title}</h2>
+                        <p class="current-situation-description">{diagnosticResult.currentSituation.description}</p>
+                        {diagnosticResult.currentSituation.highlights && diagnosticResult.currentSituation.highlights.length > 0 && (
+                          <ul class="current-situation-highlights">
+                            {diagnosticResult.currentSituation.highlights.map((highlight: string, i: number) => (
+                              <li class="current-situation-highlight-item">
+                                <span class="highlight-icon">✓</span>
+                                <span class="highlight-text">{highlight}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </div>
-                      <div class="arrow">→</div>
-                      <div class="cost-card potential">
-                        <div class="cost-label">Ahorro Potencial</div>
-                        <div class="cost-value time savings">
-                          {Math.round(diagnosticResult.summary.totalPotentialSavings?.timeHours || 0)} horas/semana
-                        </div>
-                        <div class="cost-value money savings">
-                          ${Math.round(diagnosticResult.summary.totalPotentialSavings?.moneyCost || 0)}/mes
-                        </div>
-                        <div class="cost-description">Tiempo y dinero que podrías recuperar</div>
+                      <div class="current-situation-image-wrapper">
+                        {(() => {
+                          const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
+                          let imageUrl = diagnosticResult.currentSituation.imageUrl;
+                          
+                          // Si no hay imageUrl, generarlo usando la función de utilidad
+                          if (!imageUrl) {
+                            imageUrl = getCurrentSituationImageUrl(sector);
+                            console.log('🔄 [RESULT PAGE] Generated currentSituation imageUrl:', imageUrl);
+                          }
+                          
+                          return (
+                            <img 
+                              src={imageUrl} 
+                              alt={diagnosticResult.currentSituation.title || 'Situación actual'}
+                              class="current-situation-image"
+                            />
+                          );
+                        })()}
                       </div>
                     </div>
-                    {diagnosticResult.summary.roi > 0 && (
-                      <div class="roi-indicator">
-                        <span class="roi-label">ROI Estimado:</span>
-                        <span class="roi-value">{Math.round(diagnosticResult.summary.roi)}%</span>
+                  </div>
+                )}
+
+                <!-- Resumen de Costos y Ahorros - Rediseñado -->
+                {diagnosticResult.summary && (
+                  <div class="cost-summary-section-modern">
+                    <h2 class="cost-summary-title">Resumen de tu Situación Actual</h2>
+                    <div class="cost-summary-content">
+                      <div class="cost-summary-image-container">
+                        {(() => {
+                          const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
+                          let imageUrl = diagnosticResult.summary.imageUrl;
+                          
+                          // Corregir mayúsculas en beforeAfter -> beforeafter para compatibilidad con diagnósticos antiguos
+                          if (imageUrl && imageUrl.includes('beforeAfter')) {
+                            imageUrl = imageUrl.replace('beforeAfter', 'beforeafter');
+                          }
+                          
+                          // Si no hay imageUrl, generarlo usando la función de utilidad
+                          if (!imageUrl) {
+                            imageUrl = getSummaryImageUrl(sector, 'beforeAfter');
+                            console.log('🔄 [RESULT PAGE] Generated summary imageUrl:', imageUrl);
+                          }
+                          
+                          return imageUrl ? (
+                            <div class="cost-summary-image-wrapper">
+                              <img 
+                                src={imageUrl} 
+                                alt="Resumen de costos y ahorros"
+                                class="cost-summary-image"
+                              />
+                            </div>
+                          ) : null;
+                        })()}
+                        <div class="cost-comparison-overlay">
+                          <div class="cost-card-modern cost-card-current">
+                            <div class="cost-card-label">COSTO ACTUAL</div>
+                            <div class="cost-card-values">
+                              <div class="cost-card-value-time">
+                                {Math.round(diagnosticResult.summary.totalCurrentCost?.timeHours || 0)} horas/semana
+                              </div>
+                              <div class="cost-card-value-money">
+                                ${Math.round(diagnosticResult.summary.totalCurrentCost?.moneyCost || 0)}/mes
+                              </div>
+                            </div>
+                            <div class="cost-card-description">Tiempo y dinero que estás perdiendo en procesos manuales</div>
+                          </div>
+                          <div class="cost-arrow-modern">→</div>
+                          <div class="cost-card-modern cost-card-potential">
+                            <div class="cost-card-label">AHORRO POTENCIAL</div>
+                            <div class="cost-card-values">
+                              <div class="cost-card-value-time savings">
+                                {Math.round(diagnosticResult.summary.totalPotentialSavings?.timeHours || 0)} horas/semana
+                              </div>
+                              <div class="cost-card-value-money savings">
+                                ${Math.round(diagnosticResult.summary.totalPotentialSavings?.moneyCost || 0)}/mes
+                              </div>
+                            </div>
+                            <div class="cost-card-description">Tiempo y dinero que podrías recuperar</div>
+                          </div>
+                        </div>
+                        {diagnosticResult.summary.roi > 0 && (
+                          <div class="roi-indicator-overlay">
+                            <span class="roi-label-modern">ROI Estimado:</span>
+                            <span class="roi-value-modern">{Math.round(diagnosticResult.summary.roi)}%</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <!-- Oportunidades - Rediseñado con Slider -->
+                {diagnosticResult.opportunities && diagnosticResult.opportunities.length > 0 && (
+                  <div class="opportunities-section-modern">
+                    <h2 class="opportunities-section-title">Oportunidades Detectadas</h2>
+                    <div class="opportunities-slider-wrapper">
+                      <div class="opportunities-slider" id="opportunities-slider">
+                        {diagnosticResult.opportunities.map((opportunity: any, index: number) => {
+                          const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
+                          let imageUrl = opportunity.imageUrl;
+                          
+                          // Si no hay imageUrl, generarlo usando la función de utilidad
+                          if (!imageUrl && opportunity.title) {
+                            imageUrl = getOpportunityImageUrl(sector, opportunity.title);
+                            console.log('🔄 [RESULT PAGE] Generated opportunity imageUrl:', { title: opportunity.title, imageUrl });
+                          }
+                          
+                          return (
+                            <div class="opportunity-slide" data-slide-index={index}>
+                              <div class="opportunity-card-modern">
+                                <div class="opportunity-image-wrapper">
+                                  {imageUrl ? (
+                                    <img 
+                                      src={imageUrl} 
+                                      alt={opportunity.title}
+                                      class="opportunity-image-modern"
+                                    />
+                                  ) : null}
+                                </div>
+                                <div class="opportunity-content-modern">
+                                  <h3 class="opportunity-title-modern">{opportunity.title}</h3>
+                                  <p class="opportunity-description-modern">{opportunity.description}</p>
+                                  {opportunity.impact && (
+                                    <div class="opportunity-impact-modern">
+                                      {opportunity.impact.time && (
+                                        <div class="impact-item-modern">
+                                          <span class="impact-icon">⏰</span>
+                                          <span class="impact-text">{opportunity.impact.time}</span>
+                                        </div>
+                                      )}
+                                      {opportunity.impact.money && (
+                                        <div class="impact-item-modern">
+                                          <span class="impact-icon">💰</span>
+                                          <span class="impact-text">{opportunity.impact.money}</span>
+                                        </div>
+                                      )}
+                                      {opportunity.impact.quality && (
+                                        <div class="impact-item-modern">
+                                          <span class="impact-icon">✨</span>
+                                          <span class="impact-text">{opportunity.impact.quality}</span>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                  {opportunity.dailyImprovement && opportunity.dailyImprovement.length > 0 && (
+                                    <ul class="improvement-list-modern">
+                                      {opportunity.dailyImprovement.map((improvement: string, i: number) => (
+                                        <li class="improvement-item-modern">
+                                          <span class="improvement-icon">→</span>
+                                          <span>{improvement}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      {diagnosticResult.opportunities.length > 1 && (
+                        <>
+                          <button class="opportunity-nav-btn opportunity-nav-prev" id="opportunity-prev" aria-label="Oportunidad anterior">
+                            ‹
+                          </button>
+                          <button class="opportunity-nav-btn opportunity-nav-next" id="opportunity-next" aria-label="Siguiente oportunidad">
+                            ›
+                          </button>
+                          <div class="opportunity-indicators" id="opportunity-indicators">
+                            {diagnosticResult.opportunities.map((_opportunity: any, index: number) => (
+                              <button class="opportunity-indicator" data-slide-index={index} aria-label={`Ir a oportunidad ${index + 1}`}></button>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <!-- Impacto Operativo - Rediseñado -->
+                {diagnosticResult.operationalImpact && (
+                  <div class="operational-impact-section-modern">
+                    <h2 class="operational-impact-title">{diagnosticResult.operationalImpact.title}</h2>
+                    <p class="operational-impact-description">{diagnosticResult.operationalImpact.description}</p>
+                    {diagnosticResult.operationalImpact.consequences && diagnosticResult.operationalImpact.consequences.length > 0 && (
+                      <div class="operational-impact-consequences">
+                        {diagnosticResult.operationalImpact.consequences.map((consequence: any, index: number) => {
+                          const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
+                          let imageUrl = consequence.imageUrl;
+                          
+                          // Si no hay imageUrl, generarlo basándose en el área
+                          if (!imageUrl && consequence.area) {
+                            const areaLower = consequence.area.toLowerCase();
+                            let impactArea: 'tiempo' | 'costos' | 'errores' | 'crecimiento' = 'tiempo';
+                            
+                            if (areaLower.includes('tiempo')) impactArea = 'tiempo';
+                            else if (areaLower.includes('costo')) impactArea = 'costos';
+                            else if (areaLower.includes('error')) impactArea = 'errores';
+                            else if (areaLower.includes('crecimiento')) impactArea = 'crecimiento';
+                            
+                            imageUrl = getOperationalImpactImageUrl(sector, impactArea);
+                            console.log('🔄 [RESULT PAGE] Generated consequence imageUrl:', { area: consequence.area, impactArea, imageUrl });
+                          }
+                          
+                          // Alternar posición: índice par = texto izquierda, imagen derecha
+                          // índice impar = imagen izquierda, texto derecha
+                          const isEven = index % 2 === 0;
+                          
+                          return (
+                            <div class={`consequence-card-modern ${isEven ? 'text-left' : 'image-left'}`}>
+                              {isEven ? (
+                                <>
+                                  <div class="consequence-content-modern">
+                                    <h3 class="consequence-area-modern">{consequence.area}</h3>
+                                    <p class="consequence-impact-modern">{consequence.impact}</p>
+                                  </div>
+                                  {imageUrl ? (
+                                    <div class="consequence-image-wrapper">
+                                      <img 
+                                        src={imageUrl} 
+                                        alt={consequence.area}
+                                        class="consequence-image-modern"
+                                      />
+                                    </div>
+                                  ) : null}
+                                </>
+                              ) : (
+                                <>
+                                  {imageUrl ? (
+                                    <div class="consequence-image-wrapper">
+                                      <img 
+                                        src={imageUrl} 
+                                        alt={consequence.area}
+                                        class="consequence-image-modern"
+                                      />
+                                    </div>
+                                  ) : null}
+                                  <div class="consequence-content-modern">
+                                    <h3 class="consequence-area-modern">{consequence.area}</h3>
+                                    <p class="consequence-impact-modern">{consequence.impact}</p>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
                 )}
 
-                <!-- Oportunidad -->
-                {diagnosticResult.personalizedMessage?.opportunity && (
-                  <div class="opportunity-section">
-                    <h2 class="section-title">La Oportunidad</h2>
-                    <p class="opportunity-text">{diagnosticResult.personalizedMessage.opportunity}</p>
+                <!-- Visión Futura - Rediseñado -->
+                {diagnosticResult.futureVision && (
+                  <div class="future-vision-section-modern">
+                    <div class="future-vision-content">
+                      <div class="future-vision-left">
+                        {(() => {
+                          const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
+                          let imageUrl = diagnosticResult.futureVision.imageUrl;
+                          
+                          // Si no hay imageUrl, generarlo usando la función de utilidad
+                          if (!imageUrl) {
+                            imageUrl = getFutureVisionImageUrl(sector);
+                            console.log('🔄 [RESULT PAGE] Generated futureVision imageUrl:', imageUrl);
+                          }
+                          
+                          return (
+                            <div class="future-vision-image-wrapper">
+                              <img 
+                                src={imageUrl} 
+                                alt={diagnosticResult.futureVision.title}
+                                class="future-vision-image"
+                              />
+                              <div class="future-vision-text-overlay">
+                                <h2 class="future-vision-title-overlay">{diagnosticResult.futureVision.title}</h2>
+                                <p class="future-vision-description-overlay">{diagnosticResult.futureVision.description}</p>
+                              </div>
+                            </div>
+                          );
+                        })()}
+                      </div>
+                      {diagnosticResult.futureVision.benefits && diagnosticResult.futureVision.benefits.length > 0 && (
+                        <div class="future-vision-benefits">
+                          {diagnosticResult.futureVision.benefits.map((benefit: any, index: number) => {
+                            const totalBenefits = diagnosticResult.futureVision.benefits.length;
+                            const isLastRow = index >= totalBenefits - (totalBenefits % 2 === 0 ? 0 : 1);
+                            const isAloneInLastRow = totalBenefits % 2 !== 0 && index === totalBenefits - 1;
+                            return (
+                              <div 
+                                class={`benefit-card-modern ${isAloneInLastRow ? 'benefit-card-full-width' : ''}`}
+                              >
+                                <div class="benefit-icon-modern">{benefit.icon}</div>
+                                <h3 class="benefit-title-modern">{benefit.title}</h3>
+                                <p class="benefit-description-modern">{benefit.description}</p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
 
-                <!-- Insights Específicos -->
-                {diagnosticResult.insights && diagnosticResult.insights.length > 0 && (
-                  <div class="insights-section">
-                    <h2 class="section-title">Problemas Identificados y Soluciones</h2>
-                    {diagnosticResult.insights.map((insight: any, index: number) => (
-                      <div class="insight-card" key={index}>
-                        <div class="insight-header">
-                          <h3 class="insight-problem">{insight.problem}</h3>
+                <!-- Oportunidad - Rediseñado -->
+                {diagnosticResult.personalizedMessage?.opportunity && (
+                  <div class="opportunity-section-modern">
+                    {(() => {
+                      const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
+                      const imageUrl = getOpportunitySectionImageUrl(sector);
+                      
+                      return (
+                        <div class="opportunity-image-wrapper">
+                          <img 
+                            src={imageUrl} 
+                            alt="La Oportunidad"
+                            class="opportunity-background-image"
+                          />
+                          <div class="opportunity-content-overlay">
+                            <div class="opportunity-title-box">
+                              <h2 class="opportunity-title-overlay">La Oportunidad</h2>
+                            </div>
+                            <div class="opportunity-text-box">
+                              <p class="opportunity-text-overlay">{diagnosticResult.personalizedMessage.opportunity}</p>
+                            </div>
+                          </div>
                         </div>
-                        <div class="insight-details">
-                          <div class="insight-costs">
-                            <div class="cost-item">
-                              <span class="cost-label">Tiempo perdido:</span>
-                              <span class="cost-value">{Math.round(insight.currentCost?.timeHours || 0)} horas/semana</span>
+                      );
+                    })()}
+                  </div>
+                )}
+
+                <!-- Insights Específicos - Rediseñado -->
+                {diagnosticResult.insights && diagnosticResult.insights.length > 0 && (
+                  <div class="insights-section-modern">
+                    {(() => {
+                      const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
+                      const insightImageUrl = getInsightImageUrl(sector, 'problemas-identificados');
+                      
+                      return (
+                        <div class="insights-header-image">
+                          <img 
+                            src={insightImageUrl} 
+                            alt="Problemas Identificados y Soluciones"
+                            class="insights-background-image"
+                          />
+                          <div class="insights-title-overlay">
+                            <h2 class="insights-title-text">Problemas Identificados y Soluciones</h2>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                    {diagnosticResult.insights.map((insight: any, index: number) => (
+                      <div class="insight-card-modern">
+                        <div class="insight-problem-header">
+                          <h3 class="insight-problem-title">{insight.problem}</h3>
+                        </div>
+                        <div class="insight-content-wrapper">
+                          {insight.impact && (
+                            <div class="insight-impact-card">
+                              <div class="impact-item-modern">
+                                <strong>Impacto operativo:</strong> {insight.impact.operational}
+                              </div>
+                              <div class="impact-item-modern">
+                                <strong>Impacto financiero:</strong> {insight.impact.financial}
+                              </div>
+                              <div class="impact-item-modern">
+                                <strong>Impacto en crecimiento:</strong> {insight.impact.growth}
+                              </div>
                             </div>
-                            <div class="cost-item">
-                              <span class="cost-label">Costo mensual:</span>
-                              <span class="cost-value">${Math.round(insight.currentCost?.moneyCost || 0)}</span>
+                          )}
+                          <div class="insight-right-column">
+                            <div class="insight-main-card">
+                              <div class="insight-costs-column">
+                                <div class="cost-row">
+                                  <span class="cost-label-modern">Tiempo perdido:</span>
+                                  <span class="cost-value-modern">{Math.round(insight.currentCost?.timeHours || 0)} horas/semana</span>
+                                </div>
+                                <div class="cost-row">
+                                  <span class="cost-label-modern">Costo mensual:</span>
+                                  <span class="cost-value-modern">${Math.round(insight.currentCost?.moneyCost || 0)}</span>
+                                </div>
+                                {insight.currentCost?.errorRate > 0 && (
+                                  <div class="cost-row">
+                                    <span class="cost-label-modern">Tasa de errores:</span>
+                                    <span class="cost-value-modern">{insight.currentCost.errorRate}%</span>
+                                  </div>
+                                )}
+                              </div>
+                              <div class="insight-savings-column">
+                                <div class="savings-label-modern">Ahorro potencial:</div>
+                                <div class="savings-value-time">{Math.round(insight.potentialSavings?.timeHours || 0)} horas/semana</div>
+                                <div class="savings-value-money">${Math.round(insight.potentialSavings?.moneyCost || 0)}/mes</div>
+                              </div>
                             </div>
-                            {insight.currentCost?.errorRate > 0 && (
-                              <div class="cost-item">
-                                <span class="cost-label">Tasa de errores:</span>
-                                <span class="cost-value">{insight.currentCost.errorRate}%</span>
+                            {insight.recommendation && (
+                              <div class="insight-recommendation-card">
+                                <h4 class="recommendation-title-modern">Recomendación: {insight.recommendation.tool}</h4>
+                                <p class="recommendation-description-modern">{insight.recommendation.description}</p>
+                                {insight.recommendation.benefits && insight.recommendation.benefits.length > 0 && (
+                                  <ul class="benefits-list-modern">
+                                    {insight.recommendation.benefits.map((benefit: string, i: number) => (
+                                      <li class="benefit-item-modern">✓ {benefit}</li>
+                                    ))}
+                                  </ul>
+                                )}
                               </div>
                             )}
                           </div>
-                          <div class="insight-savings">
-                            <div class="savings-label">Ahorro potencial:</div>
-                            <div class="savings-values">
-                              <span>{Math.round(insight.potentialSavings?.timeHours || 0)} horas/semana</span>
-                              <span>${Math.round(insight.potentialSavings?.moneyCost || 0)}/mes</span>
-                            </div>
-                          </div>
                         </div>
-                        {insight.impact && (
-                          <div class="insight-impact">
-                            <div class="impact-item">
-                              <strong>Impacto operativo:</strong> {insight.impact.operational}
-                            </div>
-                            <div class="impact-item">
-                              <strong>Impacto financiero:</strong> {insight.impact.financial}
-                            </div>
-                            <div class="impact-item">
-                              <strong>Impacto en crecimiento:</strong> {insight.impact.growth}
-                            </div>
-                          </div>
-                        )}
-                        {insight.recommendation && (
-                          <div class="insight-recommendation">
-                            <h4 class="recommendation-title">Recomendación: {insight.recommendation.tool}</h4>
-                            <p class="recommendation-description">{insight.recommendation.description}</p>
-                            {insight.recommendation.benefits && insight.recommendation.benefits.length > 0 && (
-                              <ul class="benefits-list">
-                                {insight.recommendation.benefits.map((benefit: string, i: number) => (
-                                  <li key={i}>{benefit}</li>
-                                ))}
-                              </ul>
-                            )}
-                          </div>
-                        )}
                       </div>
                     ))}
                   </div>
                 )}
 
-                <!-- Visión -->
+                <!-- Visión - Rediseñado -->
                 {diagnosticResult.personalizedMessage?.vision && (
-                  <div class="vision-section">
-                    <h2 class="section-title">Tu Visión</h2>
-                    <p class="vision-text">{diagnosticResult.personalizedMessage.vision}</p>
+                  <div class="vision-section-modern">
+                    {(() => {
+                      const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
+                      const imageUrl = getFutureVisionImageUrl(sector);
+                      
+                      return (
+                        <div class="vision-image-wrapper">
+                          <img 
+                            src={imageUrl} 
+                            alt="Tu Visión"
+                            class="vision-background-image"
+                          />
+                          <div class="vision-content-overlay">
+                            <div class="vision-title-overlay">
+                              <h2 class="vision-title-text">Tu Visión</h2>
+                            </div>
+                            <div class="vision-text-overlay">
+                              <p class="vision-text-content">{diagnosticResult.personalizedMessage.vision}</p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                 )}
               </>
@@ -521,6 +913,92 @@ try {
     padding: 3rem;
     margin-bottom: 3rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  /* ============================================
+     SECCIÓN: LA OPORTUNIDAD - DISEÑO MODERNO
+     ============================================ */
+  .opportunity-section-modern {
+    margin-bottom: 4rem;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 
+      0 10px 40px rgba(0, 0, 0, 0.08),
+      0 2px 8px rgba(0, 0, 0, 0.04);
+    position: relative;
+    height: calc(100vh - 200px);
+    max-height: 800px;
+    min-height: 500px;
+  }
+
+  .opportunity-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .opportunity-background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  .opportunity-content-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    z-index: 2;
+  }
+
+  .opportunity-title-box {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 1.25rem 2rem;
+    box-shadow: 
+      0 8px 24px rgba(0, 0, 0, 0.15),
+      0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    max-width: 350px;
+    width: auto;
+  }
+
+  .opportunity-title-overlay {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .opportunity-text-box {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    box-shadow: 
+      0 12px 32px rgba(0, 0, 0, 0.2),
+      0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 900px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .opportunity-text-overlay {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    line-height: 1.8;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0;
   }
 
   .opportunity-header {
@@ -930,6 +1408,254 @@ try {
      ESTILOS PARA VISTA CONSULTIVA CONVERSACIONAL
      ============================================ */
   
+  /* ============================================
+     SECCIÓN: RESUMEN DE TU SITUACIÓN ACTUAL - DISEÑO MODERNO
+     ============================================ */
+  .cost-summary-section-modern {
+    margin-bottom: 4rem;
+    position: relative;
+  }
+
+  .cost-summary-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0 auto -1.5rem auto;
+    padding: 1.5rem 2rem;
+    background: #FFFFFF;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    position: relative;
+    z-index: 2;
+    display: block;
+    text-align: center;
+    transform: translateY(-1rem);
+    max-width: fit-content;
+  }
+
+  .cost-summary-content {
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 3rem 2rem 2rem 2rem;
+    box-shadow: 
+      0 10px 40px rgba(0, 0, 0, 0.08),
+      0 2px 8px rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: visible;
+  }
+
+  .cost-summary-image-container {
+    position: relative;
+    width: 100%;
+    margin: 0;
+  }
+
+  .cost-summary-image-wrapper {
+    width: 100%;
+    height: 650px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    background: #F8F9FA;
+    position: relative;
+  }
+
+  .cost-summary-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  .cost-comparison-overlay {
+    position: absolute;
+    bottom: 4rem;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 0 2rem;
+    z-index: 3;
+  }
+
+  .cost-card-modern {
+    flex: 0 1 auto;
+    min-width: 280px;
+    max-width: 320px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    box-shadow: 
+      0 12px 32px rgba(0, 0, 0, 0.2),
+      0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 3px solid;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .cost-card-modern:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 12px 32px rgba(0, 0, 0, 0.15),
+      0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .cost-card-current {
+    border-color: #DC2626;
+  }
+
+  .cost-card-potential {
+    border-color: #10B981;
+  }
+
+  .cost-card-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+    color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .cost-card-values {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .cost-card-value-time,
+  .cost-card-value-money {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    line-height: 1.2;
+  }
+
+  .cost-card-value-time.savings,
+  .cost-card-value-money.savings {
+    color: #10B981;
+  }
+
+  .cost-card-description {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-grey-medium, #6B7280);
+    margin-top: 1rem;
+  }
+
+  .cost-arrow-modern {
+    font-size: 3rem;
+    color: var(--color-grey-medium, #9A9A97);
+    font-weight: 300;
+    flex-shrink: 0;
+    margin: 0 1rem;
+  }
+
+  .roi-indicator-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding: 1.25rem 2rem;
+    background: linear-gradient(135deg, #F0FDF4 0%, #D1FAE5 100%);
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 -4px 12px rgba(16, 185, 129, 0.2);
+    z-index: 4;
+  }
+
+  .roi-indicator-modern {
+    text-align: center;
+    margin-top: 2.5rem;
+    padding: 1.25rem 2rem;
+    background: linear-gradient(135deg, #F0FDF4 0%, #D1FAE5 100%);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+  }
+
+  .roi-label-modern {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-right: 0.75rem;
+  }
+
+  .roi-value-modern {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #10B981;
+  }
+
+  /* Responsive */
+  @media (max-width: 968px) {
+    .cost-summary-title {
+      transform: translateY(0);
+      margin-bottom: 0;
+      border-radius: 16px;
+    }
+
+    .cost-summary-content {
+      border-radius: 16px;
+      padding: 2rem 1.5rem;
+    }
+
+    .cost-summary-image-wrapper {
+      height: 500px;
+    }
+
+    .cost-comparison-overlay {
+      position: relative;
+      bottom: auto;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 2rem 0 0 0;
+      margin-top: 2rem;
+    }
+
+    .cost-arrow-modern {
+      transform: rotate(90deg);
+      margin: 0;
+    }
+
+    .cost-card-modern {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .roi-indicator-overlay {
+      position: relative;
+      bottom: auto;
+      border-radius: 12px;
+      margin-top: 2rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .cost-summary-title {
+      font-size: 1.75rem;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .cost-summary-image-wrapper {
+      height: 300px;
+    }
+
+    .cost-card-modern {
+      padding: 2rem 1.5rem;
+    }
+
+    .cost-card-value-time,
+    .cost-card-value-money {
+      font-size: 1.5rem;
+    }
+  }
+
+  /* Estilos legacy para compatibilidad */
   .cost-summary-section {
     margin-bottom: 3rem;
     background: #FFFFFF;
@@ -1031,6 +1757,99 @@ try {
     display: block !important;
   }
 
+  /* ============================================
+     SECCIÓN: TU VISIÓN - DISEÑO MODERNO
+     ============================================ */
+  .vision-section-modern {
+    margin-bottom: 4rem;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 
+      0 10px 40px rgba(0, 0, 0, 0.08),
+      0 2px 8px rgba(0, 0, 0, 0.04);
+    position: relative;
+    height: calc(100vh - 200px);
+    max-height: 700px;
+    min-height: 500px;
+  }
+
+  .vision-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .vision-background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  .vision-content-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    padding: 4rem;
+    z-index: 2;
+  }
+
+  @media (max-width: 1024px) {
+    .vision-content-overlay {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding: 3rem;
+    }
+  }
+
+  .vision-title-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .vision-title-text {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 0;
+    line-height: 1.1;
+    text-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.5),
+      0 4px 16px rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(0, 0, 0, 0.2);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+  }
+
+  .vision-text-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .vision-text-content {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    line-height: 1.8;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: 
+      0 8px 24px rgba(0, 0, 0, 0.15),
+      0 2px 8px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
   .opportunity-text,
   .vision-text {
     font-size: 1.125rem;
@@ -1045,14 +1864,277 @@ try {
     display: block;
   }
 
+  /* ============================================
+     SECCIÓN: PROBLEMAS IDENTIFICADOS - DISEÑO MODERNO
+     ============================================ */
+  .insights-section-modern {
+    margin-bottom: 4rem;
+    width: 100%;
+  }
+
+  .insights-header-image {
+    position: relative;
+    width: 100%;
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 3rem;
+    box-shadow: 
+      0 10px 40px rgba(0, 0, 0, 0.08),
+      0 2px 8px rgba(0, 0, 0, 0.04);
+    height: calc(100vh - 200px);
+    max-height: 500px;
+    min-height: 400px;
+  }
+
+  .insights-background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  .insights-title-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 1.5rem 3rem;
+    box-shadow: 
+      0 12px 32px rgba(0, 0, 0, 0.2),
+      0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 2;
+  }
+
+  .insights-title-text {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0;
+    text-align: center;
+  }
+
+  .insight-card-modern {
+    margin-bottom: 3rem;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: 
+      0 10px 40px rgba(0, 0, 0, 0.08),
+      0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid #E5E5E3;
+  }
+
+  .insight-problem-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #F6F5F2;
+  }
+
+  .insight-problem-title {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .insight-content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    align-items: stretch;
+  }
+
+  @media (max-width: 1024px) {
+    .insight-content-wrapper {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .insight-right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    height: 100%;
+  }
+
+  .insight-main-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.08),
+      0 2px 4px rgba(0, 0, 0, 0.04);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    flex: 1;
+    height: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .insight-main-card {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  .insight-costs-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+
+  .cost-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .cost-label-modern {
+    font-size: 0.95rem;
+    color: var(--color-grey-medium, #6B7280);
+    font-weight: 500;
+  }
+
+  .cost-value-modern {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .insight-savings-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: flex-start;
+  }
+
+  .savings-label-modern {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #10B981;
+    margin-bottom: 0.5rem;
+  }
+
+  .savings-value-time,
+  .savings-value-money {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #10B981;
+  }
+
+  .insight-recommendation-card {
+    background: #E0F2FE;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.08),
+      0 2px 4px rgba(0, 0, 0, 0.04);
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .recommendation-title-modern {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0 0 0.75rem 0;
+  }
+
+  .recommendation-description-modern {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0 0 1rem 0;
+  }
+
+  .benefits-list-modern {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .benefit-item-modern {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-graphite-dark, #2B2B2B);
+    padding-left: 0;
+  }
+
+  .insight-impact-card {
+    background: #FEF3C7;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.08),
+      0 2px 4px rgba(0, 0, 0, 0.04);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .impact-item-modern {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1rem;
+  }
+
+  .impact-item-modern:last-child {
+    margin-bottom: 0;
+  }
+
+  .impact-item-modern strong {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
   .insight-card {
     background: #FFFFFF !important;
     border-radius: 12px !important;
-    padding: 2rem !important;
+    padding: 0 !important;
     margin-bottom: 2rem !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    position: relative;
+    overflow: hidden;
     border-left: 4px solid #2B2B2B !important;
-    display: block !important;
+  }
+  
+  .insight-image {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px 12px 0 0;
+    margin: 0;
+    object-fit: cover;
+    max-height: 300px;
+    display: block;
+  }
+  
+  .insight-card .insight-header {
+    padding: 2rem 2rem 1rem 2rem;
+  }
+  
+  .insight-card .insight-details,
+  .insight-card .insight-impact,
+  .insight-card .insight-recommendation {
+    padding: 0 2rem 1.5rem 2rem;
   }
 
   .insight-problem {
@@ -1170,6 +2252,1016 @@ try {
     color: var(--color-grey-medium, #9A9A97) !important;
   }
 
+  /* Nuevas secciones con imágenes */
+  /* ============================================
+     SECCIÓN: TU SITUACIÓN ACTUAL - DISEÑO MODERNO
+     ============================================ */
+  .current-situation-section-modern {
+    margin-bottom: 4rem;
+    padding: 0;
+  }
+
+  .current-situation-content {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 4rem;
+    align-items: stretch;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+    border-radius: 24px;
+    padding: 4rem;
+    box-shadow: 
+      0 10px 40px rgba(0, 0, 0, 0.08),
+      0 2px 8px rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: hidden;
+    min-height: 600px;
+  }
+
+  .current-situation-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+    border-radius: 24px 24px 0 0;
+  }
+
+  .current-situation-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: center;
+  }
+
+  .current-situation-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .current-situation-description {
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    line-height: 1.8;
+    color: var(--color-grey-medium, #6B7280);
+    margin: 0;
+  }
+
+  .current-situation-highlights {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .current-situation-highlight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+  }
+
+  .current-situation-highlight-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .highlight-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #FFFFFF;
+    border-radius: 50%;
+    font-size: 1rem;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .highlight-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-graphite-dark, #2B2B2B);
+    font-weight: 500;
+  }
+
+  .current-situation-image-wrapper {
+    position: relative;
+    border-radius: 0 20px 20px 0;
+    overflow: hidden;
+    box-shadow: 
+      0 20px 60px rgba(0, 0, 0, 0.15),
+      0 8px 24px r0gba(0, 0, 0, 0.1);
+    background: #FFFFFF;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .current-situation-image {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.4s ease;
+  }
+
+  .current-situation-image-wrapper:hover .current-situation-image {
+    transform: scale(1.02);
+  }
+
+  /* Responsive para móvil */
+  @media (max-width: 968px) {
+    .current-situation-content {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      padding: 3rem 2rem;
+    }
+
+    .current-situation-image-wrapper {
+      order: -1;
+    }
+
+    .current-situation-title {
+      font-size: 2rem;
+    }
+
+    .current-situation-description {
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .current-situation-content {
+      padding: 2rem 1.5rem;
+      border-radius: 16px;
+    }
+
+    .current-situation-title {
+      font-size: 1.75rem;
+    }
+
+    .current-situation-highlight-item {
+      padding: 0.875rem 1.25rem;
+    }
+
+    .highlight-icon {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      font-size: 0.875rem;
+    }
+
+    .highlight-text {
+      font-size: 0.9375rem;
+    }
+  }
+
+  /* Estilos legacy para otras secciones */
+  /* ============================================
+     SECCIÓN: OPORTUNIDADES DETECTADAS - DISEÑO MODERNO CON SLIDER
+     ============================================ */
+  .opportunities-section-modern {
+    margin-bottom: 4rem;
+  }
+
+  .opportunities-section-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0 0 3rem 0;
+    text-align: center;
+  }
+
+  .opportunities-slider-wrapper {
+    position: relative;
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 0;
+    box-shadow: 
+      0 10px 40px rgba(0, 0, 0, 0.08),
+      0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .opportunities-slider-wrapper > .opportunities-slider {
+    overflow: hidden;
+  }
+
+  .opportunities-slider {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+    width: 100%;
+    overflow: visible;
+    position: relative;
+    will-change: transform;
+  }
+
+  .opportunity-slide {
+    min-width: 100%;
+    max-width: 100%;
+    flex: 0 0 100%;
+    flex-shrink: 0;
+    display: block;
+    width: 100%;
+    opacity: 1;
+    visibility: visible;
+    box-sizing: border-box;
+  }
+
+  .opportunity-card-modern {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: stretch;
+    min-height: 600px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .opportunity-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    background: #F8F9FA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 600px;
+  }
+
+  .opportunity-image-modern {
+    width: 100%;
+    height: 100%;
+    min-height: 600px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  .opportunity-content-modern {
+    padding: 4rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+    width: 100%;
+    height: 100%;
+    min-height: 600px;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+
+  .opportunity-title-modern {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .opportunity-description-modern {
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    line-height: 1.8;
+    color: var(--color-grey-medium, #6B7280);
+    margin: 0;
+  }
+
+  .opportunity-impact-modern {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .impact-item-modern {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .impact-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .impact-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .improvement-list-modern {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .improvement-item-modern {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .improvement-icon {
+    color: #10B981;
+    font-size: 1.25rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
+
+  .opportunity-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--color-grey-light);
+    border-radius: 50%;
+    color: var(--color-graphite-dark);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .opportunity-nav-btn:hover {
+    background: var(--color-graphite-dark);
+    color: #FFFFFF;
+    border-color: var(--color-graphite-dark);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .opportunity-nav-prev {
+    left: 1.5rem;
+  }
+
+  .opportunity-nav-next {
+    right: 1.5rem;
+  }
+
+  .opportunity-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 2rem;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.95) 0%, transparent 100%);
+  }
+
+  .opportunity-indicator {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: var(--color-grey-light);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .opportunity-indicator:hover,
+  .opportunity-indicator.active {
+    background: var(--color-graphite-dark);
+    transform: scale(1.2);
+    border-color: var(--color-graphite-dark);
+  }
+
+  /* Responsive */
+  @media (max-width: 968px) {
+    .opportunity-card-modern {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+
+    .opportunity-image-wrapper {
+      height: 400px;
+      order: -1;
+    }
+
+    .opportunity-content-modern {
+      padding: 3rem 2rem;
+    }
+
+    .opportunity-nav-btn {
+      width: 2.5rem;
+      height: 2.5rem;
+      font-size: 1.25rem;
+    }
+
+    .opportunity-nav-prev {
+      left: 1rem;
+    }
+
+    .opportunity-nav-next {
+      right: 1rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .opportunity-image-wrapper {
+      height: 300px;
+    }
+
+    .opportunity-content-modern {
+      padding: 2rem 1.5rem;
+    }
+
+    .opportunity-title-modern {
+      font-size: 1.5rem;
+    }
+  }
+
+  /* Estilos legacy para compatibilidad */
+  .opportunities-section,
+  .operational-impact-section,
+  .future-vision-section {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 3rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .result-section-image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 12px;
+    margin: 0 auto 2rem;
+    display: block;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .section-description {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 1.5rem;
+  }
+
+  .highlights-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+  }
+
+  .highlights-list li {
+    padding: 0.75rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .highlights-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #10B981;
+    font-weight: 700;
+  }
+
+  /* Oportunidades */
+  .opportunity-card {
+    background: #F6F5F2;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .opportunity-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .opportunity-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .opportunity-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0;
+  }
+
+  .opportunity-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .opportunity-impact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .impact-item {
+    font-size: 0.95rem;
+    color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .improvement-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+  }
+
+  .improvement-list li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    font-size: 0.95rem;
+    color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  .improvement-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #10B981;
+  }
+
+  /* ============================================
+     SECCIÓN: IMPACTO OPERATIVO - DISEÑO MODERNO
+     ============================================ */
+  .operational-impact-section-modern {
+    margin-bottom: 4rem;
+  }
+
+  .operational-impact-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0 0 1.5rem 0;
+  }
+
+  .operational-impact-description {
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    line-height: 1.8;
+    color: var(--color-grey-medium, #6B7280);
+    margin: 0 0 3rem 0;
+  }
+
+  .operational-impact-consequences {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .consequence-card-modern {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: stretch;
+    background: #FFFFFF;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 
+      0 10px 40px rgba(0, 0, 0, 0.08),
+      0 2px 8px rgba(0, 0, 0, 0.04);
+    min-height: 500px;
+  }
+
+  /* Por defecto: texto izquierda, imagen derecha */
+  .consequence-card-modern.text-left {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Alternado: imagen izquierda, texto derecha */
+  .consequence-card-modern.image-left {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .consequence-content-modern {
+    padding: 4rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+    justify-content: center;
+    order: 1;
+  }
+
+  .consequence-image-wrapper {
+    order: 2;
+  }
+
+  /* Cuando la imagen va primero (índice impar) */
+  .consequence-card-modern.image-left .consequence-image-wrapper {
+    order: 1;
+  }
+
+  .consequence-card-modern.image-left .consequence-content-modern {
+    order: 2;
+  }
+
+  .consequence-area-modern {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .consequence-impact-modern {
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    line-height: 1.8;
+    color: var(--color-grey-medium, #6B7280);
+    margin: 0;
+  }
+
+  .consequence-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    background: #F8F9FA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    order: 2;
+  }
+
+  /* Cuando la imagen va primero (índice impar) */
+  .consequence-card-modern.image-left .consequence-image-wrapper {
+    order: 1;
+  }
+
+  .consequence-card-modern.image-left .consequence-content-modern {
+    order: 2;
+  }
+
+  .consequence-image-modern {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  /* Responsive */
+  @media (max-width: 968px) {
+    .consequence-card-modern {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+
+    .consequence-image-wrapper {
+      height: 400px;
+      order: -1;
+      min-height: 400px;
+    }
+
+    .consequence-image-modern {
+      min-height: 400px;
+    }
+
+    .consequence-content-modern {
+      padding: 3rem 2rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .consequence-image-wrapper {
+      height: 300px;
+      min-height: 300px;
+    }
+
+    .consequence-image-modern {
+      min-height: 300px;
+    }
+
+    .consequence-content-modern {
+      padding: 2rem 1.5rem;
+    }
+  }
+
+  /* Estilos legacy para compatibilidad */
+  .consequence-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+    align-items: start;
+    border-left: 4px solid #2B2B2B;
+  }
+
+  .consequence-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .consequence-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .consequence-area {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0;
+  }
+
+  .consequence-impact {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  /* ============================================
+     SECCIÓN: VISIÓN FUTURA - DISEÑO MODERNO
+     ============================================ */
+  .future-vision-section-modern {
+    margin-bottom: 4rem;
+  }
+
+  .future-vision-content {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 0;
+    align-items: stretch;
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 0;
+    box-shadow: 
+      0 10px 40px rgba(0, 0, 0, 0.08),
+      0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    height: calc(100vh - 200px);
+    max-height: 800px;
+  }
+
+  .future-vision-left {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .future-vision-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #F8F9FA;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .future-vision-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .future-vision-text-overlay {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 2.5rem;
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    box-shadow: 
+      0 12px 32px rgba(0, 0, 0, 0.2),
+      0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 480px;
+    width: auto;
+    z-index: 2;
+  }
+
+  .future-vision-title-overlay {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0 0 1rem 0;
+    line-height: 1.2;
+  }
+
+  .future-vision-description-overlay {
+    font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
+    line-height: 1.8;
+    color: var(--color-grey-medium, #6B7280);
+    margin: 0;
+  }
+
+  .future-vision-benefits {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    align-content: start;
+    padding: 2rem;
+    height: 100%;
+    background: #FFFFFF;
+    overflow-y: auto;
+  }
+
+  .benefit-card-modern {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    box-shadow: 
+      0 4px 12px rgba(0, 0, 0, 0.08),
+      0 2px 4px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: auto;
+    min-height: fit-content;
+    box-sizing: border-box;
+  }
+
+  .benefit-card-full-width {
+    grid-column: 1 / -1;
+  }
+
+  .benefit-card-modern:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 8px 20px rgba(0, 0, 0, 0.12),
+      0 4px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .benefit-icon-modern {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    line-height: 1;
+  }
+
+  .benefit-title-modern {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .benefit-description-modern {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-grey-medium, #6B7280);
+    margin: 0;
+    flex-grow: 1;
+  }
+
+  /* Responsive */
+  @media (max-width: 968px) {
+    .future-vision-content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .future-vision-benefits {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    .benefit-card-modern {
+      padding: 1.75rem 1.25rem;
+      min-height: 180px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .future-vision-benefits {
+      grid-template-columns: 1fr;
+    }
+
+    .benefit-card-modern {
+      min-height: auto;
+    }
+
+    .future-vision-overlay {
+      padding: 2rem 1.5rem 1.5rem 1.5rem;
+    }
+  }
+
+  /* Estilos legacy para compatibilidad */
+  .future-vision-section {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 3rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .benefit-card {
+    background: #F6F5F2;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .benefit-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .benefit-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-graphite-dark, #2B2B2B);
+    margin-bottom: 0.75rem;
+  }
+
+  .benefit-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--color-graphite-dark, #2B2B2B);
+  }
+
+  @media (max-width: 768px) {
+    .opportunity-card,
+    .consequence-card {
+      grid-template-columns: 1fr;
+    }
+
+    .opportunity-image,
+    .consequence-image {
+      max-width: 100%;
+    }
+  }
+
   .recommendation-title {
     font-size: 1.125rem;
     font-weight: 600;
@@ -1254,3 +3346,324 @@ try {
     }
   }
 </style>
+
+<script>
+  // Manejar errores de carga de imágenes
+  document.addEventListener('DOMContentLoaded', () => {
+    const images = document.querySelectorAll('.result-section-image, .opportunity-image, .opportunity-image-modern, .consequence-image');
+    images.forEach((imgElement) => {
+      const img = imgElement as HTMLImageElement;
+      img.addEventListener('error', function() {
+        console.error('❌ Error loading image:', this.src);
+        this.style.display = 'none';
+      });
+      
+      // Log cuando la imagen se carga correctamente
+      img.addEventListener('load', function() {
+        console.log('✅ Image loaded successfully:', this.src);
+      });
+    });
+    
+    // Log todas las imágenes encontradas
+    console.log('🔍 [CLIENT] Page loaded, checking for diagnostic data...');
+    console.log('🔍 [CLIENT] Found images:', images.length);
+    images.forEach((imgElement, index: number) => {
+      const img = imgElement as HTMLImageElement;
+      console.log(`🔍 [CLIENT] Image ${index + 1}:`, {
+        src: img.src,
+        alt: img.alt,
+        loaded: img.complete,
+        naturalWidth: img.naturalWidth,
+        naturalHeight: img.naturalHeight
+      });
+    });
+    
+    // Buscar mensajes de debug
+    const debugMessages = document.querySelectorAll('[style*="background: #fef3c7"]');
+    console.log('🔍 [CLIENT] Debug messages found:', debugMessages.length);
+  });
+</script>
+
+<script>
+  // Logs del lado del cliente para depuración
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('🔍 [CLIENT] Page loaded, checking for diagnostic data...');
+    
+    // Verificar qué secciones existen
+    const currentSituationSection = document.querySelector('.current-situation-section-modern');
+    const opportunitiesSection = document.querySelector('.opportunities-section-modern') || document.querySelector('.opportunities-section');
+    const operationalImpactSection = document.querySelector('.operational-impact-section-modern') || document.querySelector('.operational-impact-section');
+    const futureVisionSection = document.querySelector('.future-vision-section-modern') || document.querySelector('.future-vision-section');
+    const summarySection = document.querySelector('.cost-summary-section-modern') || document.querySelector('.cost-summary-section');
+    
+    console.log('🔍 [CLIENT] Sections found:', {
+      currentSituation: !!currentSituationSection,
+      opportunities: !!opportunitiesSection,
+      operationalImpact: !!operationalImpactSection,
+      futureVision: !!futureVisionSection,
+      summary: !!summarySection
+    });
+    
+    // Buscar elementos con imageUrl
+    const images = document.querySelectorAll('img.result-section-image, img.opportunity-image, img.consequence-image');
+    console.log('🔍 [CLIENT] Found images:', images.length);
+    
+    images.forEach((img, index) => {
+      console.log(`🔍 [CLIENT] Image ${index + 1}:`, {
+        src: img.getAttribute('src'),
+        alt: img.getAttribute('alt'),
+        class: img.className,
+        loaded: img.complete,
+        naturalWidth: img.naturalWidth,
+        naturalHeight: img.naturalHeight,
+        parentSection: img.closest('section, div')?.className
+      });
+      
+      img.addEventListener('error', (e) => {
+        console.error(`❌ [CLIENT] Image ${index + 1} failed to load:`, img.getAttribute('src'));
+      });
+      
+      img.addEventListener('load', () => {
+        console.log(`✅ [CLIENT] Image ${index + 1} loaded successfully:`, img.getAttribute('src'));
+      });
+    });
+    
+    // Verificar si hay secciones sin imágenes
+    if (currentSituationSection) {
+      const img = currentSituationSection.querySelector('img');
+      console.log('🔍 [CLIENT] currentSituationSection has image:', !!img, img?.getAttribute('src'));
+    }
+    if (opportunitiesSection) {
+      const imgs = opportunitiesSection.querySelectorAll('img');
+      console.log('🔍 [CLIENT] opportunitiesSection has images:', imgs.length, Array.from(imgs).map((img: HTMLImageElement) => img.getAttribute('src')));
+    }
+    if (operationalImpactSection) {
+      const imgs = operationalImpactSection.querySelectorAll('img');
+      console.log('🔍 [CLIENT] operationalImpactSection has images:', imgs.length, Array.from(imgs).map((img: HTMLImageElement) => img.getAttribute('src')));
+    }
+    if (futureVisionSection) {
+      const img = futureVisionSection.querySelector('img');
+      console.log('🔍 [CLIENT] futureVisionSection has image:', !!img, img?.getAttribute('src'));
+    }
+    
+    // Buscar mensajes de debug
+    const debugMessages = document.querySelectorAll('[style*="background: #fef3c7"]');
+    console.log('🔍 [CLIENT] Debug messages found:', debugMessages.length);
+    debugMessages.forEach((msg, index) => {
+      console.log(`🔍 [CLIENT] Debug message ${index + 1}:`, msg.textContent);
+    });
+
+    // Funcionalidad del slider de oportunidades con autoplay
+    const opportunitiesSlider = document.getElementById('opportunities-slider');
+    const opportunityPrev = document.getElementById('opportunity-prev');
+    const opportunityNext = document.getElementById('opportunity-next');
+    const opportunityIndicators = document.querySelectorAll('.opportunity-indicator');
+    const opportunitySlides = document.querySelectorAll('.opportunity-slide');
+
+    if (opportunitiesSlider && opportunitySlides.length > 0) {
+      let currentSlide = 0;
+      const totalSlides = opportunitySlides.length;
+      let autoplayInterval: number | null = null;
+      const autoplayDelay = 5000; // 5 segundos
+
+      console.log('🎠 [OPPORTUNITIES SLIDER] Initialized:', {
+        totalSlides,
+        sliderElement: !!opportunitiesSlider,
+        prevBtn: !!opportunityPrev,
+        nextBtn: !!opportunityNext,
+        indicators: opportunityIndicators.length
+      });
+
+      const updateSlider = () => {
+        if (!opportunitiesSlider) return;
+        
+        const sliderElement = opportunitiesSlider as HTMLElement;
+        const wrapper = sliderElement.parentElement;
+        if (!wrapper) return;
+
+        const wrapperWidth = wrapper.offsetWidth;
+        const translateX = -currentSlide * wrapperWidth;
+        
+        sliderElement.style.transform = `translateX(${translateX}px)`;
+        sliderElement.style.display = 'flex';
+        sliderElement.style.width = `${totalSlides * 100}%`;
+
+        // Asegurar que cada slide tenga el ancho correcto
+        opportunitySlides.forEach((slide) => {
+          const slideElement = slide as HTMLElement;
+          slideElement.style.width = `${wrapperWidth}px`;
+          slideElement.style.minWidth = `${wrapperWidth}px`;
+          slideElement.style.maxWidth = `${wrapperWidth}px`;
+          slideElement.style.flexShrink = '0';
+          slideElement.style.flexGrow = '0';
+          slideElement.style.flexBasis = `${wrapperWidth}px`;
+        });
+
+        console.log('🎠 [OPPORTUNITIES SLIDER] Updated:', {
+          currentSlide,
+          translateX,
+          totalSlides,
+          wrapperWidth
+        });
+
+        // Actualizar indicadores
+        opportunityIndicators.forEach((indicator, index) => {
+          if (index === currentSlide) {
+            indicator.classList.add('active');
+          } else {
+            indicator.classList.remove('active');
+          }
+        });
+
+        // Actualizar botones
+        if (opportunityPrev) {
+          (opportunityPrev as HTMLButtonElement).disabled = false;
+        }
+        if (opportunityNext) {
+          (opportunityNext as HTMLButtonElement).disabled = false;
+        }
+      };
+
+      const nextSlide = () => {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateSlider();
+      };
+
+      const prevSlide = () => {
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        updateSlider();
+      };
+
+      const startAutoplay = () => {
+        if (autoplayInterval) {
+          clearInterval(autoplayInterval);
+        }
+        autoplayInterval = window.setInterval(() => {
+          nextSlide();
+        }, autoplayDelay);
+      };
+
+      const stopAutoplay = () => {
+        if (autoplayInterval) {
+          clearInterval(autoplayInterval);
+          autoplayInterval = null;
+        }
+      };
+
+      if (opportunityPrev) {
+        opportunityPrev.addEventListener('click', () => {
+          prevSlide();
+          startAutoplay(); // Reiniciar autoplay después de interacción manual
+        });
+      }
+
+      if (opportunityNext) {
+        opportunityNext.addEventListener('click', () => {
+          nextSlide();
+          startAutoplay(); // Reiniciar autoplay después de interacción manual
+        });
+      }
+
+      opportunityIndicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+          currentSlide = index;
+          updateSlider();
+          startAutoplay(); // Reiniciar autoplay después de interacción manual
+        });
+      });
+
+      // Pausar autoplay al hacer hover
+      const sliderWrapper = opportunitiesSlider.closest('.opportunities-slider-wrapper');
+      if (sliderWrapper) {
+        sliderWrapper.addEventListener('mouseenter', stopAutoplay);
+        sliderWrapper.addEventListener('mouseleave', startAutoplay);
+      }
+
+      // Touch/swipe support
+      let startX = 0;
+      let isDragging = false;
+
+      opportunitiesSlider.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+        stopAutoplay();
+      });
+
+      opportunitiesSlider.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+      });
+
+      opportunitiesSlider.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        const endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+
+        if (Math.abs(diff) > 50) {
+          if (diff > 0) {
+            nextSlide();
+          } else {
+            prevSlide();
+          }
+        }
+        startAutoplay();
+      });
+
+      // Mouse drag support
+      let mouseStartX = 0;
+      let isMouseDragging = false;
+
+      opportunitiesSlider.addEventListener('mousedown', (e) => {
+        mouseStartX = e.clientX;
+        isMouseDragging = true;
+        (opportunitiesSlider as HTMLElement).style.cursor = 'grabbing';
+        stopAutoplay();
+      });
+
+      opportunitiesSlider.addEventListener('mousemove', (e) => {
+        if (!isMouseDragging) return;
+        e.preventDefault();
+      });
+
+      opportunitiesSlider.addEventListener('mouseup', (e) => {
+        if (!isMouseDragging) return;
+        isMouseDragging = false;
+        (opportunitiesSlider as HTMLElement).style.cursor = 'grab';
+        const mouseEndX = e.clientX;
+        const mouseDiff = mouseStartX - mouseEndX;
+
+        if (Math.abs(mouseDiff) > 50) {
+          if (mouseDiff > 0) {
+            nextSlide();
+          } else {
+            prevSlide();
+          }
+        }
+        startAutoplay();
+      });
+
+      opportunitiesSlider.style.cursor = 'grab';
+
+      // Inicializar después de que la página cargue completamente
+      setTimeout(() => {
+        updateSlider();
+        if (totalSlides > 1) {
+          startAutoplay(); // Iniciar autoplay automáticamente solo si hay más de un slide
+        }
+      }, 100);
+
+      // Actualizar al redimensionar
+      window.addEventListener('resize', () => {
+        updateSlider();
+      });
+    } else {
+      console.warn('🎠 [OPPORTUNITIES SLIDER] Not initialized:', {
+        slider: !!opportunitiesSlider,
+        slides: opportunitySlides.length
+      });
+    }
+  });
+</script>
+
+m

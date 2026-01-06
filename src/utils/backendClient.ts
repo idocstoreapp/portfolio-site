@@ -15,6 +15,7 @@ export interface DiagnosticRequest {
   necesidadesAdicionales?: string[];
   // Nuevos campos del diagnóstico mejorado
   businessType?: string;
+  sector?: string;
   operacionActual?: string;
   situacionActual?: string;
   dolorPrincipal?: string;
@@ -23,6 +24,16 @@ export interface DiagnosticRequest {
   email?: string;
   empresa?: string;
   telefono?: string;
+  // Campos del sistema conversacional
+  summary?: any;
+  insights?: any[];
+  personalizedMessage?: any;
+  currentSituation?: any;
+  opportunities?: any[];
+  operationalImpact?: any;
+  futureVision?: any;
+  // Permitir campos adicionales dinámicos
+  [key: string]: any;
 }
 
 export interface DiagnosticData {
@@ -85,6 +96,18 @@ export async function createDiagnostic(
   data: DiagnosticRequest
 ): Promise<DiagnosticResponse> {
   try {
+    // Log crítico antes de enviar
+    console.log('🚨 [BACKEND CLIENT] Sending to backend:', {
+      hasCurrentSituation: !!data.currentSituation,
+      hasOpportunities: !!data.opportunities,
+      opportunitiesIsArray: Array.isArray(data.opportunities),
+      opportunitiesLength: data.opportunities?.length || 0,
+      hasOperationalImpact: !!data.operationalImpact,
+      hasFutureVision: !!data.futureVision,
+      allKeys: Object.keys(data),
+      dataSize: JSON.stringify(data).length
+    });
+    
     const response = await fetch(`${BACKEND_URL}/api/diagnostic`, {
       method: 'POST',
       headers: {

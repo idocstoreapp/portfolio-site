@@ -1,5 +1,5 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from '../../layouts/AdminLayout.astro';
 import AdminGuard from '../../components/admin/AdminGuard';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import DiagnosticosList from '../../components/admin/DiagnosticosList';
@@ -13,9 +13,9 @@ const currentPath = Astro.url.pathname;
   description="Gestiona todos los diagnósticos realizados"
 >
   <AdminGuard client:load>
-    <div className="flex min-h-screen bg-gray-50">
+    <div style="position: relative; min-height: 100vh; background: #f9fafb;">
       <AdminSidebar client:load currentPath={currentPath} />
-      <div className="flex-1 ml-64">
+      <div style="margin-left: 16rem; min-height: 100vh; width: calc(100% - 16rem);">
         <header className="bg-white shadow-sm border-b border-gray-200">
           <div className="px-6 py-4">
             <h2 className="text-2xl font-bold text-gray-900">

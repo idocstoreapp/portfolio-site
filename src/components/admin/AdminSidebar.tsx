@@ -47,11 +47,14 @@ export default function AdminSidebar({ currentPath }: AdminSidebarProps) {
     { href: '/admin', label: 'Dashboard', icon: '📊' },
     { href: '/admin/diagnosticos', label: 'Diagnósticos', icon: '🔍' },
     { href: '/admin/proyectos', label: 'Proyectos', icon: '📁' },
+    { href: '/admin/prompts-imagenes', label: 'Prompts Imágenes (Preguntas)', icon: '🎨' },
+    { href: '/admin/prompts-imagenes-resultados', label: 'Prompts Imágenes (Resultados)', icon: '📊' },
+    { href: '/admin/iconos-wizard', label: 'Iconos Wizard', icon: '🎯' },
   ];
 
   return (
-    <aside className="w-64 bg-gray-900 text-white min-h-screen fixed left-0 top-0 z-40">
-      <div className="p-6">
+    <aside className="w-64 bg-gray-900 text-white min-h-screen fixed left-0 top-0 z-40 flex flex-col">
+      <div className="p-6 flex-1 overflow-y-auto">
         <h1 className="text-xl font-bold mb-8">Panel Admin</h1>
         <nav className="space-y-2">
           {menuItems.map((item) => {
@@ -73,7 +76,7 @@ export default function AdminSidebar({ currentPath }: AdminSidebarProps) {
           })}
         </nav>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 p-6">
+      <div className="p-6 border-t border-gray-700 flex-shrink-0">
         {user && (
           <div className="mb-4 pb-4 border-b border-gray-700">
             <p className="text-sm font-medium text-white">{user.nombre}</p>
