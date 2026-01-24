@@ -42,36 +42,6 @@ const {
   <!-- Content Container -->
   <div class="hero-container">
     <div class="hero-content">
-      <!-- Mockup Image -->
-      <div class="hero-mockup">
-        <div class="hero-mockup-mobile">
-        <img 
-          src="/images/mockup-hero.png" 
-          alt="Mockup de aplicación móvil"
-          class="mockup-image"
-          loading="eager"
-        />
-        </div>
-        <div class="hero-mockup-desktop">
-          <img 
-            src="/images/webs/mockup-escritorio.png" 
-            alt="Sistema de gestión"
-            class="mockup-desktop-image"
-            loading="lazy"
-          />
-        </div>
-        <div class="hero-systems-banner">
-          <div class="systems-slider">
-            <div class="system-slide active">Sistemas para servicios técnicos de celulares</div>
-            <div class="system-slide">Sistemas para talleres</div>
-            <div class="system-slide">Cotizadores para fabricantes</div>
-            <div class="system-slide">Manejo de ingresos y egresos internos</div>
-            <div class="system-slide">Gestión de empleados</div>
-            <div class="system-slide">Manejo de stock y proveedores</div>
-          </div>
-        </div>
-      </div>
-      
       <!-- Text Content -->
       <div class="hero-text">
         <h1 class="hero-title">
@@ -87,10 +57,10 @@ const {
         <div class="hero-logos-carousel">
           <h3 class="logos-title">Confían en nosotros</h3>
           <div class="logos-track" id="logos-track">
-            <div class="logo-item">
+            <div class="logo-item logo-item-large">
               <img src="/images/projects/logo-gourmetarabe.png" alt="Gourmet Árabe" />
             </div>
-            <div class="logo-item">
+            <div class="logo-item logo-item-large">
               <img src="/images/projects/logo-idocstore.png" alt="IDoc Store" />
             </div>
             <div class="logo-item">
@@ -98,16 +68,6 @@ const {
             </div>
             <div class="logo-item">
               <img src="/images/projects/logo-muebleriacadablanca.png" alt="Mueblería Casa Blanca" />
-            </div>
-            <!-- Duplicar logos para efecto infinito -->
-            <div class="logo-item">
-              <img src="/images/projects/logo-gourmetarabe.png" alt="Gourmet Árabe" />
-            </div>
-            <div class="logo-item">
-              <img src="/images/projects/logo-idocstore.png" alt="IDoc Store" />
-            </div>
-            <div class="logo-item">
-              <img src="/images/projects/logo-kubica.png" alt="Kubica" />
             </div>
           </div>
         </div>
@@ -176,11 +136,11 @@ const {
     overflow-x: hidden; /* Solo ocultar overflow horizontal */
     background: var(--bg-primary);
     background-color: var(--color-elephant-white);
-    background-image: url("/images/background-hero.jpg");
+    background-image: url("/images/hero-escritorio.png");
     background-size: cover;
     background-position: center top;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: scroll; /* Cambiar de fixed a scroll para que no se mueva */
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -278,9 +238,9 @@ const {
     inset: 0;
     overflow: hidden;
     z-index: 0;
-    background-image: url("/images/background-hero.jpg");
+    background-image: url("/images/hero-escritorio.png");
     background-size: cover;
-    background-position: center top; /* Mover background más arriba */
+    background-position: center top;
     background-repeat: no-repeat;
     /* Filtros CSS para hacer el fondo más claro y luminoso */
     filter: brightness(1.15) contrast(0.95);
@@ -294,6 +254,23 @@ const {
     background: rgba(255, 255, 255, 0.25);
     z-index: 1;
     mix-blend-mode: overlay;
+  }
+  
+  /* Background diferente para móvil - más pequeño */
+  @media (max-width: 1023px) {
+    .hero-premium {
+      background-image: url("/images/hero-movil.png") !important;
+      background-size: 95% auto !important; /* Hacer la imagen más pequeña */
+      background-position: center center !important;
+    }
+    
+    .hero-background {
+      background-image: url("/images/hero-movil.png");
+      background-size: 95% auto !important; /* Mismo tamaño que hero-premium */
+      background-attachment: scroll !important; /* No se mueve al hacer scroll */
+      background-repeat: no-repeat !important;
+      background-position: center center !important;
+    }
   }
   
   .gradient-orb {
@@ -384,7 +361,7 @@ const {
       align-items: center !important;
       justify-items: center !important;
       margin: 0 auto !important;
-      padding: 0 1rem !important;
+      padding: 0.75rem 1rem 0.5rem 1rem !important; /* Padding equilibrado para móvil */
       width: 100% !important;
       max-width: 100% !important;
     }
@@ -473,28 +450,31 @@ const {
       flex-direction: column !important;
     }
     
-    /* Layout de columna única para mobile */
+    /* Layout de columna única para mobile - "Confían en nosotros" antes del subtítulo */
     .hero-content {
       display: grid !important;
       grid-template-columns: 1fr !important;
+      grid-template-rows: auto auto auto 1fr auto auto; /* Título, logos, subtítulo, espacio flexible, CTAs y rating al final */
       grid-template-areas: 
         "title"
-        "subtitle"
-        "mockup"
-        "ctas"
         "logos"
+        "subtitle"
+        "."
+        "ctas"
         "rating";
-      gap: 0.5rem 0; /* Reducir gap para que todo quepa en el viewport */
-      align-items: center !important;
+      gap: 0.5rem 0 !important; /* Gap equilibrado */
+      align-items: start !important;
       justify-items: center !important;
       width: 100% !important;
       max-width: 100% !important;
-      padding: 0 1rem !important;
+      padding: 0.75rem 1rem 0.5rem 1rem !important; /* Padding equilibrado */
       box-sizing: border-box !important;
-      height: auto;
-      min-height: auto;
+      min-height: 100vh;
+      height: 100vh;
+      max-height: 100vh;
       margin: 0 auto !important;
       overflow-x: hidden !important;
+      overflow-y: hidden !important;
       position: relative !important;
       left: 0 !important;
       right: 0 !important;
@@ -506,7 +486,7 @@ const {
       grid-area: title;
       text-align: center !important; /* Centrado para mejor jerarquía */
       margin: 0 auto !important;
-      padding: 1rem 1rem 0.5rem 1rem !important;
+      padding: 0.75rem 1rem 0.25rem 1rem !important; /* Padding aumentado para bajar el título */
       width: 100% !important;
       max-width: 100% !important;
       box-sizing: border-box !important;
@@ -536,8 +516,9 @@ const {
       margin: 0 auto !important;
       margin-left: auto !important;
       margin-right: auto !important;
-      margin-top: -0.5rem !important; /* Más cerca del título */
-      padding: 0 1rem !important;
+      margin-top: -0.25rem !important; /* Espacio con el título */
+      padding: 0 1rem 0.3rem 1rem !important; /* Padding aumentado */
+      line-height: 1.4 !important; /* Line-height equilibrado */
       text-align: center !important;
       font-size: clamp(1rem, 3vw, 1.25rem);
       color: #1a1a1a !important; /* Gris más oscuro */
@@ -551,19 +532,9 @@ const {
       position: relative !important;
     }
     
-    /* Mockup alineado a la derecha */
+    /* Mockup eliminado */
     .hero-mockup {
-      grid-area: mockup;
-      display: flex;
-      align-items: center;
-      justify-content: center !important; /* Centrar en lugar de flex-end */
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      z-index: 1;
-      position: relative;
-      box-sizing: border-box;
+      display: none !important;
     }
     
     .hero-mockup .mockup-image {
@@ -577,22 +548,30 @@ const {
       filter: drop-shadow(-30px 20px 30px rgba(0, 0, 0, 0.7)) !important; /* Sombra solo en la imagen PNG */
     }
     
-    /* CTAs: Apilados verticalmente, siempre visibles */
-    .hero-cta-primary {
-      grid-area: ctas;
-      width: 100%;
-      max-width: 100%;
-      margin: 0;
-      padding: 0 0.25rem !important; /* Reducir aún más el padding */
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-      align-items: center;
-      box-sizing: border-box;
-      justify-content: center;
-      box-sizing: border-box;
-      position: relative;
-      z-index: 10;
+    /* CTAs: Apilados verticalmente, al final donde termina la imagen hero-movil */
+    .hero-cta-primary,
+    .hero-text .hero-cta-primary {
+      grid-area: ctas !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      margin-top: auto !important; /* Empujar hacia abajo al final del viewport */
+      margin-bottom: 5rem !important; /* Subir más para que se vean los ratings */
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      padding: 0 0.25rem !important;
+      padding-top: 0.5rem !important;
+      padding-bottom: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0.75rem !important; /* Gap entre botones */
+      align-items: center !important;
+      box-sizing: border-box !important;
+      justify-content: center !important;
+      position: relative !important;
+      z-index: 10 !important;
+      flex-shrink: 0 !important;
+      align-self: center !important;
     }
     
     /* En móvil: botón primario (grande) arriba, secundario (pequeño) abajo */
@@ -646,7 +625,8 @@ const {
       width: 100% !important;
       max-width: 100% !important;
       position: relative;
-      will-change: transform;
+      transform: translateX(0) !important; /* Mantener estático */
+      will-change: auto !important; /* No optimizar para animación */
       box-sizing: border-box;
       margin: 0 !important;
       padding: 0 !important;
@@ -677,6 +657,17 @@ const {
     
     .logo-item img:hover {
       filter: grayscale(0%) opacity(1);
+    }
+    
+    /* Logos más grandes para gourmetarabe e idocstore */
+    .logo-item-large {
+      height: 65px !important;
+      max-width: 130px !important;
+    }
+    
+    .logo-item-large img {
+      max-width: 130px !important;
+      height: 100% !important;
     }
     
     /* Ajustes específicos para pantallas pequeñas (360px) */
@@ -720,6 +711,17 @@ const {
       
       .logo-item img {
         max-width: 55px !important;
+      }
+      
+      /* Logos más grandes en móvil pequeño */
+      .logo-item-large {
+        height: 55px !important;
+        max-width: 110px !important;
+      }
+      
+      .logo-item-large img {
+        max-width: 110px !important;
+        height: 100% !important;
       }
       
       .logos-track {
@@ -794,16 +796,24 @@ const {
       }
     }
     
-    .hero-rating {
-      grid-area: rating;
+    .hero-rating,
+    .hero-text .hero-rating {
+      grid-area: rating !important;
       width: 100% !important;
       max-width: 100% !important;
       margin: 0 !important;
-      padding: 0 0.25rem !important; /* Reducir padding para que no se salga */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-sizing: border-box;
+      margin-top: -2.25rem !important; /* Margen arriba reducido para subirlo */
+      margin-bottom: 0.5rem !important; /* Margen abajo para que sea visible */
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      padding: 0 0.25rem !important;
+      padding-bottom: 0.5rem !important; /* Padding abajo */
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      box-sizing: border-box !important;
+      flex-shrink: 0 !important;
+      align-self: center !important;
     }
     
     /* Título: Primero en el orden visual */
@@ -1229,15 +1239,15 @@ const {
   
   @media (min-width: 1024px) {
     .hero-content {
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr; /* Solo una fila: mockup y text lado a lado */
+      grid-template-columns: 1fr; /* Solo una columna sin mockup */
+      grid-template-rows: 1fr;
       grid-template-areas: 
-        "mockup text"; /* Solo mockup y text en desktop, sin logos */
+        "text"; /* Solo text en desktop */
       gap: 2rem;
-      align-items: stretch; /* Hacer que las columnas ocupen toda la altura */
+      align-items: stretch;
       margin-top: 0;
-      height: 100%; /* Ocupar toda la altura disponible del hero-container */
-      max-height: 100%; /* No exceder la altura del contenedor */
+      height: 100%;
+      max-height: 100%;
       min-height: 0;
       box-sizing: border-box;
     }
@@ -1261,113 +1271,9 @@ const {
       margin: 0;
     }
     
-    /* En desktop, mantener el orden: mockup primero, texto después */
-    .hero-mockup {
-      order: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 120px; /* Mockups: ocupan espacio disponible (1fr), Banner: 120px fijo */
-      gap: 1rem;
-      align-items: flex-start;
-      justify-content: flex-start;
-      padding: 0;
-      margin: 0;
-      height: 100%; /* Ocupar toda la altura disponible */
-      max-height: 100%; /* No exceder la altura del contenedor */
-      box-sizing: border-box;
-      width: 100%;
-      height: 100%; /* Ocupar toda la altura disponible */
-      min-height: 0;
-      align-self: stretch; /* Estirar para ocupar toda la altura de la fila del grid */
-    }
+    /* Mockups eliminados completamente */
     
-    .hero-mockup-mobile {
-      grid-column: 1 !important;
-      grid-row: 1 !important;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      height: 100%; /* Ocupar toda la altura de la fila 1 */
-      min-height: 0;
-      align-self: stretch; /* Estirar para ocupar toda la altura */
-    }
-    
-    .hero-mockup-desktop {
-      grid-column: 2 !important;
-      grid-row: 1 !important;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      height: 100%; /* Ocupar toda la altura de la fila 1 */
-      min-height: 0;
-      align-self: stretch; /* Estirar para ocupar toda la altura */
-    }
-    
-    .mockup-desktop-image {
-      max-width: 100%;
-      width: auto;
-      height: 100%; /* Ocupar toda la altura disponible de la fila 1 */
-      max-height: 100%; /* No exceder la altura de la fila */
-      object-fit: contain;
-      border-radius: 12px;
-      filter: drop-shadow(-10px 30px 30px rgba(0, 0, 0, 0.7)) !important; /* Sombra solo en la imagen PNG */
-    }
-    
-    .hero-mockup-mobile .mockup-image {
-      max-width: 120% !important; /* Mockup móvil más grande en desktop */
-      width: auto;
-      height: 100%; /* Ocupar toda la altura disponible de la fila 1 */
-      max-height: 100%; /* No exceder la altura de la fila */
-      object-fit: contain;
-      filter: drop-shadow(-30px 20px 30px rgba(0, 0, 0, 0.7)) !important; /* Sombra solo en la imagen PNG */
-    }
-    
-    .hero-systems-banner {
-      grid-column: 1 / -1 !important;
-      grid-row: 2 !important;
-      width: 100%;
-      background: rgba(15, 23, 42, 0.85); /* Mismo color que el header */
-      backdrop-filter: blur(20px); /* Mismo blur que el header */
-      border: 1px solid rgba(59, 130, 246, 0.2); /* Mismo borde que el header */
-      border-radius: 12px;
-      padding: 2rem 1.5rem;
-      overflow: hidden;
-      position: relative;
-      height: 120px;
-      min-height: 120px;
-      max-height: 120px; /* Altura fija para el banner */
-      display: flex !important;
-      align-items: center;
-      justify-content: center;
-      align-self: flex-end; /* Alinear al final de la fila del grid */
-    }
-    
-    .systems-slider {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-    }
-    
-    .system-slide {
-      position: absolute;
-      width: 100%;
-      text-align: center;
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #D4AF37; /* Color dorado como los enlaces del header */
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.5s ease;
-      white-space: nowrap;
-    }
-    
-    .system-slide.active {
-      opacity: 1;
-      transform: translateY(0);
-      color: #D4AF37; /* Color dorado para el slide activo */
-    }
+    /* Banner de sistemas eliminado */
 
     
     .hero-text {
@@ -1807,10 +1713,11 @@ const {
     
     /* Carrusel de logos (visible en escritorio y móvil) */
     .hero-logos-carousel {
+      grid-area: logos; /* Área del grid para móvil */
       width: 100% !important;
       max-width: 100% !important;
-      margin: 2rem 0 !important;
-      padding: 0.5rem 0 !important;
+      margin: 0 !important; /* Sin margen, el grid lo maneja */
+      padding: 0.25rem 0 !important; /* Padding reducido */
       display: flex !important;
       flex-direction: column;
       align-items: center;
@@ -1844,7 +1751,8 @@ const {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      will-change: transform;
+      transform: translateX(0) !important; /* Mantener estático */
+      will-change: auto; /* No optimizar para animación */
       contain: layout style paint;
     }
     
@@ -1869,6 +1777,17 @@ const {
     
     .hero-logos-carousel .logo-item img:hover {
       filter: grayscale(0%) opacity(1);
+    }
+    
+    /* Logos más grandes para gourmetarabe e idocstore en desktop */
+    .hero-logos-carousel .logo-item-large {
+      height: 90px !important;
+      max-width: 200px !important;
+    }
+    
+    .hero-logos-carousel .logo-item-large img {
+      max-width: 200px !important;
+      height: 100% !important;
     }
     
     /* Ocultar completamente el carrusel móvil antiguo */
@@ -1899,13 +1818,25 @@ const {
       .hero-logos-carousel .logo-item img {
         max-width: 120px;
       }
+      
+      /* Logos más grandes en desktop */
+      .hero-logos-carousel .logo-item-large {
+        height: 100px !important;
+        max-width: 220px !important;
+      }
+      
+      .hero-logos-carousel .logo-item-large img {
+        max-width: 220px !important;
+        height: 100% !important;
+      }
     }
     
     /* En móvil, asegurar que no tape el viewport */
     @media (max-width: 1023px) {
       .hero-logos-carousel {
-        margin: 1.5rem 0 !important;
-        padding: 0.5rem 1rem !important;
+        margin: 0 !important; /* Sin margen, el grid lo maneja */
+        padding: 0.2rem 1rem !important; /* Padding muy reducido */ /* Padding reducido */
+        padding-bottom: 0 !important;
         max-height: 80px;
         overflow: hidden !important;
         overflow-x: hidden !important;
@@ -1928,7 +1859,8 @@ const {
         margin: 0 !important;
         padding: 0 !important;
         position: relative !important;
-        will-change: transform;
+        transform: translateX(0) !important; /* Mantener estático */
+        will-change: auto !important; /* No optimizar para animación */
         contain: layout style paint !important;
       }
       
@@ -1945,6 +1877,17 @@ const {
         height: auto;
         object-fit: contain;
         box-sizing: border-box;
+      }
+      
+      /* Logos más grandes en móvil */
+      .hero-logos-carousel .logo-item-large {
+        height: 60px !important;
+        max-width: 130px !important;
+      }
+      
+      .hero-logos-carousel .logo-item-large img {
+        max-width: 130px !important;
+        height: 100% !important;
       }
     }
     
@@ -2152,8 +2095,7 @@ const {
     }
     
     /* Mostrar elementos de desktop solo en desktop/ipad */
-    .hero-mockup-desktop,
-    .hero-systems-banner {
+    .hero-mockup-desktop {
       display: flex;
     }
     
@@ -2371,29 +2313,17 @@ const {
     height: 1.25rem;
   }
   
-  .hero-mockup {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: fadeInRight 1s ease-out 0.2s both;
-  }
-  
-  @media (min-width: 1024px) {
-    .hero-mockup {
-      display: grid !important;
-    }
-  }
-  
-  /* Ocultar elementos de desktop en móvil */
-  @media (max-width: 1023px) {
-    .hero-mockup-desktop,
-    .hero-systems-banner {
-      display: none !important;
-    }
-    
-    .hero-mockup-mobile {
-      width: 100%;
-    }
+  /* Mockups eliminados completamente - limpiar todos los estilos */
+  .hero-mockup,
+  .hero-mockup-mobile,
+  .hero-mockup-desktop,
+  .mockup-image,
+  .mockup-desktop-image {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    overflow: hidden !important;
   }
   
   .mockup-image {
@@ -2528,33 +2458,8 @@ const {
 </style>
 
 <script>
-  // Slider de sistemas para desktop/ipad
+  // Slider de sistemas eliminado - ya no se usa
   document.addEventListener('DOMContentLoaded', function() {
-    // Slider de sistemas para desktop/ipad
-    const slides = document.querySelectorAll('.system-slide');
-    if (slides.length > 0) {
-      let currentSlide = 0;
-      
-      function showSlide(index: number) {
-        slides.forEach((slide, i) => {
-          slide.classList.remove('active');
-          if (i === index) {
-            slide.classList.add('active');
-          }
-        });
-      }
-      
-      function nextSlide() {
-        currentSlide = (currentSlide + 1) % slides.length;
-        showSlide(currentSlide);
-      }
-      
-      // Cambiar slide cada 3 segundos
-      if (slides.length > 1) {
-        setInterval(nextSlide, 3000);
-        showSlide(0);
-      }
-    }
     
     // Slider de subtítulos para móvil - Nueva estructura de columnas
     const subtitleSlider = document.querySelector('.subtitle-slider-mobile');
@@ -2631,92 +2536,8 @@ const {
       });
     }
     
-    // Carrusel infinito de logos (solo móvil)
-    // NO ejecutar en desktop bajo ninguna circunstancia
-    if (window.innerWidth > 1023) {
-      return; // Salir inmediatamente si estamos en desktop
-    }
-    
-    const logosTrack = document.getElementById('logos-track');
-    if (!logosTrack) {
-      return; // Si no existe el elemento, salir
-    }
-    
-    // Verificar que el elemento sea visible (no oculto por CSS)
-    const computedStyle = window.getComputedStyle(logosTrack);
-    if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden') {
-      return; // Si está oculto, no ejecutar
-    }
-    
-    if (window.innerWidth <= 1023) {
-      let position = 0;
-      const speed = 0.5; // Velocidad de desplazamiento (px por frame)
-      let animationId: number;
-      
-      function animateLogos() {
-        if (!logosTrack) return;
-        
-        if (window.innerWidth > 1023) {
-          if (animationId) {
-            cancelAnimationFrame(animationId);
-          }
-          logosTrack.style.transform = 'translateX(0)';
-          return;
-        }
-        
-        position -= speed;
-        
-        const logos = logosTrack.querySelectorAll('.logo-item');
-        if (logos.length > 0) {
-          const firstLogo = logos[0] as HTMLElement;
-          const logoWidth = firstLogo.offsetWidth + 24; // 24px es el gap
-          const totalLogos = 5; // Número original de logos (sin duplicados)
-          const halfWidth = logoWidth * totalLogos;
-          
-          // Resetear posición cuando llegue a la mitad (donde empiezan los logos duplicados)
-          if (Math.abs(position) >= halfWidth) {
-            position = 0;
-          }
-        }
-        
-        // Asegurar que el transform no cause overflow
-        logosTrack.style.transform = `translateX(${position}px)`;
-        logosTrack.style.willChange = 'transform';
-        // Forzar que el contenedor padre mantenga su ancho
-        const parent = logosTrack.parentElement;
-        if (parent) {
-          parent.style.overflow = 'hidden';
-          parent.style.overflowX = 'hidden';
-          parent.style.width = '100%';
-          parent.style.maxWidth = '100%';
-        }
-        animationId = requestAnimationFrame(animateLogos);
-      }
-      
-      // Iniciar animación
-      animateLogos();
-      
-      // Reiniciar animación al cambiar tamaño de ventana
-      let resizeTimeout: ReturnType<typeof setTimeout>;
-      window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          if (!logosTrack) return;
-          if (window.innerWidth <= 1023) {
-            position = 0;
-            if (animationId) {
-              cancelAnimationFrame(animationId);
-            }
-            animateLogos();
-          } else {
-            if (animationId) {
-              cancelAnimationFrame(animationId);
-            }
-            logosTrack.style.transform = 'translateX(0)';
-          }
-        }, 250);
-      });
-    }
+    // Carrusel de logos estático - animación desactivada
+    // Los logos permanecen fijos sin movimiento automático
   });
 </script>
 

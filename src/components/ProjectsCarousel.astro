@@ -555,13 +555,8 @@ const { projects = [] } = Astro.props;
       }
     });
     
-    // Autoplay
-    let autoplayInterval = setInterval(nextSlide, 5000);
-    
-    track.addEventListener('mouseenter', () => clearInterval(autoplayInterval));
-    track.addEventListener('mouseleave', () => {
-      autoplayInterval = setInterval(nextSlide, 5000);
-    });
+    // Autoplay desactivado - carrusel estático
+    // El carrusel solo se mueve cuando el usuario interactúa con los botones o hace swipe
     
     // Initialize
     updateCarousel();
