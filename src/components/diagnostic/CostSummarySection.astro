@@ -1,0 +1,71 @@
+---
+interface Props {
+  summary: {
+    totalCurrentCost?: {
+      timeHours?: number;
+      moneyCost?: number;
+    };
+    totalPotentialSavings?: {
+      timeHours?: number;
+      moneyCost?: number;
+    };
+    roi?: number;
+    imageUrl?: string;
+  };
+}
+
+const { summary } = Astro.props;
+---
+
+{summary && (
+  <div class="cost-summary-section-modern">
+    <h2 class="cost-summary-title">Resumen de tu Situación Actual</h2>
+    <div class="cost-summary-content">
+      <div class="cost-summary-image-container">
+        {summary.imageUrl && (
+          <div class="cost-summary-image-wrapper">
+            <img 
+              src={summary.imageUrl} 
+              alt="Summary"
+              class="cost-summary-image"
+            />
+          </div>
+        )}
+        <div class="cost-comparison-overlay">
+          <div class="cost-card-modern cost-card-current">
+            <div class="cost-card-label">COSTO ACTUAL</div>
+            <div class="cost-card-values">
+              <div class="cost-card-value-time">
+                {Math.round(summary.totalCurrentCost?.timeHours || 0)} horas/semana
+              </div>
+              <div class="cost-card-value-money">
+                ${Math.round(summary.totalCurrentCost?.moneyCost || 0)}/mes
+              </div>
+            </div>
+            <div class="cost-card-description">Tiempo y dinero que estás perdiendo en procesos manuales</div>
+          </div>
+          <div class="cost-arrow-modern">→</div>
+          <div class="cost-card-modern cost-card-potential">
+            <div class="cost-card-label">AHORRO POTENCIAL</div>
+            <div class="cost-card-values">
+              <div class="cost-card-value-time savings">
+                {Math.round(summary.totalPotentialSavings?.timeHours || 0)} horas/semana
+              </div>
+              <div class="cost-card-value-money savings">
+                ${Math.round(summary.totalPotentialSavings?.moneyCost || 0)}/mes
+              </div>
+            </div>
+            <div class="cost-card-description">Tiempo y dinero que podrías recuperar</div>
+          </div>
+        </div>
+        {summary.roi > 0 && (
+          <div class="roi-indicator-overlay">
+            <span class="roi-label-modern">ROI Estimado:</span>
+            <span class="roi-value-modern">{Math.round(summary.roi)}%</span>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+)}
+

@@ -21,3 +21,5 @@ COMMENT ON COLUMN diagnosticos.tipo_negocio IS 'Tipo específico de negocio para
 COMMENT ON COLUMN diagnosticos.envelope_data IS 'Diagnostic envelope completo en formato JSON para referencia futura';
 
 
+
+

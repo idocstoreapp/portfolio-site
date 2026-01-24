@@ -10,3 +10,5 @@ CREATE INDEX IF NOT EXISTS idx_diagnosticos_fecha_aprobacion ON diagnosticos(fec
 CREATE INDEX IF NOT EXISTS idx_diagnosticos_aprobado_por ON diagnosticos(aprobado_por);
 
 
+
+

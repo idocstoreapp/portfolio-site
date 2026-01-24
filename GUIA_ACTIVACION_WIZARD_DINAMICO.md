@@ -136,3 +136,5 @@ Para verificar que todo funciona:
 - El sistema es **extensible**: fácil agregar nuevos tipos de negocio
 
 
+
+

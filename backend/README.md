@@ -75,3 +75,5 @@ Asegúrate de tener las tablas creadas en Supabase según `ARQUITECTURA_SISTEMA_
 - Implementa autenticación para endpoints administrativos
 
 
+
+

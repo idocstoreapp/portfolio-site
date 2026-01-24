@@ -131,3 +131,5 @@ Cada problema detectado genera un insight con:
 - El ROI se calcula comparando ahorros vs. costo del sistema (estimado en $300/mes)
 
 
+
+

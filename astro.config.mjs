@@ -18,7 +18,9 @@ export default defineConfig({
   adapter: vercel(),
   
   integrations: [
-    react(),
+    react({
+      jsxRuntime: 'automatic'
+    }),
     sitemap({
       // El sitemap se generará automáticamente en /sitemap.xml
       // Incluye todas las páginas estáticas y dinámicas

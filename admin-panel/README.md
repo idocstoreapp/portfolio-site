@@ -64,3 +64,5 @@ Usa Supabase Auth para autenticación de administradores.
 - ✅ Gestión de proyectos
 
 
+
+

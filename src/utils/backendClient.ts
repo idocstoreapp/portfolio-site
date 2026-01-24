@@ -5,7 +5,35 @@
  * incluyendo creación y obtención de diagnósticos.
  */
 
-const BACKEND_URL = import.meta.env.PUBLIC_BACKEND_URL || 'http://localhost:3000';
+// Detectar la URL del backend según el entorno
+const getBackendUrl = () => {
+  // Prioridad 1: Variable de entorno explícita (siempre usar si está definida)
+  if (import.meta.env.PUBLIC_BACKEND_URL) {
+    console.log('🔧 [BACKEND] Using PUBLIC_BACKEND_URL:', import.meta.env.PUBLIC_BACKEND_URL);
+    return import.meta.env.PUBLIC_BACKEND_URL;
+  }
+  
+  // Prioridad 2: En desarrollo, usar localhost
+  if (import.meta.env.DEV) {
+    console.log('🔧 [BACKEND] Development mode, using localhost:3000');
+    return 'http://localhost:3000';
+  }
+  
+  // Prioridad 3: En producción sin variable de entorno, usar la misma URL base
+  // Esto funciona si el backend está en la misma URL (ej: API routes de Vercel)
+  if (typeof window !== 'undefined') {
+    const origin = window.location.origin;
+    console.log('🔧 [BACKEND] Production mode, using origin:', origin);
+    return origin;
+  }
+  
+  // Fallback: solo en casos extremos
+  console.warn('⚠️ [BACKEND] No backend URL configured, using localhost fallback');
+  return 'http://localhost:3000';
+};
+
+const BACKEND_URL = getBackendUrl();
+console.log('🚀 [BACKEND] Final BACKEND_URL:', BACKEND_URL);
 
 export interface DiagnosticRequest {
   tipoEmpresa: string;
@@ -132,9 +160,10 @@ export async function createDiagnostic(
     if (error.message?.includes('Failed to fetch') || 
         error.message?.includes('ERR_CONNECTION_REFUSED') ||
         error.name === 'TypeError') {
-      throw new Error(
-        'El servidor backend no está disponible. Por favor, asegúrate de que el backend Nest.js esté corriendo en http://localhost:3000'
-      );
+      const errorMessage = import.meta.env.DEV
+        ? 'El servidor backend no está disponible. Por favor, asegúrate de que el backend Nest.js esté corriendo en http://localhost:3000'
+        : 'El servidor backend no está disponible. Por favor, verifica la configuración de PUBLIC_BACKEND_URL en las variables de entorno.';
+      throw new Error(errorMessage);
     }
     
     throw error;

@@ -4,6 +4,9 @@ export const prerender = false;
 
 import Layout from '../../layouts/Layout.astro';
 import { getDiagnosticResult } from '../../utils/backendClient';
+import CostSummarySection from '../../components/diagnostic/CostSummarySection.astro';
+import CurrentSituationSection from '../../components/diagnostic/CurrentSituationSection.astro';
+import OpportunitiesSection from '../../components/diagnostic/OpportunitiesSection.astro';
 import { 
   getCurrentSituationImageUrl, 
   getOpportunityImageUrl, 
@@ -82,7 +85,18 @@ try {
     }
     
     // También obtener los datos del diagnóstico para información de contacto
-    const backendUrl = import.meta.env.PUBLIC_BACKEND_URL || 'http://localhost:3000';
+    // Detectar la URL del backend según el entorno
+    const getBackendUrl = () => {
+      if (import.meta.env.PUBLIC_BACKEND_URL) {
+        return import.meta.env.PUBLIC_BACKEND_URL;
+      }
+      if (import.meta.env.DEV) {
+        return 'http://localhost:3000';
+      }
+      // En producción, usar la misma URL base
+      return typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+    };
+    const backendUrl = getBackendUrl();
     console.log('🔍 Fetching diagnostic data from:', `${backendUrl}/api/diagnostic/${id}`);
     
     const diagnosticResponse = await fetch(
@@ -103,6 +117,26 @@ try {
       }
     } else {
       console.warn('⚠️  Could not fetch diagnostic data for contact info');
+    }
+    
+    // Calcular summaryImageUrl si existe summary
+    if (diagnosticResult.summary) {
+      const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
+      let summaryImageUrl = diagnosticResult.summary.imageUrl;
+      
+      // Corregir mayúsculas en beforeAfter -> beforeafter para compatibilidad con diagnósticos antiguos
+      if (summaryImageUrl && summaryImageUrl.includes('beforeAfter')) {
+        summaryImageUrl = summaryImageUrl.replace('beforeAfter', 'beforeafter');
+      }
+      
+      // Si no hay imageUrl, generarlo usando la función de utilidad
+      if (!summaryImageUrl) {
+        summaryImageUrl = getSummaryImageUrl(sector, 'beforeAfter');
+        console.log('🔄 [RESULT PAGE] Generated summary imageUrl:', summaryImageUrl);
+      }
+      
+      // Agregar el imageUrl calculado al objeto summary
+      diagnosticResult.summary.imageUrl = summaryImageUrl;
     }
   } else {
     console.error('❌ Response not successful:', response);
@@ -156,212 +190,34 @@ try {
             // Vista consultiva conversacional
             return (
               <>
-                <!-- Mensaje Personalizado -->
+                {/* Mensaje Personalizado */}
                 <div class="result-header">
                   <h1 class="result-title">{diagnosticResult.personalizedMessage?.greeting || 'Hola'}</h1>
                   <p class="result-subtitle">{diagnosticResult.personalizedMessage?.context || 'He analizado tu negocio'}</p>
                 </div>
 
-                <!-- Situación Actual - Rediseñada -->
+                {/* Situación Actual - Rediseñada */}
                 {diagnosticResult.currentSituation && (
-                  <div class="current-situation-section-modern">
-                    <div class="current-situation-content">
-                      <div class="current-situation-text">
-                        <h2 class="current-situation-title">{diagnosticResult.currentSituation.title}</h2>
-                        <p class="current-situation-description">{diagnosticResult.currentSituation.description}</p>
-                        {diagnosticResult.currentSituation.highlights && diagnosticResult.currentSituation.highlights.length > 0 && (
-                          <ul class="current-situation-highlights">
-                            {diagnosticResult.currentSituation.highlights.map((highlight: string, i: number) => (
-                              <li class="current-situation-highlight-item">
-                                <span class="highlight-icon">✓</span>
-                                <span class="highlight-text">{highlight}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                      <div class="current-situation-image-wrapper">
-                        {(() => {
-                          const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
-                          let imageUrl = diagnosticResult.currentSituation.imageUrl;
-                          
-                          // Si no hay imageUrl, generarlo usando la función de utilidad
-                          if (!imageUrl) {
-                            imageUrl = getCurrentSituationImageUrl(sector);
-                            console.log('🔄 [RESULT PAGE] Generated currentSituation imageUrl:', imageUrl);
-                          }
-                          
-                          return (
-                            <img 
-                              src={imageUrl} 
-                              alt={diagnosticResult.currentSituation.title || 'Situación actual'}
-                              class="current-situation-image"
-                            />
-                          );
-                        })()}
-                      </div>
-                    </div>
-                  </div>
+                  <CurrentSituationSection 
+                    currentSituation={diagnosticResult.currentSituation}
+                    sector={diagnosticResult?.sector as BusinessSector}
+                  />
                 )}
 
-                <!-- Resumen de Costos y Ahorros - Rediseñado -->
+                {/* Resumen de Costos y Ahorros - Rediseñado */}
                 {diagnosticResult.summary && (
-                  <div class="cost-summary-section-modern">
-                    <h2 class="cost-summary-title">Resumen de tu Situación Actual</h2>
-                    <div class="cost-summary-content">
-                      <div class="cost-summary-image-container">
-                        {(() => {
-                          const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
-                          let imageUrl = diagnosticResult.summary.imageUrl;
-                          
-                          // Corregir mayúsculas en beforeAfter -> beforeafter para compatibilidad con diagnósticos antiguos
-                          if (imageUrl && imageUrl.includes('beforeAfter')) {
-                            imageUrl = imageUrl.replace('beforeAfter', 'beforeafter');
-                          }
-                          
-                          // Si no hay imageUrl, generarlo usando la función de utilidad
-                          if (!imageUrl) {
-                            imageUrl = getSummaryImageUrl(sector, 'beforeAfter');
-                            console.log('🔄 [RESULT PAGE] Generated summary imageUrl:', imageUrl);
-                          }
-                          
-                          return imageUrl ? (
-                            <div class="cost-summary-image-wrapper">
-                              <img 
-                                src={imageUrl} 
-                                alt="Resumen de costos y ahorros"
-                                class="cost-summary-image"
-                              />
-                            </div>
-                          ) : null;
-                        })()}
-                        <div class="cost-comparison-overlay">
-                          <div class="cost-card-modern cost-card-current">
-                            <div class="cost-card-label">COSTO ACTUAL</div>
-                            <div class="cost-card-values">
-                              <div class="cost-card-value-time">
-                                {Math.round(diagnosticResult.summary.totalCurrentCost?.timeHours || 0)} horas/semana
-                              </div>
-                              <div class="cost-card-value-money">
-                                ${Math.round(diagnosticResult.summary.totalCurrentCost?.moneyCost || 0)}/mes
-                              </div>
-                            </div>
-                            <div class="cost-card-description">Tiempo y dinero que estás perdiendo en procesos manuales</div>
-                          </div>
-                          <div class="cost-arrow-modern">→</div>
-                          <div class="cost-card-modern cost-card-potential">
-                            <div class="cost-card-label">AHORRO POTENCIAL</div>
-                            <div class="cost-card-values">
-                              <div class="cost-card-value-time savings">
-                                {Math.round(diagnosticResult.summary.totalPotentialSavings?.timeHours || 0)} horas/semana
-                              </div>
-                              <div class="cost-card-value-money savings">
-                                ${Math.round(diagnosticResult.summary.totalPotentialSavings?.moneyCost || 0)}/mes
-                              </div>
-                            </div>
-                            <div class="cost-card-description">Tiempo y dinero que podrías recuperar</div>
-                          </div>
-                        </div>
-                        {diagnosticResult.summary.roi > 0 && (
-                          <div class="roi-indicator-overlay">
-                            <span class="roi-label-modern">ROI Estimado:</span>
-                            <span class="roi-value-modern">{Math.round(diagnosticResult.summary.roi)}%</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                  <CostSummarySection summary={diagnosticResult.summary} />
                 )}
 
-                <!-- Oportunidades - Rediseñado con Slider -->
+                {/* Oportunidades - Rediseñado con Slider */}
                 {diagnosticResult.opportunities && diagnosticResult.opportunities.length > 0 && (
-                  <div class="opportunities-section-modern">
-                    <h2 class="opportunities-section-title">Oportunidades Detectadas</h2>
-                    <div class="opportunities-slider-wrapper">
-                      <div class="opportunities-slider" id="opportunities-slider">
-                        {diagnosticResult.opportunities.map((opportunity: any, index: number) => {
-                          const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
-                          let imageUrl = opportunity.imageUrl;
-                          
-                          // Si no hay imageUrl, generarlo usando la función de utilidad
-                          if (!imageUrl && opportunity.title) {
-                            imageUrl = getOpportunityImageUrl(sector, opportunity.title);
-                            console.log('🔄 [RESULT PAGE] Generated opportunity imageUrl:', { title: opportunity.title, imageUrl });
-                          }
-                          
-                          return (
-                            <div class="opportunity-slide" data-slide-index={index}>
-                              <div class="opportunity-card-modern">
-                                <div class="opportunity-image-wrapper">
-                                  {imageUrl ? (
-                                    <img 
-                                      src={imageUrl} 
-                                      alt={opportunity.title}
-                                      class="opportunity-image-modern"
-                                    />
-                                  ) : null}
-                                </div>
-                                <div class="opportunity-content-modern">
-                                  <h3 class="opportunity-title-modern">{opportunity.title}</h3>
-                                  <p class="opportunity-description-modern">{opportunity.description}</p>
-                                  {opportunity.impact && (
-                                    <div class="opportunity-impact-modern">
-                                      {opportunity.impact.time && (
-                                        <div class="impact-item-modern">
-                                          <span class="impact-icon">⏰</span>
-                                          <span class="impact-text">{opportunity.impact.time}</span>
-                                        </div>
-                                      )}
-                                      {opportunity.impact.money && (
-                                        <div class="impact-item-modern">
-                                          <span class="impact-icon">💰</span>
-                                          <span class="impact-text">{opportunity.impact.money}</span>
-                                        </div>
-                                      )}
-                                      {opportunity.impact.quality && (
-                                        <div class="impact-item-modern">
-                                          <span class="impact-icon">✨</span>
-                                          <span class="impact-text">{opportunity.impact.quality}</span>
-                                        </div>
-                                      )}
-                                    </div>
-                                  )}
-                                  {opportunity.dailyImprovement && opportunity.dailyImprovement.length > 0 && (
-                                    <ul class="improvement-list-modern">
-                                      {opportunity.dailyImprovement.map((improvement: string, i: number) => (
-                                        <li class="improvement-item-modern">
-                                          <span class="improvement-icon">→</span>
-                                          <span>{improvement}</span>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      {diagnosticResult.opportunities.length > 1 && (
-                        <>
-                          <button class="opportunity-nav-btn opportunity-nav-prev" id="opportunity-prev" aria-label="Oportunidad anterior">
-                            ‹
-                          </button>
-                          <button class="opportunity-nav-btn opportunity-nav-next" id="opportunity-next" aria-label="Siguiente oportunidad">
-                            ›
-                          </button>
-                          <div class="opportunity-indicators" id="opportunity-indicators">
-                            {diagnosticResult.opportunities.map((_opportunity: any, index: number) => (
-                              <button class="opportunity-indicator" data-slide-index={index} aria-label={`Ir a oportunidad ${index + 1}`}></button>
-                            ))}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
+                  <OpportunitiesSection 
+                    opportunities={diagnosticResult.opportunities}
+                    sector={diagnosticResult?.sector as BusinessSector}
+                  />
                 )}
 
-                <!-- Impacto Operativo - Rediseñado -->
+                {/* Impacto Operativo - Rediseñado */}
                 {diagnosticResult.operationalImpact && (
                   <div class="operational-impact-section-modern">
                     <h2 class="operational-impact-title">{diagnosticResult.operationalImpact.title}</h2>
@@ -433,7 +289,7 @@ try {
                   </div>
                 )}
 
-                <!-- Visión Futura - Rediseñado -->
+                {/* Visión Futura - Rediseñado */}
                 {diagnosticResult.futureVision && (
                   <div class="future-vision-section-modern">
                     <div class="future-vision-content">
@@ -485,7 +341,7 @@ try {
                   </div>
                 )}
 
-                <!-- Oportunidad - Rediseñado -->
+                {/* Oportunidad - Rediseñado */}
                 {diagnosticResult.personalizedMessage?.opportunity && (
                   <div class="opportunity-section-modern">
                     {(() => {
@@ -513,7 +369,7 @@ try {
                   </div>
                 )}
 
-                <!-- Insights Específicos - Rediseñado -->
+                {/* Insights Específicos - Rediseñado */}
                 {diagnosticResult.insights && diagnosticResult.insights.length > 0 && (
                   <div class="insights-section-modern">
                     {(() => {
@@ -596,7 +452,7 @@ try {
                   </div>
                 )}
 
-                <!-- Visión - Rediseñado -->
+                {/* Visión - Rediseñado */}
                 {diagnosticResult.personalizedMessage?.vision && (
                   <div class="vision-section-modern">
                     {(() => {
@@ -629,19 +485,19 @@ try {
             // Vista mejorada con envelope completo
             return (
               <>
-                <!-- Header con mensaje personalizado -->
+                {/* Header con mensaje personalizado */}
                 <div class="result-header">
                   <div class="result-icon-large">💡</div>
                   <h1 class="result-title">{diagnosticResult.personalizedMessage.title}</h1>
                   <p class="result-subtitle">{diagnosticResult.personalizedMessage.subtitle}</p>
                 </div>
 
-                <!-- Insight personalizado -->
+                {/* Insight personalizado */}
                 <div class="result-insight">
                   <p>{diagnosticResult.personalizedMessage.insight}</p>
                 </div>
 
-                <!-- Oportunidad Detectada -->
+                {/* Oportunidad Detectada */}
                 <div class="opportunity-section">
                   <div class="opportunity-header">
                     <h2 class="opportunity-title">{diagnosticResult.opportunity.title}</h2>
@@ -687,7 +543,7 @@ try {
           }
         })()}
 
-        <!-- Solución Principal -->
+        {/* Solución Principal */}
         {(() => {
           const primarySolution = diagnosticResult.recommendation?.primarySolution || diagnosticResult.primarySolution;
           const nextSteps = diagnosticResult.nextSteps;
@@ -733,7 +589,7 @@ try {
           );
         })()}
 
-        <!-- Módulos Recomendados (solo para envelope mejorado) -->
+        {/* Módulos Recomendados (solo para envelope mejorado) */}
         {diagnosticResult.resultProfile?.recommendedModules && (
           <div class="modules-section">
             <h3 class="modules-title">Módulos Recomendados</h3>
@@ -748,7 +604,7 @@ try {
           </div>
         )}
 
-        <!-- Soluciones Complementarias -->
+        {/* Soluciones Complementarias */}
         {(() => {
           const complementarySolutions = diagnosticResult.recommendation?.complementarySolutions || diagnosticResult.complementarySolutions || [];
           return complementarySolutions.length > 0 && (
@@ -3665,5 +3521,3 @@ try {
     }
   });
 </script>
-
-m

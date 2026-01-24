@@ -70,3 +70,5 @@ SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
 **El backend ahora debería funcionar correctamente.**
 
 
+
+

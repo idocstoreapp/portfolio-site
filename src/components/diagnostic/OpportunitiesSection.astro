@@ -1,0 +1,121 @@
+---
+import type { BusinessSector } from '../../utils/conversationalDiagnostic';
+import { getOpportunityImageUrl } from '../../utils/getResultImageUrl';
+
+interface Props {
+  opportunities: any[];
+  sector?: BusinessSector;
+}
+
+const { opportunities = [], sector = 'restaurante' } = Astro.props;
+
+// Deduplicar oportunidades
+const normalizeTitle = (title: string): string => {
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, ' ')
+    .replace(/[^\w\s]/g, '')
+    .trim();
+};
+
+const uniqueOpportunities: any[] = [];
+const seenTitles = new Set<string>();
+
+if (opportunities && opportunities.length > 0) {
+  opportunities.forEach((opp: any) => {
+    const normalizedTitle = normalizeTitle(opp.title || '');
+    if (!seenTitles.has(normalizedTitle)) {
+      seenTitles.add(normalizedTitle);
+      uniqueOpportunities.push(opp);
+    }
+  });
+}
+
+if (uniqueOpportunities.length === 0) {
+  return null;
+}
+---
+
+<div class="opportunities-section-modern">
+  <h2 class="opportunities-section-title">Oportunidades Detectadas</h2>
+  <div class="opportunities-slider-wrapper">
+    <div class="opportunities-slider" id="opportunities-slider">
+      {uniqueOpportunities.map((opportunity: any, index: number) => {
+        let imageUrl = opportunity.imageUrl;
+        
+        if (!imageUrl && opportunity.title) {
+          imageUrl = getOpportunityImageUrl(sector, opportunity.title);
+        }
+        
+        return (
+          <div class="opportunity-slide" data-slide-index={index}>
+            <div class="opportunity-card-modern">
+              <div class="opportunity-image-wrapper">
+                {imageUrl && (
+                  <img 
+                    src={imageUrl} 
+                    alt={opportunity.title}
+                    class="opportunity-image-modern"
+                  />
+                )}
+              </div>
+              <div class="opportunity-content-modern">
+                <h3 class="opportunity-title-modern">{opportunity.title}</h3>
+                <p class="opportunity-description-modern">{opportunity.description}</p>
+                {opportunity.impact && (
+                  <div class="opportunity-impact-modern">
+                    {opportunity.impact.time && (
+                      <div class="impact-item-modern">
+                        <span class="impact-icon">⏰</span>
+                        <span class="impact-text">{opportunity.impact.time}</span>
+                      </div>
+                    )}
+                    {opportunity.impact.money && (
+                      <div class="impact-item-modern">
+                        <span class="impact-icon">💰</span>
+                        <span class="impact-text">{opportunity.impact.money}</span>
+                      </div>
+                    )}
+                    {opportunity.impact.quality && (
+                      <div class="impact-item-modern">
+                        <span class="impact-icon">✨</span>
+                        <span class="impact-text">{opportunity.impact.quality}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+                {opportunity.dailyImprovement && opportunity.dailyImprovement.length > 0 && (
+                  <ul class="improvement-list-modern">
+                    {opportunity.dailyImprovement.map((improvement: string) => (
+                      <li class="improvement-item-modern">
+                        <span class="improvement-icon">→</span>
+                        <span>{improvement}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+    {uniqueOpportunities.length > 1 && (
+      <>
+        <button class="opportunity-nav-btn opportunity-nav-prev" id="opportunity-prev" aria-label="Oportunidad anterior">
+          ‹
+        </button>
+        <button class="opportunity-nav-btn opportunity-nav-next" id="opportunity-next" aria-label="Siguiente oportunidad">
+          ›
+        </button>
+        <div class="opportunity-indicators" id="opportunity-indicators">
+          {uniqueOpportunities.map((_opportunity: any, index: number) => (
+            <button class="opportunity-indicator" data-slide-index={index} aria-label={`Ir a oportunidad ${index + 1}`}></button>
+          ))}
+        </div>
+      </>
+    )}
+  </div>
+</div>
+

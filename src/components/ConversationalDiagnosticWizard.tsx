@@ -5,7 +5,7 @@
  * UX conversacional, no como test repetitivo
  */
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   type BusinessSector,
   SECTOR_QUESTIONS,

@@ -155,3 +155,5 @@ const response = await fetch(`http://localhost:3000/api/diagnostic/${id}/status`
 **¿Quieres que cree el panel admin completo en Next.js o prefieres una versión simple en Astro?**
 
 
+
+

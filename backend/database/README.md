@@ -67,3 +67,5 @@ Después de ejecutar el schema:
    - Prueba crear un diagnóstico con Postman
 
 
+
+

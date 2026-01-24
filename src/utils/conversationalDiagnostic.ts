@@ -1554,7 +1554,8 @@ function generateCurrentSituation(
 function generateOpportunities(
   insights: DiagnosticInsight[]
 ): ConversationalDiagnosticResult['opportunities'] {
-  return insights
+  // Filtrar insights con oportunidad y mapear
+  const opportunities = insights
     .filter(insight => insight.opportunity)
     .map(insight => ({
       title: insight.opportunity!.title,
@@ -1570,6 +1571,56 @@ function generateOpportunities(
       },
       dailyImprovement: insight.opportunity!.whatWouldImprove
     }));
+  
+  // Normalizar título para comparación (eliminar espacios extra, normalizar caracteres)
+  const normalizeTitle = (title: string): string => {
+    return title
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, ' ') // Reemplazar múltiples espacios con uno solo
+      .replace(/[^\w\s]/g, '') // Eliminar caracteres especiales
+      .trim();
+  };
+  
+  // Eliminar duplicados basándose en el título normalizado
+  const seenTitles = new Map<string, number>(); // Map para mantener el índice del primero
+  const uniqueOpportunities: typeof opportunities = [];
+  
+  opportunities.forEach((opp, index) => {
+    const normalizedTitle = normalizeTitle(opp.title);
+    if (!seenTitles.has(normalizedTitle)) {
+      seenTitles.set(normalizedTitle, index);
+      uniqueOpportunities.push(opp);
+    } else {
+      // Si es duplicado, combinar los impactos si es necesario (tomar el que tenga más información)
+      const firstIndex = seenTitles.get(normalizedTitle)!;
+      const firstOpp = uniqueOpportunities[firstIndex];
+      
+      // Si el duplicado tiene más información en impact, actualizar
+      const hasMoreInfo = (opp.impact.time || opp.impact.money || opp.impact.quality) &&
+                          !(firstOpp.impact.time && firstOpp.impact.money && firstOpp.impact.quality);
+      
+      if (hasMoreInfo) {
+        uniqueOpportunities[firstIndex] = {
+          ...firstOpp,
+          impact: {
+            time: opp.impact.time || firstOpp.impact.time,
+            money: opp.impact.money || firstOpp.impact.money,
+            quality: opp.impact.quality || firstOpp.impact.quality
+          }
+        };
+      }
+    }
+  });
+  
+  console.log('🔍 [BACKEND] Opportunities deduplication:', {
+    total: opportunities.length,
+    unique: uniqueOpportunities.length,
+    removed: opportunities.length - uniqueOpportunities.length,
+    titles: uniqueOpportunities.map(o => o.title)
+  });
+  
+  return uniqueOpportunities;
 }
 
 /**

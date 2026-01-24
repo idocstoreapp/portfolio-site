@@ -125,3 +125,5 @@ El panel estará disponible en: `http://localhost:3001`
 **¡Listo! Ya puedes gestionar todos los diagnósticos desde el panel admin.**
 
 
+
+

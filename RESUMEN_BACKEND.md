@@ -86,3 +86,5 @@
 - CORS configurado para desarrollo local
 
 
+
+

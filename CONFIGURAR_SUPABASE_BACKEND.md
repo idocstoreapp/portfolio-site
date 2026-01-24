@@ -160,3 +160,5 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhY
 **Una vez completado, el diagnóstico debería funcionar correctamente.**
 
 
+
+

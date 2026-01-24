@@ -358,3 +358,5 @@ El motor actual (`diagnosticEngine.ts`) necesita mejoras basadas en proyectos re
 6. **Crear panel administrativo**
 
 
+
+

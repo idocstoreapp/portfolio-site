@@ -88,3 +88,5 @@ http://localhost:3001/login
 Con el email y contraseña del usuario de Supabase Auth.
 
 
+
+

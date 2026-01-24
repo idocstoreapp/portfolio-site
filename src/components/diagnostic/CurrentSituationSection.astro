@@ -1,0 +1,55 @@
+---
+import type { BusinessSector } from '../../utils/conversationalDiagnostic';
+import { getCurrentSituationImageUrl } from '../../utils/getResultImageUrl';
+
+interface Props {
+  currentSituation: {
+    title: string;
+    description: string;
+    highlights?: string[];
+    imageUrl?: string;
+  };
+  sector?: BusinessSector;
+}
+
+const { currentSituation, sector = 'restaurante' } = Astro.props;
+---
+
+{currentSituation && (
+  <div class="current-situation-section-modern">
+    <div class="current-situation-content">
+      <div class="current-situation-text">
+        <h2 class="current-situation-title">{currentSituation.title}</h2>
+        <p class="current-situation-description">{currentSituation.description}</p>
+        {currentSituation.highlights && currentSituation.highlights.length > 0 && (
+          <ul class="current-situation-highlights">
+            {currentSituation.highlights.map((highlight: string) => (
+              <li class="current-situation-highlight-item">
+                <span class="highlight-icon">✓</span>
+                <span class="highlight-text">{highlight}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <div class="current-situation-image-wrapper">
+        {(() => {
+          let imageUrl = currentSituation.imageUrl;
+          
+          if (!imageUrl) {
+            imageUrl = getCurrentSituationImageUrl(sector);
+          }
+          
+          return (
+            <img 
+              src={imageUrl} 
+              alt={currentSituation.title || 'Situación actual'}
+              class="current-situation-image"
+            />
+          );
+        })()}
+      </div>
+    </div>
+  </div>
+)}
+

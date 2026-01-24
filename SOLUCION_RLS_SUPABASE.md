@@ -79,3 +79,5 @@ npm run start:dev
 **El código ya está actualizado. Solo necesitas verificar que el `SUPABASE_SERVICE_ROLE_KEY` esté configurado en `backend/.env`.**
 
 
+
+
