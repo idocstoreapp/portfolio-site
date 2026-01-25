@@ -1,6 +1,4 @@
 ---
-import ProjectsCarousel from './ProjectsCarousel.astro';
-
 export interface Project {
   title: string;
   image: string;
@@ -141,6 +139,8 @@ const {
     background-position: center top;
     background-repeat: no-repeat;
     background-attachment: scroll; /* Cambiar de fixed a scroll para que no se mueva */
+    
+    /* En móvil, el background-size se sobrescribe en el media query */
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -256,20 +256,22 @@ const {
     mix-blend-mode: overlay;
   }
   
-  /* Background diferente para móvil - más pequeño */
+  /* Background diferente para móvil - cubre todo el ancho del viewport, posicionado más abajo */
   @media (max-width: 1023px) {
     .hero-premium {
       background-image: url("/images/hero-movil.png") !important;
-      background-size: 95% auto !important; /* Hacer la imagen más pequeña */
-      background-position: center center !important;
+      background-size: calc(100vw + 4px) auto !important; /* 2px a cada lado para cubrir todo el viewport */
+      background-position: center bottom !important; /* Más abajo, al final del viewport */
+      background-attachment: scroll !important; /* No se mueve al hacer scroll */
+      background-repeat: no-repeat !important;
     }
     
     .hero-background {
-      background-image: url("/images/hero-movil.png");
-      background-size: 95% auto !important; /* Mismo tamaño que hero-premium */
+      background-image: url("/images/hero-movil.png") !important;
+      background-size: calc(100vw + 4px) auto !important; /* 2px a cada lado para cubrir todo el viewport */
       background-attachment: scroll !important; /* No se mueve al hacer scroll */
       background-repeat: no-repeat !important;
-      background-position: center center !important;
+      background-position: center bottom !important; /* Más abajo, al final del viewport */
     }
   }
   
@@ -450,24 +452,23 @@ const {
       flex-direction: column !important;
     }
     
-    /* Layout de columna única para mobile - "Confían en nosotros" antes del subtítulo */
+    /* Layout de columna única para mobile - CTAs más arriba, rating muy pegado */
     .hero-content {
       display: grid !important;
       grid-template-columns: 1fr !important;
-      grid-template-rows: auto auto auto 1fr auto auto; /* Título, logos, subtítulo, espacio flexible, CTAs y rating al final */
+      grid-template-rows: auto auto auto 1fr auto; /* Título, subtítulo, CTAs, espacio flexible, rating */
       grid-template-areas: 
         "title"
-        "logos"
         "subtitle"
-        "."
         "ctas"
+        "."
         "rating";
-      gap: 0.5rem 0 !important; /* Gap equilibrado */
+      gap: 1rem 0 !important; /* Gap más espaciado */
       align-items: start !important;
       justify-items: center !important;
       width: 100% !important;
       max-width: 100% !important;
-      padding: 0.75rem 1rem 0.5rem 1rem !important; /* Padding equilibrado */
+      padding: 1rem 1rem 1rem 1rem !important; /* Padding más espaciado */
       box-sizing: border-box !important;
       min-height: 100vh;
       height: 100vh;
@@ -486,7 +487,7 @@ const {
       grid-area: title;
       text-align: center !important; /* Centrado para mejor jerarquía */
       margin: 0 auto !important;
-      padding: 0.75rem 1rem 0.25rem 1rem !important; /* Padding aumentado para bajar el título */
+      padding: 1rem 1rem 0.5rem 1rem !important; /* Padding normal para el título */
       width: 100% !important;
       max-width: 100% !important;
       box-sizing: border-box !important;
@@ -516,8 +517,8 @@ const {
       margin: 0 auto !important;
       margin-left: auto !important;
       margin-right: auto !important;
-      margin-top: -0.25rem !important; /* Espacio con el título */
-      padding: 0 1rem 0.3rem 1rem !important; /* Padding aumentado */
+      margin-top: 0.5rem !important; /* Espacio después del título */
+      padding: 0 1rem 0.5rem 1rem !important; /* Padding normal */
       line-height: 1.4 !important; /* Line-height equilibrado */
       text-align: center !important;
       font-size: clamp(1rem, 3vw, 1.25rem);
@@ -548,19 +549,19 @@ const {
       filter: drop-shadow(-30px 20px 30px rgba(0, 0, 0, 0.7)) !important; /* Sombra solo en la imagen PNG */
     }
     
-    /* CTAs: Apilados verticalmente, al final donde termina la imagen hero-movil */
-    .hero-cta-primary,
-    .hero-text .hero-cta-primary {
+    /* CTAs: Más abajo en el viewport como en la segunda imagen - FORZAR con máxima especificidad */
+    .hero-content .hero-text .hero-cta-primary,
+    .hero-content .hero-cta-primary {
       grid-area: ctas !important;
       width: 100% !important;
       max-width: 100% !important;
       margin: 0 !important;
-      margin-top: auto !important; /* Empujar hacia abajo al final del viewport */
-      margin-bottom: 5rem !important; /* Subir más para que se vean los ratings */
+      margin-top: 0 !important; /* El espacio flexible los empuja hacia abajo */
+      margin-bottom: 0 !important; /* Sin espacio, rating pegado */
       margin-left: 0 !important;
       margin-right: 0 !important;
       padding: 0 0.25rem !important;
-      padding-top: 0.5rem !important;
+      padding-top: 0 !important;
       padding-bottom: 0 !important;
       display: flex !important;
       flex-direction: column !important;
@@ -796,26 +797,28 @@ const {
       }
     }
     
-    .hero-rating,
-    .hero-text .hero-rating {
+    /* Rating: Muy pegado a los CTAs como en la segunda imagen - FORZAR con máxima especificidad */
+    .hero-content .hero-text .hero-rating,
+    .hero-content .hero-rating {
       grid-area: rating !important;
       width: 100% !important;
       max-width: 100% !important;
       margin: 0 !important;
-      margin-top: -2.25rem !important; /* Margen arriba reducido para subirlo */
-      margin-bottom: 0.5rem !important; /* Margen abajo para que sea visible */
+      margin-top: 0.25rem !important; /* Muy pegado a los CTAs, pequeño espacio */
+      margin-bottom: 0 !important;
       margin-left: 0 !important;
       margin-right: 0 !important;
       padding: 0 0.25rem !important;
-      padding-bottom: 0.5rem !important; /* Padding abajo */
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
       display: flex !important;
       justify-content: center !important;
       align-items: center !important;
-      box-sizing: border-box !important;
-      flex-shrink: 0 !important;
-      align-self: center !important;
+      visibility: visible !important; /* Asegurar que sea visible */
+      opacity: 1 !important;
     }
     
+    /* Carrusel de proyectos dentro del hero */
     /* Título: Primero en el orden visual */
     .hero-title {
       grid-area: title;
@@ -1831,12 +1834,14 @@ const {
       }
     }
     
-    /* En móvil, asegurar que no tape el viewport */
+    /* En móvil, ocultar el carrusel de logos como en la segunda imagen */
     @media (max-width: 1023px) {
       .hero-logos-carousel {
-        margin: 0 !important; /* Sin margen, el grid lo maneja */
-        padding: 0.2rem 1rem !important; /* Padding muy reducido */ /* Padding reducido */
-        padding-bottom: 0 !important;
+        display: none !important; /* Ocultar en móvil como en la segunda imagen */
+        visibility: hidden !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
         max-height: 80px;
         overflow: hidden !important;
         overflow-x: hidden !important;
@@ -1891,27 +1896,7 @@ const {
       }
     }
     
-    /* CTA y rating van abajo usando margin-top: auto - FORZAR que el DIV completo se mueva */
-    .hero-text .hero-cta-primary {
-      margin-top: 2rem !important; /* Espacio después del carrusel */
-      flex-shrink: 0 !important; /* No permitir que se encoja */
-      margin-bottom: 2rem !important; /* Espacio adicional para subir los CTAs */
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      padding: 0 !important;
-      width: 100% !important;
-      align-self: flex-start !important; /* Alinear el div al inicio horizontalmente */
-    }
-    
-    .hero-text .hero-rating {
-      margin-top: 0.5rem !important; /* Pequeño espacio después de CTA */
-      flex-shrink: 0 !important; /* No permitir que se encoja */
-      margin-bottom: 0 !important; /* Sin espacio al final para que llegue hasta el banner */
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      width: 100% !important;
-      align-self: flex-start !important; /* Alinear el div al inicio horizontalmente */
-    }
+    /* CTA y rating - SOBRESCRIBIDO por estilos más específicos arriba en @media (max-width: 1023px) */
     
     /* Desktop: Asegurar que los CTAs tengan los mismos estilos que en móvil */
     .hero-text .hero-cta-primary .btn-neon-blue {
