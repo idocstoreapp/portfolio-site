@@ -239,7 +239,7 @@ const successCases = [
       <div class="projects-carousel-mobile-only">
         <ProjectsCarousel projects={carouselProjects} />
       </div>
-      <div class="projects-grid-desktop-only">
+      <div class="projects-grid-desktop-only" style="display: flex; justify-content: center; width: 100%;">
         <div class="projects-grid-wrapper">
           <button class="projects-nav-btn projects-nav-prev" id="projects-prev" aria-label="Proyectos anteriores">
             ‹
@@ -373,6 +373,12 @@ const successCases = [
     .projects-section-premium .section-container {
       position: relative;
       z-index: 10;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+      margin: 0 auto !important;
     }
   }
   
@@ -382,8 +388,11 @@ const successCases = [
   }
   .section-container {
     max-width: 1400px;
-    margin: 0 auto;
+    margin: 0 auto !important; /* Centrar el contenedor */
     padding: 0 1rem;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important; /* Centrar contenido */
   }
   
   .section-header {
@@ -414,13 +423,23 @@ const successCases = [
     }
     
     .projects-grid-desktop-only {
-      display: block !important;
+      display: flex !important; /* Cambiar a flex para centrar */
+      flex-direction: column !important;
+      align-items: center !important; /* Centrar horizontalmente */
+      justify-content: center !important;
       visibility: visible !important;
+      width: 100% !important;
+      margin: 0 auto !important;
     }
     
     .projects-grid-wrapper {
       position: relative;
       max-width: 100%;
+      width: 100% !important;
+      margin: 0 auto !important; /* Centrar el wrapper */
+      display: flex !important;
+      justify-content: center !important; /* Centrar el contenido */
+      align-items: center !important;
     }
     
     .projects-grid {
@@ -429,6 +448,9 @@ const successCases = [
       gap: 2rem;
       max-width: 100%;
       overflow-x: auto;
+      justify-content: center !important; /* Centrar el grid */
+      align-items: center !important;
+      margin: 0 auto !important; /* Centrar el grid */
       overflow-y: hidden;
       padding-bottom: 1rem;
       scrollbar-width: thin;

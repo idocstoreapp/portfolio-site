@@ -240,18 +240,19 @@ const {
     z-index: 0;
     background-image: url("/images/hero-escritorio.png");
     background-size: cover;
-    background-position: center top;
+    background-position: center 20% !important; /* Background más arriba */
     background-repeat: no-repeat;
-    /* Filtros CSS para hacer el fondo más claro y luminoso */
-    filter: brightness(1.15) contrast(0.95);
+    /* Filtros CSS para fondo más limpio y profesional tipo SaaS */
+    filter: brightness(1.05) contrast(0.98) saturate(0.85);
   }
+  
   
   .hero-background::before {
     content: '';
     position: absolute;
     inset: 0;
-    /* Overlay blanco translúcido para mayor claridad */
-    background: rgba(255, 255, 255, 0.25);
+    /* Overlay blanco más fuerte para fondo más limpio */
+    background: rgba(255, 255, 255, 0.45);
     z-index: 1;
     mix-blend-mode: overlay;
   }
@@ -334,10 +335,10 @@ const {
   @media (min-width: 1024px) {
     .hero-container {
       align-items: flex-start;
-      padding-top: 5rem; /* Espacio para header sticky (aprox 5rem) */
+      padding-top: 0 !important; /* Sin padding superior para subir todo */
       display: flex;
       flex-direction: column;
-      height: calc(100% - 5rem); /* Altura disponible menos espacio del header */
+      height: 100% !important; /* Altura completa */
       min-height: 0;
       box-sizing: border-box;
     }
@@ -491,7 +492,10 @@ const {
       width: 100% !important;
       max-width: 100% !important;
       box-sizing: border-box !important;
-      font-family: 'Libre Baskerville', serif !important; /* Fuente serif elegante */
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important; /* Tipografía sans-serif moderna */
+      font-weight: 700 !important;
+      letter-spacing: -0.02em !important;
+      color: #0f172a !important;
     }
     
     /* Asegurar que las líneas del título estén centradas en móvil */
@@ -521,11 +525,13 @@ const {
       padding: 0 1rem 0.5rem 1rem !important; /* Padding normal */
       line-height: 1.4 !important; /* Line-height equilibrado */
       text-align: center !important;
-      font-size: clamp(1rem, 3vw, 1.25rem);
-      color: #1a1a1a !important; /* Gris más oscuro */
-      line-height: 1.5;
-      font-weight: 500;
-      font-style: italic !important; /* Cursiva */
+      font-size: clamp(1.125rem, 3.5vw, 1.375rem) !important; /* Tamaño más grande */
+      color: #475569 !important; /* Gris medio para jerarquía */
+      line-height: 1.6 !important; /* Más espacio para legibilidad */
+      font-weight: 400 !important; /* Peso normal */
+      font-style: normal !important; /* Sin cursiva para look más moderno */
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+      letter-spacing: -0.01em !important;
       box-sizing: border-box !important;
       left: 0 !important;
       right: 0 !important;
@@ -652,12 +658,12 @@ const {
       width: auto;
       max-width: 70px;
       object-fit: contain;
-      filter: grayscale(100%) opacity(0.6);
+      filter: grayscale(100%) opacity(0.5) saturate(0.3); /* Más sutil, menos saturación */
       transition: filter 0.3s ease;
     }
     
     .logo-item img:hover {
-      filter: grayscale(0%) opacity(1);
+      filter: grayscale(80%) opacity(0.7) saturate(0.5); /* Hover más sutil */
     }
     
     /* Logos más grandes para gourmetarabe e idocstore */
@@ -1194,9 +1200,9 @@ const {
       flex-shrink: 0;
       margin: 0;
       margin-right: 0.15rem !important; /* Espacio pequeño entre estrellas (antes -0.5rem) */
-      filter: grayscale(100%) brightness(0.3); /* Oscuro en lugar de brillante */
-      opacity: 1;
-      color: #1a1a1a !important; /* Color oscuro para las estrellas */
+      filter: grayscale(100%) brightness(0.4) opacity(0.7); /* Más sutil y menos prominente */
+      opacity: 0.8;
+      color: #64748b !important; /* Gris más suave */
     }
     
     /* Separar las estrellas del texto de las reseñas */
@@ -1242,13 +1248,14 @@ const {
   
   @media (min-width: 1024px) {
     .hero-content {
-      grid-template-columns: 1fr; /* Solo una columna sin mockup */
-      grid-template-rows: 1fr;
+      grid-template-columns: 1fr !important; /* Una columna como antes */
+      grid-template-rows: 1fr !important;
       grid-template-areas: 
-        "text"; /* Solo text en desktop */
-      gap: 2rem;
-      align-items: stretch;
-      margin-top: 0;
+        "text" !important; /* Solo text en desktop */
+      gap: 0 !important; /* Sin gap para subir todo */
+      align-items: center !important; /* Centrar verticalmente */
+      justify-items: center !important; /* Centrar horizontalmente */
+      margin-top: 0 !important;
       height: 100%;
       max-height: 100%;
       min-height: 0;
@@ -1661,23 +1668,24 @@ const {
     }
   }
   
-  /* Desktop: hero-text usa flexbox con flex-start y margin-top: auto para CTA/rating */
+  /* Desktop: hero-text centrado pero más arriba */
   @media (min-width: 1024px) {
     .hero-text {
       display: flex !important;
       flex-direction: column !important;
-      justify-content: flex-start !important; /* Title al inicio */
+      justify-content: flex-start !important; /* Más arriba */
       gap: 0 !important; /* Sin gap, usar margin-top para control preciso */
       max-width: 100% !important;
       width: 100% !important;
-      height: 100% !important; /* Ocupar toda la altura disponible para distribuir elementos */
+      height: 100% !important; /* Ocupar toda la altura disponible */
       box-sizing: border-box !important;
-      align-items: flex-start !important; /* Alinear elementos al inicio */
-      align-self: stretch !important; /* Estirar para igualar altura de hero-mockup */
+      align-items: center !important; /* Centrar horizontalmente */
+      align-self: stretch !important;
       min-height: 0 !important;
+      padding: 2rem 1.5rem !important; /* Padding generoso para más aire y legibilidad */
     }
     
-    /* Title al inicio - sobrescribir TODOS los estilos cuando está en hero-text */
+    /* Title más arriba */
     .hero-text .hero-title {
       margin-top: 0 !important; /* Al inicio del flex */
       margin-bottom: 0 !important;
@@ -1685,46 +1693,57 @@ const {
       margin-right: 0 !important;
       padding: 0 !important;
       flex-shrink: 0 !important;
-      width: 100% !important; /* Forzar 100% para que se adapte al flex */
-      max-width: 100% !important; /* Forzar 100% para que se adapte al flex */
+      width: 100% !important;
+      max-width: 900px !important; /* Max-width para mejor legibilidad en pantallas grandes */
       box-sizing: border-box !important;
       grid-column: unset !important; /* Remover grid positioning cuando está en flex */
       grid-row: unset !important;
       align-self: unset !important;
-      text-align: left !important; /* Alinear al inicio */
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: flex-start !important;
-      gap: 0.1rem !important;
-      line-height: 0.9 !important;
+      text-align: center !important; /* Centrado como en la segunda imagen de referencia */
+      display: block !important; /* Cambiar de flex a block para mejor control */
+      line-height: 1.2 !important; /* Mejor legibilidad */
       position: relative !important;
       z-index: 10 !important;
       overflow-wrap: break-word !important;
       word-wrap: break-word !important;
-      font-size: clamp(2.5rem, 8vw, 4rem) !important; /* Título más grande */
-      font-family: 'Libre Baskerville', serif !important; /* Fuente serif elegante */
+      font-size: clamp(2.75rem, 6vw, 4rem) !important; /* Título más grande para mejor jerarquía */
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important; /* Tipografía sans-serif moderna */
+      font-weight: 700 !important; /* Peso más fuerte para jerarquía */
+      letter-spacing: -0.02em !important; /* Tracking ajustado para modernidad */
+      line-height: 1.15 !important; /* Line-height más ajustado */
+      color: #0f172a !important; /* Color más oscuro y profesional */
     }
     
-    /* Subtitle en el medio - usar margin-top para posicionarlo más abajo */
+    /* Subtitle centrado con mejor jerarquía */
     .hero-text .hero-subtitle {
       flex-shrink: 0;
       width: 100%;
-      max-width: 100%;
-      margin-top: 5rem !important; /* Más espacio después del título para bajarlo más */
-      margin-bottom: 2rem !important; /* Espacio para el carrusel */
+      max-width: 700px !important; /* Max-width para mejor legibilidad del subtítulo */
+      margin-top: 1.5rem !important; /* Más espacio para mejor respiración */
+      margin-bottom: 1.5rem !important; /* Más espacio */
+      margin-left: auto !important;
+      margin-right: auto !important;
+      text-align: center !important;
+      font-size: clamp(1.125rem, 2.5vw, 1.375rem) !important; /* Tamaño más grande */
+      font-weight: 400 !important; /* Peso normal para contraste con H1 */
+      line-height: 1.6 !important; /* Line-height más generoso para legibilidad */
+      letter-spacing: -0.01em !important;
+      color: #475569 !important; /* Gris medio para jerarquía visual */
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
     }
     
-    /* Carrusel de logos (visible en escritorio y móvil) */
+    /* Carrusel de logos centrado */
     .hero-logos-carousel {
       grid-area: logos; /* Área del grid para móvil */
       width: 100% !important;
       max-width: 100% !important;
-      margin: 0 !important; /* Sin margen, el grid lo maneja */
-      padding: 0.25rem 0 !important; /* Padding reducido */
+      margin: 0 auto !important; /* Centrado */
+      padding: 0.25rem 0 !important;
       display: flex !important;
       flex-direction: column;
-      align-items: center;
-      gap: 0.75rem;
+      align-items: center !important; /* Centrado */
+      justify-content: center !important; /* Centrado verticalmente */
+      gap: 1rem; /* Más espacio para mejor respiración */
       flex-shrink: 0;
       z-index: 10;
       visibility: visible !important;
@@ -1734,13 +1753,23 @@ const {
       overflow-x: hidden !important;
     }
     
+    .hero-logos-carousel .logos-track {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important; /* Centrar los logos */
+      gap: 2rem;
+    }
+    
     .hero-logos-carousel .logos-title {
-      font-size: 0.875rem;
-      color: var(--color-grey-medium);
+      font-size: 0.8125rem;
+      color: #94a3b8; /* Gris más suave y menos prominente */
       font-weight: 500;
       margin: 0;
+      margin-bottom: 0.5rem;
       text-align: center;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
     
     .hero-logos-carousel .logos-track {
@@ -1774,12 +1803,12 @@ const {
       width: auto;
       max-width: 100px;
       object-fit: contain;
-      filter: grayscale(100%) opacity(0.6);
+      filter: grayscale(100%) opacity(0.5) saturate(0.3); /* Más sutil en desktop también */
       transition: filter 0.3s ease;
     }
     
     .hero-logos-carousel .logo-item img:hover {
-      filter: grayscale(0%) opacity(1);
+      filter: grayscale(80%) opacity(0.7) saturate(0.5); /* Hover más sutil */
     }
     
     /* Logos más grandes para gourmetarabe e idocstore en desktop */
@@ -2002,13 +2031,30 @@ const {
     
     .hero-cta-primary {
       flex-shrink: 0;
-      margin: 0;
-      margin-top: auto; /* Empuja CTA hacia abajo en desktop */
-    display: flex;
+      margin: 0 auto !important; /* Centrado */
+      margin-top: 2rem !important; /* Más espacio para mejor respiración */
+      margin-bottom: 1rem !important; /* Más espacio antes del rating */
+      display: flex;
+      flex-direction: row !important; /* Botones lado a lado en escritorio */
       gap: 1rem;
       flex-wrap: nowrap;
       align-items: center;
-      justify-content: center;
+      justify-content: center !important; /* Centrado como en la referencia */
+      z-index: 10;
+      position: relative;
+    }
+    
+    /* Rating centrado en escritorio, debajo de los CTAs */
+    .hero-text .hero-rating {
+      flex-shrink: 0;
+      margin: 0 auto !important; /* Centrado */
+      margin-top: 0.75rem !important; /* Más espacio para respiración */
+      margin-bottom: 0;
+      display: flex !important;
+      justify-content: center !important; /* Centrado como en la referencia */
+      align-items: center;
+      visibility: visible !important;
+      opacity: 1 !important;
       z-index: 10;
       position: relative;
     }

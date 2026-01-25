@@ -149,16 +149,19 @@ const currentPath = Astro.url.pathname;
     right: 0;
     width: 100%;
     z-index: 100;
-    background: rgba(229, 229, 227, 0.9); /* Gris claro (#E5E5E3) más claro */
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(154, 154, 151, 0.2);
+    background: rgba(147, 197, 253, 0.3) !important; /* Azul claro con transparencia para efecto glass */
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.1);
     transition: all var(--norm) var(--ease);
   }
   
   /* Cuando el menú móvil está abierto, asegurar que el header tenga fondo sólido */
   .header-premium:has(.mobile-menu[style*="flex"]) {
-    background: rgba(229, 229, 227, 0.95); /* Gris claro más opaco */
-    backdrop-filter: blur(20px);
+    background: rgba(147, 197, 253, 0.4) !important; /* Azul claro más opaco */
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
   }
   
   .header-premium::before {
@@ -167,8 +170,8 @@ const currentPath = Astro.url.pathname;
     inset: 0;
     background: linear-gradient(
       180deg,
-      rgba(59, 130, 246, 0.1) 0%,
-      rgba(99, 102, 241, 0.05) 50%,
+      rgba(147, 197, 253, 0.2) 0%,
+      rgba(96, 165, 250, 0.15) 50%,
       transparent 100%
     );
     pointer-events: none;
@@ -245,7 +248,7 @@ const currentPath = Astro.url.pathname;
   .nav-link {
     font-size: 0.95rem;
     font-weight: 500;
-    color: #D4AF37; /* Color dorado */
+    color: #1e293b !important; /* Color negro/gris oscuro para mejor contraste con fondo azul claro */
     text-decoration: none;
     padding: 0.5rem 0;
     position: relative;
@@ -295,12 +298,12 @@ const currentPath = Astro.url.pathname;
     left: 0;
     width: 0;
     height: 2px;
-    background: linear-gradient(90deg, #D4AF37, #F4D03F);
+    background: linear-gradient(90deg, #3b82f6, #60a5fa); /* Azul para el subrayado */
     transition: width var(--norm) var(--ease);
   }
   
   .nav-link:hover {
-    color: #F4D03F; /* Dorado más claro al hover */
+    color: #0f172a !important; /* Negro más oscuro al hover para mejor contraste */
   }
   
   .nav-link:hover::after {
@@ -308,11 +311,13 @@ const currentPath = Astro.url.pathname;
   }
   
   .nav-link-active {
-    color: #F4D03F; /* Dorado más claro para activo */
+    color: #0f172a !important; /* Negro más oscuro para activo */
+    font-weight: 600;
   }
   
   .nav-link-active::after {
     width: 100%;
+    background: linear-gradient(90deg, #2563eb, #3b82f6); /* Azul más intenso para activo */
   }
   
   .mobile-menu-button {
@@ -321,10 +326,10 @@ const currentPath = Astro.url.pathname;
     justify-content: center;
     width: 2.5rem;
     height: 2.5rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(30, 41, 59, 0.1);
+    border: 1px solid rgba(30, 41, 59, 0.2);
     border-radius: var(--radius-md);
-    color: var(--text-primary);
+    color: #1e293b !important; /* Negro para el icono */
     cursor: pointer;
     transition: all var(--fast) var(--ease);
   }
@@ -336,8 +341,8 @@ const currentPath = Astro.url.pathname;
   }
   
   .mobile-menu-button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(30, 41, 59, 0.15);
+    border-color: rgba(30, 41, 59, 0.3);
   }
   
   .menu-icon {
@@ -350,12 +355,13 @@ const currentPath = Astro.url.pathname;
     flex-direction: column;
     padding: 1.5rem 0;
     border-top: 1px solid rgba(59, 130, 246, 0.2);
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(20px);
+    background: rgba(147, 197, 253, 0.3) !important; /* Azul claro con efecto glass */
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
     position: relative;
     z-index: 100;
     margin-top: 0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.2);
   }
   
   @media (min-width: 768px) {
@@ -373,29 +379,30 @@ const currentPath = Astro.url.pathname;
   .mobile-nav-link {
     font-size: 1rem;
     font-weight: 500;
-    color: #D4AF37; /* Color dorado */
+    color: #1e293b !important; /* Color negro/gris oscuro para mejor contraste */
     text-decoration: none;
     padding: 0.75rem 0;
     transition: color var(--fast) var(--ease);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.1);
   }
   
   .mobile-nav-link:hover {
-    color: #F4D03F; /* Dorado más claro al hover */
+    color: #0f172a !important; /* Negro más oscuro al hover */
   }
   
   .mobile-nav-link-active {
-    color: #F4D03F; /* Dorado más claro para activo */
+    color: #0f172a !important; /* Negro más oscuro para activo */
+    font-weight: 600;
   }
 
   .mobile-nav-sublink {
     padding-left: 2.5rem;
     font-size: 0.9rem;
-    color: rgba(212, 175, 55, 0.8); /* Dorado más claro */
+    color: #334155 !important; /* Gris oscuro para sublinks */
   }
 
   .mobile-nav-sublink:hover {
-    color: #F4D03F;
+    color: #0f172a !important; /* Negro más oscuro al hover */
   }
 </style>
 
