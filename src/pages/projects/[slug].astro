@@ -82,14 +82,14 @@ const { data: projectData } = project;
       }
     } : {})
   })} />
-  <section style="max-width:1100px;margin:0 auto;padding:64px 20px;">
+  <section style="max-width:1100px;margin:0 auto;padding:64px 20px;background:#FFFFFF;">
     <!-- Back Navigation -->
     <div class="mb-8">
       <a 
         href="/projects" 
-        style="display:inline-flex;align-items:center;gap:8px;color:#9aa3b2;text-decoration:none;transition:color 0.2s ease;"
-        onmouseover="this.style.color='#ffffff'"
-        onmouseout="this.style.color='#9aa3b2'"
+        style="display:inline-flex;align-items:center;gap:8px;color:#6B7280;text-decoration:none;transition:color 0.2s ease;"
+        onmouseover="this.style.color='#2B2B2B'"
+        onmouseout="this.style.color='#6B7280'"
       >
         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -102,7 +102,7 @@ const { data: projectData } = project;
     <div class="animate-fade-in-up mb-12">
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
         <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(90deg,#00C2FF,#7C4DFF);box-shadow:0 0 25px rgba(0,194,255,.4);flex-shrink:0;"></div>
-        <h1 style="margin:0;font-size:2.5rem;font-weight:800;color:#ffffff;">
+        <h1 style="margin:0;font-size:2.5rem;font-weight:800;color:#2B2B2B;">
           {projectData.title}
         </h1>
         {projectData.featured && (
@@ -112,14 +112,14 @@ const { data: projectData } = project;
         )}
       </div>
       
-      <p style="color:#9aa3b2;font-size:1.2rem;line-height:1.6;margin-bottom:24px;max-width:800px;">
+      <p style="color:#6B7280;font-size:1.2rem;line-height:1.6;margin-bottom:24px;max-width:800px;">
         {projectData.summary}
       </p>
       
       <!-- Tech Stack -->
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;">
         {projectData.stack.map((tech) => (
-          <span style="border:1px solid #2b2f36;border-radius:999px;padding:.4rem .8rem;font-size:.9rem;color:#cbd5e1;background:rgba(255,255,255,.03);">
+          <span style="border:1px solid rgba(59, 130, 246, 0.2);border-radius:999px;padding:.4rem .8rem;font-size:.9rem;color:#3B82F6;background:rgba(59, 130, 246, 0.1);">
             {tech}
           </span>
         ))}
@@ -138,14 +138,14 @@ const { data: projectData } = project;
       <button 
         class="btn tab" 
         data-tab="shots"
-        style="padding:.8rem 1.2rem;background:transparent;color:#e5e7eb;border:1px solid rgba(255,255,255,.15);border-radius:10px;font-weight:600;cursor:pointer;transition:all 0.2s ease;"
+        style="padding:.8rem 1.2rem;background:transparent;color:#6B7280;border:1px solid rgba(0,0,0,.15);border-radius:10px;font-weight:600;cursor:pointer;transition:all 0.2s ease;"
       >
         📸 Capturas
       </button>
       <button 
         class="btn tab" 
         data-tab="code"
-        style="padding:.8rem 1.2rem;background:transparent;color:#e5e7eb;border:1px solid rgba(255,255,255,.15);border-radius:10px;font-weight:600;cursor:pointer;transition:all 0.2s ease;"
+        style="padding:.8rem 1.2rem;background:transparent;color:#6B7280;border:1px solid rgba(0,0,0,.15);border-radius:10px;font-weight:600;cursor:pointer;transition:all 0.2s ease;"
       >
         💻 Código
       </button>
@@ -157,9 +157,9 @@ const { data: projectData } = project;
           target="_blank" 
           rel="noopener" 
           class="btn"
-          style="padding:.8rem 1.2rem;background:transparent;color:#e5e7eb;border:1px solid rgba(255,255,255,.15);text-decoration:none;border-radius:10px;font-weight:600;transition:all 0.2s ease;"
-          onmouseover="this.style.background='rgba(255,255,255,.1)';this.style.color='#ffffff'"
-          onmouseout="this.style.background='transparent';this.style.color='#e5e7eb'"
+          style="padding:.8rem 1.2rem;background:transparent;color:#6B7280;border:1px solid rgba(0,0,0,.15);text-decoration:none;border-radius:10px;font-weight:600;transition:all 0.2s ease;"
+            onmouseover="this.style.background='rgba(59, 130, 246, 0.1)';this.style.color='#3B82F6'"
+            onmouseout="this.style.background='transparent';this.style.color='#6B7280'"
         >
           GitHub
         </a>
@@ -169,9 +169,9 @@ const { data: projectData } = project;
             target="_blank" 
             rel="noopener" 
             class="btn"
-            style="padding:.8rem 1.2rem;background:rgba(0,194,255,.1);color:#00C2FF;border:1px solid rgba(0,194,255,.3);text-decoration:none;border-radius:10px;font-weight:600;transition:all 0.2s ease;"
-            onmouseover="this.style.background='rgba(0,194,255,.2)';this.style.color='#ffffff'"
-            onmouseout="this.style.background='rgba(0,194,255,.1)';this.style.color='#00C2FF'"
+            style="padding:.8rem 1.2rem;background:rgba(59, 130, 246, 0.1);color:#3B82F6;border:1px solid rgba(59, 130, 246, 0.3);text-decoration:none;border-radius:10px;font-weight:600;transition:all 0.2s ease;"
+            onmouseover="this.style.background='rgba(59, 130, 246, 0.2)';this.style.color='#2563EB'"
+            onmouseout="this.style.background='rgba(59, 130, 246, 0.1)';this.style.color='#3B82F6'"
           >
             Ver en Vivo
           </a>
@@ -189,7 +189,7 @@ const { data: projectData } = project;
               <div style="width:12px;height:12px;border-radius:50%;background:#ff5f57;"></div>
               <div style="width:12px;height:12px;border-radius:50%;background:#ffbd2e;"></div>
               <div style="width:12px;height:12px;border-radius:50%;background:#28ca42;"></div>
-              <span style="margin-left:16px;color:#9aa3b2;font-size:.9rem;">{projectData.demoUrl}</span>
+              <span style="margin-left:16px;color:#9CA3AF;font-size:.9rem;">{projectData.demoUrl}</span>
             </div>
             <div class="skeleton" style="border-radius:0;height:70vh">
               <iframe 
@@ -202,10 +202,10 @@ const { data: projectData } = project;
             </div>
           </div>
         ) : (
-          <div style="text-align:center;padding:4rem 2rem;border:2px dashed rgba(255,255,255,.1);border-radius:16px;">
+          <div style="text-align:center;padding:4rem 2rem;border:2px dashed rgba(0,0,0,.1);border-radius:16px;background:#F9FAFB;">
             <div style="font-size:3rem;margin-bottom:1rem;">🚧</div>
-            <h3 style="color:#ffffff;margin-bottom:1rem;">Demo no disponible</h3>
-            <p style="color:#9aa3b2;margin-bottom:2rem;">
+            <h3 style="color:#2B2B2B;margin-bottom:1rem;">Demo no disponible</h3>
+            <p style="color:#6B7280;margin-bottom:2rem;">
               Este proyecto no tiene una demo pública disponible, pero puedes revisar el código fuente.
             </p>
             <a 
@@ -237,10 +237,10 @@ const { data: projectData } = project;
             ))}
           </div>
         ) : (
-          <div style="text-align:center;padding:4rem 2rem;border:2px dashed rgba(255,255,255,.1);border-radius:16px;">
+          <div style="text-align:center;padding:4rem 2rem;border:2px dashed rgba(0,0,0,.1);border-radius:16px;background:#F9FAFB;">
             <div style="font-size:3rem;margin-bottom:1rem;">📸</div>
-            <h3 style="color:#ffffff;margin-bottom:1rem;">Capturas próximamente</h3>
-            <p style="color:#9aa3b2;">
+            <h3 style="color:#2B2B2B;margin-bottom:1rem;">Capturas próximamente</h3>
+            <p style="color:#6B7280;">
               Las capturas de pantalla de este proyecto se agregarán pronto.
             </p>
           </div>
@@ -259,10 +259,10 @@ const { data: projectData } = project;
 
     <!-- Call to Action -->
     <div class="text-center mt-16 animate-fade-in-up">
-      <h3 style="color:#ffffff;margin-bottom:1rem;font-size:1.5rem;">
+      <h3 style="color:#2B2B2B;margin-bottom:1rem;font-size:1.5rem;">
         ¿Te interesa un proyecto similar?
       </h3>
-      <p style="color:#9aa3b2;margin-bottom:2rem;max-width:500px;margin-left:auto;margin-right:auto;">
+      <p style="color:#6B7280;margin-bottom:2rem;max-width:500px;margin-left:auto;margin-right:auto;">
         Puedo crear algo parecido o mejor para tu negocio. Hablemos de tu proyecto.
       </p>
       <a 
@@ -290,8 +290,8 @@ const { data: projectData } = project;
     }
     
     .tab:not(.active):hover {
-      background: rgba(255,255,255,.1) !important;
-      color: #ffffff !important;
+      background: rgba(59, 130, 246, 0.1) !important;
+      color: #3B82F6 !important;
     }
 
     /* Animations */

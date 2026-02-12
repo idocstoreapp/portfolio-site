@@ -1,0 +1,382 @@
+---
+export interface Props {
+  title: string | string[];
+  description: string;
+  mockup: string;
+  liveUrl?: string;
+  githubUrl?: string;
+  rating?: {
+    score: string;
+    count: string;
+  };
+}
+
+const { title, description, mockup, liveUrl, githubUrl, rating } = Astro.props;
+
+const titleLines = Array.isArray(title) ? title : [title];
+const defaultRating = rating || { score: "4.9/5.0", count: "250+ Reseñas en Google" };
+---
+
+<section class="project-hero-premium">
+  <div class="project-hero-container">
+    <div class="project-hero-content">
+      <!-- Mockup Image -->
+      <div class="project-hero-mockup">
+        <img 
+          src={mockup} 
+          alt={`Mockup de ${Array.isArray(title) ? title.join(' ') : title}`}
+          class="project-mockup-image"
+          loading="eager"
+        />
+      </div>
+      
+      <!-- Text Content -->
+      <div class="project-hero-text">
+        <h1 class="project-hero-title">
+          {titleLines.map((line) => (
+            <span class="title-line">{line}</span>
+          ))}
+        </h1>
+        
+        <p class="project-hero-description">
+          {description}
+        </p>
+        
+        <!-- CTA Buttons -->
+        <div class="project-hero-cta">
+          {liveUrl && liveUrl !== "#" && (
+            <a href={liveUrl} target="_blank" rel="noopener noreferrer" class="btn-primary-small">
+              Ver en Vivo
+              <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+              </svg>
+            </a>
+          )}
+          {githubUrl && githubUrl !== "#" && (
+            <a href={githubUrl} target="_blank" rel="noopener noreferrer" class="btn-secondary-small">
+              Ver Código
+              <svg fill="currentColor" viewBox="0 0 24 24" class="btn-icon">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path>
+              </svg>
+            </a>
+          )}
+        </div>
+        
+        <!-- Rating -->
+        <div class="project-hero-rating">
+          <span class="star">⭐</span>
+          <span class="star">⭐</span>
+          <span class="star">⭐</span>
+          <span class="star">⭐</span>
+          <span class="star">⭐</span>
+          <span class="rating-score">{defaultRating.score}</span>
+          <span class="rating-separator">•</span>
+          <span class="rating-count">{defaultRating.count}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .project-hero-premium {
+    position: relative;
+    padding: 4rem 2rem;
+    background: var(--bg-primary);
+    min-height: auto;
+    max-height: 70vh;
+    overflow: hidden;
+  }
+  
+  @media (min-width: 1200px) {
+    .project-hero-premium {
+      padding: 3rem 2rem;
+      max-height: 65vh;
+    }
+  }
+
+  /* Mobile: Layout vertical optimizado */
+  @media (max-width: 1023px) {
+    .project-hero-premium {
+      min-height: auto;
+      max-height: none;
+      padding: 2rem 1rem 2rem;
+      overflow: visible;
+    }
+
+    .project-hero-container {
+      width: 100%;
+      max-width: 100%;
+      padding: 0;
+      height: auto;
+    }
+
+    .project-hero-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: center;
+      width: 100%;
+    }
+
+    .project-hero-mockup {
+      order: 1;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+      height: auto;
+      max-height: 40vh;
+      overflow: visible;
+    }
+
+    .project-mockup-image {
+      width: 100%;
+      max-width: 350px;
+      height: 45vh;
+      object-fit: contain;
+    }
+
+    @media (min-width: 480px) {
+      .project-mockup-image {
+        max-width: 400px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .project-mockup-image {
+        max-width: 500px;
+      }
+    }
+
+    .project-hero-text {
+      order: 2;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1rem;
+      padding: 0 1rem;
+    }
+
+    .project-hero-title {
+      font-size: clamp(1.75rem, 7vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--text-primary);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      font-family: var(--font-heading);
+    }
+
+    .project-hero-title .title-line {
+      display: block;
+    }
+
+    .project-hero-description {
+      font-size: clamp(0.875rem, 3vw, 1rem);
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin: 0;
+      max-width: 600px;
+    }
+
+    .project-hero-cta {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 0;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .project-hero-rating {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: clamp(0.7rem, 2.5vw, 0.875rem);
+      color: var(--text-secondary);
+      margin: 0;
+      flex-wrap: wrap;
+    }
+
+    .project-hero-rating .star {
+      font-size: 1rem;
+      filter: grayscale(100%) brightness(2);
+      opacity: 0.9;
+    }
+
+    .project-hero-rating .rating-score,
+    .project-hero-rating .rating-separator,
+    .project-hero-rating .rating-count {
+      white-space: nowrap;
+    }
+  }
+  
+  /* Desktop: Layout horizontal similar a SolutionHero */
+  @media (min-width: 1024px) {
+    .project-hero-premium {
+      min-height: auto;
+      max-height: 70vh;
+      padding: 4rem 2rem;
+    }
+
+    @media (min-width: 1200px) {
+      .project-hero-premium {
+        padding: 3rem 2rem;
+        max-height: 65vh;
+      }
+    }
+
+    .project-hero-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .project-hero-content {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4rem;
+      align-items: center;
+      width: 100%;
+    }
+
+    @media (min-width: 1200px) {
+      .project-hero-content {
+        gap: 5rem;
+      }
+    }
+
+    .project-hero-mockup {
+      order: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      max-height: 70vh;
+      overflow: hidden;
+    }
+
+    .project-mockup-image {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      max-height: 70vh;
+      object-fit: contain;
+      object-position: top center;
+    }
+
+    .project-hero-text {
+      order: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .project-hero-title {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      font-family: var(--font-heading);
+    }
+
+    .project-hero-title .title-line {
+      display: block;
+    }
+
+    .project-hero-description {
+      font-size: clamp(1.125rem, 1.5vw, 1.25rem);
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0;
+      max-width: 600px;
+    }
+
+    .project-hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      margin: 0;
+    }
+
+    .project-hero-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .project-hero-rating .star {
+      font-size: 1.25rem;
+      filter: grayscale(100%) brightness(2);
+      opacity: 0.9;
+    }
+  }
+
+  /* Botones */
+  .btn-primary-small,
+  .btn-secondary-small {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .btn-primary-small {
+    background: var(--grad-primary);
+    color: var(--bg-primary);
+    border: none;
+  }
+
+  .btn-primary-small:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow-primary);
+  }
+
+  .btn-secondary-small {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .btn-secondary-small:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .btn-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+</style>

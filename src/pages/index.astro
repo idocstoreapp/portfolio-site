@@ -224,7 +224,7 @@ const successCases = [
     title="Creamos métodos de trabajo para tu negocio"
     subtitle="Soluciones digitales que optimizan procesos y generan resultados reales."
     primaryCta={{ text: "Solicitar diagnóstico", href: "#diagnostico-estrategico" }}
-    secondaryCta={{ text: "Ver casos reales", href: "/projects" }}
+    secondaryCta={{ text: "Ver casos reales", href: "/proyectos-actuales" }}
     rating={{ score: "4.9/5.0", count: "250+ Reseñas en Google" }}
   />
 
@@ -232,7 +232,7 @@ const successCases = [
   <ConversationalDiagnosticWizard />
 
   <!-- Featured Projects Section - Carrusel -->
-  <section class="projects-section-premium">
+  <section id="proyectos-destacados" class="projects-section-premium">
     <div class="section-container">
       <div class="section-header">
         <h2 class="section-title">Proyectos Destacados</h2>
@@ -288,6 +288,7 @@ const successCases = [
         <p class="section-subtitle">Resultados reales de mis clientes</p>
       </div>
 
+      {/* Grid para escritorio */}
       <div class="success-cases-grid">
         {successCases.map((caseItem) => (
           <a href={caseItem.link || '#'} style="text-decoration: none; color: inherit; display: block;">
@@ -302,6 +303,31 @@ const successCases = [
           </a>
         ))}
       </div>
+      
+      {/* Carrusel para móvil */}
+      <div class="success-cases-carousel">
+        <div class="carousel-track-success" id="success-cases-track">
+          {successCases.map((caseItem, index) => (
+            <div class="carousel-item-success" data-index={index}>
+              <a href={caseItem.link || '#'} style="text-decoration: none; color: inherit; display: block;">
+                <SuccessCaseCard
+                  icon={caseItem.icon}
+                  title={caseItem.title}
+                  problem={caseItem.problem}
+                  solution={caseItem.solution}
+                  result={caseItem.result}
+                  gradient={caseItem.gradient}
+                />
+              </a>
+            </div>
+          ))}
+        </div>
+        <div class="carousel-indicators-success" id="success-cases-indicators">
+          {successCases.map((_, index) => (
+            <button class="carousel-indicator-success" data-index={index} aria-label={`Caso ${index + 1}`}></button>
+          ))}
+        </div>
+      </div>
     </div>
   </section>
 
@@ -313,6 +339,7 @@ const successCases = [
         <p class="section-subtitle">Testimonios reales de empresas que transformaron su negocio</p>
       </div>
 
+      {/* Grid para escritorio */}
       <div class="testimonials-grid-premium">
         {testimonials.map((testimonial) => (
           <TestimonialCardPremium
@@ -324,6 +351,29 @@ const successCases = [
             avatar={testimonial.avatar}
           />
         ))}
+      </div>
+      
+      {/* Carrusel para móvil */}
+      <div class="testimonials-carousel">
+        <div class="carousel-track-testimonials" id="testimonials-track">
+          {testimonials.map((testimonial, index) => (
+            <div class="carousel-item-testimonial" data-index={index}>
+              <TestimonialCardPremium
+                name={testimonial.name}
+                role={testimonial.role}
+                company={testimonial.company}
+                text={testimonial.text}
+                rating={testimonial.rating}
+                avatar={testimonial.avatar}
+              />
+            </div>
+          ))}
+        </div>
+        <div class="carousel-indicators-testimonials" id="testimonials-indicators">
+          {testimonials.map((_, index) => (
+            <button class="carousel-indicator-testimonial" data-index={index} aria-label={`Testimonio ${index + 1}`}></button>
+          ))}
+        </div>
       </div>
     </div>
   </section>
@@ -340,7 +390,7 @@ const successCases = [
           <a href="/contacto" class="btn-cta-primary">
             Solicitar Propuesta
           </a>
-          <a href="/projects" class="btn-cta-secondary">
+          <a href="/proyectos-actuales" class="btn-cta-secondary">
             Ver Todos los Proyectos
           </a>
         </div>
@@ -728,6 +778,7 @@ const successCases = [
     z-index: 2;
   }
   
+  /* Success Cases - Grid para escritorio */
   .success-cases-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -741,6 +792,71 @@ const successCases = [
     }
   }
   
+  /* Success Cases Carousel - Solo móvil */
+  .success-cases-carousel {
+    display: none;
+  }
+  
+  @media (max-width: 767px) {
+    .success-cases-grid {
+      display: none;
+    }
+    
+    .success-cases-carousel {
+      display: block;
+      position: relative;
+      max-width: 100%;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    
+    .carousel-track-success {
+      display: flex;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+    }
+    
+    .carousel-item-success {
+      flex: 0 0 100%;
+      width: 100%;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    
+    .carousel-item-success.active {
+      opacity: 1;
+    }
+    
+    .carousel-indicators-success {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+    
+    .carousel-indicator-success {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 0;
+    }
+    
+    .carousel-indicator-success:hover {
+      background: rgba(0, 0, 0, 0.4);
+      transform: scale(1.2);
+    }
+    
+    .carousel-indicator-success.active {
+      background: var(--color-graphite-dark, #2B2B2B);
+      width: 32px;
+      border-radius: 6px;
+    }
+  }
+  
   /* Testimonials Section */
   .testimonials-section {
     padding: 6rem 0;
@@ -748,6 +864,7 @@ const successCases = [
     background-color: var(--color-elephant-white);
   }
   
+  /* Testimonials - Grid para escritorio */
   .testimonials-grid-premium {
     display: grid;
     grid-template-columns: 1fr;
@@ -764,6 +881,71 @@ const successCases = [
   @media (min-width: 1024px) {
     .testimonials-grid-premium {
       grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  /* Testimonials Carousel - Solo móvil */
+  .testimonials-carousel {
+    display: none;
+  }
+  
+  @media (max-width: 767px) {
+    .testimonials-grid-premium {
+      display: none;
+    }
+    
+    .testimonials-carousel {
+      display: block;
+      position: relative;
+      max-width: 100%;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    
+    .carousel-track-testimonials {
+      display: flex;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+    }
+    
+    .carousel-item-testimonial {
+      flex: 0 0 100%;
+      width: 100%;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    
+    .carousel-item-testimonial.active {
+      opacity: 1;
+    }
+    
+    .carousel-indicators-testimonials {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 2rem;
+    }
+    
+    .carousel-indicator-testimonial {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 0;
+    }
+    
+    .carousel-indicator-testimonial:hover {
+      background: rgba(0, 0, 0, 0.4);
+      transform: scale(1.2);
+    }
+    
+    .carousel-indicator-testimonial.active {
+      background: var(--color-graphite-dark, #2B2B2B);
+      width: 32px;
+      border-radius: 6px;
     }
   }
   
@@ -918,6 +1100,18 @@ const successCases = [
       padding-top: 1rem !important;
       overflow: visible !important;
     }
+    
+    /* Asegurar que el carrusel sea visible en móvil */
+    .success-cases-carousel,
+    .testimonials-carousel {
+      display: block !important;
+    }
+    
+    /* Ocultar grid en móvil */
+    .success-cases-grid,
+    .testimonials-grid-premium {
+      display: none !important;
+    }
   }
 </style>
 
@@ -1015,7 +1209,8 @@ const successCases = [
       
       // Manejar errores de carga de imágenes en el grid de escritorio
       const projectImages = document.querySelectorAll('.project-image');
-      projectImages.forEach((img: HTMLImageElement) => {
+      projectImages.forEach((imgElement) => {
+        const img = imgElement as HTMLImageElement;
         img.addEventListener('error', function() {
           console.error('Error loading image:', img.getAttribute('src'));
           img.style.display = 'none';
@@ -1026,6 +1221,128 @@ const successCases = [
           }
         });
       });
+    }
+    
+    // Success Cases Carousel Auto Slide - Solo móvil
+    const successTrack = document.getElementById('success-cases-track');
+    const successIndicators = document.querySelectorAll('.carousel-indicator-success');
+    const successItems = document.querySelectorAll('.carousel-item-success');
+    let successCurrentIndex = 0;
+    let successAutoSlideInterval: number | null = null;
+    
+    // Solo inicializar si estamos en móvil y el elemento existe
+    if (successTrack && successItems.length > 0 && window.innerWidth <= 767) {
+      function updateSuccessCarousel() {
+        successItems.forEach((item, index) => {
+          item.classList.toggle('active', index === successCurrentIndex);
+        });
+        
+        const translateX = -successCurrentIndex * 100;
+        successTrack.style.transform = `translateX(${translateX}%)`;
+        
+        successIndicators.forEach((indicator, index) => {
+          indicator.classList.toggle('active', index === successCurrentIndex);
+        });
+      }
+      
+      function nextSuccessSlide() {
+        successCurrentIndex = (successCurrentIndex + 1) % successItems.length;
+        updateSuccessCarousel();
+      }
+      
+      function goToSuccessSlide(index: number) {
+        successCurrentIndex = index;
+        updateSuccessCarousel();
+        resetSuccessAutoSlide();
+      }
+      
+      function resetSuccessAutoSlide() {
+        if (successAutoSlideInterval) {
+          clearInterval(successAutoSlideInterval);
+        }
+        successAutoSlideInterval = window.setInterval(nextSuccessSlide, 5000);
+      }
+      
+      // Click en indicadores
+      successIndicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => goToSuccessSlide(index));
+      });
+      
+      // Pausar auto slide al hacer hover
+      const successCarousel = successTrack.closest('.success-cases-carousel');
+      if (successCarousel) {
+        successCarousel.addEventListener('mouseenter', () => {
+          if (successAutoSlideInterval) {
+            clearInterval(successAutoSlideInterval);
+          }
+        });
+        successCarousel.addEventListener('mouseleave', resetSuccessAutoSlide);
+      }
+      
+      // Inicializar
+      updateSuccessCarousel();
+      resetSuccessAutoSlide();
+    }
+    
+    // Testimonials Carousel Auto Slide - Solo móvil
+    const testimonialsTrack = document.getElementById('testimonials-track');
+    const testimonialsIndicators = document.querySelectorAll('.carousel-indicator-testimonial');
+    const testimonialsItems = document.querySelectorAll('.carousel-item-testimonial');
+    let testimonialsCurrentIndex = 0;
+    let testimonialsAutoSlideInterval: number | null = null;
+    
+    // Solo inicializar si estamos en móvil y el elemento existe
+    if (testimonialsTrack && testimonialsItems.length > 0 && window.innerWidth <= 767) {
+      function updateTestimonialsCarousel() {
+        testimonialsItems.forEach((item, index) => {
+          item.classList.toggle('active', index === testimonialsCurrentIndex);
+        });
+        
+        const translateX = -testimonialsCurrentIndex * 100;
+        testimonialsTrack.style.transform = `translateX(${translateX}%)`;
+        
+        testimonialsIndicators.forEach((indicator, index) => {
+          indicator.classList.toggle('active', index === testimonialsCurrentIndex);
+        });
+      }
+      
+      function nextTestimonialsSlide() {
+        testimonialsCurrentIndex = (testimonialsCurrentIndex + 1) % testimonialsItems.length;
+        updateTestimonialsCarousel();
+      }
+      
+      function goToTestimonialsSlide(index: number) {
+        testimonialsCurrentIndex = index;
+        updateTestimonialsCarousel();
+        resetTestimonialsAutoSlide();
+      }
+      
+      function resetTestimonialsAutoSlide() {
+        if (testimonialsAutoSlideInterval) {
+          clearInterval(testimonialsAutoSlideInterval);
+        }
+        testimonialsAutoSlideInterval = window.setInterval(nextTestimonialsSlide, 5000);
+      }
+      
+      // Click en indicadores
+      testimonialsIndicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => goToTestimonialsSlide(index));
+      });
+      
+      // Pausar auto slide al hacer hover
+      const testimonialsCarousel = testimonialsTrack.closest('.testimonials-carousel');
+      if (testimonialsCarousel) {
+        testimonialsCarousel.addEventListener('mouseenter', () => {
+          if (testimonialsAutoSlideInterval) {
+            clearInterval(testimonialsAutoSlideInterval);
+          }
+        });
+        testimonialsCarousel.addEventListener('mouseleave', resetTestimonialsAutoSlide);
+      }
+      
+      // Inicializar
+      updateTestimonialsCarousel();
+      resetTestimonialsAutoSlide();
     }
   });
 </script>

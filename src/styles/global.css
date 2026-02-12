@@ -100,13 +100,15 @@ html {
 
 /* High-Tech Gradient Backgrounds */
 .bg-gradient-dark {
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #312e81 50%, #1e1b4b 75%, #0f172a 100%);
+  background: linear-gradient(135deg, #F8F9FA 0%, #E5E7EB 50%, #F8F9FA 100%);
   background-attachment: fixed;
+  color: var(--color-graphite-dark, #2B2B2B);
 }
 
 .bg-gradient-darker {
-  background: linear-gradient(135deg, #0a0a1a 0%, #1e1b4b 50%, #0a0a1a 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, #F3F4F6 50%, #FFFFFF 100%);
   background-attachment: fixed;
+  color: var(--color-graphite-dark, #2B2B2B);
 }
 
 /* Glass morphism effect */
