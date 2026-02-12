@@ -358,26 +358,40 @@ export default function ConversationalDiagnosticWizard() {
       );
 
       // Preparar datos para el backend
+      // Asegurar que se envíen todos los campos necesarios para guardar en el admin
       const diagnosticData = {
         tipoEmpresa: selectedSector || '',
         businessType: selectedSector || '',
+        sector: selectedSector || '',
+        // Campos requeridos por el backend para guardar en admin
+        nivelDigital: answers.nivelDigital || answers.nivel_digital || 'intermedio',
+        objetivos: answers.objetivos || (answers.objetivo ? [answers.objetivo] : ['mejorar-operaciones']),
+        tamano: answers.tamano || answers.tamaño || 'pequeña',
+        necesidadesAdicionales: answers.necesidadesAdicionales || answers.necesidades_adicionales || [],
+        // Campos específicos del wizard conversacional
         extendedType: answers.extendedType, // Tipo específico de negocio
         servicePage: answers.servicePage, // Página del servicio específico
         selectedServices: selectedServices, // Incluir servicios seleccionados
-        sector: selectedSector || '',
+        // Incluir todas las respuestas adicionales
         ...Object.fromEntries(
-          Object.entries(answers).filter(([key]) => key !== 'sector')
+          Object.entries(answers).filter(([key]) => 
+            !['sector', 'tipoEmpresa', 'businessType'].includes(key)
+          )
         ),
+        // Información de contacto
         nombre: contactInfo.name || undefined,
         empresa: contactInfo.company || undefined,
         email: contactInfo.email || undefined,
+        // Estructura mejorada del diagnóstico conversacional
         summary: enhancedStructure.summary,
         insights,
         personalizedMessage,
         currentSituation: enhancedStructure.currentSituation || null,
         opportunities: enhancedStructure.opportunities || [],
         operationalImpact: enhancedStructure.operationalImpact || null,
-        futureVision: enhancedStructure.futureVision || null
+        futureVision: enhancedStructure.futureVision || null,
+        // Marcar como diagnóstico conversacional
+        type: 'conversational'
       };
 
       // Generar ID único para el diagnóstico
