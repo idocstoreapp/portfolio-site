@@ -80,12 +80,27 @@ const { projects = [] } = Astro.props;
     position: relative;
     z-index: 10;
     background: transparent;
+    min-height: 400px;
   }
   
   /* Reducir padding-top en móvil para acercar al título */
   @media (max-width: 767px) {
     .carousel-section {
-      padding-top: 0rem;
+      padding-top: 1rem;
+      padding-bottom: 2rem;
+      min-height: 350px;
+    }
+    
+    .carousel-inner {
+      width: 100% !important;
+      display: block !important;
+      visibility: visible !important;
+    }
+    
+    .carousel-track {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
     }
   }
   
@@ -119,7 +134,7 @@ const { projects = [] } = Astro.props;
     margin: 0 auto;
     padding: 0 1rem;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     z-index: 10;
     min-height: 400px;
     width: 100%;
@@ -136,10 +151,33 @@ const { projects = [] } = Astro.props;
     }
   }
   
+  /* En móvil, asegurar visibilidad completa */
+  @media (max-width: 767px) {
+    .carousel-inner {
+      overflow: visible !important;
+      min-height: auto !important;
+    }
+  }
+  
   /* Ajustar margin-top solo en móvil */
   @media (max-width: 767px) {
     .carousel-inner {
-      margin-top: -3.5rem;
+      margin-top: 0;
+      overflow: visible;
+      min-height: auto;
+    }
+    
+    .carousel-track {
+      overflow: visible;
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    
+    .carousel-item {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
     }
   }
   

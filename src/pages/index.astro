@@ -240,7 +240,7 @@ const successCases = [
       </div>
 
       <!-- Carousel para móvil, Grid para escritorio -->
-      <div class="projects-carousel-mobile-only">
+      <div class="projects-carousel-mobile-only" style="width: 100%; display: block; visibility: visible;">
         <ProjectsCarousel projects={carouselProjects} />
       </div>
       <div class="projects-grid-desktop-only" style="display: flex; justify-content: center; width: 100%;">
@@ -411,13 +411,40 @@ const successCases = [
   /* Reducir espacio entre título y carrusel en móvil */
   @media (max-width: 767px) {
     .projects-section-premium .section-header {
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem !important;
+      margin-top: 0 !important;
+      padding-top: 1rem !important;
+    }
+    
+    .success-cases-section .section-header {
+      margin-bottom: 2.5rem !important;
+      margin-top: 0 !important;
+      padding-top: 1rem !important;
+    }
+    
+    .section-title {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      margin-top: 0 !important;
     }
   }
   
   /* Grid de proyectos para escritorio */
   .projects-grid-desktop-only {
     display: none;
+  }
+  
+  /* Mostrar carrusel en móvil por defecto */
+  .projects-carousel-mobile-only {
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+    position: relative;
+    z-index: 10;
   }
   
   @media (min-width: 1024px) {
@@ -632,11 +659,17 @@ const successCases = [
     .projects-carousel-mobile-only {
       display: block !important;
       visibility: visible !important;
+      height: auto !important;
+      overflow: visible !important;
+      width: 100% !important;
+      margin-top: 2rem;
     }
     
     .projects-grid-desktop-only {
       display: none !important;
       visibility: hidden !important;
+      height: 0 !important;
+      overflow: hidden !important;
     }
   }
   
@@ -825,17 +858,64 @@ const successCases = [
     .projects-section-premium,
     .success-cases-section,
     .testimonials-section {
-      padding: 4rem 0;
+      padding: 3rem 0;
     }
     
     .cta-section-premium {
-      padding: 6rem 0;
+      padding: 4rem 0;
     }
     
     .section-header {
-      margin-top:-2.5rem; 
-      margin-bottom:-7rem;
-      padding-bottom:-6rem;
+      margin-top: 0 !important;
+      margin-bottom: 2.5rem !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .projects-section-premium .section-header {
+      margin-bottom: 2rem !important;
+      margin-top: 0 !important;
+    }
+    
+    .success-cases-section .section-header {
+      margin-bottom: 2.5rem !important;
+      margin-top: 0 !important;
+    }
+    
+    .testimonials-section .section-header {
+      margin-bottom: 2.5rem !important;
+      margin-top: 0 !important;
+    }
+    
+    .section-title {
+      margin-top: 0 !important;
+      margin-bottom: 0.75rem !important;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      position: relative !important;
+      z-index: 10 !important;
+    }
+    
+    .section-subtitle {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    
+    .section-container {
+      padding-top: 1rem !important;
+    }
+    
+    .projects-section-premium .section-container,
+    .success-cases-section .section-container,
+    .testimonials-section .section-container {
+      padding-top: 1rem !important;
+      overflow: visible !important;
     }
   }
 </style>
