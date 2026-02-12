@@ -5,6 +5,7 @@ import ProblemCards from '../../components/ProblemCards.astro';
 import FeatureGrid from '../../components/FeatureGrid.astro';
 import ProcessTimeline from '../../components/ProcessTimeline.astro';
 import RelatedProjects from '../../components/RelatedProjects.astro';
+import TestimonialsSection from '../../components/TestimonialsSection.astro';
 import SolutionCTA from '../../components/SolutionCTA.astro';
 ---
 
@@ -15,11 +16,39 @@ import SolutionCTA from '../../components/SolutionCTA.astro';
 >
   <SolutionHero
     title="Sistema completo para restaurantes que quieren dejar el papel atrás"
-    subtitle="Menú QR, POS, gestión de mesas y comandas. Todo en un solo sistema que funciona desde el celular."
+    subtitle="Menú QR, POS, gestión de mesas y comandas. Todo en un solo sistema que funciona desde el celular. Inversión: $160 USD - Se recupera en semanas."
     image="/images/menuqr/mockup-arabe.png"
+    image2="/images/menuqr/menu-bar.jpeg"
     ctaText="Ver cómo funciona"
     ctaLink="#caracteristicas"
   />
+
+  <!-- Sección de Precio Destacada -->
+  <section class="pricing-highlight" style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); padding: 4rem 2rem; text-align: center; color: white;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+      <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 24px; padding: 3rem; border: 2px solid rgba(255, 255, 255, 0.2);">
+        <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">Inversión: $160 USD</h2>
+        <p style="font-size: 1.25rem; margin-bottom: 2rem; opacity: 0.9;">Una sola vez. Sin mensualidades. Sin costos ocultos.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem;">
+          <div style="background: rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">⏱️</div>
+            <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">3-4 horas/día</div>
+            <div style="opacity: 0.9;">Ahorro de tiempo diario</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">💰</div>
+            <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">2 semanas</div>
+            <div style="opacity: 0.9;">Recuperación de inversión</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">✅</div>
+            <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">100%</div>
+            <div style="opacity: 0.9;">Sin papel, todo digital</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <ProblemCards
     problems={[
@@ -49,34 +78,54 @@ import SolutionCTA from '../../components/SolutionCTA.astro';
   <FeatureGrid
     features={[
       {
-        title: "Menú QR para clientes",
-        description: "Los clientes escanean el código y ven el menú actualizado en su celular. Sin contacto, siempre actualizado, sin costos de impresión.",
+        title: "Menú Digital con Código QR",
+        description: "Crea un menú digital con fotos de tus platos. Genera código QR que los clientes escanean. Cambias precios en 2 clics, el QR siempre actualizado. Ahorras 2-3 horas semanales en actualizar menús físicos.",
         image: "/images/menuqr/menu-bar.jpeg"
       },
       {
-        title: "POS integrado",
-        description: "Cobro rápido desde cualquier dispositivo. Control en tiempo real de ventas, productos más vendidos y ganancias del día.",
-        icon: "💳"
+        title: "Sistema de Mesas y Pedidos (POS)",
+        description: "Ves todas tus mesas en pantalla (libre/ocupada). Creas pedidos tocando la mesa. Agregas platos tocando en el menú. La app calcula el total automáticamente. Suma platos, calcula propinas, muestra IVA. Ahorras 5-10 minutos por mesa = 2-3 horas diarias.",
+        icon: "🍽️"
       },
       {
-        title: "Comandas directas a cocina",
-        description: "Los pedidos llegan instantáneamente a la cocina. Sin papel, sin errores de lectura, sin pérdidas de órdenes.",
-        icon: "🍳"
-      },
-      {
-        title: "Gestión de mesas",
-        description: "Sabes qué mesa está ocupada, qué pidió cada mesa, cuánto tiempo lleva esperando. Control total del restaurante.",
-        icon: "🪑"
-      },
-      {
-        title: "Uso desde celular",
-        description: "Los meseros no necesitan tablet. Todo funciona desde su celular: tomar pedidos, cobrar, ver estado de comandas.",
-        icon: "📱"
-      },
-      {
-        title: "Impresión automática",
-        description: "Comandas y boletas se imprimen automáticamente cuando las necesites. Integración con impresoras térmicas.",
+        title: "Impresión Automática de Comandas",
+        description: "Cuando cambias pedido a 'En Preparación', se imprime automáticamente en cocina. Cuando el cliente paga, se imprime la boleta automáticamente. Sin errores de escritura. Ahorras 1-2 minutos por pedido = 30-60 minutos diarios.",
         icon: "🖨️"
+      },
+      {
+        title: "Control de Inventario y Stock",
+        description: "Registras todos tus ingredientes. La app te avisa cuando algo se está acabando. Ajustas stock al comprar o usar. Ves en tiempo real cuánto tienes. Calcula automáticamente cuánto stock tienes. Ahorras 1-2 horas semanales.",
+        icon: "📦"
+      },
+      {
+        title: "Recetas y Costos de Platos",
+        description: "Registras recetas de tus platos (qué ingredientes lleva cada uno). La app calcula cuánto cuesta hacer cada plato. Te muestra cuánto ganas por plato (precio de venta - costo). Ahorras 2-3 horas semanales en cálculos de costos.",
+        icon: "📝"
+      },
+      {
+        title: "Registro de Compras a Proveedores",
+        description: "Registras cada compra que haces. La app actualiza automáticamente tu inventario. Tienes historial de todas tus compras. Calcula el total de la compra automáticamente. Ahorras 30 minutos por compra = 2-3 horas mensuales.",
+        icon: "🛒"
+      },
+      {
+        title: "Control de Gastos",
+        description: "Registras todos tus gastos (luz, agua, sueldos, etc.). La app los organiza por categorías. Ves cuánto gastaste este mes. Suma todos tus gastos automáticamente. Ahorras 2-3 horas mensuales en organizar gastos.",
+        icon: "💸"
+      },
+      {
+        title: "Dashboard y Reportes",
+        description: "Ves en tiempo real: cuánto vendiste hoy, cuántas mesas están ocupadas, cuántos pedidos pendientes, cuánto gastaste este mes, qué ingredientes están bajos. Calcula ventas del día automáticamente. Ahorras 30-60 minutos diarios.",
+        icon: "📊"
+      },
+      {
+        title: "Gestión de Empleados y Propinas",
+        description: "Registras a tus empleados (meseros, cocineros, etc.). Asignas propinas a cada empleado. La app calcula cuánto corresponde a cada uno. Ves reportes de propinas por empleado. Ahorras 20-30 minutos diarios en cálculos de propinas.",
+        icon: "👥"
+      },
+      {
+        title: "Menú Imprimible",
+        description: "Genera un menú en formato PDF listo para imprimir. Puedes imprimirlo y ponerlo en las mesas. Se actualiza automáticamente cuando cambias precios. Ahorras 1-2 horas cuando actualizas precios.",
+        icon: "📄"
       }
     ]}
   />
@@ -115,17 +164,59 @@ import SolutionCTA from '../../components/SolutionCTA.astro';
       {
         title: "Gourmet Árabe",
         image: "/images/menuqr/mockup-arabe.png",
-        problem: "Restaurante con menú impreso que se desactualizaba constantemente y pérdida de órdenes",
-        solution: "Sistema completo con menú QR, POS y gestión de mesas",
-        result: "Reducción de costos de impresión y cero pérdida de órdenes",
+        problem: "Restaurante con menú impreso que se desactualizaba constantemente y pérdida de órdenes entre papelitos y WhatsApp",
+        solution: "Menú digital con código QR + Sistema de gestión de mesas y pedidos (POS) completo",
+        result: "Reducción de costos de impresión, cero pérdida de órdenes y ahorro de 3-4 horas diarias",
         link: "/projects/gourmet-arabe"
       }
     ]}
   />
 
+  <TestimonialsSection
+    testimonials={[
+      {
+        name: "Mohamed Hassan",
+        role: "Dueño",
+        company: "Gourmet Árabe",
+        text: "El sistema cambió completamente nuestra operación. Antes perdíamos órdenes constantemente y gastábamos mucho en imprimir menús cada vez que cambiábamos un precio. Ahora todo es digital, los clientes escanean el QR y hacen su pedido directamente. Ahorramos 3-4 horas diarias y nunca más perdimos una orden.",
+        rating: 5
+      }
+    ]}
+  />
+
+  <!-- Sección de Ahorro de Tiempo -->
+  <section class="time-savings" style="padding: 4rem 2rem; background: #f8fafc;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+      <h2 style="text-align: center; font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; color: #0f172a;">⏱️ Ahorro de Tiempo Diario</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem;">
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🍽️</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a;">Tomar pedidos y calcular</h3>
+          <p style="color: #3b82f6; font-weight: 700; font-size: 1.125rem;">2-3 horas diarias</p>
+        </div>
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">📦</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a;">Revisar inventario</h3>
+          <p style="color: #3b82f6; font-weight: 700; font-size: 1.125rem;">30-60 minutos diarios</p>
+        </div>
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">💰</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a;">Calcular propinas</h3>
+          <p style="color: #3b82f6; font-weight: 700; font-size: 1.125rem;">20-30 minutos diarios</p>
+        </div>
+        <div style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3); color: white;">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎯</div>
+          <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">TOTAL</h3>
+          <p style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">3-4 horas/día</p>
+          <p style="opacity: 0.9;">Ahorro de tiempo diario</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <SolutionCTA
     title="¿Listo para modernizar tu restaurante?"
-    description="Agenda una demo y descubre cómo este sistema puede transformar tu operación"
+    description="Inversión única de $160 USD. Sin mensualidades. Se recupera en menos de 2 semanas. Agenda una demo y descubre cómo este sistema puede transformar tu operación."
     primaryCta={{
       text: "Agendar llamada estratégica",
       link: "/contacto?solucion=restaurantes"

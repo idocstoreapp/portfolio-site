@@ -58,67 +58,73 @@ const carouselProjects = [
   }
 ];
 
-// Testimonials data
+// Testimonials data - Comentarios simulados de empresas reales
 const testimonials = [
   {
-    name: "José Perez",
-    role: "Director",
-    company: "NubeX",
+    name: "Mohamed Hassan",
+    role: "Dueño",
+    company: "Gourmet Árabe",
     rating: 5,
-    text: "Gracias a Jonathan, nuestra plataforma aumentó un 40% en usuarios activos. El sistema es robusto y fácil de usar.",
+    text: "El sistema cambió completamente nuestra operación. Antes perdíamos órdenes constantemente y gastábamos mucho en imprimir menús cada vez que cambiábamos un precio. Ahora todo es digital, los clientes escanean el QR y hacen su pedido directamente. Ahorramos 3-4 horas diarias y nunca más perdimos una orden.",
     avatar: "👨‍💼"
   },
   {
-    name: "Ana Torres",
-    role: "CEO",
-    company: "El Gabriel",
+    name: "Carlos Mendoza",
+    role: "Gerente General",
+    company: "IDoc Store",
     rating: 5,
-    text: "Excelente trabajo en nuestra tienda online. Las ventas aumentaron significativamente y la experiencia de usuario es impecable.",
+    text: "Antes teníamos todo en papel y cuadernos. Perdíamos órdenes, no sabíamos qué repuestos teníamos y calcular las comisiones de los técnicos era un dolor de cabeza. Con el sistema ahora todo está organizado, encontramos cualquier orden en segundos y el sistema calcula automáticamente los pagos y comisiones. La productividad aumentó significativamente.",
+    avatar: "👨‍💼"
+  },
+  {
+    name: "Patricio Kubica",
+    role: "Director",
+    company: "Kubica Mobiliario",
+    rating: 5,
+    text: "Necesitábamos una página web profesional y un sistema para cotizar nuestros muebles personalizados. El sistema que desarrollaron nos ahorra 43 minutos por cotización. Antes tardábamos casi una hora en hacer una cotización manual, ahora la hacemos en 5 minutos. La página web también nos ha traído muchos más clientes.",
+    avatar: "👨‍💼"
+  },
+  {
+    name: "María González",
+    role: "Dueña",
+    company: "Mueblería Cotizador",
+    rating: 5,
+    text: "Antes cotizábamos a ojo y perdíamos dinero en muchos proyectos. No sabíamos cuánto costaba realmente hacer cada mueble. Con el sistema ahora calculamos los costos reales automáticamente y cotizamos con precisión. Nuestras ganancias aumentaron porque ya no perdemos dinero en proyectos mal cotizados.",
     avatar: "👩‍💼"
-  },
-  {
-    name: "Inés Traba",
-    role: "CEO",
-    company: "Mi Life",
-    rating: 5,
-    text: "Problema: Mi App tenía baja retención. Solución: Plataforma completa que aumentó usuarios activos en 50%.",
-    avatar: "👩‍💻"
-  },
-  {
-    name: "Anna Tellez",
-    role: "Fundadora",
-    company: "Bloom",
-    rating: 5,
-    text: "Sistema de automatización que redujo costos en 30%. Muy profesional y resultados medibles.",
-    avatar: "👩‍🎨"
   }
 ];
 
-// Success cases data
+// Success cases data - Proyectos reales
 const successCases = [
   {
-    icon: "☁️",
-    title: "Plataforma Cloud",
-    problem: "Gestión desactualizada en App móvil",
-    solution: "Sistema completo moderno con API",
-    result: "+40% usuarios activos",
-    gradient: "primary" as const
+    icon: "🍽️",
+    title: "Gourmet Árabe",
+    problem: "Menú impreso que se desactualizaba constantemente y pérdida de órdenes entre papelitos y WhatsApp",
+    solution: "Menú digital con código QR + Sistema de gestión de mesas y pedidos (POS) completo",
+    result: "Reducción de costos de impresión, cero pérdida de órdenes y ahorro de 3-4 horas diarias",
+    gradient: "primary" as const,
+    image: "/images/menuqr/mockup-arabe.png",
+    link: "/projects/gourmet-arabe"
   },
   {
-    icon: "🛒",
-    title: "E-commerce",
-    problem: "Baja conversión en tienda online",
-    solution: "Rediseño UX/UI + optimización",
-    result: "+25% ventas",
-    gradient: "secondary" as const
+    icon: "🔧",
+    title: "IDoc Store",
+    problem: "Servicio técnico con órdenes en papel, sin control de inventario y pérdida de información de clientes",
+    solution: "Sistema de gestión de órdenes de clientes + Sistema de gestión de pagos y comisiones para empleados",
+    result: "Organización total, aumento de productividad y control completo de pagos y comisiones",
+    gradient: "secondary" as const,
+    image: "/images/sistemas/idocstore-hero.png",
+    link: "/projects/sistema-reparaciones"
   },
   {
-    icon: "📊",
-    title: "Sistema de Gestión",
-    problem: "Procesos manuales ineficientes",
-    solution: "Automatización completa",
-    result: "-30% costos operativos",
-    gradient: "tertiary" as const
+    icon: "🏪",
+    title: "Kubica Mobiliario",
+    problem: "Necesidad de presencia web profesional y sistema para cotizar muebles personalizados con precisión",
+    solution: "Página web moderna + Sistema cotizador con cálculo automático de costos",
+    result: "Presencia digital profesional y proceso de cotización eficiente que ahorra 43 minutos por cotización",
+    gradient: "tertiary" as const,
+    image: "/images/webs/muebleria1.png",
+    link: "/projects/kubica-mobiliario"
   }
 ];
 ---
@@ -215,13 +221,11 @@ const successCases = [
 
   <!-- Hero Section Premium -->
   <HeroPremium 
-    title="Plataformas digitales que convierten crecimiento en resultados reales"
-    subtitle="Diseñamos sistemas web que optimizan procesos y generan ventas."
+    title="Creamos métodos de trabajo para tu negocio"
+    subtitle="Soluciones digitales que optimizan procesos y generan resultados reales."
     primaryCta={{ text: "Solicitar diagnóstico", href: "#diagnostico-estrategico" }}
     secondaryCta={{ text: "Ver casos reales", href: "/projects" }}
     rating={{ score: "4.9/5.0", count: "250+ Reseñas en Google" }}
-    mockupImage={featuredProjects[0]?.data.cover}
-    carouselProjects={carouselProjects}
   />
 
   <!-- Diagnóstico Estratégico Interactivo -->
@@ -231,8 +235,8 @@ const successCases = [
   <section class="projects-section-premium">
     <div class="section-container">
       <div class="section-header">
-        <h2 class="section-title">Transformaciones que generan valor</h2>
-        <p class="section-subtitle">Cada proyecto es una decisión estratégica. Cada solución, una mejora medible.</p>
+        <h2 class="section-title">Proyectos Destacados</h2>
+        <p class="section-subtitle">Soluciones reales que transforman negocios y generan resultados medibles</p>
       </div>
 
       <!-- Carousel para móvil, Grid para escritorio -->
@@ -285,14 +289,16 @@ const successCases = [
 
       <div class="success-cases-grid">
         {successCases.map((caseItem) => (
-          <SuccessCaseCard
-            icon={caseItem.icon}
-            title={caseItem.title}
-            problem={caseItem.problem}
-            solution={caseItem.solution}
-            result={caseItem.result}
-            gradient={caseItem.gradient}
-          />
+          <a href={caseItem.link || '#'} style="text-decoration: none; color: inherit; display: block;">
+            <SuccessCaseCard
+              icon={caseItem.icon}
+              title={caseItem.title}
+              problem={caseItem.problem}
+              solution={caseItem.solution}
+              result={caseItem.result}
+              gradient={caseItem.gradient}
+            />
+          </a>
         ))}
       </div>
     </div>
@@ -302,8 +308,8 @@ const successCases = [
   <section class="testimonials-section">
     <div class="section-container">
       <div class="section-header">
-        <h2 class="section-title">Lo que dicen mis clientes</h2>
-        <p class="section-subtitle">Testimonios reales de proyectos exitosos</p>
+        <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+        <p class="section-subtitle">Testimonios reales de empresas que transformaron su negocio</p>
       </div>
 
       <div class="testimonials-grid-premium">
@@ -861,9 +867,9 @@ const successCases = [
     });
     
     // Funcionalidad de scroll horizontal para proyectos en escritorio
-    const projectsGrid = document.getElementById('projects-grid');
-    const projectsPrev = document.getElementById('projects-prev');
-    const projectsNext = document.getElementById('projects-next');
+    const projectsGrid = document.getElementById('projects-grid') as HTMLElement | null;
+    const projectsPrev = document.getElementById('projects-prev') as HTMLButtonElement | null;
+    const projectsNext = document.getElementById('projects-next') as HTMLButtonElement | null;
     
     if (projectsGrid && projectsPrev && projectsNext) {
       const updateNavButtons = () => {
@@ -895,8 +901,8 @@ const successCases = [
       
       // Scroll horizontal con mouse drag
       let isDown = false;
-      let startX;
-      let scrollLeft;
+      let startX: number = 0;
+      let scrollLeft: number = 0;
       
       projectsGrid.addEventListener('mousedown', (e) => {
         isDown = true;

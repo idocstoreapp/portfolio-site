@@ -5,6 +5,7 @@ import ProblemCards from '../../components/ProblemCards.astro';
 import FeatureGrid from '../../components/FeatureGrid.astro';
 import ProcessTimeline from '../../components/ProcessTimeline.astro';
 import RelatedProjects from '../../components/RelatedProjects.astro';
+import TestimonialsSection from '../../components/TestimonialsSection.astro';
 import SolutionCTA from '../../components/SolutionCTA.astro';
 ---
 
@@ -15,11 +16,81 @@ import SolutionCTA from '../../components/SolutionCTA.astro';
 >
   <SolutionHero
     title="Sistema de cotizaciones que calcula costos reales"
-    subtitle="Crea cotizaciones personalizadas, controla costos de materiales, horas de trabajo y tiempos de producción. Cotiza con precisión y gana más."
+    subtitle="Crea cotizaciones personalizadas, controla costos de materiales, horas de trabajo y tiempos de producción. Cotiza con precisión y gana más. Inversión: $160 USD - Se recupera en semanas."
     image="/images/sistemas/cotizador-hero.png"
+    image2="/images/sistemas/cotizador1.png"
     ctaText="Ver cómo funciona"
     ctaLink="#caracteristicas"
   />
+
+  <!-- Sección de Precio Destacada -->
+  <section class="pricing-highlight" style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); padding: 4rem 2rem; text-align: center; color: white;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+      <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 24px; padding: 3rem; border: 2px solid rgba(255, 255, 255, 0.2);">
+        <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">Inversión: $160 USD</h2>
+        <p style="font-size: 1.25rem; margin-bottom: 2rem; opacity: 0.9;">Una sola vez. Sin mensualidades. Sin costos ocultos.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem;">
+          <div style="background: rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">⏱️</div>
+            <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">25-55 min</div>
+            <div style="opacity: 0.9;">Ahorro por cotización</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">💰</div>
+            <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">2 semanas</div>
+            <div style="opacity: 0.9;">Recuperación de inversión</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">✅</div>
+            <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">100%</div>
+            <div style="opacity: 0.9;">Cálculos automáticos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de Ahorro de Tiempo -->
+  <section class="time-savings" style="padding: 4rem 2rem; background: #f8fafc;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+      <h2 style="text-align: center; font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; color: #0f172a;">⏱️ Ahorro de Tiempo por Cotización</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem;">
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #0f172a;">❌ Sin la aplicación</h3>
+          <ul style="list-style: none; padding: 0; color: #64748b;">
+            <li style="margin-bottom: 0.5rem;">• Buscar precios: 5 minutos</li>
+            <li style="margin-bottom: 0.5rem;">• Calcular materiales: 10 minutos</li>
+            <li style="margin-bottom: 0.5rem;">• Calcular horas: 5 minutos</li>
+            <li style="margin-bottom: 0.5rem;">• Sumar todo: 2 minutos</li>
+            <li style="margin-bottom: 0.5rem;">• Calcular IVA: 2 minutos</li>
+            <li style="margin-bottom: 0.5rem;">• Calcular margen: 2 minutos</li>
+            <li style="margin-bottom: 0.5rem;">• Escribir en Word: 10 minutos</li>
+            <li style="margin-bottom: 0.5rem;">• Revisar: 5 minutos</li>
+          </ul>
+          <p style="color: #ef4444; font-weight: 700; font-size: 1.25rem; margin-top: 1rem;">TOTAL: 48 minutos</p>
+        </div>
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; color: #0f172a;">✅ Con la aplicación</h3>
+          <ul style="list-style: none; padding: 0; color: #64748b;">
+            <li style="margin-bottom: 0.5rem;">• Ingresar datos cliente: 1 minuto</li>
+            <li style="margin-bottom: 0.5rem;">• Seleccionar materiales: 2 minutos</li>
+            <li style="margin-bottom: 0.5rem;">• Seleccionar servicios: 1 minuto</li>
+            <li style="margin-bottom: 0.5rem;">• Cálculos automáticos: 0 minutos</li>
+            <li style="margin-bottom: 0.5rem;">• Generar PDF: 1 minuto</li>
+          </ul>
+          <p style="color: #10b981; font-weight: 700; font-size: 1.25rem; margin-top: 1rem;">TOTAL: 5 minutos</p>
+        </div>
+        <div style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3); color: white;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
+          <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">AHORRO</h3>
+          <p style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">43 minutos</p>
+          <p style="opacity: 0.9; margin-bottom: 1rem;">por cotización</p>
+          <p style="font-size: 1.125rem; opacity: 0.9;">Si haces 10 cotizaciones/semana:</p>
+          <p style="font-size: 1.5rem; font-weight: 700; margin-top: 0.5rem;">28.7 horas/mes ahorradas</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <ProblemCards
     problems={[
@@ -49,34 +120,54 @@ import SolutionCTA from '../../components/SolutionCTA.astro';
   <FeatureGrid
     features={[
       {
-        title: "Cotizaciones personalizadas",
-        description: "Crea cotizaciones con medidas exactas, materiales específicos y tiempos de producción. El sistema calcula el costo real automáticamente.",
+        title: "Crear Cotizaciones en 5 Minutos",
+        description: "Ingresas datos del cliente (1 min), seleccionas materiales del catálogo (2 min), seleccionas servicios y horas (1 min). La app calcula TODO automáticamente: suma materiales, suma servicios, subtotal, IVA (19%), margen de ganancia (30%), total final. Ahorras 25-55 minutos por cotización.",
         image: "/images/sistemas/cotizador1-3.png"
       },
       {
-        title: "Control de costos",
-        description: "Sabe cuánto cuesta cada material, cada hora de trabajo y cada proceso. Calcula el precio real de cada producto.",
-        icon: "💰"
+        title: "Catálogo Visual de Productos",
+        description: "Crea catálogo de todos tus muebles (closets, cocinas, baños, etc.). Para cada producto: foto, precio base, materiales con cantidades, horas de mano de obra, opciones de personalización, días de fabricación. Seleccionas del catálogo y la app calcula precio final automáticamente.",
+        icon: "🏪"
       },
       {
-        title: "Gestión de materiales",
-        description: "Controla qué materiales tienes, cuántos y cuánto cuestan. El sistema calcula automáticamente qué necesitas para cada cotización.",
+        title: "Gestión de Materiales y Servicios",
+        description: "Base de datos de materiales (madera, tornillos, bisagras) con costo unitario y proveedor. Servicios (Instalación, Pintura, Acabados) con precio por hora. La app usa estos precios automáticamente. Nunca más buscar en papeles o recordar precios.",
         icon: "📦"
       },
       {
-        title: "Control de horas y empleados",
-        description: "Registra horas trabajadas por empleado y por proyecto. Sabe cuánto tiempo realmente toma hacer cada producto.",
-        icon: "⏱️"
+        title: "Dashboard y Organización",
+        description: "Ve todas tus cotizaciones en un solo lugar. Filtra por estado: Borrador, Enviada, Aprobada, Rechazada. Estadísticas: cuántas has hecho, cuántas se aprobaron, cuánto has vendido. Gráficos visuales de rendimiento.",
+        icon: "📊"
       },
       {
-        title: "Recálculo automático",
-        description: "Si el cliente cambia medidas o materiales, el sistema recalcula automáticamente el precio. Sin errores, sin pérdida de tiempo.",
-        icon: "🔄"
+        title: "PDFs Profesionales con un Clic",
+        description: "Genera PDF profesional de cualquier cotización. Incluye: cliente, materiales, servicios, precios, totales. Listo para enviar por email o WhatsApp. Formato profesional que da confianza. Ya no necesitas copiar y pegar en Word.",
+        icon: "📄"
       },
       {
-        title: "Reportes y ganancias",
-        description: "Ve cuánto ganaste en cada proyecto, qué productos son más rentables y cómo optimizar tus precios.",
+        title: "Gestión de Clientes",
+        description: "Base de datos completa. Guarda información de todos tus clientes. Ve historial completo de trabajos de cada cliente. Ve todas las cotizaciones que has hecho. Rastrea estado de pago de cada trabajo.",
+        icon: "👥"
+      },
+      {
+        title: "Gestión de Personal",
+        description: "Vendedores: registra, asigna cotizaciones, ve cuántas ha hecho cada uno, rastrea rendimiento. Trabajadores del Taller: registra empleados, asigna trabajos, ve quién está disponible, rastrea qué trabajo está haciendo cada persona.",
+        icon: "👷"
+      },
+      {
+        title: "Control de Costos Reales",
+        description: "Cuando una cotización se aprueba, registra costos reales: materiales reales, mano de obra real, gastos hormiga, transporte. Compara con lo cotizado. Ve cuánto ganaste realmente, porcentaje de ganancia real, si cumpliste con el margen esperado.",
+        icon: "💰"
+      },
+      {
+        title: "Reportes y Estadísticas",
+        description: "Gráficos visuales: ventas por categoría, cotizaciones por estado, rentabilidad por proyecto, rendimiento de vendedores, costos vs presupuestos. Información clara para tomar decisiones. Sabes qué productos venden más y dónde están tus oportunidades.",
         icon: "📈"
+      },
+      {
+        title: "Catálogo Público para Clientes",
+        description: "Publica catálogo en tu página web. Los clientes ven tus productos sin login. Pueden personalizar opciones (colores, materiales). Ven precio en tiempo real. Pueden enviar cotización directamente por WhatsApp o Email. Los clientes cotizan solos, ahorrándote tiempo.",
+        icon: "🌐"
       }
     ]}
   />
@@ -113,27 +204,85 @@ import SolutionCTA from '../../components/SolutionCTA.astro';
   <RelatedProjects
     projects={[
       {
-        title: "Mueblería Cotizador",
-        image: "/images/sistemas/cotizador-hero.png",
-        problem: "Fábrica cotizando a ojo y perdiendo dinero en proyectos",
-        solution: "Sistema de cotizaciones con cálculo automático de costos",
-        result: "Cotizaciones precisas y aumento de ganancias",
-        link: "/projects/muebleria-cotizador"
-      },
-      {
         title: "Kubica Mobiliario",
         image: "/images/webs/muebleria1.png",
-        problem: "Necesidad de cotizar muebles personalizados con precisión",
-        solution: "Sistema web con cotizador integrado",
-        result: "Proceso de cotización profesional y eficiente",
+        problem: "Necesidad de presencia web profesional y sistema para cotizar muebles personalizados con precisión",
+        solution: "Página web moderna + Sistema cotizador con cálculo automático de costos",
+        result: "Presencia digital profesional y proceso de cotización eficiente que ahorra 43 minutos por cotización",
         link: "/projects/kubica-mobiliario"
+      },
+      {
+        title: "Mueblería Cotizador",
+        image: "/images/sistemas/cotizador-hero.png",
+        problem: "Fábrica cotizando a ojo y perdiendo dinero en proyectos por falta de control de costos",
+        solution: "Sistema de cotizaciones con cálculo automático de costos reales",
+        result: "Cotizaciones precisas y aumento de ganancias al cotizar correctamente",
+        link: "/projects/muebleria-cotizador"
       }
     ]}
   />
 
+  <TestimonialsSection
+    testimonials={[
+      {
+        name: "Patricio Kubica",
+        role: "Director",
+        company: "Kubica Mobiliario",
+        text: "Necesitábamos una página web profesional y un sistema para cotizar nuestros muebles personalizados. El sistema que desarrollaron nos ahorra 43 minutos por cotización. Antes tardábamos casi una hora en hacer una cotización manual, ahora la hacemos en 5 minutos. La página web también nos ha traído muchos más clientes.",
+        rating: 5
+      },
+      {
+        name: "María González",
+        role: "Dueña",
+        company: "Mueblería Cotizador",
+        text: "Antes cotizábamos a ojo y perdíamos dinero en muchos proyectos. No sabíamos cuánto costaba realmente hacer cada mueble. Con el sistema ahora calculamos los costos reales automáticamente y cotizamos con precisión. Nuestras ganancias aumentaron porque ya no perdemos dinero en proyectos mal cotizados.",
+        rating: 5
+      }
+    ]}
+  />
+
+  <!-- Sección de Cálculos Automáticos -->
+  <section class="calculations-section" style="padding: 4rem 2rem; background: white;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+      <h2 style="text-align: center; font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; color: #0f172a;">🧮 Cálculos Automáticos</h2>
+      <p style="text-align: center; font-size: 1.25rem; color: #64748b; margin-bottom: 3rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+        El sistema hace automáticamente todos los cálculos complicados
+      </p>
+      <div style="background: #f8fafc; border-radius: 16px; padding: 2rem; border-left: 4px solid #3b82f6;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+          <div>
+            <p style="font-weight: 700; color: #3b82f6; margin-bottom: 0.5rem;">✓ Multiplicación de materiales</p>
+            <p style="color: #64748b; font-size: 0.9375rem;">10 tablas × $5,000 = $50,000</p>
+          </div>
+          <div>
+            <p style="font-weight: 700; color: #3b82f6; margin-bottom: 0.5rem;">✓ Suma de múltiples materiales</p>
+            <p style="color: #64748b; font-size: 0.9375rem;">15 materiales diferentes sumados</p>
+          </div>
+          <div>
+            <p style="font-weight: 700; color: #3b82f6; margin-bottom: 0.5rem;">✓ Cálculo de servicios</p>
+            <p style="color: #64748b; font-size: 0.9375rem;">8 horas × $25,000 = $200,000</p>
+          </div>
+          <div>
+            <p style="font-weight: 700; color: #3b82f6; margin-bottom: 0.5rem;">✓ Cálculo de IVA</p>
+            <p style="color: #64748b; font-size: 0.9375rem;">Subtotal × 19% automático</p>
+          </div>
+          <div>
+            <p style="font-weight: 700; color: #3b82f6; margin-bottom: 0.5rem;">✓ Margen de ganancia</p>
+            <p style="color: #64748b; font-size: 0.9375rem;">Subtotal × 30% automático</p>
+          </div>
+          <div>
+            <p style="font-weight: 700; color: #3b82f6; margin-bottom: 0.5rem;">✓ Total final</p>
+            <p style="color: #64748b; font-size: 0.9375rem;">Subtotal + Margen + IVA</p>
+          </div>
+        </div>
+        <p style="color: #3b82f6; font-weight: 700; margin-top: 1.5rem; text-align: center; font-size: 1.125rem;">Tú solo ingresas las cantidades, la app hace todo lo demás</p>
+      </div>
+    </div>
+  </section>
+
   <SolutionCTA
     title="¿Listo para cotizar con precisión?"
-    description="Agenda una demo y descubre cómo este sistema puede aumentar tus ganancias"
+    description="Inversión única de $160 USD. Sin mensualidades. Se recupera en menos de 2 semanas. Agenda una demo y descubre cómo este sistema puede aumentar tus ganancias."
     primaryCta={{
       text: "Agendar llamada estratégica",
       link: "/contacto?solucion=cotizador-fabrica"

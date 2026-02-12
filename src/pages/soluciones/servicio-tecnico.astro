@@ -5,21 +5,50 @@ import ProblemCards from '../../components/ProblemCards.astro';
 import FeatureGrid from '../../components/FeatureGrid.astro';
 import ProcessTimeline from '../../components/ProcessTimeline.astro';
 import RelatedProjects from '../../components/RelatedProjects.astro';
+import TestimonialsSection from '../../components/TestimonialsSection.astro';
 import SolutionCTA from '../../components/SolutionCTA.astro';
 ---
 
 <Layout 
   title="Sistema para Servicio Técnico | Gestión de Reparaciones | Maestro Digital"
-  description="Sistema completo para servicios técnicos: órdenes de servicio, inventario, clientes y pagos. Organiza tu negocio y aumenta tu productividad."
+  description="Sistema completo para servicios técnicos: órdenes de servicio, inventario, clientes y pagos. Organiza tu negocio y aumenta tu productividad. Precio: $160 USD."
   image="/images/sistemas/idocstore-hero.png"
 >
   <SolutionHero
     title="Sistema completo para servicios técnicos que quieren organizarse"
-    subtitle="Gestiona reparaciones, inventario, clientes y pagos desde un solo sistema. Deja de perder órdenes y aumenta tu productividad."
+    subtitle="Gestiona reparaciones, inventario, clientes y pagos desde un solo sistema. Deja de perder órdenes y aumenta tu productividad. Inversión: $160 USD - Se recupera en semanas."
     image="/images/sistemas/idocstore-hero.png"
+    image2="/images/sistemas/idocstore1.png"
     ctaText="Ver cómo funciona"
     ctaLink="#caracteristicas"
   />
+
+  <!-- Sección de Precio Destacada -->
+  <section class="pricing-highlight" style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); padding: 4rem 2rem; text-align: center; color: white;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+      <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 24px; padding: 3rem; border: 2px solid rgba(255, 255, 255, 0.2);">
+        <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">Inversión: $160 USD</h2>
+        <p style="font-size: 1.25rem; margin-bottom: 2rem; opacity: 0.9;">Una sola vez. Sin mensualidades. Sin costos ocultos.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem;">
+          <div style="background: rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">⏱️</div>
+            <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">1-2 horas/día</div>
+            <div style="opacity: 0.9;">Ahorro de tiempo diario</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">💰</div>
+            <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">2 semanas</div>
+            <div style="opacity: 0.9;">Recuperación de inversión</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">✅</div>
+            <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">100%</div>
+            <div style="opacity: 0.9;">Digital y organizado</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <ProblemCards
     problems={[
@@ -46,37 +75,114 @@ import SolutionCTA from '../../components/SolutionCTA.astro';
     ]}
   />
 
+  <!-- Sección de Ahorro de Tiempo -->
+  <section class="time-savings" style="padding: 4rem 2rem; background: #f8fafc;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+      <h2 style="text-align: center; font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; color: #0f172a;">💰 Ahorro de Tiempo y Dinero</h2>
+      <p style="text-align: center; font-size: 1.25rem; color: #64748b; margin-bottom: 3rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+        El sistema te ahorra entre 1-2 horas diarias que puedes usar para atender más clientes
+      </p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">📝</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a;">Crear una orden</h3>
+          <p style="color: #64748b; margin-bottom: 1rem;"><strong>Antes:</strong> 10-15 minutos</p>
+          <p style="color: #64748b; margin-bottom: 1rem;"><strong>Ahora:</strong> 3-5 minutos</p>
+          <p style="color: #3b82f6; font-weight: 700; font-size: 1.125rem;">Ahorro: 7-10 minutos por orden</p>
+        </div>
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🔍</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a;">Buscar orden antigua</h3>
+          <p style="color: #64748b; margin-bottom: 1rem;"><strong>Antes:</strong> 5-10 minutos</p>
+          <p style="color: #64748b; margin-bottom: 1rem;"><strong>Ahora:</strong> 10 segundos</p>
+          <p style="color: #3b82f6; font-weight: 700; font-size: 1.125rem;">Ahorro: 5-10 minutos por búsqueda</p>
+        </div>
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🧮</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a;">Calcular totales</h3>
+          <p style="color: #64748b; margin-bottom: 1rem;"><strong>Antes:</strong> 2-3 minutos</p>
+          <p style="color: #64748b; margin-bottom: 1rem;"><strong>Ahora:</strong> Automático</p>
+          <p style="color: #3b82f6; font-weight: 700; font-size: 1.125rem;">Ahorro: 2-3 minutos por orden</p>
+        </div>
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">📄</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a;">Generar documento</h3>
+          <p style="color: #64748b; margin-bottom: 1rem;"><strong>Antes:</strong> 5-10 minutos</p>
+          <p style="color: #64748b; margin-bottom: 1rem;"><strong>Ahora:</strong> 30 segundos</p>
+          <p style="color: #3b82f6; font-weight: 700; font-size: 1.125rem;">Ahorro: 5-10 minutos por orden</p>
+        </div>
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">📊</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a;">Ver estadísticas</h3>
+          <p style="color: #64748b; margin-bottom: 1rem;"><strong>Antes:</strong> 30-60 minutos</p>
+          <p style="color: #64748b; margin-bottom: 1rem;"><strong>Ahora:</strong> Instantáneo</p>
+          <p style="color: #3b82f6; font-weight: 700; font-size: 1.125rem;">Ahorro: 30-60 minutos por semana</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <FeatureGrid
     features={[
       {
-        title: "Órdenes de servicio digitales",
-        description: "Crea órdenes de servicio desde tu celular. Registra el problema, toma fotos, establece precio y tiempo estimado. Todo organizado.",
-        image: "/images/sistemas/idocstore1-7.png"
-      },
-      {
-        title: "Control de inventario",
-        description: "Sabe qué repuestos tienes, cuántos y dónde están. Recibe alertas cuando se acaban y controla tus compras.",
-        icon: "📦"
-      },
-      {
-        title: "Seguimiento de reparaciones",
-        description: "Marca el estado de cada reparación: recibido, en diagnóstico, en reparación, listo, entregado. Los clientes pueden ver el progreso.",
+        title: "Dashboard en Tiempo Real",
+        description: "Ves un resumen completo de tu negocio al instante: ventas del día, ventas del mes, equipos en reparación, equipos listos para entregar y equipos en garantía. Todo actualizado automáticamente.",
         icon: "📊"
       },
       {
-        title: "Gestión de clientes",
-        description: "Historial completo de cada cliente: qué equipos ha traído, qué reparaciones se hicieron, garantías y pagos pendientes.",
+        title: "Órdenes de servicio digitales",
+        description: "Crea órdenes de servicio desde tu celular en 3-5 minutos. Autocompletado inteligente de dispositivos (iPhone, iPad, MacBook, Apple Watch), checklist automático según el dispositivo, y cálculo automático de precios.",
+        image: "/images/sistemas/idocstore1-7.png"
+      },
+      {
+        title: "Múltiples Equipos en una Orden",
+        description: "Funcionalidad única: puedes agregar múltiples dispositivos a la misma orden. Un cliente puede traer iPhone, iPad y Apple Watch, todo en una sola orden con un solo total.",
+        icon: "📱"
+      },
+      {
+        title: "Búsqueda Instantánea",
+        description: "Encuentra cualquier orden en 10 segundos. Filtros por estado, fecha, cliente o búsqueda rápida por número de orden. No más buscar en papeles o cuadernos.",
+        icon: "🔍"
+      },
+      {
+        title: "Gestión de Clientes con Historial",
+        description: "Historial completo de cada cliente: todas sus órdenes anteriores, dispositivos reparados, montos pagados y estados. Búsqueda inteligente por nombre.",
         icon: "👥"
       },
       {
-        title: "Control de pagos",
-        description: "Registra pagos, cobros pendientes y genera reportes de ingresos. Sabe cuánto ganaste y qué servicios son más rentables.",
-        icon: "💳"
+        title: "PDFs Profesionales Automáticos",
+        description: "Genera PDFs profesionales en 30 segundos con logo de tu empresa, datos del cliente, checklist completo, servicios con precios, totales calculados, código QR para seguimiento y dos copias (cliente y sucursal).",
+        icon: "📄"
       },
       {
-        title: "Reportes y estadísticas",
-        description: "Ve cuántas reparaciones hiciste, cuánto ganaste, qué servicios son más solicitados y cómo mejorar tu negocio.",
-        icon: "📈"
+        title: "Gestión de Sucursales",
+        description: "Administra múltiples sucursales desde un solo lugar. Cada sucursal puede tener su logo, datos fiscales y usuarios asignados. Filtra órdenes y estadísticas por sucursal.",
+        icon: "🏢"
+      },
+      {
+        title: "Usuarios y Permisos",
+        description: "Control de acceso completo: Administrador, Encargado, Técnico, Recepcionista y Responsable. Cada usuario ve solo lo que tiene permiso. Seguridad y privacidad garantizadas.",
+        icon: "🔐"
+      },
+      {
+        title: "Comunicación por WhatsApp",
+        description: "Envía diagnósticos a clientes por WhatsApp con un click. Mensaje pre-formateado con número de orden, dispositivo, diagnóstico y precio estimado.",
+        icon: "💬"
+      },
+      {
+        title: "Cálculos Automáticos Sin Errores",
+        description: "El sistema calcula automáticamente: precio por servicio, suma de múltiples servicios, costo de repuesto, mano de obra, total general y descuentos. Cero errores de cálculo.",
+        icon: "🧮"
+      },
+      {
+        title: "Estados y Prioridades Visuales",
+        description: "Estados con colores: En Proceso, Por Entregar, Entregada, Rechazada, Sin Solución, Garantía. Prioridades: Baja (verde), Media (amarillo), Urgente (rojo). Organización visual instantánea.",
+        icon: "🎯"
+      },
+      {
+        title: "Notas y Seguimiento",
+        description: "Agrega notas a órdenes en cualquier momento. Historial completo de notas ordenadas por fecha. Útil para recordatorios, observaciones y comunicación interna.",
+        icon: "📝"
       }
     ]}
   />
@@ -86,46 +192,203 @@ import SolutionCTA from '../../components/SolutionCTA.astro';
       {
         number: 1,
         title: "Cliente trae su equipo",
-        description: "Registras el equipo, el problema y tomas fotos. El sistema crea una orden de servicio con precio y tiempo estimado.",
+        description: "Seleccionas o creas el cliente (30 segundos). Seleccionas el dispositivo con autocompletado inteligente. El sistema muestra checklist automático según el dispositivo (iPhone, iPad, MacBook, Apple Watch). Registras número de serie, código de desbloqueo y descripción del problema.",
         image: "/images/sistemas/idocstore1-7.png"
       },
       {
         number: 2,
-        title: "Diagnóstico y reparación",
-        description: "Marcas el estado de la reparación. El sistema te muestra qué repuestos necesitas y si los tienes en stock.",
+        title: "Agregar servicios y calcular precios",
+        description: "Seleccionas servicios predefinidos o creas nuevos. Agregas costo de repuesto (opcional). El sistema calcula automáticamente: mano de obra + repuesto = total. Puedes agregar múltiples equipos a la misma orden. Todo se suma automáticamente.",
         image: "/images/sistemas/idocstorepc1-2.PNG"
       },
       {
         number: 3,
-        title: "Cliente consulta el estado",
-        description: "El cliente puede ver en tiempo real el estado de su reparación sin necesidad de llamar.",
-        icon: "📱"
+        title: "Generar PDF y enviar diagnóstico",
+        description: "Generas PDF profesional en 30 segundos con todos los detalles. Incluye logo, datos del cliente, checklist, servicios, precios y código QR. Puedes enviar diagnóstico por WhatsApp con un click.",
+        icon: "📄"
       },
       {
         number: 4,
-        title: "Cobro y entrega",
-        description: "Registras el pago, generas la boleta y entregas el equipo. El sistema actualiza automáticamente tus reportes.",
+        title: "Seguimiento y entrega",
+        description: "Marcas el estado de la reparación (En Proceso, Por Entregar, Entregada). El cliente puede consultar el estado online con el código QR. Registras el pago y el sistema actualiza automáticamente tus reportes y estadísticas.",
         icon: "✅"
       }
     ]}
   />
+
+  <!-- Sección de Funcionalidades Detalladas -->
+  <section class="detailed-features" style="padding: 4rem 2rem; background: white;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+      <h2 style="text-align: center; font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; color: #0f172a;">🚀 Funcionalidades Principales</h2>
+      <p style="text-align: center; font-size: 1.25rem; color: #64748b; margin-bottom: 3rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+        Todo lo que necesitas para gestionar tu servicio técnico de forma profesional
+      </p>
+      
+      <div style="display: grid; gap: 2rem;">
+        <div style="background: #f8fafc; border-radius: 16px; padding: 2rem; border-left: 4px solid #3b82f6;">
+          <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: #0f172a;">📋 Crear Órdenes de Trabajo (El Corazón del Sistema)</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+            <div>
+              <p style="font-weight: 700; color: #3b82f6; margin-bottom: 0.5rem;">Paso 1: Cliente</p>
+              <p style="color: #64748b;">Búsqueda inteligente, crear nuevo en 30 segundos, historial automático</p>
+            </div>
+            <div>
+              <p style="font-weight: 700; color: #3b82f6; margin-bottom: 0.5rem;">Paso 2: Dispositivo</p>
+              <p style="color: #64748b;">Autocompletado inteligente para iPhone, iPad, MacBook, Apple Watch</p>
+            </div>
+            <div>
+              <p style="font-weight: 700; color: #3b82f6; margin-bottom: 0.5rem;">Paso 3: Checklist</p>
+              <p style="color: #64748b;">Automático según el dispositivo (cámaras, sensores, botones, etc.)</p>
+            </div>
+            <div>
+              <p style="font-weight: 700; color: #3b82f6; margin-bottom: 0.5rem;">Paso 4: Servicios</p>
+              <p style="color: #64748b;">Selección de servicios predefinidos, cálculo automático de precios</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: #f8fafc; border-radius: 16px; padding: 2rem; border-left: 4px solid #10b981;">
+          <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: #0f172a;">💵 Cálculo Automático de Precios</h3>
+          <p style="color: #64748b; margin-bottom: 1rem;">El sistema calcula automáticamente sin errores:</p>
+          <ul style="list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <li style="display: flex; align-items: start; gap: 0.5rem;">
+              <span style="color: #10b981; font-weight: 700;">✓</span>
+              <span style="color: #64748b;">Precio por servicio</span>
+            </li>
+            <li style="display: flex; align-items: start; gap: 0.5rem;">
+              <span style="color: #10b981; font-weight: 700;">✓</span>
+              <span style="color: #64748b;">Suma de múltiples servicios</span>
+            </li>
+            <li style="display: flex; align-items: start; gap: 0.5rem;">
+              <span style="color: #10b981; font-weight: 700;">✓</span>
+              <span style="color: #64748b;">Costo de repuesto</span>
+            </li>
+            <li style="display: flex; align-items: start; gap: 0.5rem;">
+              <span style="color: #10b981; font-weight: 700;">✓</span>
+              <span style="color: #64748b;">Mano de obra</span>
+            </li>
+            <li style="display: flex; align-items: start; gap: 0.5rem;">
+              <span style="color: #10b981; font-weight: 700;">✓</span>
+              <span style="color: #64748b;">Total general</span>
+            </li>
+            <li style="display: flex; align-items: start; gap: 0.5rem;">
+              <span style="color: #10b981; font-weight: 700;">✓</span>
+              <span style="color: #64748b;">Descuentos</span>
+            </li>
+          </ul>
+        </div>
+
+        <div style="background: #f8fafc; border-radius: 16px; padding: 2rem; border-left: 4px solid #8b5cf6;">
+          <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: #0f172a;">📄 PDFs Profesionales Automáticos</h3>
+          <p style="color: #64748b; margin-bottom: 1rem;">Cada PDF incluye:</p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+            <div>
+              <p style="color: #64748b;">✓ Logo de tu empresa</p>
+              <p style="color: #64748b;">✓ Datos del cliente</p>
+              <p style="color: #64748b;">✓ Número de orden único</p>
+            </div>
+            <div>
+              <p style="color: #64748b;">✓ Checklist completo</p>
+              <p style="color: #64748b;">✓ Servicios con precios</p>
+              <p style="color: #64748b;">✓ Totales calculados</p>
+            </div>
+            <div>
+              <p style="color: #64748b;">✓ Código QR para seguimiento</p>
+              <p style="color: #64748b;">✓ Políticas de garantía</p>
+              <p style="color: #64748b;">✓ Dos copias (cliente/sucursal)</p>
+            </div>
+          </div>
+          <p style="color: #8b5cf6; font-weight: 700; margin-top: 1rem;">Ahorro: 10-15 minutos → 30 segundos</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <RelatedProjects
     projects={[
       {
         title: "IDoc Store",
         image: "/images/sistemas/idocstore-hero.png",
-        problem: "Servicio técnico con órdenes en papel y sin control de inventario",
-        solution: "Sistema completo con órdenes digitales, inventario y gestión de clientes",
-        result: "Organización total y aumento de productividad",
+        problem: "Servicio técnico con órdenes en papel, sin control de inventario y pérdida de información de clientes",
+        solution: "Sistema de gestión de órdenes de clientes + Sistema de gestión de pagos y comisiones para empleados",
+        result: "Organización total, aumento de productividad y control completo de pagos y comisiones",
         link: "/projects/sistema-reparaciones"
       }
     ]}
   />
 
+  <TestimonialsSection
+    testimonials={[
+      {
+        name: "Carlos Mendoza",
+        role: "Gerente General",
+        company: "IDoc Store",
+        text: "Antes teníamos todo en papel y cuadernos. Perdíamos órdenes, no sabíamos qué repuestos teníamos y calcular las comisiones de los técnicos era un dolor de cabeza. Con el sistema ahora todo está organizado, encontramos cualquier orden en segundos y el sistema calcula automáticamente los pagos y comisiones. La productividad aumentó significativamente.",
+        rating: 5
+      }
+    ]}
+  />
+
+  <!-- Sección de Transformación y Valor -->
+  <section class="transformation-section" style="padding: 4rem 2rem; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">🚀 Transformación que Genera Valor</h2>
+        <p style="font-size: 1.25rem; opacity: 0.9; max-width: 800px; margin: 0 auto;">
+          No solo es un sistema, es una transformación completa de tu negocio
+        </p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+        <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 2rem; border: 2px solid rgba(255, 255, 255, 0.2); transition: transform 0.3s ease;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">⏱️</div>
+          <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Ahorro de Tiempo</h3>
+          <p style="opacity: 0.9; margin-bottom: 1rem; font-size: 1rem;">1-2 horas diarias ahorradas</p>
+          <p style="font-size: 1.5rem; font-weight: 700; color: #60a5fa;">30-60 horas/mes</p>
+          <p style="opacity: 0.8; font-size: 0.875rem; margin-top: 0.5rem;">Tiempo que puedes usar para atender más clientes</p>
+        </div>
+        <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 2rem; border: 2px solid rgba(255, 255, 255, 0.2); transition: transform 0.3s ease;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">💰</div>
+          <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Valor Monetario</h3>
+          <p style="opacity: 0.9; margin-bottom: 1rem; font-size: 1rem;">Si tu hora vale $10 USD</p>
+          <p style="font-size: 1.5rem; font-weight: 700; color: #60a5fa;">$300-600 USD/mes</p>
+          <p style="opacity: 0.8; font-size: 0.875rem; margin-top: 0.5rem;">Ahorro mensual en tiempo</p>
+        </div>
+        <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.3) 100%); backdrop-filter: blur(10px); border-radius: 20px; padding: 2rem; border: 2px solid rgba(59, 130, 246, 0.5); transition: transform 0.3s ease;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">📈</div>
+          <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Retorno de Inversión</h3>
+          <p style="opacity: 0.9; margin-bottom: 1rem; font-size: 1rem;">Inversión única: $160 USD</p>
+          <p style="font-size: 1.5rem; font-weight: 700; color: #93c5fd;">Recuperación en 13 días</p>
+          <p style="opacity: 0.9; font-size: 0.875rem; margin-top: 0.5rem;">ROI del 2300% en el primer año</p>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+        <div style="background: rgba(16, 185, 129, 0.15); border-radius: 16px; padding: 1.5rem; border: 2px solid rgba(16, 185, 129, 0.3);">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">✅</div>
+          <p style="font-weight: 700; margin-bottom: 0.5rem;">Más Profesionalismo</p>
+          <p style="opacity: 0.9; font-size: 0.9375rem;">PDFs profesionales, organización total, cero errores</p>
+        </div>
+        <div style="background: rgba(59, 130, 246, 0.15); border-radius: 16px; padding: 1.5rem; border: 2px solid rgba(59, 130, 246, 0.3);">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+          <p style="font-weight: 700; margin-bottom: 0.5rem;">Control Total</p>
+          <p style="opacity: 0.9; font-size: 0.9375rem;">Reportes en tiempo real, estadísticas y análisis</p>
+        </div>
+        <div style="background: rgba(139, 92, 246, 0.15); border-radius: 16px; padding: 1.5rem; border: 2px solid rgba(139, 92, 246, 0.3);">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🚀</div>
+          <p style="font-weight: 700; margin-bottom: 0.5rem;">Más Crecimiento</p>
+          <p style="opacity: 0.9; font-size: 0.9375rem;">Atiende más clientes, aumenta ingresos</p>
+        </div>
+        <div style="background: rgba(236, 72, 153, 0.15); border-radius: 16px; padding: 1.5rem; border: 2px solid rgba(236, 72, 153, 0.3);">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">😊</div>
+          <p style="font-weight: 700; margin-bottom: 0.5rem;">Menos Estrés</p>
+          <p style="opacity: 0.9; font-size: 0.9375rem;">Todo organizado, sin pérdida de información</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <SolutionCTA
     title="¿Listo para organizar tu servicio técnico?"
-    description="Agenda una demo y descubre cómo este sistema puede transformar tu negocio"
+    description="Inversión única de $160 USD. Sin mensualidades. Se recupera en menos de 2 semanas. Agenda una demo y descubre cómo este sistema puede transformar tu negocio."
     primaryCta={{
       text: "Agendar llamada estratégica",
       link: "/contacto?solucion=servicio-tecnico"

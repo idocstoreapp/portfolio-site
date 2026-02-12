@@ -7,6 +7,7 @@ import { getDiagnosticResult } from '../../utils/backendClient';
 import CostSummarySection from '../../components/diagnostic/CostSummarySection.astro';
 import CurrentSituationSection from '../../components/diagnostic/CurrentSituationSection.astro';
 import OpportunitiesSection from '../../components/diagnostic/OpportunitiesSection.astro';
+import DiagnosticResultClient from '../../components/DiagnosticResultClient';
 import { 
   getCurrentSituationImageUrl, 
   getOpportunityImageUrl, 
@@ -17,6 +18,7 @@ import {
   getInsightImageUrl
 } from '../../utils/getResultImageUrl';
 import type { BusinessSector } from '../../utils/conversationalDiagnostic';
+import { getServiceById, getRecommendedServicesForSector, getServicePageForExtendedType, type Service } from '../../utils/services';
 
 interface Props {
   id: string;
@@ -38,13 +40,22 @@ try {
 
   console.log('🔍 Loading diagnostic with ID:', id);
   
-  // Obtener el resultado procesado del backend
-  const response = await getDiagnosticResult(id);
-  console.log('📥 Response from getDiagnosticResult:', response);
-  console.log('📥 Response.data keys:', response.data ? Object.keys(response.data) : 'NO DATA');
-  
-  if (response.success && response.data) {
-    diagnosticResult = response.data;
+  // Si el ID comienza con "local-", marcar para cargar desde localStorage en el cliente
+  // El servidor no puede leer sessionStorage, así que siempre marcamos para carga en cliente
+  if (id.startsWith('local-')) {
+    console.log('📦 [RESULT PAGE] Will load from localStorage in client');
+    // En el cliente, leer desde localStorage
+    // Por ahora, marcar que debe leerse en el cliente
+    diagnosticResult = { _loadFromLocalStorage: true, _id: id };
+  } else {
+    // Intentar obtener el resultado procesado del backend
+    try {
+      const response = await getDiagnosticResult(id);
+      console.log('📥 Response from getDiagnosticResult:', response);
+      console.log('📥 Response.data keys:', response.data ? Object.keys(response.data) : 'NO DATA');
+      
+      if (response.success && response.data) {
+        diagnosticResult = response.data;
     console.log('✅ Diagnostic result loaded:', diagnosticResult);
     console.log('✅ Diagnostic result keys:', Object.keys(diagnosticResult));
     console.log('✅ Diagnostic result type:', diagnosticResult.type);
@@ -138,9 +149,35 @@ try {
       // Agregar el imageUrl calculado al objeto summary
       diagnosticResult.summary.imageUrl = summaryImageUrl;
     }
-  } else {
-    console.error('❌ Response not successful:', response);
-    throw new Error(response.error || 'No se pudo obtener el resultado del diagnóstico');
+      } else {
+        console.error('❌ Response not successful:', response);
+        // Si falla el backend, intentar localStorage como fallback
+        diagnosticResult = { _loadFromLocalStorage: true, _id: id };
+      }
+    } catch (backendError: any) {
+      console.warn('⚠️ [RESULT PAGE] Backend not available, trying localStorage:', backendError);
+      // Si el backend no está disponible, intentar localStorage
+      diagnosticResult = { _loadFromLocalStorage: true, _id: id };
+    }
+  }
+  
+  // Asegurar que diagnosticResult tenga nextSteps y urgency si existe y no es placeholder
+  if (diagnosticResult && !diagnosticResult._loadFromLocalStorage) {
+    if (!diagnosticResult.nextSteps) {
+      diagnosticResult.nextSteps = {
+        primary: {
+          text: 'Solicitar consulta personalizada',
+          link: '/contacto'
+        },
+        secondary: {
+          text: 'Ver todos los servicios',
+          link: '/servicios'
+        }
+      };
+    }
+    if (!diagnosticResult.urgency) {
+      diagnosticResult.urgency = 'medium';
+    }
   }
 } catch (e: any) {
   error = e.message || 'Error desconocido';
@@ -176,6 +213,16 @@ try {
     <section class="diagnostic-result">
       <div class="result-container">
         {(() => {
+          // Si necesita cargar desde localStorage, usar el componente React del cliente
+          if (diagnosticResult._loadFromLocalStorage) {
+            return (
+              <DiagnosticResultClient 
+                client:only="react" 
+                diagnosticId={diagnosticResult._id || id} 
+              />
+            );
+          }
+          
           // Detectar si es un diagnóstico conversacional
           const isConversational = diagnosticResult.type === 'conversational' ||
                                   diagnosticResult.summary !== undefined ||
@@ -195,6 +242,215 @@ try {
                   <h1 class="result-title">{diagnosticResult.personalizedMessage?.greeting || 'Hola'}</h1>
                   <p class="result-subtitle">{diagnosticResult.personalizedMessage?.context || 'He analizado tu negocio'}</p>
                 </div>
+
+                {/* Servicios Seleccionados - Nueva Sección */}
+                {(() => {
+                  const extendedType = diagnosticResult.extendedType;
+                  const servicePage = diagnosticResult.servicePage;
+                  const selectedServicesIds = diagnosticResult.selectedServices || diagnosticData?.selectedServices || [];
+                  
+                  // Obtener servicios seleccionados o recomendados
+                  let selectedServicesList: Service[] = selectedServicesIds
+                    .map((id: string) => getServiceById(id))
+                    .filter((s: Service | undefined): s is Service => s !== undefined);
+                  
+                  // Si no hay servicios seleccionados, usar recomendados
+                  if (selectedServicesList.length === 0) {
+                    selectedServicesList = getRecommendedServicesForSector(diagnosticResult.sector || 'restaurante', extendedType);
+                  }
+                  
+                  // Agregar información de página específica
+                  const servicesWithPages = selectedServicesList.map(service => {
+                    const specificPage = servicePage || getServicePageForExtendedType(extendedType);
+                    return {
+                      ...service,
+                      servicePage: specificPage || `/contacto?service=${service.id}`
+                    };
+                  });
+                  
+                  if (servicesWithPages.length > 0) {
+                    return (
+                      <div class="selected-services-section-modern" style="margin: 4rem 0;">
+                        <div style="text-align: center; margin-bottom: 3rem;">
+                          <h2 style="font-size: 2.5rem; font-weight: 700; color: #0f172a; margin-bottom: 1rem;">
+                            Servicios Recomendados para Ti
+                          </h2>
+                          <p style="font-size: 1.25rem; color: #64748b; max-width: 700px; margin: 0 auto; line-height: 1.6;">
+                            Basado en tu diagnóstico, estos son los servicios que mejor se adaptan a las necesidades de tu negocio
+                          </p>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; max-width: 1400px; margin: 0 auto;">
+                          {servicesWithPages.map((service: Service & { servicePage?: string }) => (
+                            <div 
+                              class="service-card-result-enhanced"
+                              style={`
+                                background: ${service.popular ? 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)' : '#ffffff'};
+                                border: ${service.popular ? '3px solid #3b82f6' : '2px solid #e2e8f0'};
+                                border-radius: 24px;
+                                padding: 2rem;
+                                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                                position: relative;
+                                box-shadow: ${service.popular ? '0 12px 40px rgba(59, 130, 246, 0.2)' : '0 4px 20px rgba(0, 0, 0, 0.08)'};
+                                overflow: hidden;
+                              `}
+                              onmouseenter="this.style.transform = 'translateY(-8px) scale(1.02)'; this.style.boxShadow = '0 20px 60px rgba(59, 130, 246, 0.3)'; this.style.borderColor = '#3b82f6';"
+                              onmouseleave={`this.style.transform = 'translateY(0) scale(1)'; const isPopular = ${service.popular}; this.style.boxShadow = isPopular ? '0 12px 40px rgba(59, 130, 246, 0.2)' : '0 4px 20px rgba(0, 0, 0, 0.08)'; this.style.borderColor = isPopular ? '#3b82f6' : '#e2e8f0';`}
+                            >
+                              {service.popular && (
+                                <span style="
+                                  position: absolute;
+                                  top: 1.5rem;
+                                  right: 1.5rem;
+                                  background: linear-gradient(135deg, #00C2FF 0%, #7C4DFF 100%);
+                                  color: #ffffff;
+                                  padding: 0.5rem 1.25rem;
+                                  border-radius: 999px;
+                                  font-size: 0.875rem;
+                                  font-weight: 700;
+                                  box-shadow: 0 4px 16px rgba(0, 194, 255, 0.4);
+                                  z-index: 10;
+                                ">
+                                  ⭐ Más Popular
+                                </span>
+                              )}
+
+                              <!-- Icono grande y destacado -->
+                              <div style="display: flex; justify-content: center; margin-bottom: 1.5rem;">
+                                <div style="
+                                  width: 80px;
+                                  height: 80px;
+                                  border-radius: 20px;
+                                  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+                                  display: flex;
+                                  align-items: center;
+                                  justify-content: center;
+                                  font-size: 2.5rem;
+                                  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+                                ">
+                                  {service.icon || '⚙️'}
+                                </div>
+                              </div>
+                              
+                              <h3 style="
+                                font-size: 1.5rem;
+                                font-weight: 700;
+                                color: #0f172a;
+                                margin-bottom: 1rem;
+                                margin-top: 0;
+                                line-height: 1.3;
+                                text-align: center;
+                              ">
+                                {service.name}
+                              </h3>
+                              
+                              <p style="
+                                font-size: 1rem;
+                                color: #64748b;
+                                line-height: 1.7;
+                                margin-bottom: 1.5rem;
+                                text-align: center;
+                              ">
+                                {service.description}
+                              </p>
+                              
+                              {service.features && service.features.length > 0 && (
+                                <div style="
+                                  background: #f8fafc;
+                                  border-radius: 16px;
+                                  padding: 1.5rem;
+                                  margin-bottom: 1.5rem;
+                                ">
+                                  <ul style="
+                                    list-style: none;
+                                    padding: 0;
+                                    margin: 0;
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 0.75rem;
+                                  ">
+                                    {service.features.slice(0, 4).map((feature) => (
+                                      <li style="
+                                        display: flex;
+                                        align-items: start;
+                                        gap: 0.75rem;
+                                        font-size: 0.9375rem;
+                                        color: #475569;
+                                        line-height: 1.6;
+                                      ">
+                                        <span style="color: #3b82f6; flex-shrink: 0; font-size: 1.125rem; font-weight: 700; margin-top: 0.125rem;">✓</span>
+                                        <span style="flex: 1;">{feature}</span>
+                                      </li>
+                                    ))}
+                                    {service.features.length > 4 && (
+                                      <li style="
+                                        font-size: 0.875rem;
+                                        color: #94a3b8;
+                                        font-weight: 600;
+                                        margin-top: 0.5rem;
+                                        text-align: center;
+                                      ">
+                                        +{service.features.length - 4} características adicionales
+                                      </li>
+                                    )}
+                                  </ul>
+                                </div>
+                              )}
+                              
+                              {service.includesHardware && (
+                                <div style="
+                                  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.1) 100%);
+                                  border: 2px solid rgba(59, 130, 246, 0.3);
+                                  border-radius: 12px;
+                                  padding: 1rem;
+                                  margin-bottom: 1.5rem;
+                                  text-align: center;
+                                ">
+                                  <p style="
+                                    font-size: 0.9375rem;
+                                    font-weight: 700;
+                                    color: #3b82f6;
+                                    margin: 0;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    gap: 0.5rem;
+                                  ">
+                                    <span style="font-size: 1.25rem;">📦</span>
+                                    <span>Incluye hardware completo</span>
+                                  </p>
+                                </div>
+                              )}
+                              
+                              <a 
+                                href={service.servicePage || `/contacto?service=${service.id}`}
+                                style={`
+                                  display: block;
+                                  width: 100%;
+                                  text-align: center;
+                                  padding: 1rem 2rem;
+                                  background: ${service.popular ? 'linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)' : '#0f172a'};
+                                  color: #ffffff;
+                                  text-decoration: none;
+                                  border-radius: 12px;
+                                  font-weight: 700;
+                                  font-size: 1rem;
+                                  transition: all 0.3s ease;
+                                  box-shadow: ${service.popular ? '0 4px 16px rgba(59, 130, 246, 0.4)' : '0 4px 12px rgba(15, 23, 42, 0.2)'};
+                                `}
+                                onmouseenter={`this.style.transform = 'translateY(-2px)'; const isPopular = ${service.popular}; this.style.boxShadow = isPopular ? '0 8px 24px rgba(59, 130, 246, 0.5)' : '0 8px 20px rgba(15, 23, 42, 0.3)';`}
+                                onmouseleave={`this.style.transform = 'translateY(0)'; const isPopular = ${service.popular}; this.style.boxShadow = isPopular ? '0 4px 16px rgba(59, 130, 246, 0.4)' : '0 4px 12px rgba(15, 23, 42, 0.2)';`}
+                              >
+                                {service.servicePage ? 'Ver solución completa →' : `Solicitar ${service.name.split('(')[0].trim()}`}
+                              </a>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
 
                 {/* Situación Actual - Rediseñada */}
                 {diagnosticResult.currentSituation && (
@@ -590,19 +846,22 @@ try {
         })()}
 
         {/* Módulos Recomendados (solo para envelope mejorado) */}
-        {diagnosticResult.resultProfile?.recommendedModules && (
-          <div class="modules-section">
-            <h3 class="modules-title">Módulos Recomendados</h3>
-            <p class="modules-subtitle">Estos módulos están incluidos en la solución recomendada</p>
-            <div class="modules-grid">
-              {diagnosticResult.resultProfile.recommendedModules.map((module: string) => (
-                <div class="module-card">
-                  <span class="module-name">{module.replace(/-/g, ' ')}</span>
-                </div>
-              ))}
+        {(() => {
+          const recommendedModules = diagnosticResult.resultProfile?.recommendedModules;
+          return recommendedModules && recommendedModules.length > 0 && (
+            <div class="modules-section">
+              <h3 class="modules-title">Módulos Recomendados</h3>
+              <p class="modules-subtitle">Estos módulos están incluidos en la solución recomendada</p>
+              <div class="modules-grid">
+                {recommendedModules.map((module: string) => (
+                  <div class="module-card">
+                    <span class="module-name">{module.replace(/-/g, ' ')}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Soluciones Complementarias */}
         {(() => {
@@ -630,49 +889,76 @@ try {
         })()}
 
         <!-- Urgencia y CTA Final -->
-        <div class="result-cta-section">
-          <div class="urgency-indicator" data-urgency={diagnosticResult.urgency}>
-            {diagnosticResult.urgency === 'high' && (
-              <>
-                <span class="urgency-icon">⚡</span>
-                <span class="urgency-text">Tu negocio necesita esta solución ahora</span>
-              </>
+        {diagnosticResult.nextSteps && diagnosticResult.nextSteps.primary && (
+          <div class="result-cta-section">
+            {diagnosticResult.urgency && (
+              <div class="urgency-indicator" data-urgency={diagnosticResult.urgency}>
+                {diagnosticResult.urgency === 'high' && (
+                  <>
+                    <span class="urgency-icon">⚡</span>
+                    <span class="urgency-text">Tu negocio necesita esta solución ahora</span>
+                  </>
+                )}
+                {diagnosticResult.urgency === 'medium' && (
+                  <>
+                    <span class="urgency-icon">📈</span>
+                    <span class="urgency-text">Esta solución puede acelerar tu crecimiento</span>
+                  </>
+                )}
+                {diagnosticResult.urgency === 'low' && (
+                  <>
+                    <span class="urgency-icon">✨</span>
+                    <span class="urgency-text">Esta solución puede optimizar tu operación</span>
+                  </>
+                )}
+              </div>
             )}
-            {diagnosticResult.urgency === 'medium' && (
-              <>
-                <span class="urgency-icon">📈</span>
-                <span class="urgency-text">Esta solución puede acelerar tu crecimiento</span>
-              </>
-            )}
-            {diagnosticResult.urgency === 'low' && (
-              <>
-                <span class="urgency-icon">✨</span>
-                <span class="urgency-text">Esta solución puede optimizar tu operación</span>
-              </>
-            )}
-          </div>
-          
-          <div class="cta-group">
-            <a href={diagnosticResult.nextSteps.primary.link} class="btn-cta-primary">
-              {diagnosticResult.nextSteps.primary.text}
-            </a>
-            {diagnosticResult.nextSteps.secondary && (
-              <a href={diagnosticResult.nextSteps.secondary.link} class="btn-cta-secondary">
-                {diagnosticResult.nextSteps.secondary.text}
+            
+            <div class="cta-group">
+              <a href={diagnosticResult.nextSteps.primary.link || '/contacto'} class="btn-cta-primary">
+                {diagnosticResult.nextSteps.primary.text || 'Solicitar consulta'}
               </a>
-            )}
-            {(() => {
-              const contactParams = contactName || contactCompany 
-                ? `?name=${encodeURIComponent(contactName)}&company=${encodeURIComponent(contactCompany)}`
-                : '';
-              return (
-                <a href={`/contacto${contactParams}`} class="btn-cta-tertiary">
-                  {diagnosticResult.opportunity ? 'Solicitar validación operativa' : 'Hablar con un especialista'}
+              {diagnosticResult.nextSteps.secondary && (
+                <a href={diagnosticResult.nextSteps.secondary.link || '/servicios'} class="btn-cta-secondary">
+                  {diagnosticResult.nextSteps.secondary.text || 'Ver servicios'}
                 </a>
-              );
-            })()}
+              )}
+              {(() => {
+                const contactParams = contactName || contactCompany 
+                  ? `?name=${encodeURIComponent(contactName)}&company=${encodeURIComponent(contactCompany)}`
+                  : '';
+                return (
+                  <a href={`/contacto${contactParams}`} class="btn-cta-tertiary">
+                    {diagnosticResult.opportunity ? 'Solicitar validación operativa' : 'Hablar con un especialista'}
+                  </a>
+                );
+              })()}
+            </div>
           </div>
-        </div>
+        )}
+        
+        {/* CTA alternativo si no hay nextSteps */}
+        {(!diagnosticResult.nextSteps || !diagnosticResult.nextSteps.primary) && (
+          <div class="result-cta-section">
+            <div class="cta-group">
+              {(() => {
+                const contactParams = contactName || contactCompany 
+                  ? `?name=${encodeURIComponent(contactName)}&company=${encodeURIComponent(contactCompany)}`
+                  : '';
+                return (
+                  <>
+                    <a href={`/contacto${contactParams}`} class="btn-cta-primary">
+                      Solicitar consulta personalizada
+                    </a>
+                    <a href="/servicios" class="btn-cta-secondary">
+                      Ver todos los servicios
+                    </a>
+                  </>
+                );
+              })()}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   ) : (
@@ -3241,8 +3527,145 @@ try {
 </script>
 
 <script>
-  // Logs del lado del cliente para depuración
+  // Cargar desde localStorage si es necesario (sin recargar la página)
   document.addEventListener('DOMContentLoaded', () => {
+    const placeholder = document.getElementById('diagnostic-loading-placeholder');
+    if (placeholder) {
+      // Obtener el ID de la URL
+      const pathParts = window.location.pathname.split('/');
+      const diagnosticId = pathParts[pathParts.length - 1];
+      console.log('📦 [CLIENT] Loading diagnostic from localStorage:', diagnosticId);
+      
+      try {
+        const stored = localStorage.getItem(`diagnostic-${diagnosticId}`);
+        if (stored) {
+          const diagnosticData = JSON.parse(stored);
+          console.log('✅ [CLIENT] Diagnostic loaded from localStorage:', diagnosticData);
+          
+          // Asegurar que tenga nextSteps y urgency
+          if (!diagnosticData.nextSteps) {
+            diagnosticData.nextSteps = {
+              primary: {
+                text: 'Solicitar consulta personalizada',
+                link: '/contacto'
+              },
+              secondary: {
+                text: 'Ver todos los servicios',
+                link: '/servicios'
+              }
+            };
+          }
+          if (!diagnosticData.urgency) {
+            diagnosticData.urgency = 'medium';
+          }
+          
+          // Guardar en sessionStorage y recargar UNA VEZ
+          // Después de recargar, verificar si hay datos en sessionStorage para renderizar
+          const urlParams = new URLSearchParams(window.location.search);
+          const hasData = urlParams.get('_hasData') === 'true';
+          
+          if (!hasData) {
+            // Primera vez: guardar en sessionStorage y recargar con flag
+            sessionStorage.setItem('diagnostic-result-data', stored);
+            const newUrl = `${window.location.pathname}?_hasData=true`;
+            window.location.href = newUrl;
+            return;
+          } else {
+            // Ya tiene el flag: leer desde sessionStorage
+            const sessionData = sessionStorage.getItem('diagnostic-result-data');
+            
+            if (sessionData) {
+              console.log('✅ [CLIENT] Diagnostic data found in sessionStorage, but server cannot read it.');
+              console.log('⚠️ [CLIENT] Need to render content directly from client.');
+              
+              // Por ahora, simplemente mostrar un mensaje indicando que el diagnóstico está cargado
+              // y que el usuario debe recargar o hacer un nuevo diagnóstico
+              // En el futuro, aquí se podría renderizar todo el contenido directamente
+              placeholder.innerHTML = `
+                <div style="text-align: center; padding: 4rem 2rem;">
+                  <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+                  <h2 style="font-size: 1.5rem; font-weight: 600; color: #0f172a; margin-bottom: 1rem;">
+                    Diagnóstico cargado
+                  </h2>
+                  <p style="color: #64748b; margin-bottom: 2rem;">
+                    Tu diagnóstico se guardó correctamente. Por favor, realiza un nuevo diagnóstico para ver los resultados.
+                  </p>
+                  <a href="/#diagnostico-estrategico" style="
+                    display: inline-block;
+                    padding: 0.75rem 1.5rem;
+                    background: #0f172a;
+                    color: #ffffff;
+                    text-decoration: none;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    margin-right: 1rem;
+                  ">
+                    Realizar nuevo diagnóstico
+                  </a>
+                </div>
+              `;
+              
+              // Limpiar sessionStorage
+              sessionStorage.removeItem('diagnostic-result-data');
+              return;
+            }
+          }
+        } else {
+          console.error('❌ [CLIENT] Diagnostic not found in localStorage');
+          placeholder.innerHTML = `
+            <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+            <h2 style="font-size: 1.5rem; font-weight: 600; color: #0f172a; margin-bottom: 1rem;">
+              Diagnóstico no encontrado
+            </h2>
+            <p style="color: #64748b; margin-bottom: 2rem;">
+              No se pudo cargar el diagnóstico. Por favor, realiza un nuevo diagnóstico.
+            </p>
+            <a href="/#diagnostico-estrategico" style="
+              display: inline-block;
+              padding: 0.75rem 1.5rem;
+              background: #0f172a;
+              color: #ffffff;
+              text-decoration: none;
+              border-radius: 8px;
+              font-weight: 600;
+            ">
+              Realizar nuevo diagnóstico
+            </a>
+          `;
+        }
+      } catch (error) {
+        console.error('❌ [CLIENT] Error loading from localStorage:', error);
+        placeholder.innerHTML = `
+          <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+          <h2 style="font-size: 1.5rem; font-weight: 600; color: #0f172a; margin-bottom: 1rem;">
+            Error al cargar el diagnóstico
+          </h2>
+          <p style="color: #64748b; margin-bottom: 2rem;">
+            Hubo un error al cargar el diagnóstico desde el almacenamiento local.
+          </p>
+          <a href="/#diagnostico-estrategico" style="
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #0f172a;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+          ">
+            Realizar nuevo diagnóstico
+          </a>
+        `;
+      }
+      return;
+    }
+    
+    // Limpiar flags después de que la página se haya cargado completamente
+    setTimeout(() => {
+      sessionStorage.removeItem('diagnostic-result');
+      sessionStorage.removeItem(`diagnostic-loaded-${window.location.pathname}`);
+    }, 2000);
+    
+    // Logs del lado del cliente para depuración
     console.log('🔍 [CLIENT] Page loaded, checking for diagnostic data...');
     
     // Verificar qué secciones existen
@@ -3265,22 +3688,23 @@ try {
     console.log('🔍 [CLIENT] Found images:', images.length);
     
     images.forEach((img, index) => {
+      const imgElement = img as HTMLImageElement;
       console.log(`🔍 [CLIENT] Image ${index + 1}:`, {
-        src: img.getAttribute('src'),
-        alt: img.getAttribute('alt'),
-        class: img.className,
-        loaded: img.complete,
-        naturalWidth: img.naturalWidth,
-        naturalHeight: img.naturalHeight,
-        parentSection: img.closest('section, div')?.className
+        src: imgElement.getAttribute('src'),
+        alt: imgElement.getAttribute('alt'),
+        class: imgElement.className,
+        loaded: imgElement.complete,
+        naturalWidth: imgElement.naturalWidth,
+        naturalHeight: imgElement.naturalHeight,
+        parentSection: imgElement.closest('section, div')?.className
       });
       
-      img.addEventListener('error', (e) => {
-        console.error(`❌ [CLIENT] Image ${index + 1} failed to load:`, img.getAttribute('src'));
+      imgElement.addEventListener('error', (e) => {
+        console.error(`❌ [CLIENT] Image ${index + 1} failed to load:`, imgElement.getAttribute('src'));
       });
       
-      img.addEventListener('load', () => {
-        console.log(`✅ [CLIENT] Image ${index + 1} loaded successfully:`, img.getAttribute('src'));
+      imgElement.addEventListener('load', () => {
+        console.log(`✅ [CLIENT] Image ${index + 1} loaded successfully:`, imgElement.getAttribute('src'));
       });
     });
     

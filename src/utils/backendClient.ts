@@ -119,6 +119,7 @@ export interface UpdateDiagnosticRequest {
 
 /**
  * Crea un nuevo diagnóstico en el backend
+ * Si el backend Nest.js no está disponible, usa la API route de Astro
  */
 export async function createDiagnostic(
   data: DiagnosticRequest
@@ -136,7 +137,33 @@ export async function createDiagnostic(
       dataSize: JSON.stringify(data).length
     });
     
+    // Intentar primero con el backend Nest.js
+    try {
     const response = await fetch(`${BACKEND_URL}/api/diagnostic`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        return result;
+      }
+    } catch (nestError: any) {
+      // Si falla, usar la API route de Astro como fallback
+      console.log('⚠️ [BACKEND CLIENT] Nest.js backend not available, using Astro API route');
+    }
+    
+    // Fallback: usar la API route de Astro
+    const astroApiUrl = typeof window !== 'undefined' 
+      ? `${window.location.origin}/api/diagnostico`
+      : '/api/diagnostico';
+    
+    console.log('🔄 [BACKEND CLIENT] Using Astro API route:', astroApiUrl);
+    
+    const response = await fetch(astroApiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -152,20 +179,48 @@ export async function createDiagnostic(
     }
 
     const result = await response.json();
+    
+    // La API route de Astro retorna un formato diferente, adaptarlo
+    if (result.success && result.data) {
+      // Generar un ID único para el diagnóstico
+      const diagnosticId = `astro-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Guardar en localStorage para poder recuperarlo después
+      if (typeof window !== 'undefined') {
+        const diagnosticData = {
+          id: diagnosticId,
+          ...result.data,
+          selectedServices: data.selectedServices,
+          created_at: new Date().toISOString(),
+        };
+        localStorage.setItem(`diagnostic-${diagnosticId}`, JSON.stringify(diagnosticData));
+      }
+      
+      return {
+        success: true,
+        data: {
+          id: diagnosticId,
+          created_at: new Date().toISOString(),
+          tipo_empresa: data.tipoEmpresa || data.businessType || '',
+          nivel_digital: data.nivelDigital || '',
+          objetivos: data.objetivos || [],
+          tamano: data.tamano || '',
+          necesidades_adicionales: data.necesidadesAdicionales || [],
+          nombre: data.nombre,
+          empresa: data.empresa,
+          email: data.email,
+          solucion_principal: '',
+          soluciones_complementarias: [],
+          urgencia: 'medium' as const,
+          match_score: 0,
+          estado: 'nuevo',
+        }
+      };
+    }
+    
     return result;
   } catch (error: any) {
     console.error('Error creating diagnostic:', error);
-    
-    // Detectar si el backend no está disponible
-    if (error.message?.includes('Failed to fetch') || 
-        error.message?.includes('ERR_CONNECTION_REFUSED') ||
-        error.name === 'TypeError') {
-      const errorMessage = import.meta.env.DEV
-        ? 'El servidor backend no está disponible. Por favor, asegúrate de que el backend Nest.js esté corriendo en http://localhost:3000'
-        : 'El servidor backend no está disponible. Por favor, verifica la configuración de PUBLIC_BACKEND_URL en las variables de entorno.';
-      throw new Error(errorMessage);
-    }
-    
     throw error;
   }
 }

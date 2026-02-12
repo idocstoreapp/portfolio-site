@@ -1,2621 +1,617 @@
 ---
-export interface Project {
-  title: string;
-  image: string;
-  category: 'web' | 'menu-qr' | 'admin' | 'sistema';
-  liveUrl?: string;
-  githubUrl?: string;
-  slug?: string;
-}
-
 export interface Props {
   title?: string;
   subtitle?: string;
   primaryCta?: { text: string; href: string };
   secondaryCta?: { text: string; href: string };
   rating?: { score: string; count: string };
-  mockupImage?: string;
-  carouselProjects?: Project[];
 }
 
 const {
-  title = "Desarrollo Web, Apps y Automatizaciones Profesionales",
-  subtitle = "Soluciones reales para empresas, con resultados medibles.",
-  primaryCta = { text: "Ver Portafolio", href: "/projects" },
-  secondaryCta = { text: "Solicitar Diagnóstico", href: "/contacto" },
-  rating = { score: "4.9/5.0", count: "250+ Reseñas en Google" },
-  mockupImage,
-  carouselProjects = []
+  title = "Creamos métodos de trabajo para tu negocio",
+  subtitle = "Soluciones digitales que optimizan procesos y generan resultados reales.",
+  primaryCta = { text: "Solicitar diagnóstico", href: "/diagnostico" },
+  secondaryCta = { text: "Ver casos reales", href: "/proyectos" },
+  rating = { score: "4.9/5.0", count: "+ 250 reseñas en Google" },
 } = Astro.props;
+
+const heroImages = [
+  "/images/hero-1.png",
+  "/images/hero-2.png",
+  "/images/hero-3.png",
+  "/images/hero-4.png"
+];
 ---
 
-<section class="hero-premium" style="margin: 0 auto; width: 100%; max-width: 100%; box-sizing: border-box;">
-  <!-- Background Effects -->
-  <div class="hero-background">
-    <div class="gradient-orb orb-1"></div>
-    <div class="gradient-orb orb-2"></div>
-    <div class="gradient-orb orb-3"></div>
+<section class="hero-premium">
+  <div class="hero-container">
+    <!-- Contenido de texto (IZQUIERDA) -->
+    <div class="hero-text-section">
+      <h1 class="hero-title">{title}</h1>
+      
+      {subtitle && (
+        <p class="hero-subtitle">{subtitle}</p>
+      )}
+
+      <!-- CTAs -->
+      <div class="hero-cta-buttons">
+        <a href={primaryCta.href} class="btn-primary">
+          <span>{primaryCta.text}</span>
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+          </svg>
+        </a>
+        <a href={secondaryCta.href} class="btn-secondary">
+          <span>{secondaryCta.text}</span>
+        </a>
   </div>
   
-  <!-- Content Container -->
-  <div class="hero-container">
-    <div class="hero-content">
-      <!-- Text Content -->
-      <div class="hero-text">
-        <h1 class="hero-title">
-          Plataformas digitales que convierten crecimiento en resultados reales
-        </h1>
-        
-        <!-- Subtítulo sin card azul -->
-        <p class="hero-subtitle">
-          Diseñamos sistemas web que optimizan procesos y generan ventas.
-        </p>
-        
-        <!-- Carrusel de logos (visible en escritorio y móvil) -->
-        <div class="hero-logos-carousel">
-          <h3 class="logos-title">Confían en nosotros</h3>
-          <div class="logos-track" id="logos-track">
-            <div class="logo-item logo-item-large">
-              <img src="/images/projects/logo-gourmetarabe.png" alt="Gourmet Árabe" />
-            </div>
-            <div class="logo-item logo-item-large">
-              <img src="/images/projects/logo-idocstore.png" alt="IDoc Store" />
-            </div>
-            <div class="logo-item">
-              <img src="/images/projects/logo-kubica.png" alt="Kubica" />
-            </div>
-            <div class="logo-item">
-              <img src="/images/projects/logo-muebleriacadablanca.png" alt="Mueblería Casa Blanca" />
-            </div>
-          </div>
+      <!-- Reseñas de Google -->
+      <div class="hero-rating">
+        <div class="rating-stars">
+          <span class="star">⭐</span>
+          <span class="star">⭐</span>
+          <span class="star">⭐</span>
+          <span class="star">⭐</span>
+          <span class="star">⭐</span>
         </div>
-        
-        <!-- CTA Buttons con efecto neón -->
-        <div class="hero-cta-primary">
-          <a href={primaryCta.href} class="btn-neon btn-neon-blue">
-            <span class="btn-text">{primaryCta.text}</span>
-            <span class="btn-glow btn-glow-blue"></span>
-            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-            </svg>
-          </a>
-          <a href={secondaryCta.href} class="btn-neon btn-neon-orange">
-            <span class="btn-text">{secondaryCta.text}</span>
-            <span class="btn-glow btn-glow-orange"></span>
-          </a>
-        </div>
-        
-        <!-- Rating -->
-        <div class="hero-rating">
-          <span class="star">⭐</span>
-          <span class="star">⭐</span>
-          <span class="star">⭐</span>
-          <span class="star">⭐</span>
-          <span class="star">⭐</span>
+        <div class="rating-info">
           <span class="rating-score">{rating.score}</span>
           <span class="rating-separator">•</span>
           <span class="rating-count">{rating.count}</span>
         </div>
       </div>
+      
+      <!-- Confían en nosotros -->
+      <div class="hero-trust-section">
+        <h3 class="trust-title">Confían en nosotros</h3>
+        <div class="trust-logos">
+          <div class="trust-logo">
+              <img src="/images/projects/logo-gourmetarabe.png" alt="Gourmet Árabe" />
+            </div>
+          <div class="trust-logo">
+              <img src="/images/projects/logo-idocstore.png" alt="IDoc Store" />
+            </div>
+          <div class="trust-logo">
+              <img src="/images/projects/logo-kubica.png" alt="Kubica" />
+            </div>
+          <div class="trust-logo">
+              <img src="/images/projects/logo-muebleriacadablanca.png" alt="Mueblería Casa Blanca" />
+            </div>
+            </div>
+          </div>
+        </div>
+        
+    <!-- Imagen con carrusel automático (DERECHA) -->
+    <div class="hero-image-section">
+      <div class="hero-image-carousel" id="hero-carousel">
+        {heroImages.map((image, index) => (
+          <div class={`hero-image-slide ${index === 0 ? 'active' : ''}`} data-index={index}>
+            <img src={image} alt={`Hero ${index + 1}`} />
+        </div>
+        ))}
+        </div>
+      <!-- Indicadores del carrusel -->
+      <div class="carousel-indicators">
+        {heroImages.map((_, index) => (
+          <button 
+            class={`carousel-indicator ${index === 0 ? 'active' : ''}`}
+            data-index={index}
+            aria-label={`Ir a imagen ${index + 1}`}
+          ></button>
+        ))}
+      </div>
     </div>
   </div>
 </section>
 
-<style>
-  /* Override header transparente solo cuando está sobre el hero */
-  :global(.header-premium) {
-    transition: background 0.3s ease, backdrop-filter 0.3s ease;
-  }
-  
-  /* Cuando el hero está visible, hacer header más transparente */
-  .hero-premium:has(+ *) ~ :global(.header-premium),
-  body:has(.hero-premium:first-child) :global(.header-premium) {
-    background: rgba(255, 255, 255, 0.7) !important;
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  }
-  
-  /* Asegurar legibilidad de links en header transparente */
-  body:has(.hero-premium:first-child) :global(.header-premium) :global(.nav-link),
-  body:has(.hero-premium:first-child) :global(.header-premium) :global(.mobile-nav-link) {
-    color: var(--color-graphite-dark) !important;
-  }
-  
-  .hero-premium {
-    position: relative;
-    min-height: 100svh; /* Usar svh para mejor control del viewport */
-    display: flex;
-    align-items: flex-start; /* Cambiar de center a flex-start para mejor control */
-    padding: 0;
-    padding-top: 0; /* El scroll-margin-top del header manejará el espacio */
-    padding-bottom: 0;
-    margin: 0 auto;
-    margin-bottom: 0;
-    overflow-x: hidden; /* Solo ocultar overflow horizontal */
-    background: var(--bg-primary);
-    background-color: var(--color-elephant-white);
-    background-image: url("/images/hero-escritorio.png");
-    background-size: cover;
-    background-position: center top;
-    background-repeat: no-repeat;
-    background-attachment: scroll; /* Cambiar de fixed a scroll para que no se mueva */
-    
-    /* En móvil, el background-size se sobrescribe en el media query */
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    scroll-margin-top: 5rem; /* Espacio para header sticky */
-  }
-  
-  /* Mobile: altura automática, se adapta al contenido */
-  @media (min-width: 320px) and (max-width: 1023px) {
-    .hero-premium {
-      min-height: auto !important;
-      align-items: center !important;
-      justify-content: center !important;
-      padding: 0 !important;
-      margin: 0 auto !important;
-      overflow: visible !important;
-      overflow-x: hidden !important;
-      overflow-y: visible !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      position: relative !important;
-      height: auto !important;
-      left: 0 !important;
-      right: 0 !important;
-      transform: none !important;
-      display: flex !important;
-      flex-direction: column !important;
-    }
-    
-    /* Forzar que todos los elementos hijos estén centrados */
-    .hero-premium > * {
-      margin-left: auto !important;
-      margin-right: auto !important;
-      width: 100% !important;
-      max-width: 100% !important;
-    }
-    
-    .hero-container {
-      overflow: visible !important;
-      height: auto !important;
-      min-height: auto !important;
-      max-height: none !important;
-      margin: 0 auto !important;
-      padding: 0 !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      flex-direction: column !important;
-      left: 0 !important;
-      right: 0 !important;
-      transform: none !important;
-      position: relative !important;
-    }
-    
-    .hero-content {
-      overflow: visible !important;
-      height: auto !important;
-      max-height: none !important;
-      margin: 0 auto !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      left: 0 !important;
-      right: 0 !important;
-      transform: none !important;
-      position: relative !important;
-    }
-    
-    .hero-text {
-      margin: 0 auto !important;
-      padding: 0 1rem !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      left: 0 !important;
-      right: 0 !important;
-      transform: none !important;
-    }
-  }
-  
-  /* Desktop: altura completa del viewport */
-  @media (min-width: 1024px) {
-    .hero-premium {
-      min-height: 100svh;
-      height: 100svh; /* Altura fija del viewport */
-      padding: 0rem;
-      align-items: flex-start;
-      overflow: visible; /* Permitir que se vea todo el contenido */
-      box-sizing: border-box;
-    }
-  }
-  
-  .hero-background {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    z-index: 0;
-    background-image: url("/images/hero-escritorio.png");
-    background-size: cover;
-    background-position: center 20% !important; /* Background más arriba */
-    background-repeat: no-repeat;
-    /* Filtros CSS para fondo más limpio y profesional tipo SaaS */
-    filter: brightness(1.05) contrast(0.98) saturate(0.85);
-  }
-  
-  
-  .hero-background::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    /* Overlay blanco más fuerte para fondo más limpio */
-    background: rgba(255, 255, 255, 0.45);
-    z-index: 1;
-    mix-blend-mode: overlay;
-  }
-  
-  /* Background diferente para móvil - cubre todo el ancho del viewport, posicionado más abajo */
-  @media (max-width: 1023px) {
-    .hero-premium {
-      background-image: url("/images/hero-movil.png") !important;
-      background-size: calc(100vw + 4px) auto !important; /* 2px a cada lado para cubrir todo el viewport */
-      background-position: center bottom !important; /* Más abajo, al final del viewport */
-      background-attachment: scroll !important; /* No se mueve al hacer scroll */
-      background-repeat: no-repeat !important;
-    }
-    
-    .hero-background {
-      background-image: url("/images/hero-movil.png") !important;
-      background-size: calc(100vw + 4px) auto !important; /* 2px a cada lado para cubrir todo el viewport */
-      background-attachment: scroll !important; /* No se mueve al hacer scroll */
-      background-repeat: no-repeat !important;
-      background-position: center bottom !important; /* Más abajo, al final del viewport */
-    }
-  }
-  
-  .gradient-orb {
-    display: none; /* Eliminar efectos de orbes para look más limpio y empresarial */
-  }
-  
-  .orb-1,
-  .orb-2,
-  .orb-3 {
-    display: none;
-  }
-  
-  @keyframes float-orb {
-    0%, 100% {
-      transform: translate(0, 0) scale(1);
-    }
-    33% {
-      transform: translate(50px, -50px) scale(1.1);
-    }
-    66% {
-      transform: translate(-30px, 30px) scale(0.9);
-    }
-  }
-  
-  .hero-container {
-    position: relative;
-    z-index: 1;
-    max-width: 100%;
-    margin: 0;
-    width: 100%;
-    padding: 0;
-    height: auto;
-    min-height: 0;
-    display: flex;
-    align-items: center;
-    box-sizing: border-box;
-    overflow: visible;
-  }
-  
-  @media (min-width: 320px) and (max-width: 1023px) {
-    .hero-container {
-      padding: 0 !important;
-      padding-bottom: 0 !important;
-      margin: 0 auto !important;
-      margin-bottom: 0 !important;
-      height: auto;
-      min-height: auto;
-      align-items: center !important;
-      justify-content: center !important;
-      padding-top: 0;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box;
-      overflow-x: hidden !important;
-      overflow-y: visible !important;
-    }
-  }
-  
-  @media (min-width: 1024px) {
-    .hero-container {
-      align-items: flex-start;
-      padding-top: 0 !important; /* Sin padding superior para subir todo */
-      display: flex;
-      flex-direction: column;
-      height: 100% !important; /* Altura completa */
-      min-height: 0;
-      box-sizing: border-box;
-    }
-  }
-  
-  .hero-content {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-rows: auto auto; /* Cambiar de auto 1fr a auto auto para evitar espacios fantasmas */
-    gap: 1rem; /* Restaurar gap para espaciado natural */
-    align-items: start;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    min-height: 0;
-    overflow: visible;
-  }
-  
-  /* En móvil, forzar grid de una columna centrada */
-  @media (min-width: 320px) and (max-width: 1023px) {
-    .hero-content {
-      grid-template-columns: 1fr !important;
-      align-items: center !important;
-      justify-items: center !important;
-      margin: 0 auto !important;
-      padding: 0.75rem 1rem 0.5rem 1rem !important; /* Padding equilibrado para móvil */
-      width: 100% !important;
-      max-width: 100% !important;
-    }
-  }
-
-    .hero-text {
-      max-width: 100%;
-      width: 100%;
-      margin: 0 auto;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      align-items: center; /* Centrado en lugar de flex-end */
-      justify-content: space-evenly; /* Cambiar de space-evenly a flex-start */
-      gap: 1rem; /* Usar gap para espaciado consistente */
-      min-height: 0;
-      overflow: visible;
-      /* Remover height: 100% para permitir expansión natural */
-    }
-    
-    /* En móvil, asegurar que hero-text esté centrado */
-    @media (min-width: 320px) and (max-width: 1023px) {
-      .hero-text {
-        align-items: center !important;
-        text-align: center !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 0 1rem !important;
-        box-sizing: border-box !important;
-      }
-    }
-    
-    /* Estilos para hero-title cuando NO está en hero-text (grid layout) */
-    .hero-content > .hero-title {
-      grid-column: 2;
-      grid-row: 1;
-      margin-bottom: 0;
-      margin-top: 0;
-      margin-left: 0;
-      margin-right: 0;
-      padding-left: 0;
-      padding-right: 0;
-      padding-top: 0;
-      align-self: start;
-      text-align: right;
-      font-size: clamp(0.3rem, 1vw, 0.5rem);
-      line-height: 0.9;
-      max-width: 100%;
-      width: 100%;
-      overflow: visible;
-      display: block;
-      box-sizing: border-box;
-      position: relative;
-      z-index: 10;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-    }
-    
-    /* En móvil, forzar que hero-title esté centrado */
-    @media (min-width: 320px) and (max-width: 1023px) {
-      .hero-content > .hero-title {
-        grid-column: 1 !important;
-        text-align: center !important;
-        align-self: center !important;
-        margin: 0 auto !important;
-        padding: 0 1rem !important;
-        width: 100% !important;
-        max-width: 100% !important;
-      }
-    }
-  
-  /* Mobile: Reordenamiento vertical optimizado para conversión */
-  @media (min-width: 320px) and (max-width: 1023px) {
-
-    .hero-container {
-      margin: 0 auto !important;
-      padding: 0 !important;
-      padding-bottom: 0;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box;
-      overflow-x: hidden !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      flex-direction: column !important;
-    }
-    
-    /* Layout de columna única para mobile - CTAs más arriba, rating muy pegado */
-    .hero-content {
-      display: grid !important;
-      grid-template-columns: 1fr !important;
-      grid-template-rows: auto auto auto 1fr auto; /* Título, subtítulo, CTAs, espacio flexible, rating */
-      grid-template-areas: 
-        "title"
-        "subtitle"
-        "ctas"
-        "."
-        "rating";
-      gap: 1rem 0 !important; /* Gap más espaciado */
-      align-items: start !important;
-      justify-items: center !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      padding: 1rem 1rem 1rem 1rem !important; /* Padding más espaciado */
-      box-sizing: border-box !important;
-      min-height: 100vh;
-      height: 100vh;
-      max-height: 100vh;
-      margin: 0 auto !important;
-      overflow-x: hidden !important;
-      overflow-y: hidden !important;
-      position: relative !important;
-      left: 0 !important;
-      right: 0 !important;
-      transform: none !important;
-    }
-    
-    /* Asignar áreas del grid */
-    .hero-title {
-      grid-area: title;
-      text-align: center !important; /* Centrado para mejor jerarquía */
-      margin: 0 auto !important;
-      padding: 1rem 1rem 0.5rem 1rem !important; /* Padding normal para el título */
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important; /* Tipografía sans-serif moderna */
-      font-weight: 700 !important;
-      letter-spacing: -0.02em !important;
-      color: #0f172a !important;
-    }
-    
-    /* Asegurar que las líneas del título estén centradas en móvil */
-    .hero-title .title-line,
-    .hero-title .title-line * {
-      text-align: center !important;
-      margin: 0 auto !important;
-      padding: 0 !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      left: 0 !important;
-      right: 0 !important;
-      transform: none !important;
-      display: block !important;
-    }
-    
-    /* Subtítulo: Segundo en el orden visual */
-    .hero-subtitle {
-      grid-area: subtitle;
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 auto !important;
-      margin-left: auto !important;
-      margin-right: auto !important;
-      margin-top: 0.5rem !important; /* Espacio después del título */
-      padding: 0 1rem 0.5rem 1rem !important; /* Padding normal */
-      line-height: 1.4 !important; /* Line-height equilibrado */
-      text-align: center !important;
-      font-size: clamp(1.125rem, 3.5vw, 1.375rem) !important; /* Tamaño más grande */
-      color: #475569 !important; /* Gris medio para jerarquía */
-      line-height: 1.6 !important; /* Más espacio para legibilidad */
-      font-weight: 400 !important; /* Peso normal */
-      font-style: normal !important; /* Sin cursiva para look más moderno */
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-      letter-spacing: -0.01em !important;
-      box-sizing: border-box !important;
-      left: 0 !important;
-      right: 0 !important;
-      transform: none !important;
-      position: relative !important;
-    }
-    
-    /* Mockup eliminado */
-    .hero-mockup {
-      display: none !important;
-    }
-    
-    .hero-mockup .mockup-image {
-      width: 100% !important;
-      max-width: 290px !important; /* Mockup más pequeño */
-      max-height: 45vh !important; /* Máximo 35vh de altura */
-      height: auto !important;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto !important; /* Centrar la imagen */
-      filter: drop-shadow(-30px 20px 30px rgba(0, 0, 0, 0.7)) !important; /* Sombra solo en la imagen PNG */
-    }
-    
-    /* CTAs: Más abajo en el viewport como en la segunda imagen - FORZAR con máxima especificidad */
-    .hero-content .hero-text .hero-cta-primary,
-    .hero-content .hero-cta-primary {
-      grid-area: ctas !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 !important;
-      margin-top: 0 !important; /* El espacio flexible los empuja hacia abajo */
-      margin-bottom: 0 !important; /* Sin espacio, rating pegado */
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      padding: 0 0.25rem !important;
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 0.75rem !important; /* Gap entre botones */
-      align-items: center !important;
-      box-sizing: border-box !important;
-      justify-content: center !important;
-      position: relative !important;
-      z-index: 10 !important;
-      flex-shrink: 0 !important;
-      align-self: center !important;
-    }
-    
-    /* En móvil: botón primario (grande) arriba, secundario (pequeño) abajo */
-    .btn-neon-blue {
-      order: 1; /* Primero (arriba) */
-    }
-    
-    .btn-neon-orange {
-      order: 2; /* Segundo (abajo) */
-      margin-top: 1rem !important; /* Espacio adicional para que esté claramente en la siguiente línea */
-    }
-    
-    .btn-neon {
-      position: relative;
-      z-index: 11;
-    }
-    
-    /* Carrusel de logos (solo móvil) */
-    .hero-logos-carousel-mobile {
-      grid-area: logos;
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 !important;
-      margin-top: 0 !important; /* Sin margen superior, el gap del grid lo maneja */
-      padding: 0.5rem 0.25rem !important; /* Reducir padding para que no se salga */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      box-sizing: border-box;
-      overflow: hidden !important; /* Ocultar cualquier desbordamiento */
-      /* Forzar que el contenedor no se expanda más allá del viewport */
-      min-width: 0;
-      position: relative;
-    }
-    
-    .logos-title {
-      font-size: 0.7rem !important;
-      color: var(--color-grey-medium) !important;
-      font-weight: 500;
-      margin: 0;
-      text-align: center;
-      font-family: 'Inter', sans-serif !important;
-    }
-    
-    .logos-track {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      overflow: hidden !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      position: relative;
-      transform: translateX(0) !important; /* Mantener estático */
-      will-change: auto !important; /* No optimizar para animación */
-      box-sizing: border-box;
-      margin: 0 !important;
-      padding: 0 !important;
-      /* Forzar que el track no expanda el contenedor padre */
-      min-width: 0;
-      flex-shrink: 1;
-    }
-    
-    .logo-item {
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 35px;
-      width: auto;
-      max-width: 70px; /* Limitar ancho máximo de cada logo */
-      box-sizing: border-box;
-    }
-    
-    .logo-item img {
-      height: 100%;
-      width: auto;
-      max-width: 70px;
-      object-fit: contain;
-      filter: grayscale(100%) opacity(0.5) saturate(0.3); /* Más sutil, menos saturación */
-      transition: filter 0.3s ease;
-    }
-    
-    .logo-item img:hover {
-      filter: grayscale(80%) opacity(0.7) saturate(0.5); /* Hover más sutil */
-    }
-    
-    /* Logos más grandes para gourmetarabe e idocstore */
-    .logo-item-large {
-      height: 65px !important;
-      max-width: 130px !important;
-    }
-    
-    .logo-item-large img {
-      max-width: 130px !important;
-      height: 100% !important;
-    }
-    
-    /* Ajustes específicos para pantallas pequeñas (360px) */
-    @media (max-width: 360px) {
-      /* Mockup más pequeño */
-      .hero-mockup .mockup-image {
-        max-width: 220px !important;
-        max-height: 35vh !important;
-      }
-      
-      /* CTAs más pequeños */
-      .hero-cta-primary {
-        gap: 1.5rem !important;
-      }
-      
-      .btn-neon-blue {
-        padding: 0.6rem 1.2rem !important;
-        font-size: 0.875rem !important;
-      }
-      
-      .btn-neon-orange {
-        padding: 0.5rem 1rem !important;
-        font-size: 0.8rem !important;
-      }
-      
-      /* Carrusel más pequeño y más arriba */
-      .hero-logos-carousel-mobile {
-        margin-top: 0.5rem !important;
-        padding: 0.3rem 0.25rem !important;
-        gap: 0.3rem !important; /* Menos espacio entre título y carrusel */
-      }
-      
-      .logos-title {
-        font-size: 0.65rem !important;
-        margin-bottom: 0.2rem !important;
-      }
-      
-      .logo-item {
-        height: 28px !important;
-      }
-      
-      .logo-item img {
-        max-width: 55px !important;
-      }
-      
-      /* Logos más grandes en móvil pequeño */
-      .logo-item-large {
-        height: 55px !important;
-        max-width: 110px !important;
-      }
-      
-      .logo-item-large img {
-        max-width: 110px !important;
-        height: 100% !important;
-      }
-      
-      .logos-track {
-        gap: 1rem !important;
-      }
-      
-      /* Reseñas más pequeñas */
-      .hero-rating {
-        font-size: 0.75rem !important;
-      }
-      
-      .hero-rating .star {
-        font-size: 0.75rem !important;
-      }
-    }
-    
-    /* Ocultar carrusel de logos en desktop - FORZAR COMPLETAMENTE */
-    @media (min-width: 1024px) {
-      .hero-logos-carousel-mobile {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0 !important;
-        width: 0 !important;
-        max-height: 0 !important;
-        max-width: 0 !important;
-        min-height: 0 !important;
-        min-width: 0 !important;
-        overflow: hidden !important;
-        position: fixed !important;
-        left: -9999px !important;
-        top: -9999px !important;
-        opacity: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: none !important;
-        pointer-events: none !important;
-        z-index: -1 !important;
-        grid-area: unset !important;
-      }
-      
-      .hero-logos-carousel-mobile *,
-      .hero-logos-carousel-mobile *::before,
-      .hero-logos-carousel-mobile *::after {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0 !important;
-        width: 0 !important;
-        max-height: 0 !important;
-        max-width: 0 !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-        position: fixed !important;
-        left: -9999px !important;
-        top: -9999px !important;
-      }
-      
-      .logos-track,
-      .logos-title,
-      .logo-item,
-      .logo-item img {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0 !important;
-        width: 0 !important;
-        max-height: 0 !important;
-        max-width: 0 !important;
-        opacity: 0 !important;
-        pointer-events: none !important;
-        position: fixed !important;
-        left: -9999px !important;
-        top: -9999px !important;
-      }
-    }
-    
-    /* Rating: Muy pegado a los CTAs como en la segunda imagen - FORZAR con máxima especificidad */
-    .hero-content .hero-text .hero-rating,
-    .hero-content .hero-rating {
-      grid-area: rating !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 !important;
-      margin-top: 0.25rem !important; /* Muy pegado a los CTAs, pequeño espacio */
-      margin-bottom: 0 !important;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      padding: 0 0.25rem !important;
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
-      display: flex !important;
-      justify-content: center !important;
-      align-items: center !important;
-      visibility: visible !important; /* Asegurar que sea visible */
-      opacity: 1 !important;
-    }
-    
-    /* Carrusel de proyectos dentro del hero */
-    /* Título: Primero en el orden visual */
-    .hero-title {
-      grid-area: title;
-      text-align: center;
-      margin: 0;
-      padding: 0 0.5rem;
-      font-size: clamp(1.75rem, 6vw, 2.5rem);
-      line-height: 1.2;
-      max-width: 100%;
-      width: 100%;
-      overflow: visible;
-      font-family: 'Libre Baskerville', serif; /* Fuente serif elegante */
-      display: block;
-      box-sizing: border-box;
-      position: relative;
-      z-index: 10;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      color: var(--text-primary);
-    }
-    
-    /* Ajustar alineación de líneas del título para layout centrado */
-    .title-line {
-      display: block;
-      text-align: center !important; /* Centrado para nuevo layout vertical */
-      margin: 0 auto !important;
-      padding: 0 !important;
-      line-height: 1.3 !important; /* Mejor espaciado para legibilidad */
-      margin-bottom: 0.25rem !important;
-      margin-top: 0 !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      direction: ltr;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      white-space: normal;
-      box-sizing: border-box !important;
-    }
-    
-    /* En móvil, forzar que todas las líneas del título estén centradas */
-    @media (min-width: 320px) and (max-width: 1023px) {
-      .title-line,
-      .title-line .title-align-right,
-      .title-line .title-align-left,
-      .title-line-compact,
-      .title-line-compact .title-align-right,
-      .title-line-compact .title-align-left {
-        text-align: center !important;
-        margin: 0 auto !important;
-        padding: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        display: block !important;
-      }
-    }
-    
-    .title-align-right {
-      display: block;
-      text-align: right;
-      padding-right: 0;
-      width: 100%;
-      box-sizing: border-box;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-    }
-    
-    .title-align-left {
-      display: block;
-      text-align: right;
-      padding-right: 0;
-      width: 100%;
-      box-sizing: border-box;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-    }
-    
-    /* Línea con "para hacer tu" y "EMPRESA" - usar flex para alinear */
-    .title-line:has(.title-align-right) {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      text-align: right !important;
-    }
-    
-    .title-line:has(.title-align-right) .title-align-right {
-      flex-shrink: 0;
-      text-align: right;
-    }
-    
-    .title-line:has(.title-align-right) .title-align-left {
-      flex-shrink: 0;
-      text-align: left;
-      margin-left: auto;
-      margin-right: 0;
-    }
-    
-    /* Líneas compactas - "más EFICIENTE" a la derecha */
-    .title-line-compact:has(.title-align-right) {
-      text-align: right !important;
-    }
-    
-    .title-line-compact:has(.title-align-right) .title-align-right {
-      display: inline-block;
-      text-align: right;
-    }
-    
-    /* "y" y "RENTABLE" deben estar alineados a la derecha como "más EFICIENTE" */
-    .title-line-compact:has(.title-align-right) ~ .title-line-compact {
-      text-align: right !important;
-      padding-left: 0;
-      margin-left: 0;
-    }
-    
-    .title-line-compact:has(.title-align-right) ~ .title-line-compact .title-align-left,
-    .title-line-compact:has(.title-align-right) ~ .title-line-compact .title-align-right {
-      text-align: right;
-      margin-left: 0;
-      padding-left: 0;
-      display: inline-block;
-    }
-    
-    /* Calcular el padding-left necesario para alinear con "más EFICIENTE" */
-    /* El padding debe ser: ancho del contenedor - ancho del texto "más EFICIENTE" */
-    .title-line-compact:has(.title-align-right) {
-      position: relative;
-    }
-    
-    .title-line-compact:has(.title-align-right) ~ .title-line-compact {
-      padding-left: calc(100% - 100%);
-    }
-    
-    .title-line-compact {
-      margin-bottom: 0 !important;
-      margin-top: 0 !important;
-      line-height: 0.75 !important;
-      text-align: left !important;
-    }
-    
-    /* Línea con "para" y "EMPRESA" - alinear a la izquierda */
-    .title-line:has(.title-align-left) {
-      text-align: left !important;
-    }
-    
-    .title-accent {
-      color: var(--accent-orange);
-      background: var(--grad-orange);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      white-space: nowrap !important;
-    }
-         .title-line,
-     .title-medium,
-    .title-accent,
-   .title-large {
-    margin-top: 0.2rem !important;}
-    
-    /* Subtítulo: Segundo en el orden visual */
-    /* Subtítulo ya está definido arriba con grid-area: subtitle */
-    .hero-subtitle {
-      font-size: clamp(1rem, 5vw, 1.25rem) !important;
-      color: #616161 !important; /* Gris más oscuro */
-      font-style: italic !important; /* Cursiva */
-      line-height: 1.5 !important;
-      margin: 0 !important;
-      margin-top: -0.5rem !important; /* Más cerca del título */
-      padding: 0 0.5rem !important;
-      display: block;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      text-align: center !important;
-    }
-    
-    .hero-support-text {
-      color: rgba(212, 175, 55, 0.85) !important; /* Color dorado con opacidad */
-      margin: 0;
-    }
-    
-    
- 
-    
-    .subtitle-line {
-      display: block;
-      text-align: center;
-      margin-bottom: 0 !important;
-      margin-top: 0 !important;
-      line-height: 1.1 !important;
-    }
-    
-    /* CTAs: Cuarto en el orden visual - ya definido arriba con grid-area: ctas */
-    .hero-cta-primary {
-      /* grid-area: ctas ya definido arriba */
-      display: flex !important;
-      justify-content: center !important; /* Centrar botones */
-      gap:0rem !important; /* Espacio entre botones */
-      flex-wrap: nowrap !important; /* No permitir wrap */
-      flex-direction: column !important; /* Botones apilados verticalmente */
-      align-items: center !important;
-      box-sizing: border-box;
-      width: 100%;
-      max-width: 100%;
-      position: relative;
-      z-index: 10;
-    }
-    
-    /* Botones con efecto neón - más pequeños para mobile */
-    .btn-neon {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.3rem;
-      border-radius: 12px;
-      font-weight: 600 !important;
-      text-decoration: none;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      white-space: nowrap;
-      flex-shrink: 0;
-      min-width: fit-content;
-      width: 100% !important; /* Ancho completo del contenedor */
-      max-width: 280px !important; /* Limitar ancho máximo para evitar desbordamiento */
-      overflow: hidden;
-      border: none;
-      cursor: pointer;
-      box-sizing: border-box;
-    }
-    
-    /* Botón primario (grande) - arriba en móvil */
-    .btn-neon-blue {
-      padding: 0.75rem 1.5rem !important; /* Padding más grande */
-      font-size: 1rem !important; /* Tamaño de fuente más grande */
-    }
-    
-    /* Botón secundario (pequeño) - abajo en móvil */
-    .btn-neon-orange {
-      padding: 0.5rem 1rem !important; /* Padding más pequeño */
-      font-size: 0.875rem !important; /* Tamaño de fuente más pequeño */
-    }
-    
-    .btn-text {
-      position: relative;
-      z-index: 2;
-      color: #FFFFFF; /* Color por defecto para botón primario */
-    }
-    
-    /* Texto negro para CTA secundario (Ver casos reales) */
-    .btn-neon-orange .btn-text {
-      color: var(--color-black-deep) !important; /* Negro para mejor legibilidad */
-    }
-    
-    .btn-neon .btn-icon {
-      position: relative;
-      z-index: 2;
-      width: 1rem;
-      height: 1rem;
-      color: #FFFFFF;
-    }
-    
-    .btn-glow {
-      position: absolute;
-      inset: -2px;
-      border-radius: 12px;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: 0;
-    }
-    
-    .btn-neon-blue {
-      background: var(--color-black-deep);
-      color: var(--color-white-pure);
-      box-shadow: 0 6px 19px rgba(0, 0, 0, 0.3), 0 4px 9px rgba(0, 0, 0, 0.2) !important; /* Sombra para CTA */
-      border: 1px solid var(--color-graphite-dark);
-    }
-    
-    .btn-neon-blue:hover {
-      background: var(--color-graphite-dark);
-      box-shadow: var(--shadow-lg);
-      transform: translateY(-2px);
-    }
-    
-    .btn-glow-blue {
-      display: none; /* Eliminar efecto glow */
-    }
-    
-    .btn-neon-orange {
-      background: rgba(255, 255, 255, 0.95) !important; /* Fondo blanco semi-transparente para cubrir rayas del background */
-      color: var(--color-black-deep);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 2px 5px rgba(0, 0, 0, 0.15) !important; /* Sombra para CTA */
-      border: 2px solid var(--color-graphite-dark);
-      backdrop-filter: blur(5px); /* Efecto blur para suavizar */
-    }
-    
-    .btn-neon-orange:hover {
-      background: var(--color-grey-light);
-      border-color: var(--color-black-deep);
-      transform: translateY(-2px);
-    }
-    
-    .btn-glow-orange {
-      display: none; /* Eliminar efecto glow */
-    }
-    
-    .btn-neon:hover {
-      transform: translateY(-2px) scale(1.02);
-    }
-    
-    .btn-neon:hover .btn-glow {
-      opacity: 1;
-    }
-    
-    .btn-neon-blue:hover {
-      box-shadow: 
-        0 0 30px rgba(99, 102, 241, 0.6),
-        0 0 60px rgba(59, 130, 246, 0.5),
-        0 0 90px rgba(6, 182, 212, 0.3),
-        inset 0 0 20px rgba(255, 255, 255, 0.15);
-    }
-    
-    .btn-neon-orange:hover {
-      box-shadow: 
-        0 0 30px rgba(249, 115, 22, 0.6),
-        0 0 60px rgba(251, 146, 60, 0.5),
-        0 0 90px rgba(251, 191, 36, 0.3),
-        inset 0 0 20px rgba(255, 255, 255, 0.15);
-    }
-    
-    .btn-primary-small {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      padding: 0.6rem 0.9rem;
-      border-radius: var(--radius-md);
-      font-weight: 600;
-      font-size: 0.75rem;
-      text-decoration: none;
-      transition: all var(--norm) var(--ease);
-      background: var(--grad-primary);
-      color: #FFFFFF;
-      box-shadow: var(--shadow-lg), var(--shadow-glow-primary);
-      white-space: nowrap;
-      flex-shrink: 1;
-      min-width: fit-content;
-    }
-    
-    .btn-primary-small:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-xl), var(--shadow-glow-primary);
-    }
-    
-    /* Rating: Quinto en el orden visual */
-    .hero-rating {
-      /* grid-area: rating ya definido arriba */
-      margin: 0 !important;
-      padding: 0 !important;
-      display: flex !important;
-      align-items: center;
-      justify-content: center !important; /* Centrado para nuevo layout */
-      gap: 0.5rem;
-      font-size: 0.6rem;
-      flex-wrap: nowrap !important;
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
-      position: relative;
-      white-space: nowrap;
-      overflow: visible;
-      z-index: 10;
-    }
-    
-    .hero-rating .star {
-      font-size: 0.9rem !important;
-      flex-shrink: 0;
-      margin: 0;
-      margin-right: 0.15rem !important; /* Espacio pequeño entre estrellas (antes -0.5rem) */
-      filter: grayscale(100%) brightness(0.4) opacity(0.7); /* Más sutil y menos prominente */
-      opacity: 0.8;
-      color: #64748b !important; /* Gris más suave */
-    }
-    
-    /* Separar las estrellas del texto de las reseñas */
-    .hero-rating .rating-score {
-      margin-left: 0.5rem !important; /* Espacio entre estrellas y el score */
-    }
-    
-    .hero-rating .rating-score,
-    .hero-rating .rating-separator,
-    .hero-rating .rating-count {
-      flex-shrink: 0;
-      white-space: nowrap;
-      font-size: 0.65rem;
-      color: #1a1a1a !important; /* Gris muy oscuro pero no negro puro */
-    }
-    
-    
-    .btn-secondary-small {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.6rem 0.9rem;
-      border-radius: var(--radius-md);
-      font-weight: 600;
-      font-size: 0.75rem;
-      text-decoration: none;
-      transition: all var(--norm) var(--ease);
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-secondary);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      white-space: nowrap;
-      flex-shrink: 1;
-      min-width: fit-content;
-    }
-    
-    .btn-secondary-small:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-    }
-  }
-  
-  @media (min-width: 1024px) {
-    .hero-content {
-      grid-template-columns: 1fr !important; /* Una columna como antes */
-      grid-template-rows: 1fr !important;
-      grid-template-areas: 
-        "text" !important; /* Solo text en desktop */
-      gap: 0 !important; /* Sin gap para subir todo */
-      align-items: center !important; /* Centrar verticalmente */
-      justify-items: center !important; /* Centrar horizontalmente */
-      margin-top: 0 !important;
-      height: 100%;
-      max-height: 100%;
-      min-height: 0;
-      box-sizing: border-box;
-    }
-
-    .hero-title {
-      margin: 0;
-    }
-     
-     .hero-title .title-accent {
-       color: var(--accent-orange) !important;
-       background: var(--grad-orange) !important;
-       -webkit-background-clip: text !important;
-       -webkit-text-fill-color: transparent !important;
-       background-clip: text !important;
-     }
-    
-    .hero-title .title-line-right {
-      text-align: right;
-      display: block;
-      width: 100%;
-      margin: 0;
-    }
-    
-    /* Mockups eliminados completamente */
-    
-    /* Banner de sistemas eliminado */
-
-    
-    .hero-text {
-      display: flex;
-      flex-direction: column;
-      order: 2;
-      justify-content: space-evenly; /* Title al inicio */
-      gap: 1.5rem; /* Espaciado entre elementos */
-      padding-top: 0rem;
-      align-items: flex-start; /* Alinear al inicio horizontalmente */
-      width: 100%;
-      height: 100%; /* Ocupar toda la altura disponible del hero-content */
-      min-height: 0;
-      flex-shrink: 1;
-      margin-top: 0rem;
-      align-self: stretch; /* Estirar para igualar altura de hero-mockup */
-    }
-
-    /* Estilos para hero-title dentro de hero-text en desktop - sobrescribir todo */
-    .hero-text .hero-title {
-      margin-top: 0 !important;
-      text-align: left !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      box-sizing: border-box !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: flex-start !important;
-      gap: 0.1rem !important;
-      line-height: 0.9 !important;
-      flex-shrink: 0 !important;
-      overflow-wrap: break-word !important;
-      word-wrap: break-word !important;
-      grid-column: unset !important;
-      grid-row: unset !important;
-      align-self: unset !important;
-    } 
-    
-    .title-line {
-      text-align: left;
-      margin-right: 0;
-      padding-right: 0;
-      margin-left: 0;
-      padding-left: 0;
-      line-height: 1.1;
-      margin-bottom: 0;
-      display: block;
-    }
-    
-    .title-line-right {
-      text-align: right !important;
-      display: block !important;
-      width: 100% !important;
-      justify-content: flex-end !important;
-    }
-    
-    .title-line-right span {
-      display: inline-block;
-    }
-    
-    .title-line-inline {
-      display: flex;
-      align-items: baseline;
-      gap: 0.75rem;
-    }
-    
-    .title-small {
-      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-      font-weight: 500;
-      line-height: 1.2;
-    }
-    
-    .title-medium {
-      font-size: clamp(1.5rem, 3vw, 2.2rem);
-      font-weight: 600;
-      line-height: 1.2;
-    }
-    
-    .title-large {
-      font-size: clamp(2.2rem, 4.5vw, 3.5rem);
-      font-weight: 800;
-      line-height: 1.1;
-    }
-    
-    .title-line-large {
-      font-size: clamp(2.2rem, 4.5vw, 3.5rem);
-      font-weight: 800;
-      line-height: 1.1;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      width: 100%;
-      display: flex;
-      justify-content: flex-start;
-      align-items: baseline;
-    }
-    
-    .title-line-inline {
-      display: flex;
-      align-items: baseline;
-      gap: 1rem;
-    }
-    
-    .title-small {
-      font-size: clamp(1.5rem, 3vw, 2.5rem);
-      font-weight: 600;
-      line-height: 1.2;
-    }
-    
-    .title-medium {
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      font-weight: 700;
-      line-height: 1.2;
-    }
-    
-    .title-large {
-      font-size: clamp(2.5rem, 5.5vw, 4.5rem);
-      font-weight: 800;
-      line-height: 1.2;
-    }
-    
-    /* Ajustar title-align-left y title-align-right para que funcionen centrados */
-    .title-align-left,
-    .title-align-right {
-      display: inline-block;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-    }
-
-     .hero-title {
-        margin-top: -2.5rem !important;
-        line-height: 0.5;
-     }
-    
-    /* Líneas con elementos alineados - mantener estructura pero centrada */
-    .title-line:has(.title-align-right):not(.title-line-right) {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .title-line:has(.title-align-right):not(.title-line-right) .title-align-right,
-    .title-line:has(.title-align-right):not(.title-line-right) .title-align-left {
-      flex-shrink: 0;
-      text-align: center;
-      margin: 0;
-    }
-    
-    /* Líneas compactas centradas */
-    .title-line-compact {
-      text-align: center !important;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .title-line-compact .title-align-left,
-    .title-line-compact .title-align-right {
-      text-align: center;
-      display: inline-block;
-      margin: 0;
-      padding: 0;
-    }
-    
-    /* Estilos base para el card - ocultar slider por defecto */
-    .subtitle-slider-mobile {
-      display: none;
-    }
-    
-    .subtitle-content-desktop {
-      display: block;
-    }
-    
-    .hero-subtitle-card {
-      margin-top: 1.5rem !important;
-      text-align: left;
-      width: 100% !important;
-      max-width: 100% !important;
-      background: rgba(15, 23, 42, 0.85) !important;
-      backdrop-filter: blur(20px) !important;
-      border: 1px solid rgba(59, 130, 246, 0.2) !important;
-      border-radius: 16px;
-      padding: 1.5rem !important;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
-      position: relative !important;
-      overflow: hidden !important;
-      min-height: auto;
-      height: auto;
-      visibility: visible !important;
-      opacity: 1 !important;
-      z-index: 5;
-    }
-    
-    /* Ocultar contenido desktop en móvil */
-    .subtitle-content-desktop {
-      display: none !important;
-    }
-    
-    /* Slider para móvil - Solo un texto visible a la vez */
-    .subtitle-slider-mobile {
-      position: relative;
-      width: 100%;
-      overflow: hidden !important;
-      min-height: auto;
-    }
-    
-    /* Columnas del slider - Ocupan 100% del ancho, superpuestas */
-    .subtitle-column {
-      width: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      transition: transform 0.8s ease, opacity 0.8s ease;
-      display: flex !important;
-      align-items: flex-start !important;
-    }
-    
-    /* Estado inicial: columna izquierda visible, derecha oculta fuera de la pantalla */
-    .subtitle-column-left {
-      transform: translateX(0);
-      opacity: 1;
-      visibility: visible;
-      position: relative;
-    }
-    
-    .subtitle-column-right {
-      transform: translateX(100%);
-      opacity: 0;
-      visibility: hidden !important;
-      position: absolute;
-    }
-    
-    /* Cuando el slider cambia a mostrar la columna derecha */
-    .subtitle-slider-mobile[data-slide="right"] .subtitle-column-left {
-      transform: translateX(-100%);
-      opacity: 0;
-      visibility: hidden !important;
-      position: absolute;
-    }
-    
-    .subtitle-slider-mobile[data-slide="right"] .subtitle-column-right {
-      transform: translateX(0);
-      opacity: 1;
-      visibility: visible !important;
-      position: relative;
-    }
-    
-    /* Cuando vuelve a mostrar la columna izquierda */
-    .subtitle-slider-mobile[data-slide="left"] .subtitle-column-left {
-      transform: translateX(0);
-      opacity: 1;
-      visibility: visible !important;
-      position: relative;
-    }
-    
-    .subtitle-slider-mobile[data-slide="left"] .subtitle-column-right {
-      transform: translateX(100%);
-      opacity: 0;
-      visibility: hidden !important;
-      position: absolute;
-    }
-    
-    /* Asegurar que el texto dentro de las columnas sea visible */
-    .subtitle-column .hero-subtitle,
-    .subtitle-column .hero-support-text {
-      color: rgba(212, 175, 55, 0.9) !important; /* Color dorado con opacidad */
-      font-size: clamp(1rem, 2vw, 1.25rem);
-      line-height: 1.6;
-      margin: 0 !important;
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      width: 100%;
-      text-align: left;
-    }
-    
-    .subtitle-column .hero-support-text {
-      color: rgba(212, 175, 55, 0.85) !important; /* Color dorado con opacidad */
-    }
-    
-    /* Establecer altura del slider basada en hero-subtitle */
-    .subtitle-slider-mobile {
-      min-height: auto;
-    }
-    
-    .subtitle-slider-mobile[data-height-set] {
-      height: var(--slider-height);
-    }
-    
-    .subtitle-line {
-      display: block;
-      margin-bottom: 0rem;
-    }
-    
-    .hero-cta-primary {
-      margin-top:0rem !important;
-      justify-content: center;
-      width: 100%;
-      max-width: 100%;
-      padding-left: 1rem;
-      padding-right: 1rem;
-      box-sizing: border-box;
-      flex-wrap: nowrap;
-      display: flex;
-      gap: 1rem;
-    }
-    
-    .hero-rating {
-      margin-top: -0.5rem;
-      justify-content: center;
-      width: 100%;
-      max-width: 100%;
-      padding-left: 1rem;
-      padding-right: 1rem;
-      box-sizing: border-box;
-      flex-wrap: wrap;
-    }
-  }
-  
-  .hero-text {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    animation: fadeInUp 0.8s ease-out;
-    max-width: 100%;
-    width: 100%;
-    box-sizing: border-box;
-    overflow: visible;
-    margin: 0;
-    padding: 0;
-  }
-  
-  /* Mobile: Los elementos hijos se posicionan directamente en el grid padre */
-  @media (min-width: 320px) and (max-width: 1023px) {
-    .hero-text {
-      display: contents; /* Permite que los hijos se posicionen en el grid padre */
-      gap: 0;
-      align-items: center !important;
-      text-align: center !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 auto !important;
-      padding: 0 1rem !important;
-      box-sizing: border-box !important;
-    }
-    
-    /* Forzar que todas las líneas del título estén centradas en móvil */
-    .hero-title .title-line,
-    .hero-title .title-line .title-align-right,
-    .hero-title .title-line .title-align-left,
-    .hero-title .title-line-compact,
-    .hero-title .title-line-compact .title-align-right,
-    .hero-title .title-line-compact .title-align-left {
-      text-align: center !important;
-      margin: 0 auto !important;
-      padding: 0 !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      display: block !important;
-      justify-content: center !important;
-    }
-    
-    /* Anular los estilos flex que alinean a la derecha */
-    .hero-title .title-line:has(.title-align-right) {
-      display: block !important;
-      text-align: center !important;
-      justify-content: center !important;
-    }
-    
-    .hero-title .title-line-compact:has(.title-align-right) {
-      text-align: center !important;
-    }
-    
-    .hero-title .title-line-compact:has(.title-align-right) ~ .title-line-compact {
-      text-align: center !important;
-      padding: 0 !important;
-      margin: 0 auto !important;
-    }
-  }
-  
-  /* Desktop: hero-text centrado pero más arriba */
-  @media (min-width: 1024px) {
-    .hero-text {
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: flex-start !important; /* Más arriba */
-      gap: 0 !important; /* Sin gap, usar margin-top para control preciso */
-      max-width: 100% !important;
-      width: 100% !important;
-      height: 100% !important; /* Ocupar toda la altura disponible */
-      box-sizing: border-box !important;
-      align-items: center !important; /* Centrar horizontalmente */
-      align-self: stretch !important;
-      min-height: 0 !important;
-      padding: 2rem 1.5rem !important; /* Padding generoso para más aire y legibilidad */
-    }
-    
-    /* Title más arriba */
-    .hero-text .hero-title {
-      margin-top: 0 !important; /* Al inicio del flex */
-      margin-bottom: 0 !important;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      padding: 0 !important;
-      flex-shrink: 0 !important;
-      width: 100% !important;
-      max-width: 900px !important; /* Max-width para mejor legibilidad en pantallas grandes */
-      box-sizing: border-box !important;
-      grid-column: unset !important; /* Remover grid positioning cuando está en flex */
-      grid-row: unset !important;
-      align-self: unset !important;
-      text-align: center !important; /* Centrado como en la segunda imagen de referencia */
-      display: block !important; /* Cambiar de flex a block para mejor control */
-      line-height: 1.2 !important; /* Mejor legibilidad */
-      position: relative !important;
-      z-index: 10 !important;
-      overflow-wrap: break-word !important;
-      word-wrap: break-word !important;
-      font-size: clamp(2.75rem, 6vw, 4rem) !important; /* Título más grande para mejor jerarquía */
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important; /* Tipografía sans-serif moderna */
-      font-weight: 700 !important; /* Peso más fuerte para jerarquía */
-      letter-spacing: -0.02em !important; /* Tracking ajustado para modernidad */
-      line-height: 1.15 !important; /* Line-height más ajustado */
-      color: #0f172a !important; /* Color más oscuro y profesional */
-    }
-    
-    /* Subtitle centrado con mejor jerarquía */
-    .hero-text .hero-subtitle {
-      flex-shrink: 0;
-      width: 100%;
-      max-width: 700px !important; /* Max-width para mejor legibilidad del subtítulo */
-      margin-top: 1.5rem !important; /* Más espacio para mejor respiración */
-      margin-bottom: 1.5rem !important; /* Más espacio */
-      margin-left: auto !important;
-      margin-right: auto !important;
-      text-align: center !important;
-      font-size: clamp(1.125rem, 2.5vw, 1.375rem) !important; /* Tamaño más grande */
-      font-weight: 400 !important; /* Peso normal para contraste con H1 */
-      line-height: 1.6 !important; /* Line-height más generoso para legibilidad */
-      letter-spacing: -0.01em !important;
-      color: #475569 !important; /* Gris medio para jerarquía visual */
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-    }
-    
-    /* Carrusel de logos centrado */
-    .hero-logos-carousel {
-      grid-area: logos; /* Área del grid para móvil */
-      width: 100% !important;
-      max-width: 100% !important;
-      margin: 0 auto !important; /* Centrado */
-      padding: 0.25rem 0 !important;
-      display: flex !important;
-      flex-direction: column;
-      align-items: center !important; /* Centrado */
-      justify-content: center !important; /* Centrado verticalmente */
-      gap: 1rem; /* Más espacio para mejor respiración */
-      flex-shrink: 0;
-      z-index: 10;
-      visibility: visible !important;
-      position: relative !important;
-      box-sizing: border-box !important;
-      overflow: hidden !important;
-      overflow-x: hidden !important;
-    }
-    
-    .hero-logos-carousel .logos-track {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important; /* Centrar los logos */
-      gap: 2rem;
-    }
-    
-    .hero-logos-carousel .logos-title {
-      font-size: 0.8125rem;
-      color: #94a3b8; /* Gris más suave y menos prominente */
-      font-weight: 500;
-      margin: 0;
-      margin-bottom: 0.5rem;
-      text-align: center;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-    
-    .hero-logos-carousel .logos-track {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      overflow: hidden;
-      width: 100%;
-      max-width: 100%;
-      position: relative;
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      transform: translateX(0) !important; /* Mantener estático */
-      will-change: auto; /* No optimizar para animación */
-      contain: layout style paint;
-    }
-    
-    .hero-logos-carousel .logo-item {
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 40px;
-      width: auto;
-      max-width: 100px;
-    }
-    
-    .hero-logos-carousel .logo-item img {
-      height: 100%;
-      width: auto;
-      max-width: 100px;
-      object-fit: contain;
-      filter: grayscale(100%) opacity(0.5) saturate(0.3); /* Más sutil en desktop también */
-      transition: filter 0.3s ease;
-    }
-    
-    .hero-logos-carousel .logo-item img:hover {
-      filter: grayscale(80%) opacity(0.7) saturate(0.5); /* Hover más sutil */
-    }
-    
-    /* Logos más grandes para gourmetarabe e idocstore en desktop */
-    .hero-logos-carousel .logo-item-large {
-      height: 90px !important;
-      max-width: 200px !important;
-    }
-    
-    .hero-logos-carousel .logo-item-large img {
-      max-width: 200px !important;
-      height: 100% !important;
-    }
-    
-    /* Ocultar completamente el carrusel móvil antiguo */
-    .hero-logos-carousel-mobile {
-      display: none !important;
-      visibility: hidden !important;
-      height: 0 !important;
-      width: 0 !important;
-      overflow: hidden !important;
-      position: absolute !important;
-      left: -9999px !important;
-    }
-    
-    @media (min-width: 1024px) {
-      .hero-logos-carousel {
-        margin: 2rem 0 !important;
-      }
-      
-      .hero-logos-carousel .logos-title {
-        font-size: 1rem;
-      }
-      
-      .hero-logos-carousel .logo-item {
-        height: 50px;
-        max-width: 120px;
-      }
-      
-      .hero-logos-carousel .logo-item img {
-        max-width: 120px;
-      }
-      
-      /* Logos más grandes en desktop */
-      .hero-logos-carousel .logo-item-large {
-        height: 100px !important;
-        max-width: 220px !important;
-      }
-      
-      .hero-logos-carousel .logo-item-large img {
-        max-width: 220px !important;
-        height: 100% !important;
-      }
-    }
-    
-    /* En móvil, ocultar el carrusel de logos como en la segunda imagen */
-    @media (max-width: 1023px) {
-      .hero-logos-carousel {
-        display: none !important; /* Ocultar en móvil como en la segunda imagen */
-        visibility: hidden !important;
-        height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        max-height: 80px;
-        overflow: hidden !important;
-        overflow-x: hidden !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-        position: relative !important;
-        left: 0 !important;
-        right: 0 !important;
-        transform: none !important;
-        contain: layout style paint !important;
-      }
-      
-      .hero-logos-carousel .logos-track {
-        overflow: hidden !important;
-        overflow-x: hidden !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        position: relative !important;
-        transform: translateX(0) !important; /* Mantener estático */
-        will-change: auto !important; /* No optimizar para animación */
-        contain: layout style paint !important;
-      }
-      
-      .hero-logos-carousel .logo-item {
-        height: 35px;
-        max-width: 80px;
-        flex-shrink: 0;
-        box-sizing: border-box;
-      }
-      
-      .hero-logos-carousel .logo-item img {
-        max-width: 80px;
-        width: auto;
-        height: auto;
-        object-fit: contain;
-        box-sizing: border-box;
-      }
-      
-      /* Logos más grandes en móvil */
-      .hero-logos-carousel .logo-item-large {
-        height: 60px !important;
-        max-width: 130px !important;
-      }
-      
-      .hero-logos-carousel .logo-item-large img {
-        max-width: 130px !important;
-        height: 100% !important;
-      }
-    }
-    
-    /* CTA y rating - SOBRESCRIBIDO por estilos más específicos arriba en @media (max-width: 1023px) */
-    
-    /* Desktop: Asegurar que los CTAs tengan los mismos estilos que en móvil */
-    .hero-text .hero-cta-primary .btn-neon-blue {
-      background: var(--color-black-deep) !important;
-      color: var(--color-white-pure) !important;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 2px 5px rgba(0, 0, 0, 0.2) !important;
-      border: 1px solid var(--color-graphite-dark) !important;
-    }
-    
-    .hero-text .hero-cta-primary .btn-neon-orange {
-      background: rgba(255, 255, 255, 0.95) !important;
-      color: var(--color-black-deep) !important;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 2px 5px rgba(0, 0, 0, 0.15) !important;
-      border: 2px solid var(--color-graphite-dark) !important;
-      backdrop-filter: blur(5px) !important;
-    }
-    
-    .hero-text .hero-cta-primary .btn-neon-orange .btn-text {
-      color: var(--color-black-deep) !important;
-    }
-    
-    /* Ocultar completamente el carrusel de logos dentro de hero-text en desktop */
-    .hero-text .hero-logos-carousel-mobile {
-      display: none !important;
-      visibility: hidden !important;
-      height: 0 !important;
-      width: 0 !important;
-      max-height: 0 !important;
-      max-width: 0 !important;
-      min-height: 0 !important;
-      min-width: 0 !important;
-      overflow: hidden !important;
-      position: absolute !important;
-      left: -9999px !important;
-      top: -9999px !important;
-      opacity: 0 !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      border: none !important;
-      pointer-events: none !important;
-      z-index: -1 !important;
-      grid-area: unset !important;
-      order: 999 !important; /* Moverlo al final del flex order */
-    }
-    
-    .hero-text .hero-logos-carousel-mobile * {
-      display: none !important;
-      visibility: hidden !important;
-      height: 0 !important;
-      width: 0 !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
-    }
-  }
-  
-  /* Estilos generales para hero-title */
-  .hero-title {
-    flex-shrink: 0; /* No permitir que se encoja */
-    margin-bottom: 0;
-    line-height: 1.1;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    overflow-wrap: break-word; /* Permitir que el texto se ajuste */
-    word-wrap: break-word;
-  }
-  
-  /* Desktop: Estilos adicionales para hero-subtitle y CTA */
-  @media (min-width: 1024px) {
-    .hero-subtitle-card {
-      flex-shrink: 1;
-      margin-bottom: 0.25rem;
-      margin-top: -1rem;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(59, 130, 246, 0.2);
-      border-radius: 16px;
-      padding: 2rem;
-      max-width: 600px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Ocultar slider en desktop */
-    .subtitle-slider-mobile {
-      display: none;
-    }
-    
-    /* Mostrar contenido desktop */
-    .subtitle-content-desktop {
-      display: block;
-    }
-    
-    .hero-subtitle {
-      color: rgba(212, 175, 55, 0.9);
-      line-height: 1.3;
-      margin: 0 0 1rem 0;
-    }
-    
-    .hero-support-text {
-      color: rgba(212, 175, 55, 0.85);
-      margin: 0;
-    }
-    
-    .hero-cta-primary {
-      flex-shrink: 0;
-      margin: 0 auto !important; /* Centrado */
-      margin-top: 2rem !important; /* Más espacio para mejor respiración */
-      margin-bottom: 1rem !important; /* Más espacio antes del rating */
-      display: flex;
-      flex-direction: row !important; /* Botones lado a lado en escritorio */
-      gap: 1rem;
-      flex-wrap: nowrap;
-      align-items: center;
-      justify-content: center !important; /* Centrado como en la referencia */
-      z-index: 10;
-      position: relative;
-    }
-    
-    /* Rating centrado en escritorio, debajo de los CTAs */
-    .hero-text .hero-rating {
-      flex-shrink: 0;
-      margin: 0 auto !important; /* Centrado */
-      margin-top: 0.75rem !important; /* Más espacio para respiración */
-      margin-bottom: 0;
-      display: flex !important;
-      justify-content: center !important; /* Centrado como en la referencia */
-      align-items: center;
-      visibility: visible !important;
-      opacity: 1 !important;
-      z-index: 10;
-      position: relative;
-    }
-    
-    /* Botones CTA con estilo neón igual que móvil */
-    .btn-neon {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 1rem 2rem;
-      border-radius: 16px;
-      font-weight: 700;
-      font-size: 1rem;
-      text-decoration: none;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      white-space: nowrap;
-      flex-shrink: 1;
-      min-width: fit-content;
-      overflow: hidden;
-      border: none;
-      cursor: pointer;
-      box-sizing: border-box;
-    }
-    
-    /* CTA Primario: Sólido azul (mejor conversión) */
-    .btn-neon-blue {
-      background: #3b82f6 !important; /* Azul sólido para mejor conversión */
-      color: var(--color-white-pure) !important;
-      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
-      border: 1px solid #3b82f6;
-    }
-    
-    .btn-neon-blue .btn-text {
-      color: var(--color-white-pure) !important;
-      font-weight: 600;
-    }
-    
-    .btn-neon-blue:hover {
-      background: #2563eb !important; /* Azul más oscuro en hover */
-      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-      transform: translateY(-2px);
-    }
-    
-    .btn-neon-orange {
-      background: transparent !important;
-      color: var(--color-black-deep) !important;
-      border: 2px solid var(--color-graphite-dark);
-      box-shadow: none;
-    }
-    
-    .btn-neon-orange .btn-text {
-      color: var(--color-black-deep) !important;
-    }
-    
-    .btn-neon-orange:hover {
-      background: var(--color-grey-light) !important;
-      border-color: var(--color-black-deep);
-      transform: translateY(-2px);
-    }
-    
-    .btn-neon-orange:hover .btn-text {
-      color: var(--color-black-deep) !important;
-    }
-    
-    .btn-neon:hover .btn-glow {
-      opacity: 0; /* Desactivar glow */
-    }
-    
-    /* Mostrar elementos de desktop solo en desktop/ipad */
-    .hero-mockup-desktop {
-      display: flex;
-    }
-    
-    .hero-rating {
-      flex-shrink: 0;
-      margin-bottom: 0;
-      margin-top: 0.5rem;
-    }
-  }
-  
-  .hero-title {
-    font-size: clamp(2.5rem, 2vw, 4.5rem);
-    font-weight: 800; /* Más peso visual para mejor jerarquía */
-    line-height: 1.2; /* Mejor legibilidad */
-    color: var(--text-primary);
-    letter-spacing: -0.02em;
-    margin: 0 0 0rem 0;
-    /* Mejor contraste y legibilidad */
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  }
-  
-  .hero-support-text {
-    font-size: clamp(1rem, 2vw, 1.25rem);
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin:  -1rem 0 0 0;
-    font-style: italic;
-    opacity: 0.9;
-  }
-  
-  .title-line {
-    display: block;
-    line-height: 1.1;
-  }
-  
-  /* En móvil, hacer el título más grande y con líneas específicas */
-  @media (min-width: 320px) and (max-width: 1023px) {
-    .hero-content .hero-title {
-      font-size: clamp(1.75rem, 6.5vw, 2.25rem); /* Ligeramente más grande */
-      line-height: 1.2; /* Mejor legibilidad en móvil */
-      font-weight: 800;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    }
-    
-    .hero-content .title-line {
-      display: block;
-      line-height: 1.8;
-      margin-bottom: 0.6rem;
-    }
-  }
-  
-  .hero-subtitle-card {
-    background: rgba(15, 23, 42, 0.85) !important;
-    backdrop-filter: blur(20px) !important;
-    border: 1px solid rgba(59, 130, 246, 0.2) !important;
-    border-radius: 16px;
-    padding: 1.5rem !important;
-    margin: 1.5rem 0 !important;
-    max-width: 100% !important;
-    width: 100% !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
-    position: relative !important;
-    overflow: visible;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    z-index: 5;
-  }
-  
-  /* Estilos base: mostrar contenido desktop, ocultar slider */
-  .subtitle-slider-mobile {
-    display: none;
-  }
-  
-  .subtitle-content-desktop {
-    display: block;
-  }
-  
-  .hero-subtitle {
-    font-size: clamp(1.125rem, 2vw, 1.5rem);
-    color: var(--color-graphite-dark); /* Color más oscuro para mejor contraste */
-    line-height: 1.4; /* Mejor legibilidad */
-    margin: 0 0 0rem 0;
-    font-weight: 500; /* Peso medio para diferenciarse del título */
-  }
-  
-  .hero-support-text {
-    font-size: clamp(1rem, 2vw, 1.25rem);
-    color: rgba(212, 175, 55, 0.85); /* Color dorado con opacidad */
-    line-height: 0.9;
-    margin: 0;
-    font-style: italic;
-  }
-  
-  .hero-rating {
-    display: flex;
-    align-items: center;
-    gap: 0rem;
-    flex-wrap: wrap;
-  }
-  
-  .rating-stars {
-    display: flex;
-    gap: 0.25rem;
-  }
-  
-  .star {
-    font-size: 1.5rem;
-    filter: grayscale(100%) brightness(0.3); /* Oscuro en lugar de dorado */
-    color: #1a1a1a; /* Color oscuro para las estrellas */
-  }
-  
-  .rating-text {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--text-secondary);
-    font-size: 1rem;
-  }
-  
-  .rating-score {
-    font-weight: 700;
-    color: #1a1a1a; /* Gris muy oscuro pero no negro puro */
-  }
-  
-  .rating-separator {
-    color: #1a1a1a; /* Gris muy oscuro pero no negro puro */
-  }
-  
-  .rating-count {
-    color: #1a1a1a; /* Gris muy oscuro pero no negro puro */
-  }
-  
-  .hero-cta {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-top: 0.5rem;
-  }
-  
-  .hero-cta-primary {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  /* Botones neón en desktop */
-  @media (min-width: 1024px) {
-    .btn-neon {
-      padding: 1rem 2rem;
-      font-size: 1rem;
-      border-radius: 16px;
-    }
-    
-    .btn-neon-blue {
-      box-shadow: var(--shadow-md);
-    }
-    
-    .btn-neon-blue:hover {
-      box-shadow: var(--shadow-lg);
-    }
-    
-    .btn-neon-orange {
-      box-shadow: none;
-    }
-    
-    .btn-neon-orange:hover {
-      box-shadow: var(--shadow-sm);
-    }
-  }
-  
-  .btn-primary,
-  .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 1rem 2rem;
-    border-radius: var(--radius-lg);
-    font-weight: 600;
-    font-size: 1rem;
-    text-decoration: none;
-    transition: all var(--norm) var(--ease);
-    border: none;
-    cursor: pointer;
-  }
-  
-  .btn-primary {
-    background: var(--grad-primary);
-    color: #FFFFFF;
-    box-shadow: var(--shadow-lg), var(--shadow-glow-primary);
-  }
-  
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-xl), var(--shadow-glow-primary);
-  }
-  
-  .btn-secondary {
-    background: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-  }
-  
-  .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-  }
-  
-  .btn-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-  
-  /* Mockups eliminados completamente - limpiar todos los estilos */
-  .hero-mockup,
-  .hero-mockup-mobile,
-  .hero-mockup-desktop,
-  .mockup-image,
-  .mockup-desktop-image {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    width: 0 !important;
-    overflow: hidden !important;
-  }
-  
-  .mockup-image {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    max-width: 100%;
-  }
-  
-  /* Ajustar tamaño del mockup en móvil horizontal */
-  @media (min-width: 320px) and (max-width: 479px) {
-    .hero-mockup {
-      flex-shrink: 0;
-      width: auto;
-      min-width: fit-content;
-      max-width: 50%;
-      overflow: visible;
-    }
-    
-    .mockup-image {
-      width: auto;
-      max-width: 180px;
-      height: auto;
-      display: block;
-    }
-  }
-  
-  @media (min-width: 480px) and (max-width: 767px) {
-    .hero-mockup {
-      flex-shrink: 0;
-      width: auto;
-      min-width: fit-content;
-      max-width: 50%;
-      overflow: visible;
-    }
-    
-    .mockup-image {
-      width: auto;
-      max-width: 220px;
-      height: auto;
-      display: block;
-    }
-  }
-  
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .hero-mockup {
-      flex-shrink: 0;
-      width: auto;
-      min-width: fit-content;
-      max-width: 50%;
-      overflow: visible;
-    }
-    
-    .mockup-image {
-      width: auto;
-      max-width: 300px;
-      height: auto;
-      display: block;
-    }
-  }
-  
-  @media (min-width: 1024px) {
-    .hero-mockup {
-      align-items: flex-start;
-      justify-content: flex-start;
-    }
-    
-    .mockup-image {
-      width: 75%;
-      max-width: 300px;
-      height: auto;
-      object-position: top;
-    }
-  }
-  
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes fadeInRight {
-    from {
-      opacity: 0;
-      transform: translateX(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-  
-  /* Tablet - Layout horizontal mejorado */
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .hero-premium {
-      padding: 0.5rem 1rem 1rem;
-      margin: 0 auto !important;
-      width: 100% !important;
-      max-width: 100% !important;
-    }
-    
-    .hero-content {
-      gap: 0.75rem 1rem;
-      margin: 0 auto !important;
-      width: 100% !important;
-      max-width: 100% !important;
-    }
-    
-    .hero-title {
-      font-size: clamp(1.5rem, 4vw, 2.25rem);
-      padding: 1rem !important;
-      padding-left: 1rem !important;
-      padding-right: 1rem !important;
-      margin: 0 auto !important;
-      margin-left: auto !important;
-      margin-right: auto !important;
-      text-align: center !important;
-      width: 100% !important;
-      max-width: 100% !important;
-    }
-    
-    .hero-subtitle {
-      font-size: clamp(1rem, 2vw, 1.125rem);
-    }
-  }
-  
-</style>
-
 <script>
-  // Slider de sistemas eliminado - ya no se usa
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', () => {
+    const carousel = document.getElementById('hero-carousel');
+    if (!carousel) return;
     
-    // Slider de subtítulos para móvil - Nueva estructura de columnas
-    const subtitleSlider = document.querySelector('.subtitle-slider-mobile');
-    if (subtitleSlider) {
-      // Verificar si estamos en móvil
-      function isMobile() {
-        return window.innerWidth <= 1023;
-      }
-      
-      let isShowingLeft = true; // true = izquierda (subtitle), false = derecha (support-text)
-      let subtitleInterval: ReturnType<typeof setInterval> | null = null;
-      
-      function showSubtitleColumn(side: 'left' | 'right') {
-        if (subtitleSlider) {
-          (subtitleSlider as HTMLElement).setAttribute('data-slide', side);
-          isShowingLeft = (side === 'left');
-        }
-      }
-      
-      function nextSubtitleSlide() {
-        if (!isMobile()) {
-          return;
-        }
-        // Alternar entre izquierda y derecha
-        showSubtitleColumn(isShowingLeft ? 'right' : 'left');
-      }
-      
-      function startSubtitleSlider() {
-        // Limpiar intervalo anterior si existe
-        if (subtitleInterval) {
-          clearInterval(subtitleInterval);
-          subtitleInterval = null;
-        }
-        
-        if (isMobile()) {
-          const sliderContainer = document.querySelector('.subtitle-slider-mobile');
-          const desktopContent = document.querySelector('.subtitle-content-desktop');
-          
-          if (sliderContainer) {
-            (sliderContainer as HTMLElement).style.display = 'block';
-          }
-          if (desktopContent) {
-            (desktopContent as HTMLElement).style.display = 'none';
-          }
-          
-          // Mostrar la columna izquierda primero (subtitle)
-          showSubtitleColumn('left');
-          
-          // Cambiar cada 4 segundos
-          subtitleInterval = setInterval(nextSubtitleSlide, 4000);
+    const slides = carousel.querySelectorAll('.hero-image-slide');
+    const indicators = document.querySelectorAll('.carousel-indicator');
+    
+    if (slides.length === 0) return;
+
+    let currentIndex = 0;
+    const totalSlides = slides.length;
+
+    function showSlide(index: number) {
+      // Remover clase active de todos los slides
+      slides.forEach((slide, i) => {
+        if (i === index) {
+          slide.classList.add('active');
         } else {
-          // En desktop, ocultar slider y mostrar contenido
-          const sliderContainer = document.querySelector('.subtitle-slider-mobile');
-          const desktopContent = document.querySelector('.subtitle-content-desktop');
-          if (sliderContainer) {
-            (sliderContainer as HTMLElement).style.display = 'none';
-          }
-          if (desktopContent) {
-            (desktopContent as HTMLElement).style.display = 'block';
-          }
+          slide.classList.remove('active');
         }
-      }
-      
-      // Iniciar slider inmediatamente
-      startSubtitleSlider();
-      
-      // Reiniciar slider al cambiar tamaño de ventana
-      let resizeTimeout: ReturnType<typeof setTimeout>;
-      window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          startSubtitleSlider();
-        }, 100);
       });
+
+      // Actualizar indicadores
+      indicators.forEach((indicator, i) => {
+        if (i === index) {
+          indicator.classList.add('active');
+        } else {
+          indicator.classList.remove('active');
+        }
+      });
+
+      currentIndex = index;
     }
-    
-    // Carrusel de logos estático - animación desactivada
-    // Los logos permanecen fijos sin movimiento automático
+
+    function nextSlide() {
+      const nextIndex = (currentIndex + 1) % totalSlides;
+      showSlide(nextIndex);
+    }
+
+    // Cambiar slide cada 4 segundos
+    setInterval(nextSlide, 4000);
+
+    // Permitir click en indicadores
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => {
+        showSlide(index);
+      });
+    });
   });
 </script>
 
 <style>
-  /* Estilos adicionales para forzar centrado en móvil */
-  @media (min-width: 320px) and (max-width: 1023px) {
-    /* Forzar centrado absoluto de todos los elementos del hero */
-    .hero-premium,
-    .hero-premium *,
-    .hero-container,
-    .hero-container *,
-    .hero-content,
-    .hero-content *,
-    .hero-text,
-    .hero-text * {
-      margin-left: auto !important;
-      margin-right: auto !important;
-      text-align: center !important;
+  .hero-premium {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    overflow: hidden;
+  }
+  
+  .hero-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: stretch;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* Texto a la izquierda */
+  .hero-text-section {
+    order: 1;
+  }
+
+  /* Imagen a la derecha */
+  .hero-image-section {
+    order: 2;
+  }
+
+  /* Sección de imagen con carrusel */
+  .hero-image-section {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: none;
+  }
+
+  .hero-image-carousel {
+    position: relative;
+      width: 100%;
+    height: 100%;
+  }
+
+  .hero-image-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+      width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+  }
+
+  .hero-image-slide.active {
+    opacity: 1;
+      z-index: 1;
+  }
+
+  .hero-image-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* Indicadores del carrusel */
+  .carousel-indicators {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+      display: flex;
+    gap: 0.75rem;
+      z-index: 10;
     }
     
-    /* Específicamente para el título y subtítulo */
-    .hero-title,
+  .carousel-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .carousel-indicator.active {
+    background: #ffffff;
+    border-color: #ffffff;
+    width: 32px;
+    border-radius: 6px;
+  }
+
+  /* Sección de texto */
+  .hero-text-section {
+      display: flex;
+      flex-direction: column;
+    gap: 2rem;
+    justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100%;
+    padding: 4rem 5rem;
+    background: #ffffff;
+    max-width: 100%;
+  }
+
+    .hero-title {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 3.75rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #0f172a;
+      margin: 0;
+    letter-spacing: -0.02em;
+    max-width: 90%;
+    text-align: center;
+  }
+
     .hero-subtitle {
-      text-align: center !important;
-      margin-left: auto !important;
-      margin-right: auto !important;
-      padding-left: 1rem !important;
-      padding-right: 1rem !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1.375rem;
+    font-weight: 400;
+    color: #64748b;
+    line-height: 1.7;
+      margin: 0;
+    max-width: 85%;
+      text-align: center;
+  }
+
+  /* Botones CTA */
+  .hero-cta-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    justify-content: center;
+    align-items: center;
+      width: 100%;
     }
     
-    /* Forzar que todas las líneas del título estén centradas */
-    .hero-title .title-line,
-    .hero-title .title-line *,
-    .hero-title .title-align-right,
-    .hero-title .title-align-left,
-    .hero-title .title-line-compact,
-    .hero-title .title-line-compact * {
-      text-align: center !important;
-      margin-left: auto !important;
-      margin-right: auto !important;
-      display: block !important;
-      width: 100% !important;
-      max-width: 100% !important;
+  .btn-primary,
+  .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+      border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+      text-decoration: none;
+    transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+  }
+
+  .btn-primary:hover {
+      transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+  }
+
+  .btn-primary svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .btn-secondary {
+    background: #ffffff;
+    color: #0f172a;
+    border: 2px solid #e2e8f0;
+  }
+
+  .btn-secondary:hover {
+    background: #f8fafc;
+    border-color: #3b82f6;
+    color: #3b82f6;
+  }
+
+  /* Confían en nosotros */
+  .hero-trust-section {
+    margin-top: 1.5rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .trust-title {
+    font-size: 0.875rem;
+      font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 1rem 0;
+    text-align: center;
+  }
+
+  .trust-logos {
+    display: flex;
+    gap: 1.5rem;
+      align-items: center;
+      justify-content: center;
+    flex-wrap: wrap;
+      width: 100%;
+  }
+
+  .trust-logo {
+    height: 40px;
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+  }
+
+  .trust-logo:hover {
+    opacity: 1;
+  }
+
+  .trust-logo img {
+    height: 100%;
+      width: auto;
+      object-fit: contain;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
+  }
+
+  .trust-logo:hover img {
+    filter: grayscale(0%);
+  }
+
+  /* Rating */
+  .hero-rating {
+    display: flex;
+      align-items: center;
+      justify-content: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+      width: 100%;
+  }
+
+  .rating-stars {
+      display: flex;
+    gap: 0.25rem;
+  }
+
+  .star {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .rating-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: #64748b;
+  }
+
+  .rating-score {
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  .rating-separator {
+    color: #cbd5e1;
+  }
+
+  /* Responsive - Mobile */
+  @media (max-width: 1023px) {
+    .hero-premium {
+      min-height: 100vh;
+      height: 100vh;
+      padding: 0;
+    }
+    
+    .hero-container {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding: 0;
+      height: 100%;
+      position: relative;
+    }
+    
+    .hero-image-section {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
+      border-radius: 0;
+      order: 1;
+      z-index: 1;
+    }
+
+    /* Overlay oscuro sobre la imagen para mejor legibilidad */
+    .hero-image-section::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.5) 50%,
+        rgba(0, 0, 0, 0.7) 100%
+      );
+      z-index: 2;
+    }
+
+    .hero-text-section {
+      position: relative;
+      z-index: 10;
+      order: 2;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      height: 100%;
+      background: transparent;
+    }
+
+  .hero-title {
+      font-size: 2.5rem;
+      color: #ffffff;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .hero-subtitle {
+      font-size: 1.125rem;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+      max-width: 100%;
+    }
+
+    .hero-cta-buttons {
+      justify-content: center;
+      flex-direction: column;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.95);
+      color: #0f172a;
+      border: none;
+    }
+
+    .btn-secondary:hover {
+      background: #ffffff;
+    }
+
+    .hero-trust-section {
+      margin-top: 1.5rem;
+    }
+
+    .trust-title {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .trust-logos {
+      justify-content: center;
+    }
+
+    .trust-logo img {
+      filter: brightness(0) invert(1);
+      opacity: 0.8;
+    }
+
+    .trust-logo:hover img {
+      opacity: 1;
+    }
+    
+    .hero-rating {
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .rating-info {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .rating-score {
+      color: #ffffff;
+    }
+
+    /* Indicadores más visibles en móvil */
+    .carousel-indicators {
+      bottom: 2rem;
+      z-index: 15;
+    }
+
+    .carousel-indicator {
+      border-color: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .carousel-indicator.active {
+      background: #ffffff;
+      border-color: #ffffff;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero-title {
+      font-size: 2rem;
+      line-height: 1.2;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  
+    .hero-text-section {
+      padding: 1.5rem 1rem;
+    }
+
+    .trust-logos {
+    gap: 1rem;
+    }
+
+    .trust-logo {
+      height: 32px;
+    }
+
+    .hero-cta-buttons {
+      gap: 0.75rem;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+      padding: 0.875rem 1.5rem;
+      font-size: 0.9375rem;
     }
   }
 </style>
-

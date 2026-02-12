@@ -18,18 +18,121 @@ import {
 } from '../utils/conversationalDiagnostic';
 import { createDiagnostic } from '../utils/backendClient';
 import { getIconFileName } from '../utils/iconMapping';
+import { 
+  SERVICES, 
+  SERVICE_CATEGORIES, 
+  getRecommendedServicesForSector,
+  type Service,
+  type ServiceCategory 
+} from '../utils/services';
 
-const BUSINESS_SECTORS: Array<{ value: BusinessSector; label: string; description: string; icon: string }> = [
-  { value: 'restaurante', label: 'Restaurante / Bar / Café', description: 'Negocio de comida y bebidas', icon: '/images/icons/restaurante.png' },
-  { value: 'servicio-tecnico', label: 'Servicio Técnico', description: 'Reparación de celulares, electrodomésticos, etc.', icon: '/images/icons/servicio-tecnico.png' },
-  { value: 'taller', label: 'Taller Mecánico', description: 'Reparación de autos, motos, etc.', icon: '/images/icons/taller.png' },
-  { value: 'fabrica', label: 'Fábrica / Mueblería', description: 'Producción y cotizaciones a medida', icon: '/images/icons/fabrica.png' },
-  { value: 'comercio', label: 'Comercio / Tienda', description: 'Venta de productos', icon: '/images/icons/tienda.png' },
-  { value: 'servicios', label: 'Servicios Profesionales', description: 'Consultoría, diseño, etc.', icon: '/images/icons/servicios-profesionales.png' }
+// Tipos de negocio expandidos para mejor clasificación
+type ExtendedBusinessType = 
+  | 'restaurante' 
+  | 'servicio-tecnico-celulares' 
+  | 'servicio-tecnico-general'
+  | 'taller-vehiculos' 
+  | 'taller-motos'
+  | 'muebleria'
+  | 'comercio-catalogo'
+  | 'pagina-web'
+  | 'portfolio'
+  | 'servicios-profesionales';
+
+const BUSINESS_SECTORS: Array<{ 
+  value: BusinessSector; 
+  extendedType?: ExtendedBusinessType;
+  label: string; 
+  description: string; 
+  icon: string;
+  servicePage?: string; // Página específica del servicio
+}> = [
+  { 
+    value: 'restaurante', 
+    extendedType: 'restaurante',
+    label: 'Restaurante / Bar / Café', 
+    description: 'Negocio de comida y bebidas', 
+    icon: '/images/icons/restaurante.png',
+    servicePage: '/soluciones/restaurantes'
+  },
+  { 
+    value: 'servicio-tecnico', 
+    extendedType: 'servicio-tecnico-celulares',
+    label: 'Servicio Técnico (Celulares, Tablets, Notebooks)', 
+    description: 'Reparación de dispositivos móviles y computadores', 
+    icon: '/images/icons/servicio-tecnico.png',
+    servicePage: '/soluciones/servicio-tecnico'
+  },
+  { 
+    value: 'servicio-tecnico', 
+    extendedType: 'servicio-tecnico-general',
+    label: 'Servicio Técnico (Consolas, TV, Electrónica)', 
+    description: 'Reparación de consolas, televisores, controles y otros dispositivos', 
+    icon: '/images/icons/servicio-tecnico.png',
+    servicePage: '/soluciones/servicio-tecnico'
+  },
+  { 
+    value: 'taller', 
+    extendedType: 'taller-vehiculos',
+    label: 'Taller Mecánico (Vehículos)', 
+    description: 'Reparación de autos, camionetas y vehículos', 
+    icon: '/images/icons/taller.png',
+    servicePage: '/soluciones/taller-mecanico'
+  },
+  { 
+    value: 'taller', 
+    extendedType: 'taller-motos',
+    label: 'Taller Mecánico (Motos)', 
+    description: 'Reparación de motos y motocicletas', 
+    icon: '/images/icons/taller.png',
+    servicePage: '/soluciones/taller-mecanico'
+  },
+  { 
+    value: 'fabrica', 
+    extendedType: 'muebleria',
+    label: 'Mueblería / Fábrica', 
+    description: 'Producción de muebles y cotizaciones a medida', 
+    icon: '/images/icons/fabrica.png',
+    servicePage: '/soluciones/cotizador-fabrica'
+  },
+  { 
+    value: 'comercio', 
+    extendedType: 'comercio-catalogo',
+    label: 'Comercio / Tienda con Catálogo', 
+    description: 'Venta de productos con catálogo online', 
+    icon: '/images/icons/tienda.png',
+    servicePage: '/soluciones/desarrollo-web' // O crear página específica
+  },
+  { 
+    value: 'servicios', 
+    extendedType: 'pagina-web',
+    label: 'Página Web Simple', 
+    description: 'Sitio web informativo para tu negocio', 
+    icon: '/images/icons/servicios-profesionales.png',
+    servicePage: '/soluciones/desarrollo-web'
+  },
+  { 
+    value: 'servicios', 
+    extendedType: 'portfolio',
+    label: 'Portfolio / Portafolio', 
+    description: 'Muestra tu trabajo y proyectos', 
+    icon: '/images/icons/servicios-profesionales.png',
+    servicePage: '/soluciones/desarrollo-web'
+  },
+  { 
+    value: 'servicios', 
+    extendedType: 'servicios-profesionales',
+    label: 'Servicios Profesionales', 
+    description: 'Consultoría, diseño, servicios especializados', 
+    icon: '/images/icons/servicios-profesionales.png',
+    servicePage: '/soluciones/desarrollo-web'
+  }
 ];
 
 interface DiagnosticAnswers {
   sector?: BusinessSector;
+  extendedType?: ExtendedBusinessType; // Tipo específico de negocio
+  servicePage?: string; // Página del servicio específico
   [key: string]: any;
 }
 
@@ -38,6 +141,8 @@ export default function ConversationalDiagnosticWizard() {
   const [selectedSector, setSelectedSector] = useState<BusinessSector | null>(null);
   const [answers, setAnswers] = useState<DiagnosticAnswers>({});
   const [contactInfo, setContactInfo] = useState({ name: '', company: '', email: '' });
+  const [selectedServices, setSelectedServices] = useState<string[]>([]); // IDs de servicios seleccionados
+  const [currentServiceCategory, setCurrentServiceCategory] = useState<ServiceCategory | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isMobile, setIsMobile] = useState(false);
@@ -185,9 +290,15 @@ export default function ConversationalDiagnosticWizard() {
   // Obtener todas las preguntas si hay sector seleccionado
   const allQuestions = selectedSector ? getAllQuestions() : [];
   
+  // Paso especial: selección de servicios (después de todas las preguntas)
+  const SERVICES_STEP = allQuestions.length; // El paso después de todas las preguntas
+  
+  // Determinar si estamos en el paso de servicios
+  const isServicesStep = selectedSector && currentStep === SERVICES_STEP;
+  
   // Calcular currentQuestion de forma segura
   let currentQuestion: ConversationalQuestion | undefined = undefined;
-  if (selectedSector && allQuestions.length > 0) {
+  if (selectedSector && allQuestions.length > 0 && !isServicesStep) {
     if (currentStep >= 0 && currentStep < allQuestions.length) {
       currentQuestion = allQuestions[currentStep];
     } else {
@@ -200,149 +311,365 @@ export default function ConversationalDiagnosticWizard() {
     ? currentStep === allQuestions.length - 1 
     : false;
 
+  // Verificar si todas las preguntas están respondidas
+  const isAllQuestionsAnswered = () => {
+    if (!selectedSector) return false;
+    
+    const allQuestions = getAllQuestions();
+    
+    // Verificar que todas las preguntas tengan respuesta
+    for (const question of allQuestions) {
+      const answer = answers[question.id];
+      if (!answer || (Array.isArray(answer) && answer.length === 0)) {
+        return false;
+      }
+    }
+    
+    return true;
+  };
+
+  // Manejar envío final - SOLO si se completó todo el test
+  const handleSubmit = async () => {
+    // Verificar que todas las preguntas estén respondidas
+    if (!isAllQuestionsAnswered()) {
+      setError('Por favor, completa todas las preguntas antes de enviar el diagnóstico.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setIsCompleted(true); // Marcar como completado antes de enviar
+
+    try {
+      // Calcular costos y ahorros
+      const summary = calculateCostsAndSavings(answers, selectedSector!);
+      const insights = generateInsights(answers, selectedSector!);
+      const personalizedMessage = generatePersonalizedMessage(answers, selectedSector!, summary);
+      
+      // Generar estructura mejorada de resultados
+      const nombre = answers.nombre || contactInfo.name || '';
+      const empresa = answers.empresa || contactInfo.company || '';
+      
+      const enhancedStructure = generateEnhancedResultStructure(
+        { ...answers, nombre, empresa },
+        selectedSector!,
+        insights,
+        summary
+      );
+
+      // Preparar datos para el backend
+      const diagnosticData = {
+        tipoEmpresa: selectedSector,
+        businessType: selectedSector,
+        extendedType: answers.extendedType, // Tipo específico de negocio
+        servicePage: answers.servicePage, // Página del servicio específico
+        selectedServices: selectedServices, // Incluir servicios seleccionados
+        sector: selectedSector,
+        ...Object.fromEntries(
+          Object.entries(answers).filter(([key]) => key !== 'sector')
+        ),
+        nombre: contactInfo.name || undefined,
+        empresa: contactInfo.company || undefined,
+        email: contactInfo.email || undefined,
+        summary: enhancedStructure.summary,
+        insights,
+        personalizedMessage,
+        currentSituation: enhancedStructure.currentSituation || null,
+        opportunities: enhancedStructure.opportunities || [],
+        operationalImpact: enhancedStructure.operationalImpact || null,
+        futureVision: enhancedStructure.futureVision || null
+      };
+
+      // Generar ID único para el diagnóstico
+      const diagnosticId = `local-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Preparar resultado completo para guardar
+      // Asegurar que tenga nextSteps y urgency para evitar errores en la página de resultado
+      // Si hay una página de servicio específica, dirigir allí
+      const primaryLink = answers.servicePage || '/contacto';
+      const primaryText = answers.servicePage 
+        ? 'Ver solución específica para mi negocio'
+        : 'Solicitar consulta personalizada';
+      
+      const fullResult = {
+        id: diagnosticId,
+        type: 'conversational',
+        sector: selectedSector,
+        extendedType: answers.extendedType,
+        servicePage: answers.servicePage,
+        selectedServices: selectedServices,
+        ...diagnosticData,
+        // Agregar nextSteps y urgency si no existen
+        nextSteps: {
+          primary: {
+            text: primaryText,
+            link: primaryLink
+          },
+          secondary: {
+            text: 'Ver todos los servicios',
+            link: '/servicios'
+          }
+        },
+        urgency: 'medium' as const,
+        created_at: new Date().toISOString(),
+      };
+
+      // Guardar en localStorage inmediatamente
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(`diagnostic-${diagnosticId}`, JSON.stringify(fullResult));
+        console.log('✅ [WIZARD] Diagnostic saved to localStorage:', diagnosticId);
+      }
+
+      // Intentar enviar al backend (pero no bloquear si falla)
+      try {
+        const response = await createDiagnostic(diagnosticData);
+        
+        if (response.success && response.data?.id) {
+          // Si el backend responde con un ID diferente, actualizar
+          if (response.data.id !== diagnosticId) {
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem(`diagnostic-${diagnosticId}`);
+              localStorage.setItem(`diagnostic-${response.data.id}`, JSON.stringify({
+                ...fullResult,
+                id: response.data.id
+              }));
+            }
+            window.location.href = `/diagnostico/${response.data.id}`;
+          } else {
+            window.location.href = `/diagnostico/${diagnosticId}`;
+          }
+        } else {
+          // Si el backend no responde bien, usar el ID local
+          window.location.href = `/diagnostico/${diagnosticId}`;
+        }
+      } catch (err) {
+        console.warn('⚠️ [WIZARD] Backend not available, using local storage:', err);
+        // Si el backend falla, usar localStorage
+        window.location.href = `/diagnostico/${diagnosticId}`;
+      }
+    } catch (err) {
+      console.error('Error en handleSubmit:', err);
+      setError('Error al generar el diagnóstico. Por favor, intenta de nuevo.');
+      setLoading(false);
+      setIsCompleted(false);
+    }
+  };
+
+  // Calcular progreso total
+  const totalSteps = selectedSector ? (getAllQuestions().length + 1) : 1; // +1 para el paso de servicios
+  const currentProgress = isSectorSelection ? 0 : (isServicesStep ? totalSteps : currentStep + 1);
+  const progressPercentage = (currentProgress / totalSteps) * 100;
+
   // Paso inicial: Selección de sector
   if (isSectorSelection) {
     return (
       <div className="wizard-step active" style={{ display: 'block' }}>
+        {/* Barra de progreso elegante */}
+        <div style={{
+          position: 'relative',
+          width: '100%',
+          maxWidth: '600px',
+          margin: '0 auto 2rem',
+          height: '4px',
+          background: 'rgba(59, 130, 246, 0.1)',
+          borderRadius: '999px',
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            height: '100%',
+            width: `${progressPercentage}%`,
+            background: 'linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%)',
+            borderRadius: '999px',
+            transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+            boxShadow: '0 0 12px rgba(59, 130, 246, 0.4)'
+          }} />
+        </div>
+
         <div className="step-header">
           <div className="conversational-intro">
-            <h3 className="step-title">Cuéntame sobre tu negocio</h3>
-            <p className="step-description">
-              Quiero entender cómo operas para identificar oportunidades de ahorro y crecimiento
+            <h3 className="step-title" style={{
+              fontSize: isMobile ? '1.75rem' : '2.25rem',
+              fontWeight: 700,
+              color: '#0f172a',
+              marginBottom: '0.75rem',
+              lineHeight: 1.2,
+              letterSpacing: '-0.02em'
+            }}>¿Cuál es tu negocio?</h3>
+            <p className="step-description" style={{
+              fontSize: isMobile ? '1rem' : '1.125rem',
+              color: '#64748b',
+              lineHeight: 1.6,
+              maxWidth: '600px',
+              margin: '0 auto'
+            }}>
+              Selecciona el tipo de negocio que mejor describe el tuyo
             </p>
           </div>
         </div>
         <div className="cards-grid sector-selection-grid" style={{ 
           display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(240px, 1fr))',
-          gap: isMobile ? '0.75rem' : '1.5rem',
-          marginTop: '2rem'
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)',
+          gap: isMobile ? '1rem' : '2rem',
+          marginTop: '2.5rem',
+          maxWidth: '100%',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          paddingLeft: isMobile ? '0' : '2rem',
+          paddingRight: isMobile ? '0' : '2rem'
         }}>
-          {BUSINESS_SECTORS.map((sector) => (
-            <button
-              key={sector.value}
-              className={`option-card sector-option-card ${selectedSector === sector.value ? 'selected' : ''}`}
-              style={{
-                background: '#FFFFFF',
-                border: isMobile ? 'none' : '2px solid #E5E5E3',
-                borderRadius: isMobile ? '12px' : '16px',
-                padding: isMobile ? '1rem 1.25rem' : '2rem 1.5rem',
-                textAlign: 'left',
-                cursor: 'pointer',
-                transition: isMobile ? 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' : 'all 0.3s ease',
-                display: 'flex',
-                flexDirection: isMobile ? 'row' : 'column',
-                alignItems: 'center',
-                justifyContent: isMobile ? 'flex-start' : 'center',
-                gap: '1rem',
-                minHeight: isMobile ? 'auto' : '200px',
-                height: isMobile ? 'auto' : 'auto',
-                position: 'relative',
-                boxShadow: isMobile 
-                  ? '0 2px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04)' 
-                  : '0 2px 8px rgba(0, 0, 0, 0.05)',
-                width: '100%',
-                transform: 'scale(1)',
-                transformOrigin: 'center'
-              }}
-              onMouseEnter={(e) => {
-                if (!isMobile) {
-                  e.currentTarget.style.borderColor = '#2B2B2B';
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.12)';
-                  e.currentTarget.style.background = '#F6F5F2';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isMobile) {
-                  e.currentTarget.style.borderColor = '#E5E5E3';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.05)';
-                  e.currentTarget.style.background = '#FFFFFF';
-                }
-              }}
-              onTouchStart={(e) => {
-                if (isMobile) {
-                  e.currentTarget.style.transform = 'scale(0.98)';
-                }
-              }}
-              onTouchEnd={(e) => {
-                if (isMobile) {
-                  e.currentTarget.style.transform = 'scale(1)';
-                }
-              }}
+          {BUSINESS_SECTORS.map((sector) => {
+            const isSelected = selectedSector === sector.value;
+            return (
+              <button
+                key={sector.value}
+                className={`option-card sector-option-card ${isSelected ? 'selected' : ''}`}
+                style={{
+                  background: isSelected ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' : '#FFFFFF',
+                  border: isSelected ? '3px solid #3b82f6' : '2px solid #e2e8f0',
+                  borderRadius: '20px',
+                  padding: 0,
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  overflow: 'hidden',
+                  position: 'relative',
+                  boxShadow: isSelected 
+                    ? '0 12px 32px rgba(59, 130, 246, 0.3), 0 0 0 4px rgba(59, 130, 246, 0.1)' 
+                    : '0 4px 12px rgba(0, 0, 0, 0.08)',
+                  width: '100%',
+                  transform: 'scale(1)',
+                  transformOrigin: 'center',
+                  minHeight: isMobile ? '280px' : '320px'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isMobile && !isSelected) {
+                    e.currentTarget.style.borderColor = '#3b82f6';
+                    e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
+                    e.currentTarget.style.boxShadow = '0 16px 40px rgba(59, 130, 246, 0.2)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isMobile && !isSelected) {
+                    e.currentTarget.style.borderColor = '#e2e8f0';
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
+                  }
+                }}
               onClick={() => {
                 setSelectedSector(sector.value);
-                setAnswers({ sector: sector.value });
+                setAnswers({ 
+                  sector: sector.value,
+                  extendedType: sector.extendedType,
+                  servicePage: sector.servicePage
+                });
                 setCurrentStep(0);
               }}
-            >
-              <div className="card-icon" style={{ 
-                width: isMobile ? '40px' : '56px',
-                height: isMobile ? '40px' : '56px',
-                marginBottom: isMobile ? '0' : '0.5rem', 
-                marginRight: isMobile ? '0' : '0',
-                lineHeight: 1,
-                flexShrink: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <img 
-                  src={sector.icon} 
-                  alt={sector.label}
-                  className="black-icon"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                    filter: 'grayscale(100%) brightness(0)' // Convertir iconos a negro
-                  }}
-                />
-              </div>
-              <div style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: isMobile ? 'flex-start' : 'center',
-                flex: 1,
-                textAlign: isMobile ? 'left' : 'center'
-              }}>
-                <h4 className="card-title" style={{
-                  fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif",
-                  fontSize: isMobile ? '1rem' : '1.25rem',
-                  fontWeight: 600,
-                  color: '#2B2B2B',
-                  margin: 0,
-                  textAlign: isMobile ? 'left' : 'center',
-                  lineHeight: 1.4,
-                  letterSpacing: '-0.01em'
+              >
+                {/* Imagen de fondo del sector */}
+                <div style={{
+                  width: '100%',
+                  height: isMobile ? '180px' : '200px',
+                  background: isSelected 
+                    ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%)' 
+                    : 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'relative',
+                  overflow: 'hidden'
                 }}>
-                  {sector.label}
-                </h4>
-                <p className="card-description" style={{
-                  fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif",
-                  fontSize: isMobile ? '0.8125rem' : '0.875rem',
-                  color: '#6B7280',
-                  margin: 0,
-                  marginTop: isMobile ? '0.25rem' : '0',
-                  lineHeight: 1.5,
-                  fontWeight: 400
-                }}>
-                  {sector.description}
-                </p>
-              </div>
-              {isMobile && (
-                <div style={{ 
-                  fontSize: '1.25rem', 
-                  color: '#9A9A97',
-                  flexShrink: 0,
-                  marginLeft: 'auto'
-                }}>
-                  →
+                  {/* Icono o imagen del sector */}
+                  <div style={{
+                    width: isMobile ? '80px' : '100px',
+                    height: isMobile ? '80px' : '100px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative',
+                    zIndex: 1
+                  }}>
+                    <img 
+                      src={sector.icon} 
+                      alt={sector.label}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                        filter: isSelected ? 'brightness(0) invert(1)' : 'grayscale(100%) brightness(0)',
+                        opacity: isSelected ? 1 : 0.6
+                      }}
+                    />
+                  </div>
+                  {/* Anillo de selección */}
+                  {isSelected && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      width: '120%',
+                      height: '120%',
+                      borderRadius: '50%',
+                      border: '3px solid rgba(255, 255, 255, 0.3)',
+                      animation: 'pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                    }} />
+                  )}
                 </div>
-              )}
-            </button>
-          ))}
+                
+                {/* Contenido de texto */}
+                <div style={{ 
+                  padding: isMobile ? '1.25rem' : '1.5rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.5rem',
+                  flex: 1
+                }}>
+                  <h4 style={{
+                    fontSize: isMobile ? '1.125rem' : '1.25rem',
+                    fontWeight: 700,
+                    color: isSelected ? '#FFFFFF' : '#0f172a',
+                    margin: 0,
+                    lineHeight: 1.3,
+                    letterSpacing: '-0.01em'
+                  }}>
+                    {sector.label}
+                  </h4>
+                  <p style={{
+                    fontSize: isMobile ? '0.875rem' : '0.9375rem',
+                    color: isSelected ? 'rgba(255, 255, 255, 0.9)' : '#64748b',
+                    margin: 0,
+                    lineHeight: 1.5
+                  }}>
+                    {sector.description}
+                  </p>
+                </div>
+
+                {/* Indicador de selección */}
+                {isSelected && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    right: '1rem',
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    background: '#FFFFFF',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                  }}>
+                    <span style={{ color: '#3b82f6', fontSize: '1.125rem', fontWeight: 'bold' }}>✓</span>
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
     );
@@ -351,6 +678,398 @@ export default function ConversationalDiagnosticWizard() {
   // Si no hay sector seleccionado, no debería llegar aquí (ya se maneja en isSectorSelection)
   if (!selectedSector) {
     return null;
+  }
+
+  // Mostrar error si existe
+  if (error && !loading) {
+    return (
+      <div className="wizard-step active" style={{ display: 'block' }}>
+        <div style={{ textAlign: 'center', padding: '2rem' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚠️</div>
+          <h3 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#2B2B2B', marginBottom: '1rem' }}>
+            Error al procesar el diagnóstico
+          </h3>
+          <p style={{ color: '#6B7280', marginBottom: '2rem' }}>{error}</p>
+          <button
+            onClick={() => {
+              setError('');
+              setLoading(false);
+            }}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: '#2B2B2B',
+              border: 'none',
+              borderRadius: '8px',
+              color: '#FFFFFF',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              fontWeight: 500
+            }}
+          >
+            Intentar de nuevo
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Mostrar loading
+  if (loading) {
+    return (
+      <div className="wizard-step active" style={{ display: 'block' }}>
+        <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem', animation: 'spin 1s linear infinite' }}>⏳</div>
+          <h3 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#2B2B2B', marginBottom: '1rem' }}>
+            Generando tu diagnóstico...
+          </h3>
+          <p style={{ color: '#6B7280' }}>Esto puede tomar unos momentos</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Renderizar paso de selección de servicios
+  if (isServicesStep) {
+    const recommendedServices = getRecommendedServicesForSector(selectedSector);
+    const allServicesList = Object.values(SERVICES).flat();
+    
+    return (
+      <div className="wizard-step active" style={{ display: 'block' }}>
+        <div className="step-header">
+          <div className="conversational-intro">
+            <h3 className="step-title">¿Qué servicios te interesan?</h3>
+            <p className="step-description">
+              Selecciona los servicios que te gustaría conocer o implementar. Puedes elegir varios o ninguno.
+            </p>
+          </div>
+        </div>
+
+        {/* Categorías de servicios */}
+        <div style={{ marginTop: '2rem' }}>
+          {SERVICE_CATEGORIES.map((category) => {
+            const categoryServices = SERVICES[category.id];
+            const isCategoryExpanded = currentServiceCategory === category.id;
+            
+            return (
+              <div key={category.id} style={{ marginBottom: '1.5rem' }}>
+                <button
+                  onClick={() => setCurrentServiceCategory(isCategoryExpanded ? null : category.id)}
+                  style={{
+                    width: '100%',
+                    padding: '1rem 1.5rem',
+                    background: isCategoryExpanded ? '#2B2B2B' : '#FFFFFF',
+                    border: `2px solid ${isCategoryExpanded ? '#2B2B2B' : '#E5E5E3'}`,
+                    borderRadius: '12px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    transition: 'all 0.3s ease',
+                    color: isCategoryExpanded ? '#FFFFFF' : '#2B2B2B'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isCategoryExpanded) {
+                      e.currentTarget.style.borderColor = '#2B2B2B';
+                      e.currentTarget.style.background = '#F6F5F2';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isCategoryExpanded) {
+                      e.currentTarget.style.borderColor = '#E5E5E3';
+                      e.currentTarget.style.background = '#FFFFFF';
+                    }
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <span style={{ fontSize: '1.5rem' }}>{category.icon}</span>
+                    <div style={{ textAlign: 'left' }}>
+                      <h4 style={{ 
+                        margin: 0, 
+                        fontSize: '1.125rem', 
+                        fontWeight: 600,
+                        color: isCategoryExpanded ? '#FFFFFF' : '#2B2B2B'
+                      }}>
+                        {category.name}
+                      </h4>
+                      <p style={{ 
+                        margin: 0, 
+                        fontSize: '0.875rem', 
+                        color: isCategoryExpanded ? '#D1D5DB' : '#6B7280',
+                        marginTop: '0.25rem'
+                      }}>
+                        {category.description}
+                      </p>
+                    </div>
+                  </div>
+                  <span style={{ fontSize: '1.25rem' }}>
+                    {isCategoryExpanded ? '−' : '+'}
+                  </span>
+                </button>
+
+                {isCategoryExpanded && (
+                  <div style={{ 
+                    marginTop: '1rem',
+                    display: 'grid',
+                    gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))',
+                    gap: '1rem'
+                  }}>
+                    {categoryServices.map((service) => {
+                      const isSelected = selectedServices.includes(service.id);
+                      const isRecommended = recommendedServices.some(s => s.id === service.id);
+                      
+                      return (
+                        <button
+                          key={service.id}
+                          onClick={() => {
+                            if (isSelected) {
+                              setSelectedServices(selectedServices.filter(id => id !== service.id));
+                            } else {
+                              setSelectedServices([...selectedServices, service.id]);
+                            }
+                          }}
+                          style={{
+                            padding: '1.5rem',
+                            background: isSelected ? '#2B2B2B' : '#FFFFFF',
+                            border: `2px solid ${isSelected ? '#2B2B2B' : '#E5E5E3'}`,
+                            borderRadius: '12px',
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                            transition: 'all 0.3s ease',
+                            position: 'relative',
+                            boxShadow: isSelected ? '0 4px 12px rgba(43, 43, 43, 0.15)' : '0 2px 4px rgba(0, 0, 0, 0.05)'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!isSelected) {
+                              e.currentTarget.style.borderColor = '#2B2B2B';
+                              e.currentTarget.style.transform = 'translateY(-2px)';
+                              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!isSelected) {
+                              e.currentTarget.style.borderColor = '#E5E5E3';
+                              e.currentTarget.style.transform = 'translateY(0)';
+                              e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
+                            }
+                          }}
+                        >
+                          {isRecommended && (
+                            <span style={{
+                              position: 'absolute',
+                              top: '0.75rem',
+                              right: '0.75rem',
+                              background: '#3B82F6',
+                              color: '#FFFFFF',
+                              fontSize: '0.75rem',
+                              fontWeight: 600,
+                              padding: '0.25rem 0.5rem',
+                              borderRadius: '4px'
+                            }}>
+                              Recomendado
+                            </span>
+                          )}
+                          {service.popular && (
+                            <span style={{
+                              position: 'absolute',
+                              top: '0.75rem',
+                              right: isRecommended ? '4.5rem' : '0.75rem',
+                              background: '#10B981',
+                              color: '#FFFFFF',
+                              fontSize: '0.75rem',
+                              fontWeight: 600,
+                              padding: '0.25rem 0.5rem',
+                              borderRadius: '4px'
+                            }}>
+                              Popular
+                            </span>
+                          )}
+                          <h5 style={{ 
+                            margin: 0, 
+                            marginBottom: '0.5rem',
+                            fontSize: '1rem',
+                            fontWeight: 600,
+                            color: isSelected ? '#FFFFFF' : '#2B2B2B'
+                          }}>
+                            {service.name}
+                          </h5>
+                          <p style={{ 
+                            margin: 0,
+                            fontSize: '0.875rem',
+                            color: isSelected ? '#D1D5DB' : '#6B7280',
+                            lineHeight: 1.5
+                          }}>
+                            {service.description}
+                          </p>
+                          {service.features && service.features.length > 0 && (
+                            <ul style={{
+                              margin: '0.75rem 0 0 0',
+                              paddingLeft: '1.25rem',
+                              fontSize: '0.8125rem',
+                              color: isSelected ? '#D1D5DB' : '#6B7280',
+                              listStyle: 'disc'
+                            }}>
+                              {service.features.slice(0, 3).map((feature, idx) => (
+                                <li key={idx} style={{ marginBottom: '0.25rem' }}>
+                                  {feature}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                          <div style={{
+                            marginTop: '0.75rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem'
+                          }}>
+                            <span style={{
+                              width: '20px',
+                              height: '20px',
+                              border: `2px solid ${isSelected ? '#FFFFFF' : '#9CA3AF'}`,
+                              borderRadius: '4px',
+                              background: isSelected ? '#2B2B2B' : 'transparent',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexShrink: 0
+                            }}>
+                              {isSelected && (
+                                <span style={{ color: '#FFFFFF', fontSize: '0.875rem' }}>✓</span>
+                              )}
+                            </span>
+                            <span style={{
+                              fontSize: '0.875rem',
+                              fontWeight: 500,
+                              color: isSelected ? '#FFFFFF' : '#6B7280'
+                            }}>
+                              {isSelected ? 'Seleccionado' : 'Seleccionar'}
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Información de contacto */}
+        <div className="contact-section" style={{ marginTop: '2rem', paddingTop: '2rem', borderTop: '1px solid #E5E5E3' }}>
+          <h4 className="contact-title" style={{ 
+            fontSize: '1.125rem', 
+            fontWeight: 600, 
+            color: '#2B2B2B',
+            marginBottom: '1rem',
+            textAlign: 'center'
+          }}>
+            Antes de generar tu diagnóstico, cuéntame un poco más
+          </h4>
+          <div className="contact-inputs" style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            maxWidth: '500px',
+            margin: '0 auto'
+          }}>
+            <input
+              type="text"
+              className="contact-input"
+              placeholder="Tu nombre (opcional)"
+              value={contactInfo.name}
+              onChange={(e) => setContactInfo({ ...contactInfo, name: e.target.value })}
+              style={{
+                padding: '0.75rem 1rem',
+                border: '2px solid #E5E5E3',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontFamily: 'inherit',
+                transition: 'border-color 0.3s ease'
+              }}
+            />
+            <input
+              type="text"
+              className="contact-input"
+              placeholder="Nombre de tu empresa (opcional)"
+              value={contactInfo.company}
+              onChange={(e) => setContactInfo({ ...contactInfo, company: e.target.value })}
+              style={{
+                padding: '0.75rem 1rem',
+                border: '2px solid #E5E5E3',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontFamily: 'inherit',
+                transition: 'border-color 0.3s ease'
+              }}
+            />
+            <input
+              type="email"
+              className="contact-input"
+              placeholder="Tu email (opcional)"
+              value={contactInfo.email}
+              onChange={(e) => setContactInfo({ ...contactInfo, email: e.target.value })}
+              style={{
+                padding: '0.75rem 1rem',
+                border: '2px solid #E5E5E3',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontFamily: 'inherit',
+                transition: 'border-color 0.3s ease'
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Botones de navegación */}
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2rem' }}>
+          <button
+            className="btn-back"
+            onClick={() => setCurrentStep(currentStep - 1)}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: '#F6F5F2',
+              border: '2px solid #E5E5E3',
+              borderRadius: '8px',
+              color: '#2B2B2B',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              fontWeight: 500,
+              transition: 'all 0.3s ease'
+            }}
+          >
+            ← Anterior
+          </button>
+          <button
+            className="btn-submit"
+            onClick={handleSubmit}
+            disabled={loading || !isAllQuestionsAnswered()}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: loading || !isAllQuestionsAnswered() ? '#9CA3AF' : '#2B2B2B',
+              border: 'none',
+              borderRadius: '8px',
+              color: '#FFFFFF',
+              cursor: loading || !isAllQuestionsAnswered() ? 'not-allowed' : 'pointer',
+              fontSize: '1rem',
+              fontWeight: 500,
+              transition: 'all 0.3s ease'
+            }}
+          >
+            {loading ? 'Generando tu diagnóstico...' : 'Generar mi diagnóstico personalizado'}
+          </button>
+        </div>
+        {!isAllQuestionsAnswered() && (
+          <p style={{ 
+            marginTop: '1rem', 
+            color: '#9A9A97', 
+            fontSize: '0.875rem',
+            textAlign: 'center'
+          }}>
+            Por favor, completa todas las preguntas para generar tu diagnóstico
+          </p>
+        )}
+      </div>
+    );
   }
 
   // Obtener la pregunta actual de forma segura
@@ -396,15 +1115,81 @@ export default function ConversationalDiagnosticWizard() {
     const isText = question.type === 'text';
     const selectedValue = answers[question.id];
     const isFirstQuestion = currentStep === 0;
+    const questionProgress = ((currentStep + 1) / allQuestions.length) * 100;
 
     return (
       <div className="wizard-step active">
+        {/* Barra de progreso elegante y delgada */}
+        <div style={{
+          position: 'relative',
+          width: '100%',
+          maxWidth: '800px',
+          margin: '0 auto 2rem',
+          height: '3px',
+          background: 'rgba(59, 130, 246, 0.1)',
+          borderRadius: '999px',
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            height: '100%',
+            width: `${questionProgress}%`,
+            background: 'linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%)',
+            borderRadius: '999px',
+            transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+            boxShadow: '0 0 8px rgba(59, 130, 246, 0.4)'
+          }} />
+        </div>
+
+        {/* Mensaje motivacional */}
+        <div style={{
+          textAlign: 'center',
+          marginBottom: '1.5rem'
+        }}>
+          <p style={{
+            fontSize: '0.875rem',
+            color: '#64748b',
+            fontWeight: 500,
+            margin: 0
+          }}>
+            ¡Estás cerca de tu diagnóstico personalizado!
+          </p>
+        </div>
+
         <div className="step-header">
           <div className="conversational-question">
-            <span className="step-number">{currentStep + 1} / {allQuestions.length}</span>
-            <h3 className="step-title">{question.title}</h3>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              marginBottom: '1rem',
+              fontSize: '0.875rem',
+              color: '#64748b',
+              fontWeight: 500
+            }}>
+              <span>Paso {currentStep + 1} de {allQuestions.length}</span>
+            </div>
+            <h3 className="step-title" style={{
+              fontSize: isMobile ? '1.75rem' : '2.25rem',
+              fontWeight: 700,
+              color: '#0f172a',
+              marginBottom: '0.75rem',
+              lineHeight: 1.2,
+              letterSpacing: '-0.02em',
+              textAlign: 'center'
+            }}>{question.title}</h3>
             {question.subtitle && (
-              <p className="step-description">{question.subtitle}</p>
+              <p className="step-description" style={{
+                fontSize: isMobile ? '1rem' : '1.125rem',
+                color: '#64748b',
+                lineHeight: 1.6,
+                textAlign: 'center',
+                maxWidth: '700px',
+                margin: '0 auto'
+              }}>{question.subtitle}</p>
             )}
           </div>
         </div>
@@ -445,14 +1230,14 @@ export default function ConversationalDiagnosticWizard() {
               )}
               <button
                 className="btn-continue"
-                onClick={() => {
-                  if (isLastQuestion) {
-                    handleSubmit();
-                  } else {
-                    setCurrentStep(currentStep + 1);
-                  }
-                }}
-                disabled={!selectedValue || selectedValue < (question.validation?.min || 1)}
+              onClick={() => {
+                if (isLastQuestion) {
+                  setCurrentStep(SERVICES_STEP);
+                } else {
+                  setCurrentStep(currentStep + 1);
+                }
+              }}
+              disabled={!selectedValue || selectedValue < (question.validation?.min || 1)}
               >
                 Continuar →
               </button>
@@ -493,14 +1278,14 @@ export default function ConversationalDiagnosticWizard() {
               )}
               <button
                 className="btn-continue"
-                onClick={() => {
-                  if (isLastQuestion) {
-                    handleSubmit();
-                  } else {
-                    setCurrentStep(currentStep + 1);
-                  }
-                }}
-                disabled={!selectedValue}
+              onClick={() => {
+                if (isLastQuestion) {
+                  setCurrentStep(SERVICES_STEP);
+                } else {
+                  setCurrentStep(currentStep + 1);
+                }
+              }}
+              disabled={!selectedValue}
               >
                 Continuar →
               </button>
@@ -508,13 +1293,27 @@ export default function ConversationalDiagnosticWizard() {
           </div>
         )}
 
-        {question.options && (
-          <div className="cards-grid" style={{ 
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-            gap: '1.5rem',
-            marginTop: '2rem'
-          }}>
+        {question.options && (() => {
+          const optionsCount = question.options.length;
+          const use5Columns = optionsCount >= 10 && !isMobile;
+          
+          return (
+            <div 
+              className={`cards-grid ${use5Columns ? 'grid-5-columns' : ''}`}
+              style={{ 
+                display: 'grid',
+                gridTemplateColumns: isMobile 
+                  ? '1fr' 
+                  : use5Columns
+                    ? 'repeat(5, 1fr)' 
+                    : 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: isMobile ? '1rem' : '1.5rem',
+                marginTop: '2.5rem',
+                maxWidth: use5Columns ? '1400px' : '1000px',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                width: '100%'
+              } as React.CSSProperties}>
             {question.options.map((option) => {
               const isSelected = isMultiple
                 ? Array.isArray(selectedValue) && selectedValue.includes(option.value)
@@ -525,36 +1324,39 @@ export default function ConversationalDiagnosticWizard() {
                   key={option.value}
                   className={`option-card ${isMultiple ? 'multi-select' : ''} ${isSelected ? 'selected' : ''}`}
                   style={{
-                    background: isSelected ? '#2B2B2B' : '#FFFFFF',
-                    border: `2px solid ${isSelected ? '#2B2B2B' : '#E5E5E3'}`,
-                    borderRadius: '16px',
-                    padding: '2rem 1.5rem',
-                    textAlign: 'center',
+                    background: isSelected 
+                      ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' 
+                      : '#FFFFFF',
+                    border: isSelected 
+                      ? '3px solid #3b82f6' 
+                      : '2px solid #e2e8f0',
+                    borderRadius: '20px',
+                    padding: 0,
+                    textAlign: 'left',
                     cursor: 'pointer',
-                    transition: 'all 0.3s ease',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    minHeight: '200px',
+                    overflow: 'hidden',
                     position: 'relative',
-                    boxShadow: isSelected ? '0 8px 24px rgba(43, 43, 43, 0.2)' : '0 2px 8px rgba(0, 0, 0, 0.05)',
-                    color: isSelected ? '#FFFFFF' : 'inherit'
+                    boxShadow: isSelected 
+                      ? '0 12px 32px rgba(59, 130, 246, 0.3), 0 0 0 4px rgba(59, 130, 246, 0.1)' 
+                      : '0 4px 12px rgba(0, 0, 0, 0.08)',
+                    minHeight: isMobile ? '280px' : '320px',
+                    width: '100%'
                   }}
                   onMouseEnter={(e) => {
-                    if (!isSelected) {
-                      e.currentTarget.style.borderColor = '#2B2B2B';
-                      e.currentTarget.style.transform = 'translateY(-4px)';
-                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.12)';
-                      e.currentTarget.style.background = '#F6F5F2';
+                    if (!isSelected && !isMobile) {
+                      e.currentTarget.style.borderColor = '#3b82f6';
+                      e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
+                      e.currentTarget.style.boxShadow = '0 16px 40px rgba(59, 130, 246, 0.2)';
                     }
                   }}
                   onMouseLeave={(e) => {
-                    if (!isSelected) {
-                      e.currentTarget.style.borderColor = '#E5E5E3';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.05)';
-                      e.currentTarget.style.background = '#FFFFFF';
+                    if (!isSelected && !isMobile) {
+                      e.currentTarget.style.borderColor = '#e2e8f0';
+                      e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
                     }
                   }}
                   onClick={() => {
@@ -566,154 +1368,165 @@ export default function ConversationalDiagnosticWizard() {
                       setAnswers({ ...answers, [question.id]: newValue });
                     } else {
                       setAnswers({ ...answers, [question.id]: option.value });
-                      // Auto-avanzar después de un breve delay para mejor UX (solo si no es la última pregunta)
-                      if (!isLastQuestion) {
-                        setTimeout(() => {
+                      // Auto-avanzar después de un breve delay para mejor UX
+                      // Si es la última pregunta, avanzar al paso de servicios
+                      setTimeout(() => {
+                        if (isLastQuestion) {
+                          setCurrentStep(SERVICES_STEP);
+                        } else {
                           setCurrentStep(currentStep + 1);
-                        }, 300);
-                      }
+                        }
+                      }, 300);
                     }
                   }}
                 >
-                  {option.icon && (
-                    <div 
-                      className="card-icon" 
-                      style={{ 
-                        fontSize: isMobile ? '2rem' : '3rem',
-                        marginBottom: isMobile ? '0.5rem' : '1rem',
-                        lineHeight: 1,
+                  {/* Área de imagen/icono */}
+                  <div style={{
+                    width: '100%',
+                    height: isMobile ? '180px' : '200px',
+                    background: isSelected 
+                      ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%)' 
+                      : 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}>
+                    {/* Icono o imagen de la opción */}
+                    {option.icon && (
+                      <div style={{
+                        width: isMobile ? '80px' : '100px',
+                        height: isMobile ? '80px' : '100px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        userSelect: 'none'
-                      }}
-                      data-icon={option.icon}
-                    >
-                      {(() => {
-                        // Intentar usar icono de imagen si existe
-                        const iconFileName = currentQuestion ? getIconFileName(currentQuestion.id, option.value) : null;
-                        const iconPath = iconFileName ? `/images/icons/${iconFileName}` : null;
-                        
-                        // Si es una ruta de imagen (http, /, o archivo de icono)
-                        if (typeof option.icon === 'string' && (option.icon.startsWith('http') || option.icon.startsWith('/'))) {
-                          return <img 
-                            src={option.icon} 
-                            alt={option.label}
-                            className="black-icon"
-                            style={{ 
-                              width: isMobile ? '2rem' : '3rem', 
-                              height: isMobile ? '2rem' : '3rem', 
-                              objectFit: 'contain',
-                              filter: 'grayscale(100%) brightness(0)' // Convertir iconos a negro
-                            }}
-                          />;
-                        }
-                        
-                        // Si tenemos un icono mapeado, intentar usarlo
-                        if (iconPath) {
-                          return <img 
-                            src={iconPath} 
-                            alt={option.label}
-                            className="black-icon"
-                            style={{ 
-                              width: isMobile ? '2rem' : '3rem', 
-                              height: isMobile ? '2rem' : '3rem', 
-                              objectFit: 'contain',
-                              filter: 'grayscale(100%) brightness(0)' // Convertir iconos a negro
-                            }}
-                            onError={(e) => {
-                              // Silenciar el error y ocultar la imagen
-                              e.currentTarget.style.display = 'none';
-                              const parent = e.currentTarget.parentElement;
-                              if (parent && option.icon) {
-                                // Verificar que no sea una URL antes de usar como emoji
-                                const iconStr = option.icon as string;
-                                if (!iconStr.startsWith('http') && !iconStr.startsWith('/') && !iconStr.includes('.')) {
-                                  // Solo agregar fallback si no existe ya
-                                  if (!parent.querySelector('span[data-icon-fallback]')) {
-                                    const fallback = document.createElement('span');
-                                    fallback.setAttribute('data-icon-fallback', 'true');
-                                    fallback.style.fontSize = isMobile ? '2rem' : '3rem';
-                                    fallback.style.display = 'inline-block';
-                                    fallback.style.lineHeight = '1';
-                                    fallback.textContent = iconStr;
-                                    parent.appendChild(fallback);
-                                  }
-                                }
-                              }
-                            }}
-                          />;
-                        }
-                        
-                        // Fallback a emoji (solo si no es una URL)
-                        if (option.icon && typeof option.icon === 'string') {
-                          const iconStr = option.icon;
-                          // Si es una URL, no mostrar nada
-                          if (iconStr.startsWith('http') || iconStr.startsWith('/') || iconStr.includes('.')) {
-                            return <span style={{ fontSize: isMobile ? '2rem' : '3rem', display: 'inline-block', opacity: 0.3 }}>●</span>;
+                        position: 'relative',
+                        zIndex: 1
+                      }}>
+                        {(() => {
+                          // Intentar usar icono de imagen si existe
+                          const iconFileName = currentQuestion ? getIconFileName(currentQuestion.id, option.value) : null;
+                          const iconPath = iconFileName ? `/images/icons/${iconFileName}` : null;
+                          
+                          // Si es una ruta de imagen (http, /, o archivo de icono)
+                          if (typeof option.icon === 'string' && (option.icon.startsWith('http') || option.icon.startsWith('/'))) {
+                            return <img 
+                              src={option.icon} 
+                              alt={option.label}
+                              style={{ 
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain',
+                                filter: isSelected ? 'brightness(0) invert(1)' : 'grayscale(100%) brightness(0)',
+                                opacity: isSelected ? 1 : 0.6
+                              }}
+                            />;
                           }
-                          // Si es un emoji, mostrarlo con filtro para hacerlo negro
-                          return <span 
-                            className="black-emoji-icon"
-                            style={{ 
-                              fontSize: isMobile ? '2rem' : '3rem', 
-                              lineHeight: 1,
-                              display: 'inline-block',
-                              filter: 'grayscale(100%) brightness(0) contrast(200%)',
-                              WebkitFilter: 'grayscale(100%) brightness(0) contrast(200%)'
-                            }}
-                          >{option.icon}</span>;
-                        }
-                        
-                        // Si no hay icono, mostrar placeholder
-                        return <span style={{ fontSize: isMobile ? '2rem' : '3rem', display: 'inline-block', opacity: 0.3 }}>●</span>;
-                      })()}
-                    </div>
-                  )}
-                  <h4 className="card-title" style={{
-                    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif",
-                    fontSize: '1.25rem',
-                    fontWeight: 600,
-                    color: isSelected ? '#FFFFFF' : '#2B2B2B',
-                    margin: 0,
-                    lineHeight: 1.3
+                          
+                          // Si tenemos un icono mapeado, intentar usarlo
+                          if (iconPath) {
+                            return <img 
+                              src={iconPath} 
+                              alt={option.label}
+                              style={{ 
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'contain',
+                                filter: isSelected ? 'brightness(0) invert(1)' : 'grayscale(100%) brightness(0)',
+                                opacity: isSelected ? 1 : 0.6
+                              }}
+                            />;
+                          }
+                          
+                          // Fallback a emoji
+                          if (option.icon && typeof option.icon === 'string') {
+                            const iconStr = option.icon;
+                            if (!iconStr.startsWith('http') && !iconStr.startsWith('/') && !iconStr.includes('.')) {
+                              return <span style={{ 
+                                fontSize: isMobile ? '3rem' : '4rem',
+                                display: 'inline-block',
+                                filter: isSelected ? 'brightness(0) invert(1)' : 'grayscale(100%) brightness(0)',
+                                opacity: isSelected ? 1 : 0.6
+                              }}>{option.icon}</span>;
+                            }
+                          }
+                          
+                          return null;
+                        })()}
+                      </div>
+                    )}
+                    
+                    {/* Anillo de selección animado */}
+                    {isSelected && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '120%',
+                        height: '120%',
+                        borderRadius: '50%',
+                        border: '3px solid rgba(255, 255, 255, 0.3)',
+                        animation: 'pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                      }} />
+                    )}
+                  </div>
+                  
+                  {/* Contenido de texto */}
+                  <div style={{ 
+                    padding: isMobile ? '1.25rem' : '1.5rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.5rem',
+                    flex: 1
                   }}>
-                    {option.label}
-                  </h4>
-                  {option.description && (
-                    <p className="card-description" style={{
-                      fontSize: '0.875rem',
-                      color: isSelected ? '#FFFFFF' : '#9A9A97',
+                    <h4 style={{
+                      fontSize: isMobile ? '1.125rem' : '1.25rem',
+                      fontWeight: 700,
+                      color: isSelected ? '#FFFFFF' : '#0f172a',
                       margin: 0,
-                      lineHeight: 1.5
+                      lineHeight: 1.3,
+                      letterSpacing: '-0.01em'
                     }}>
-                      {option.description}
-                    </p>
-                  )}
-                  {isMultiple && isSelected && (
-                    <div className="check-icon" style={{
+                      {option.label}
+                    </h4>
+                    {option.description && (
+                      <p style={{
+                        fontSize: isMobile ? '0.875rem' : '0.9375rem',
+                        color: isSelected ? 'rgba(255, 255, 255, 0.9)' : '#64748b',
+                        margin: 0,
+                        lineHeight: 1.5
+                      }}>
+                        {option.description}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Indicador de selección */}
+                  {isSelected && (
+                    <div style={{
                       position: 'absolute',
                       top: '1rem',
                       right: '1rem',
-                      width: '28px',
-                      height: '28px',
+                      width: '32px',
+                      height: '32px',
                       borderRadius: '50%',
                       background: '#FFFFFF',
-                      color: '#2B2B2B',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '0.875rem',
-                      fontWeight: 'bold'
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
                     }}>
-                      ✓
+                      <span style={{ color: '#3b82f6', fontSize: '1.125rem', fontWeight: 'bold' }}>✓</span>
                     </div>
                   )}
                 </button>
               );
             })}
-          </div>
-        )}
+            </div>
+          );
+        })()}
 
         {/* Botón Anterior para preguntas de tipo single (no múltiples) */}
         {!isMultiple && question.options && !isLastQuestion && (
@@ -773,7 +1586,7 @@ export default function ConversationalDiagnosticWizard() {
               className="btn-continue"
               onClick={() => {
                 if (isLastQuestion) {
-                  handleSubmit();
+                  setCurrentStep(SERVICES_STEP);
                 } else {
                   setCurrentStep(currentStep + 1);
                 }
@@ -785,8 +1598,8 @@ export default function ConversationalDiagnosticWizard() {
           </div>
         )}
 
-        {/* Información de contacto al final */}
-        {isLastQuestion && (
+        {/* Información de contacto al final - Ahora en el paso de servicios */}
+        {false && (
           <div className="contact-section">
             <h4 className="contact-title">Antes de generar tu diagnóstico, cuéntame un poco más</h4>
             <div className="contact-inputs">
@@ -864,256 +1677,27 @@ export default function ConversationalDiagnosticWizard() {
     );
   };
 
-  // Verificar si todas las preguntas están respondidas
-  const isAllQuestionsAnswered = () => {
-    if (!selectedSector) return false;
-    
-    const allQuestions = getAllQuestions();
-    
-    // Verificar que todas las preguntas tengan respuesta
-    for (const question of allQuestions) {
-      const answer = answers[question.id];
-      if (!answer || (Array.isArray(answer) && answer.length === 0)) {
-        return false;
-      }
-    }
-    
-    return true;
-  };
-
-  // Manejar envío final - SOLO si se completó todo el test
-  const handleSubmit = async () => {
-    // Verificar que todas las preguntas estén respondidas
-    if (!isAllQuestionsAnswered()) {
-      setError('Por favor, completa todas las preguntas antes de enviar el diagnóstico.');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-    setIsCompleted(true); // Marcar como completado antes de enviar
-
-    try {
-      // Calcular costos y ahorros
-      const summary = calculateCostsAndSavings(answers, selectedSector!);
-      const insights = generateInsights(answers, selectedSector!);
-      const personalizedMessage = generatePersonalizedMessage(answers, selectedSector!, summary);
-      
-      // Log para depuración - verificar insights
-      console.log('🔍 [FRONTEND] Insights generated:', {
-        count: insights.length,
-        insightsWithOpportunity: insights.filter(i => i.opportunity).length,
-        insightsDetails: insights.map(i => ({
-          title: i.title,
-          hasOpportunity: !!i.opportunity,
-          opportunityTitle: i.opportunity?.title
-        }))
-      });
-      
-      // Generar estructura mejorada de resultados
-      // Obtener nombre y empresa de las respuestas o del contacto
-      const nombre = answers.nombre || contactInfo.name || '';
-      const empresa = answers.empresa || contactInfo.company || '';
-      
-      const enhancedStructure = generateEnhancedResultStructure(
-        { ...answers, nombre, empresa },
-        selectedSector!,
-        insights,
-        summary
-      );
-      
-      // Log para depuración - verificar estructura generada
-      console.log('🔍 [FRONTEND] Enhanced structure generated:', {
-        hasCurrentSituation: !!enhancedStructure.currentSituation,
-        currentSituationTitle: enhancedStructure.currentSituation?.title,
-        opportunitiesCount: enhancedStructure.opportunities?.length || 0,
-        hasOperationalImpact: !!enhancedStructure.operationalImpact,
-        operationalImpactConsequences: enhancedStructure.operationalImpact?.consequences?.length || 0,
-        hasFutureVision: !!enhancedStructure.futureVision,
-        futureVisionTitle: enhancedStructure.futureVision?.title
-      });
-
-      // Log detallado para depuración
-      console.log('🖼️ [FRONTEND] Enhanced structure COMPLETE:', JSON.stringify(enhancedStructure, null, 2));
-      console.log('🖼️ [FRONTEND] Enhanced structure imageUrls:', {
-        currentSituation: {
-          exists: !!enhancedStructure.currentSituation,
-          hasImageUrl: !!enhancedStructure.currentSituation?.imageUrl,
-          imageUrl: enhancedStructure.currentSituation?.imageUrl || 'MISSING',
-          title: enhancedStructure.currentSituation?.title
-        },
-        opportunities: {
-          count: enhancedStructure.opportunities?.length || 0,
-          items: enhancedStructure.opportunities?.map(opp => ({ 
-            title: opp.title, 
-            hasImageUrl: !!opp.imageUrl,
-            imageUrl: opp.imageUrl || 'MISSING' 
-          })) || []
-        },
-        operationalImpact: {
-          exists: !!enhancedStructure.operationalImpact,
-          hasConsequences: !!enhancedStructure.operationalImpact?.consequences,
-          consequencesCount: enhancedStructure.operationalImpact?.consequences?.length || 0,
-          consequences: enhancedStructure.operationalImpact?.consequences?.map(c => ({ 
-            area: c.area, 
-            hasImageUrl: !!c.imageUrl,
-            imageUrl: c.imageUrl || 'MISSING' 
-          })) || []
-        },
-        futureVision: {
-          exists: !!enhancedStructure.futureVision,
-          hasImageUrl: !!enhancedStructure.futureVision?.imageUrl,
-          imageUrl: enhancedStructure.futureVision?.imageUrl || 'MISSING',
-          title: enhancedStructure.futureVision?.title
-        },
-        summary: {
-          exists: !!enhancedStructure.summary,
-          hasImageUrl: !!enhancedStructure.summary?.imageUrl,
-          imageUrl: enhancedStructure.summary?.imageUrl || 'MISSING'
+  // Renderizar pregunta actual
+  return (
+    <>
+      {renderQuestion()}
+      <style>{`
+        @keyframes pulse-ring {
+          0% {
+            transform: translate(-50%, -50%) scale(0.8);
+            opacity: 1;
+          }
+          50% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.5;
+          }
+          100% {
+            transform: translate(-50%, -50%) scale(1.2);
+            opacity: 0;
+          }
         }
-      });
-      
-      // Verificar que los imageUrl se estén generando
-      if (!enhancedStructure.currentSituation?.imageUrl) {
-        console.error('❌ [FRONTEND] currentSituation.imageUrl is MISSING!', enhancedStructure.currentSituation);
-      }
-      if (!enhancedStructure.summary?.imageUrl) {
-        console.error('❌ [FRONTEND] summary.imageUrl is MISSING!', enhancedStructure.summary);
-      }
-      if (!enhancedStructure.futureVision?.imageUrl) {
-        console.error('❌ [FRONTEND] futureVision.imageUrl is MISSING!', enhancedStructure.futureVision);
-      }
-      if (!enhancedStructure.opportunities || enhancedStructure.opportunities.length === 0) {
-        console.warn('⚠️ [FRONTEND] No opportunities generated!', { insights, insightsWithOpportunity: insights.filter(i => i.opportunity) });
-      }
-      if (!enhancedStructure.operationalImpact?.consequences || enhancedStructure.operationalImpact.consequences.length === 0) {
-        console.warn('⚠️ [FRONTEND] No operational impact consequences generated!', { 
-          operationalImpact: enhancedStructure.operationalImpact,
-          summary: enhancedStructure.summary 
-        });
-      }
-
-      // Preparar datos para el backend
-      const diagnosticData = {
-        tipoEmpresa: selectedSector,
-        businessType: selectedSector,
-        sector: selectedSector, // Campo específico para el sistema conversacional
-        // Incluir todas las respuestas (excluyendo sector que ya está arriba)
-        ...Object.fromEntries(
-          Object.entries(answers).filter(([key]) => key !== 'sector')
-        ),
-        // Información de contacto
-        nombre: contactInfo.name || undefined,
-        empresa: contactInfo.company || undefined,
-        email: contactInfo.email || undefined,
-        // Datos calculados
-        summary: enhancedStructure.summary, // Usar el summary con imageUrl
-        insights,
-        personalizedMessage,
-        // Estructura mejorada de resultados - Asegurar que siempre existan
-        currentSituation: enhancedStructure.currentSituation || null,
-        opportunities: enhancedStructure.opportunities || [],
-        operationalImpact: enhancedStructure.operationalImpact || null,
-        futureVision: enhancedStructure.futureVision || null
-      };
-      
-      // Log crítico antes de enviar
-      console.log('🚨 [FRONTEND] CRITICAL CHECK before sending:', {
-        hasCurrentSituation: !!diagnosticData.currentSituation,
-        currentSituationType: typeof diagnosticData.currentSituation,
-        currentSituationKeys: diagnosticData.currentSituation ? Object.keys(diagnosticData.currentSituation) : 'NULL',
-        hasOpportunities: !!diagnosticData.opportunities,
-        opportunitiesIsArray: Array.isArray(diagnosticData.opportunities),
-        opportunitiesLength: diagnosticData.opportunities?.length || 0,
-        hasOperationalImpact: !!diagnosticData.operationalImpact,
-        operationalImpactType: typeof diagnosticData.operationalImpact,
-        hasFutureVision: !!diagnosticData.futureVision,
-        futureVisionType: typeof diagnosticData.futureVision,
-        allKeys: Object.keys(diagnosticData)
-      });
-
-      console.log('📤 [FRONTEND] Sending diagnostic data:', JSON.stringify(diagnosticData, null, 2));
-      
-      // Log detallado de la estructura mejorada antes de enviar
-      console.log('📤 [FRONTEND] Enhanced structure being sent:', {
-        currentSituation: diagnosticData.currentSituation ? {
-          hasImageUrl: !!diagnosticData.currentSituation.imageUrl,
-          imageUrl: diagnosticData.currentSituation.imageUrl,
-          title: diagnosticData.currentSituation.title
-        } : 'MISSING',
-        opportunities: diagnosticData.opportunities ? {
-          count: diagnosticData.opportunities.length,
-          first: diagnosticData.opportunities[0] ? {
-            title: diagnosticData.opportunities[0].title,
-            hasImageUrl: !!diagnosticData.opportunities[0].imageUrl,
-            imageUrl: diagnosticData.opportunities[0].imageUrl
-          } : 'empty'
-        } : 'MISSING',
-        operationalImpact: diagnosticData.operationalImpact ? {
-          hasConsequences: !!diagnosticData.operationalImpact.consequences,
-          consequencesCount: diagnosticData.operationalImpact.consequences?.length || 0,
-          firstConsequence: diagnosticData.operationalImpact.consequences?.[0] ? {
-            area: diagnosticData.operationalImpact.consequences[0].area,
-            hasImageUrl: !!diagnosticData.operationalImpact.consequences[0].imageUrl,
-            imageUrl: diagnosticData.operationalImpact.consequences[0].imageUrl
-          } : 'empty'
-        } : 'MISSING',
-        futureVision: diagnosticData.futureVision ? {
-          hasImageUrl: !!diagnosticData.futureVision.imageUrl,
-          imageUrl: diagnosticData.futureVision.imageUrl,
-          title: diagnosticData.futureVision.title
-        } : 'MISSING',
-        summary: diagnosticData.summary ? {
-          hasImageUrl: !!diagnosticData.summary.imageUrl,
-          imageUrl: diagnosticData.summary.imageUrl
-        } : 'MISSING'
-      });
-
-      const response = await createDiagnostic(diagnosticData);
-      
-      // Log de la respuesta del backend
-      console.log('📥 [FRONTEND] Response from backend:', {
-        success: response.success,
-        diagnosticId: response.data?.id,
-        hasData: !!response.data
-      });
-
-      if (response.success && response.data?.id) {
-        // Redirigir solo si se completó exitosamente
-        window.location.href = `/diagnostico/${response.data.id}`;
-      } else {
-        throw new Error('No se recibió ID del diagnóstico');
-      }
-    } catch (err: any) {
-      console.error('Error creating diagnostic:', err);
-      setError(err.message || 'Error al procesar el diagnóstico');
-      setLoading(false);
-      setIsCompleted(false); // Resetear si hay error
-    }
-  };
-
-  // Mostrar error si existe
-  if (error) {
-    return (
-      <div className="wizard-step active">
-        <div className="error-container">
-          <div className="error-icon">⚠️</div>
-          <h3 className="error-title">Error al procesar el diagnóstico</h3>
-          <p className="error-message">{error}</p>
-          <button
-            className="btn-retry"
-            onClick={() => {
-              setError('');
-              setLoading(false);
-            }}
-          >
-            Intentar de nuevo
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return renderQuestion();
+      `}</style>
+    </>
+  );
 }
 

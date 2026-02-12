@@ -1,6 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { getCollection } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import CodeViewer from "../../components/CodeViewer.astro";
 
 export async function getStaticPaths() {
@@ -11,7 +11,24 @@ export async function getStaticPaths() {
   }));
 }
 
-const { project } = Astro.props;
+const { project: projectProp } = Astro.props;
+
+// Si project no viene en props, intentar obtenerlo por slug
+let project = projectProp;
+if (!project && Astro.params.slug) {
+  try {
+    project = await getEntry("projects", Astro.params.slug);
+  } catch (error) {
+    // Si no se encuentra, redirigir a la página de proyectos
+    return Astro.redirect('/projects', 302);
+  }
+}
+
+// Validar que project existe
+if (!project) {
+  return Astro.redirect('/projects', 302);
+}
+
 const { data: projectData } = project;
 ---
 

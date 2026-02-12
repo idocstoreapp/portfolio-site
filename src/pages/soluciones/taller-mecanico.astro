@@ -5,6 +5,7 @@ import ProblemCards from '../../components/ProblemCards.astro';
 import FeatureGrid from '../../components/FeatureGrid.astro';
 import ProcessTimeline from '../../components/ProcessTimeline.astro';
 import RelatedProjects from '../../components/RelatedProjects.astro';
+import TestimonialsSection from '../../components/TestimonialsSection.astro';
 import SolutionCTA from '../../components/SolutionCTA.astro';
 ---
 
@@ -15,11 +16,92 @@ import SolutionCTA from '../../components/SolutionCTA.astro';
 >
   <SolutionHero
     title="Sistema completo para talleres mecánicos que quieren crecer"
-    subtitle="Gestiona reparaciones, inventario de repuestos, clientes y pagos desde un solo sistema. Deja de perder órdenes y aumenta tu productividad."
+    subtitle="Gestiona reparaciones, inventario de repuestos, clientes y pagos desde un solo sistema. Deja de perder órdenes y aumenta tu productividad. Inversión: $160 USD - Se recupera en semanas."
     image="/images/sistemas/idocstore-hero.png"
+    image2="/images/sistemas/idocstorepc1.PNG"
     ctaText="Ver cómo funciona"
     ctaLink="#caracteristicas"
   />
+
+  <!-- Sección de Precio Destacada -->
+  <section class="pricing-highlight" style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); padding: 4rem 2rem; text-align: center; color: white;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+      <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 24px; padding: 3rem; border: 2px solid rgba(255, 255, 255, 0.2);">
+        <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">Inversión: $160 USD</h2>
+        <p style="font-size: 1.25rem; margin-bottom: 2rem; opacity: 0.9;">Una sola vez. Sin mensualidades. Sin costos ocultos.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem;">
+          <div style="background: rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">⏱️</div>
+            <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">37.5 horas/mes</div>
+            <div style="opacity: 0.9;">Ahorro de tiempo mensual</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">💰</div>
+            <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">6-13 días</div>
+            <div style="opacity: 0.9;">Recuperación de inversión</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.5rem;">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem;">✅</div>
+            <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">100%</div>
+            <div style="opacity: 0.9;">Digital y organizado</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de Ahorro de Tiempo -->
+  <section class="time-savings" style="padding: 4rem 2rem; background: #f8fafc;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+      <h2 style="text-align: center; font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; color: #0f172a;">⏱️ Resumen de Ahorro de Tiempo</h2>
+      <p style="text-align: center; font-size: 1.25rem; color: #64748b; margin-bottom: 3rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+        Casi 1 semana completa de trabajo ahorrada cada mes
+      </p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">📝</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a;">Creación de órdenes</h3>
+          <p style="color: #3b82f6; font-weight: 700; font-size: 1.125rem;">3.3 horas/mes ahorradas</p>
+        </div>
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🛒</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a;">Control de stock</h3>
+          <p style="color: #3b82f6; font-weight: 700; font-size: 1.125rem;">7.5 horas/mes ahorradas</p>
+        </div>
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🛢️</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a;">Gestión de aceite</h3>
+          <p style="color: #3b82f6; font-weight: 700; font-size: 1.125rem;">2.5 horas/mes ahorradas</p>
+        </div>
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">👥</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a;">Búsqueda de clientes</h3>
+          <p style="color: #3b82f6; font-weight: 700; font-size: 1.125rem;">2.5 horas/mes ahorradas</p>
+        </div>
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🔧</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a;">Coordinación de mecánicos</h3>
+          <p style="color: #3b82f6; font-weight: 700; font-size: 1.125rem;">5 horas/mes ahorradas</p>
+        </div>
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">🧮</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a;">Cálculos de facturación</h3>
+          <p style="color: #3b82f6; font-weight: 700; font-size: 1.125rem;">1.7 horas/mes ahorradas</p>
+        </div>
+        <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+          <div style="font-size: 2.5rem; margin-bottom: 1rem;">📊</div>
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #0f172a;">Revisión de reportes</h3>
+          <p style="color: #3b82f6; font-weight: 700; font-size: 1.125rem;">15 horas/mes ahorradas</p>
+        </div>
+        <div style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); border-radius: 16px; padding: 2rem; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3); color: white; grid-column: 1 / -1;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
+          <h3 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">TOTAL AHORRADO</h3>
+          <p style="font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem;">37.5 horas/mes</p>
+          <p style="font-size: 1.25rem; opacity: 0.9;">Casi 1 semana completa de trabajo ahorrada cada mes</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <ProblemCards
     problems={[
@@ -49,34 +131,54 @@ import SolutionCTA from '../../components/SolutionCTA.astro';
   <FeatureGrid
     features={[
       {
-        title: "Órdenes de servicio digitales",
-        description: "Crea órdenes de servicio desde tu celular. Registra el problema del vehículo, toma fotos, establece precio y tiempo estimado. Todo organizado.",
+        title: "Órdenes de Trabajo Digitales",
+        description: "Crea órdenes completas en menos de 2 minutos. Ingresas la patente, el sistema muestra automáticamente cliente y vehículo. Seleccionas servicios, asignas mecánico y el sistema genera la orden con número único. Ahorras 10 minutos por orden.",
         image: "/images/sistemas/idocstore1-7.png"
       },
       {
-        title: "Control de inventario de repuestos",
-        description: "Sabe qué repuestos tienes, cuántos y dónde están. Recibe alertas cuando se acaban y controla tus compras de partes.",
+        title: "Control de Stock Inteligente con Escáner",
+        description: "Controla inventario automáticamente. Modo escaneo: escaneas código de barras y suma +1. Modo manual: seleccionas y escribes cantidad. Descuento automático al agregar a orden. Alertas cuando stock < 5 unidades (o < 20 litros para aceites).",
+        icon: "🛒"
+      },
+      {
+        title: "Gestión Visual de Barriles de Aceite",
+        description: "Control visual de barriles con animaciones en tiempo real. Registras capacidad al comprar, ves nivel visualmente, descuento automático al usar, alertas cuando quedan < 20 litros. Ahorras 5 minutos diarios.",
+        icon: "🛢️"
+      },
+      {
+        title: "Gestión de Clientes y Vehículos",
+        description: "Base de datos completa. Búsqueda por RUT, nombre o patente. Si existe, aparece toda la información. Si es nuevo, lo creas en 30 segundos. Historial completo de reparaciones por vehículo.",
+        icon: "👥"
+      },
+      {
+        title: "Asignación de Mecánicos y Servicios",
+        description: "Asigna trabajos específicos a cada mecánico. Cada mecánico ve solo SUS trabajos. Cambian estado: En reparación, Esperando repuestos, Listo. Pueden solicitar repuestos. Tú apruebas o rechazas. Ahorras 10 minutos diarios coordinando.",
         icon: "🔧"
       },
       {
-        title: "Seguimiento de reparaciones",
-        description: "Marca el estado de cada reparación: recibido, en diagnóstico, en reparación, listo, entregado. Los clientes pueden ver el progreso.",
+        title: "Facturación y Cálculos Automáticos",
+        description: "Calcula automáticamente: subtotal de servicios, subtotal de repuestos, total general. Todo en tiempo real. Cero errores de cálculo. Factura lista para imprimir. Ahorras 5 minutos por orden.",
+        icon: "💰"
+      },
+      {
+        title: "Dashboard y Reportes en Tiempo Real",
+        description: "Ves todo en una pantalla: órdenes creadas (hoy/semana/mes), facturación total, órdenes en progreso, productos con stock bajo, barriles de aceite activos. Toma decisiones informadas. Ahorras 30 minutos diarios.",
         icon: "📊"
       },
       {
-        title: "Gestión de clientes y vehículos",
-        description: "Historial completo de cada cliente y sus vehículos: qué reparaciones se hicieron, garantías y pagos pendientes.",
-        icon: "🚗"
+        title: "Gestión de Proveedores",
+        description: "Registra proveedores con RUT y datos de contacto. Asocia productos a proveedores. Ves qué compras a quién. Filtra productos por proveedor. Contactos organizados siempre disponibles.",
+        icon: "🏪"
       },
       {
-        title: "Control de pagos",
-        description: "Registra pagos, cobros pendientes y genera reportes de ingresos. Sabe cuánto ganaste y qué servicios son más rentables.",
-        icon: "💳"
+        title: "Compras y Facturas de Compra",
+        description: "Registra todas tus compras. Agregas productos escaneando o manualmente. El sistema actualiza stock automáticamente. Si es aceite, creas barriles directamente desde la factura. Historial de precios.",
+        icon: "📦"
       },
       {
-        title: "Reportes y estadísticas",
-        description: "Ve cuántas reparaciones hiciste, cuánto ganaste, qué servicios son más solicitados y cómo mejorar tu taller.",
-        icon: "📈"
+        title: "Seguridad y Permisos",
+        description: "Control de acceso completo: Admin (acceso total), Mecánicos (solo sus órdenes, sin ver precios). Cada usuario tiene su cuenta. Información protegida. Privacidad financiera garantizada.",
+        icon: "🔐"
       }
     ]}
   />
@@ -113,19 +215,58 @@ import SolutionCTA from '../../components/SolutionCTA.astro';
   <RelatedProjects
     projects={[
       {
-        title: "Sistema de Reparaciones",
+        title: "IDoc Store",
         image: "/images/sistemas/idocstore-hero.png",
-        problem: "Taller con órdenes en papel y sin control de inventario",
-        solution: "Sistema completo con órdenes digitales, inventario y gestión de clientes",
-        result: "Organización total y aumento de productividad",
+        problem: "Taller con órdenes en papel, sin control de inventario y pérdida de información de clientes",
+        solution: "Sistema de gestión de órdenes de clientes + Sistema de gestión de pagos y comisiones para empleados",
+        result: "Organización total, aumento de productividad y control completo de pagos y comisiones",
         link: "/projects/sistema-reparaciones"
       }
     ]}
   />
 
+  <TestimonialsSection
+    testimonials={[
+      {
+        name: "Carlos Mendoza",
+        role: "Gerente General",
+        company: "IDoc Store",
+        text: "El sistema transformó nuestro taller. Antes perdíamos órdenes, no sabíamos qué repuestos teníamos y calcular las comisiones de los mecánicos era complicado. Ahora todo está digitalizado, controlamos el inventario en tiempo real y el sistema calcula automáticamente pagos y comisiones. Ahorramos casi 1 semana completa de trabajo cada mes.",
+        rating: 5
+      }
+    ]}
+  />
+
+  <!-- Sección de ROI -->
+  <section class="roi-section" style="padding: 4rem 2rem; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; text-align: center;">
+      <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem;">💰 Retorno de Inversión</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+        <div style="background: rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 2rem; border: 2px solid rgba(255, 255, 255, 0.2);">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">⏱️</div>
+          <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Ahorro de Tiempo</h3>
+          <p style="opacity: 0.9; margin-bottom: 1rem;">37.5 horas al mes</p>
+          <p style="font-size: 1.25rem; font-weight: 700; color: #60a5fa;">Casi 1 semana completa</p>
+        </div>
+        <div style="background: rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 2rem; border: 2px solid rgba(255, 255, 255, 0.2);">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">💰</div>
+          <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Si tu hora vale $10 USD</h3>
+          <p style="opacity: 0.9; margin-bottom: 1rem;">Ahorro mensual: $375</p>
+          <p style="font-size: 1.25rem; font-weight: 700; color: #60a5fa;">ROI en 13 días</p>
+        </div>
+        <div style="background: rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 2rem; border: 2px solid rgba(255, 255, 255, 0.2);">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">📈</div>
+          <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Si tu hora vale $20 USD</h3>
+          <p style="opacity: 0.9; margin-bottom: 1rem;">Ahorro mensual: $750</p>
+          <p style="font-size: 1.25rem; font-weight: 700; color: #60a5fa;">ROI en 6 días</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <SolutionCTA
     title="¿Listo para organizar tu taller mecánico?"
-    description="Agenda una demo y descubre cómo este sistema puede transformar tu negocio"
+    description="Inversión única de $160 USD. Sin mensualidades. Se recupera en 6-13 días. Agenda una demo y descubre cómo este sistema puede transformar tu negocio."
     primaryCta={{
       text: "Agendar llamada estratégica",
       link: "/contacto?solucion=taller-mecanico"
