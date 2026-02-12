@@ -359,12 +359,12 @@ export default function ConversationalDiagnosticWizard() {
 
       // Preparar datos para el backend
       const diagnosticData = {
-        tipoEmpresa: selectedSector,
-        businessType: selectedSector,
+        tipoEmpresa: selectedSector || '',
+        businessType: selectedSector || '',
         extendedType: answers.extendedType, // Tipo específico de negocio
         servicePage: answers.servicePage, // Página del servicio específico
         selectedServices: selectedServices, // Incluir servicios seleccionados
-        sector: selectedSector,
+        sector: selectedSector || '',
         ...Object.fromEntries(
           Object.entries(answers).filter(([key]) => key !== 'sector')
         ),
@@ -392,13 +392,13 @@ export default function ConversationalDiagnosticWizard() {
         : 'Solicitar consulta personalizada';
       
       const fullResult = {
+        ...diagnosticData,
         id: diagnosticId,
         type: 'conversational',
-        sector: selectedSector,
-        extendedType: answers.extendedType,
-        servicePage: answers.servicePage,
-        selectedServices: selectedServices,
-        ...diagnosticData,
+        sector: selectedSector || diagnosticData.sector,
+        extendedType: answers.extendedType || diagnosticData.extendedType,
+        servicePage: answers.servicePage || diagnosticData.servicePage,
+        selectedServices: selectedServices || diagnosticData.selectedServices,
         // Agregar nextSteps y urgency si no existen
         nextSteps: {
           primary: {
@@ -491,17 +491,17 @@ export default function ConversationalDiagnosticWizard() {
         <div className="step-header">
           <div className="conversational-intro">
             <h3 className="step-title" style={{
-              fontSize: isMobile ? '1.75rem' : '2.25rem',
+              fontSize: isMobile ? '1.5rem' : '2.25rem',
               fontWeight: 700,
               color: '#0f172a',
-              marginBottom: '0.75rem',
+              marginBottom: '0.5rem',
               lineHeight: 1.2,
               letterSpacing: '-0.02em'
             }}>¿Cuál es tu negocio?</h3>
             <p className="step-description" style={{
-              fontSize: isMobile ? '1rem' : '1.125rem',
+              fontSize: isMobile ? '0.875rem' : '1.125rem',
               color: '#64748b',
-              lineHeight: 1.6,
+              lineHeight: 1.5,
               maxWidth: '600px',
               margin: '0 auto'
             }}>
@@ -511,55 +511,56 @@ export default function ConversationalDiagnosticWizard() {
         </div>
         <div className="cards-grid sector-selection-grid" style={{ 
           display: 'grid',
-          gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)',
-          gap: isMobile ? '1rem' : '2rem',
-          marginTop: '2.5rem',
+          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
+          gap: isMobile ? '0.5rem' : '2rem',
+          marginTop: isMobile ? '1rem' : '2.5rem',
           maxWidth: '100%',
           marginLeft: 'auto',
           marginRight: 'auto',
-          paddingLeft: isMobile ? '0' : '2rem',
-          paddingRight: isMobile ? '0' : '2rem'
+          paddingLeft: isMobile ? '0.5rem' : '2rem',
+          paddingRight: isMobile ? '0.5rem' : '2rem',
+          paddingBottom: isMobile ? '1rem' : '0'
         }}>
           {BUSINESS_SECTORS.map((sector) => {
             const isSelected = selectedSector === sector.value;
             return (
-              <button
-                key={sector.value}
+            <button
+              key={sector.value}
                 className={`option-card sector-option-card ${isSelected ? 'selected' : ''}`}
-                style={{
+              style={{
                   background: isSelected ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' : '#FFFFFF',
                   border: isSelected ? '3px solid #3b82f6' : '2px solid #e2e8f0',
                   borderRadius: '20px',
                   padding: 0,
-                  textAlign: 'left',
-                  cursor: 'pointer',
+                textAlign: 'left',
+                cursor: 'pointer',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  display: 'flex',
+                display: 'flex',
                   flexDirection: 'column',
                   overflow: 'hidden',
-                  position: 'relative',
+                position: 'relative',
                   boxShadow: isSelected 
                     ? '0 12px 32px rgba(59, 130, 246, 0.3), 0 0 0 4px rgba(59, 130, 246, 0.1)' 
                     : '0 4px 12px rgba(0, 0, 0, 0.08)',
-                  width: '100%',
-                  transform: 'scale(1)',
+                width: '100%',
+                transform: 'scale(1)',
                   transformOrigin: 'center',
                   minHeight: isMobile ? '280px' : '320px'
-                }}
-                onMouseEnter={(e) => {
+              }}
+              onMouseEnter={(e) => {
                   if (!isMobile && !isSelected) {
                     e.currentTarget.style.borderColor = '#3b82f6';
                     e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
                     e.currentTarget.style.boxShadow = '0 16px 40px rgba(59, 130, 246, 0.2)';
-                  }
-                }}
-                onMouseLeave={(e) => {
+                }
+              }}
+              onMouseLeave={(e) => {
                   if (!isMobile && !isSelected) {
                     e.currentTarget.style.borderColor = '#e2e8f0';
                     e.currentTarget.style.transform = 'translateY(0) scale(1)';
                     e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
-                  }
-                }}
+                }
+              }}
               onClick={() => {
                 setSelectedSector(sector.value);
                 setAnswers({ 
@@ -569,45 +570,45 @@ export default function ConversationalDiagnosticWizard() {
                 });
                 setCurrentStep(0);
               }}
-              >
+            >
                 {/* Imagen de fondo del sector */}
                 <div style={{
                   width: '100%',
-                  height: isMobile ? '180px' : '200px',
+                  height: isMobile ? '70px' : '200px',
                   background: isSelected 
                     ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%)' 
                     : 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
+                display: 'flex',
+                alignItems: 'center',
                   justifyContent: 'center',
                   position: 'relative',
                   overflow: 'hidden'
                 }}>
                   {/* Icono o imagen del sector */}
                   <div style={{
-                    width: isMobile ? '80px' : '100px',
-                    height: isMobile ? '80px' : '100px',
+                    width: isMobile ? '45px' : '100px',
+                    height: isMobile ? '45px' : '100px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     position: 'relative',
                     zIndex: 1
-                  }}>
-                    <img 
-                      src={sector.icon} 
-                      alt={sector.label}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain',
+              }}>
+                <img 
+                  src={sector.icon} 
+                  alt={sector.label}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
                         filter: isSelected ? 'brightness(0) invert(1)' : 'grayscale(100%) brightness(0)',
                         opacity: isSelected ? 1 : 0.6
-                      }}
-                    />
-                  </div>
+                  }}
+                />
+              </div>
                   {/* Anillo de selección */}
                   {isSelected && (
-                    <div style={{
+              <div style={{ 
                       position: 'absolute',
                       top: '50%',
                       left: '50%',
@@ -623,35 +624,35 @@ export default function ConversationalDiagnosticWizard() {
                 
                 {/* Contenido de texto */}
                 <div style={{ 
-                  padding: isMobile ? '1.25rem' : '1.5rem',
-                  display: 'flex',
-                  flexDirection: 'column',
+                  padding: isMobile ? '0.5rem 0.5rem' : '1.5rem',
+                display: 'flex', 
+                flexDirection: 'column', 
                   gap: '0.5rem',
                   flex: 1
                 }}>
                   <h4 style={{
-                    fontSize: isMobile ? '1.125rem' : '1.25rem',
+                    fontSize: isMobile ? '0.8125rem' : '1.25rem',
                     fontWeight: 700,
                     color: isSelected ? '#FFFFFF' : '#0f172a',
-                    margin: 0,
+                  margin: 0,
                     lineHeight: 1.3,
-                    letterSpacing: '-0.01em'
-                  }}>
-                    {sector.label}
-                  </h4>
+                  letterSpacing: '-0.01em'
+                }}>
+                  {sector.label}
+                </h4>
                   <p style={{
-                    fontSize: isMobile ? '0.875rem' : '0.9375rem',
+                    fontSize: isMobile ? '0.6875rem' : '0.9375rem',
                     color: isSelected ? 'rgba(255, 255, 255, 0.9)' : '#64748b',
-                    margin: 0,
+                  margin: 0,
                     lineHeight: 1.5
-                  }}>
-                    {sector.description}
-                  </p>
-                </div>
+                }}>
+                  {sector.description}
+                </p>
+              </div>
 
                 {/* Indicador de selección */}
                 {isSelected && (
-                  <div style={{
+                <div style={{ 
                     position: 'absolute',
                     top: '1rem',
                     right: '1rem',
@@ -665,9 +666,9 @@ export default function ConversationalDiagnosticWizard() {
                     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
                   }}>
                     <span style={{ color: '#3b82f6', fontSize: '1.125rem', fontWeight: 'bold' }}>✓</span>
-                  </div>
-                )}
-              </button>
+                </div>
+              )}
+            </button>
             );
           })}
         </div>
@@ -1173,19 +1174,19 @@ export default function ConversationalDiagnosticWizard() {
               <span>Paso {currentStep + 1} de {allQuestions.length}</span>
             </div>
             <h3 className="step-title" style={{
-              fontSize: isMobile ? '1.75rem' : '2.25rem',
+              fontSize: isMobile ? '1.5rem' : '2.25rem',
               fontWeight: 700,
               color: '#0f172a',
-              marginBottom: '0.75rem',
+              marginBottom: '0.5rem',
               lineHeight: 1.2,
               letterSpacing: '-0.02em',
               textAlign: 'center'
             }}>{question.title}</h3>
             {question.subtitle && (
               <p className="step-description" style={{
-                fontSize: isMobile ? '1rem' : '1.125rem',
+                fontSize: isMobile ? '0.875rem' : '1.125rem',
                 color: '#64748b',
-                lineHeight: 1.6,
+                lineHeight: 1.5,
                 textAlign: 'center',
                 maxWidth: '700px',
                 margin: '0 auto'
@@ -1230,14 +1231,14 @@ export default function ConversationalDiagnosticWizard() {
               )}
               <button
                 className="btn-continue"
-              onClick={() => {
-                if (isLastQuestion) {
+                onClick={() => {
+                  if (isLastQuestion) {
                   setCurrentStep(SERVICES_STEP);
-                } else {
-                  setCurrentStep(currentStep + 1);
-                }
-              }}
-              disabled={!selectedValue || selectedValue < (question.validation?.min || 1)}
+                  } else {
+                    setCurrentStep(currentStep + 1);
+                  }
+                }}
+                disabled={!selectedValue || selectedValue < (question.validation?.min || 1)}
               >
                 Continuar →
               </button>
@@ -1278,14 +1279,14 @@ export default function ConversationalDiagnosticWizard() {
               )}
               <button
                 className="btn-continue"
-              onClick={() => {
-                if (isLastQuestion) {
+                onClick={() => {
+                  if (isLastQuestion) {
                   setCurrentStep(SERVICES_STEP);
-                } else {
-                  setCurrentStep(currentStep + 1);
-                }
-              }}
-              disabled={!selectedValue}
+                  } else {
+                    setCurrentStep(currentStep + 1);
+                  }
+                }}
+                disabled={!selectedValue}
               >
                 Continuar →
               </button>
@@ -1296,23 +1297,27 @@ export default function ConversationalDiagnosticWizard() {
         {question.options && (() => {
           const optionsCount = question.options.length;
           const use5Columns = optionsCount >= 10 && !isMobile;
+          const use2ColumnsMobile = optionsCount >= 10 && isMobile;
           
           return (
             <div 
-              className={`cards-grid ${use5Columns ? 'grid-5-columns' : ''}`}
+              className={`cards-grid ${use5Columns ? 'grid-5-columns' : ''} ${use2ColumnsMobile ? 'grid-2-columns-mobile' : ''}`}
               style={{ 
-                display: 'grid',
+            display: 'grid',
                 gridTemplateColumns: isMobile 
-                  ? '1fr' 
+                  ? (use2ColumnsMobile ? 'repeat(2, 1fr)' : '1fr')
                   : use5Columns
                     ? 'repeat(5, 1fr)' 
                     : 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: isMobile ? '1rem' : '1.5rem',
-                marginTop: '2.5rem',
+                gap: isMobile && use2ColumnsMobile ? '0.5rem' : (isMobile ? '1rem' : '1.5rem'),
+                marginTop: isMobile && use2ColumnsMobile ? '1rem' : '2.5rem',
                 maxWidth: use5Columns ? '1400px' : '1000px',
                 marginLeft: 'auto',
                 marginRight: 'auto',
-                width: '100%'
+                width: '100%',
+                paddingLeft: isMobile && use2ColumnsMobile ? '0.5rem' : '0',
+                paddingRight: isMobile && use2ColumnsMobile ? '0.5rem' : '0',
+                paddingBottom: isMobile && use2ColumnsMobile ? '1rem' : '0'
               } as React.CSSProperties}>
             {question.options.map((option) => {
               const isSelected = isMultiple
@@ -1331,7 +1336,7 @@ export default function ConversationalDiagnosticWizard() {
                       ? '3px solid #3b82f6' 
                       : '2px solid #e2e8f0',
                     borderRadius: '20px',
-                    padding: 0,
+                    padding: isMobile && optionsCount >= 10 ? '1rem 0.75rem' : '0',
                     textAlign: 'left',
                     cursor: 'pointer',
                     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -1342,7 +1347,7 @@ export default function ConversationalDiagnosticWizard() {
                     boxShadow: isSelected 
                       ? '0 12px 32px rgba(59, 130, 246, 0.3), 0 0 0 4px rgba(59, 130, 246, 0.1)' 
                       : '0 4px 12px rgba(0, 0, 0, 0.08)',
-                    minHeight: isMobile ? '280px' : '320px',
+                    minHeight: isMobile && optionsCount >= 10 ? '140px' : (isMobile ? '280px' : '320px'),
                     width: '100%'
                   }}
                   onMouseEnter={(e) => {
@@ -1370,20 +1375,20 @@ export default function ConversationalDiagnosticWizard() {
                       setAnswers({ ...answers, [question.id]: option.value });
                       // Auto-avanzar después de un breve delay para mejor UX
                       // Si es la última pregunta, avanzar al paso de servicios
-                      setTimeout(() => {
+                        setTimeout(() => {
                         if (isLastQuestion) {
                           setCurrentStep(SERVICES_STEP);
                         } else {
                           setCurrentStep(currentStep + 1);
                         }
-                      }, 300);
+                        }, 300);
                     }
                   }}
                 >
                   {/* Área de imagen/icono */}
                   <div style={{
                     width: '100%',
-                    height: isMobile ? '180px' : '200px',
+                    height: isMobile && optionsCount >= 10 ? '70px' : (isMobile ? '180px' : '200px'),
                     background: isSelected 
                       ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%)' 
                       : 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
@@ -1394,58 +1399,58 @@ export default function ConversationalDiagnosticWizard() {
                     overflow: 'hidden'
                   }}>
                     {/* Icono o imagen de la opción */}
-                    {option.icon && (
+                  {option.icon && (
                       <div style={{
-                        width: isMobile ? '80px' : '100px',
-                        height: isMobile ? '80px' : '100px',
+                        width: isMobile && optionsCount >= 10 ? '45px' : (isMobile ? '80px' : '100px'),
+                        height: isMobile && optionsCount >= 10 ? '45px' : (isMobile ? '80px' : '100px'),
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         position: 'relative',
                         zIndex: 1
                       }}>
-                        {(() => {
-                          // Intentar usar icono de imagen si existe
-                          const iconFileName = currentQuestion ? getIconFileName(currentQuestion.id, option.value) : null;
-                          const iconPath = iconFileName ? `/images/icons/${iconFileName}` : null;
-                          
-                          // Si es una ruta de imagen (http, /, o archivo de icono)
-                          if (typeof option.icon === 'string' && (option.icon.startsWith('http') || option.icon.startsWith('/'))) {
-                            return <img 
-                              src={option.icon} 
-                              alt={option.label}
-                              style={{ 
+                      {(() => {
+                        // Intentar usar icono de imagen si existe
+                        const iconFileName = currentQuestion ? getIconFileName(currentQuestion.id, option.value) : null;
+                        const iconPath = iconFileName ? `/images/icons/${iconFileName}` : null;
+                        
+                        // Si es una ruta de imagen (http, /, o archivo de icono)
+                        if (typeof option.icon === 'string' && (option.icon.startsWith('http') || option.icon.startsWith('/'))) {
+                          return <img 
+                            src={option.icon} 
+                            alt={option.label}
+                            style={{ 
                                 width: '100%',
                                 height: '100%',
-                                objectFit: 'contain',
+                              objectFit: 'contain',
                                 filter: isSelected ? 'brightness(0) invert(1)' : 'grayscale(100%) brightness(0)',
                                 opacity: isSelected ? 1 : 0.6
-                              }}
-                            />;
-                          }
-                          
-                          // Si tenemos un icono mapeado, intentar usarlo
-                          if (iconPath) {
-                            return <img 
-                              src={iconPath} 
-                              alt={option.label}
-                              style={{ 
+                            }}
+                          />;
+                        }
+                        
+                        // Si tenemos un icono mapeado, intentar usarlo
+                        if (iconPath) {
+                          return <img 
+                            src={iconPath} 
+                            alt={option.label}
+                            style={{ 
                                 width: '100%',
                                 height: '100%',
-                                objectFit: 'contain',
+                              objectFit: 'contain',
                                 filter: isSelected ? 'brightness(0) invert(1)' : 'grayscale(100%) brightness(0)',
                                 opacity: isSelected ? 1 : 0.6
-                              }}
-                            />;
-                          }
-                          
+                            }}
+                          />;
+                        }
+                        
                           // Fallback a emoji
-                          if (option.icon && typeof option.icon === 'string') {
-                            const iconStr = option.icon;
+                        if (option.icon && typeof option.icon === 'string') {
+                          const iconStr = option.icon;
                             if (!iconStr.startsWith('http') && !iconStr.startsWith('/') && !iconStr.includes('.')) {
                               return <span style={{ 
                                 fontSize: isMobile ? '3rem' : '4rem',
-                                display: 'inline-block',
+                              display: 'inline-block',
                                 filter: isSelected ? 'brightness(0) invert(1)' : 'grayscale(100%) brightness(0)',
                                 opacity: isSelected ? 1 : 0.6
                               }}>{option.icon}</span>;
@@ -1453,9 +1458,9 @@ export default function ConversationalDiagnosticWizard() {
                           }
                           
                           return null;
-                        })()}
-                      </div>
-                    )}
+                      })()}
+                    </div>
+                  )}
                     
                     {/* Anillo de selección animado */}
                     {isSelected && (
@@ -1475,32 +1480,32 @@ export default function ConversationalDiagnosticWizard() {
                   
                   {/* Contenido de texto */}
                   <div style={{ 
-                    padding: isMobile ? '1.25rem' : '1.5rem',
+                    padding: isMobile && optionsCount >= 10 ? '0.5rem 0.5rem' : (isMobile ? '1.25rem' : '1.5rem'),
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '0.5rem',
+                    gap: isMobile && optionsCount >= 10 ? '0.25rem' : '0.5rem',
                     flex: 1
                   }}>
                     <h4 style={{
-                      fontSize: isMobile ? '1.125rem' : '1.25rem',
+                      fontSize: isMobile && optionsCount >= 10 ? '0.8125rem' : (isMobile ? '1.125rem' : '1.25rem'),
                       fontWeight: 700,
                       color: isSelected ? '#FFFFFF' : '#0f172a',
-                      margin: 0,
+                    margin: 0,
                       lineHeight: 1.3,
                       letterSpacing: '-0.01em'
-                    }}>
-                      {option.label}
-                    </h4>
-                    {option.description && (
+                  }}>
+                    {option.label}
+                  </h4>
+                  {option.description && (
                       <p style={{
-                        fontSize: isMobile ? '0.875rem' : '0.9375rem',
+                        fontSize: isMobile && optionsCount >= 10 ? '0.6875rem' : (isMobile ? '0.875rem' : '0.9375rem'),
                         color: isSelected ? 'rgba(255, 255, 255, 0.9)' : '#64748b',
-                        margin: 0,
-                        lineHeight: 1.5
-                      }}>
-                        {option.description}
-                      </p>
-                    )}
+                      margin: 0,
+                      lineHeight: 1.5
+                    }}>
+                      {option.description}
+                    </p>
+                  )}
                   </div>
 
                   {/* Indicador de selección */}
@@ -1524,7 +1529,7 @@ export default function ConversationalDiagnosticWizard() {
                 </button>
               );
             })}
-            </div>
+          </div>
           );
         })()}
 

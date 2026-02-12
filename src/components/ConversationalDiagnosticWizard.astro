@@ -99,11 +99,24 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
     text-align: center;
     margin-bottom: 2.5rem;
   }
+  
+  @media (max-width: 768px) {
+    :global(.step-header) {
+      margin-bottom: 1rem !important;
+    }
+  }
 
   :global(.conversational-intro),
   :global(.conversational-question) {
     text-align: center;
     margin-bottom: 2rem;
+  }
+  
+  @media (max-width: 768px) {
+    :global(.conversational-intro),
+    :global(.conversational-question) {
+      margin-bottom: 1rem !important;
+    }
   }
 
   :global(.step-number) {
@@ -121,21 +134,39 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
   :global(.conversational-question .step-title),
   :global(.step-title) {
     font-family: 'Libre Baskerville', serif;
-    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
     font-weight: 700;
     color: var(--color-graphite-dark, #2B2B2B);
     margin-bottom: 1rem;
     line-height: 1.3;
   }
+  
+  @media (max-width: 768px) {
+    :global(.conversational-intro .step-title),
+    :global(.conversational-question .step-title),
+    :global(.step-title) {
+      font-size: 1.5rem !important;
+      margin-bottom: 0.5rem !important;
+    }
+  }
 
   :global(.conversational-intro .step-description),
   :global(.conversational-question .step-description),
   :global(.step-description) {
-    font-size: clamp(1rem, 2vw, 1.125rem);
+    font-size: clamp(0.875rem, 2vw, 1.125rem);
     color: var(--color-grey-medium, #9A9A97);
-    line-height: 1.6;
+    line-height: 1.5;
     max-width: 600px;
     margin: 0 auto;
+  }
+  
+  @media (max-width: 768px) {
+    :global(.conversational-intro .step-description),
+    :global(.conversational-question .step-description),
+    :global(.step-description) {
+      font-size: 0.875rem !important;
+      margin-bottom: 0.75rem !important;
+    }
   }
 
   /* Cards Grid - Global para React */
@@ -516,20 +547,30 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
     }
 
     :global(.cards-grid.sector-selection-grid) {
-      grid-template-columns: 1fr !important;
-      gap: 0.75rem !important;
-      margin-top: 1.5rem !important;
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 0.5rem !important;
+      margin-top: 1rem !important;
       max-width: 100% !important;
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+    
+    :global(.cards-grid.grid-2-columns-mobile) {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 0.5rem !important;
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+      margin-top: 1rem !important;
     }
 
     :global(.option-card.sector-option-card) {
-      min-height: auto !important;
+      min-height: 140px !important;
       height: auto !important;
-      padding: 1rem 1.25rem !important;
-      flex-direction: row !important;
+      padding: 0 !important;
+      flex-direction: column !important;
       align-items: center !important;
-      justify-content: flex-start !important;
-      text-align: left !important;
+      justify-content: center !important;
+      text-align: center !important;
       border-radius: 12px !important;
       background: #FFFFFF !important;
       border: none !important;
@@ -568,9 +609,9 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
     }
     
     :global(.sector-option-card .card-icon) {
-      width: 40px !important;
-      height: 40px !important;
-      margin-bottom: 0 !important;
+      width: 45px !important;
+      height: 45px !important;
+      margin-bottom: 0.5rem !important;
       margin-right: 0 !important;
       flex-shrink: 0 !important;
       display: flex !important;
@@ -586,22 +627,32 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
     }
     
     :global(.sector-option-card .card-title) {
-      font-size: 1rem !important;
+      font-size: 0.8125rem !important;
       font-weight: 600 !important;
-      text-align: left !important;
+      text-align: center !important;
       margin: 0 !important;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
       letter-spacing: -0.01em !important;
+      line-height: 1.2 !important;
     }
     
     :global(.sector-option-card .card-description) {
-      font-size: 0.8125rem !important;
+      font-size: 0.6875rem !important;
       font-weight: 400 !important;
-      text-align: left !important;
-      margin-top: 0.25rem !important;
-      line-height: 1.5 !important;
+      text-align: center !important;
+      margin-top: 0.125rem !important;
+      line-height: 1.3 !important;
       color: #6B7280 !important;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
+    }
+    
+    :global(.sector-option-card > div:first-child) {
+      height: 70px !important;
+    }
+    
+    :global(.sector-option-card > div:last-child) {
+      padding: 0.5rem 0.5rem !important;
+      gap: 0.25rem !important;
     }
 
     :global(.option-card:not(.sector-option-card)) {

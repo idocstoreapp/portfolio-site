@@ -256,7 +256,8 @@ const successCases = [
                     src={project.image} 
                     alt={project.title}
                     class="project-image"
-                    loading="lazy"
+                    loading="eager"
+                    data-project-image={project.image}
                   />
                 </div>
                 <div class="project-info">
@@ -1011,6 +1012,20 @@ const successCases = [
       
       // Cursor grab cuando se pasa el mouse
       projectsGrid.style.cursor = 'grab';
+      
+      // Manejar errores de carga de imágenes en el grid de escritorio
+      const projectImages = document.querySelectorAll('.project-image');
+      projectImages.forEach((img: HTMLImageElement) => {
+        img.addEventListener('error', function() {
+          console.error('Error loading image:', img.getAttribute('src'));
+          img.style.display = 'none';
+          const container = img.closest('.project-image-container') as HTMLElement;
+          if (container) {
+            container.style.background = 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)';
+            container.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #64748b; font-size: 0.875rem;">Imagen no disponible</div>';
+          }
+        });
+      });
     }
   });
 </script>
