@@ -21,6 +21,7 @@ export default function CreateOrderFromDiagnostic({
   const [loading, setLoading] = useState(false);
   const [templates, setTemplates] = useState<SolutionTemplate[]>([]);
   const [modules, setModules] = useState<SolutionModule[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState<SolutionTemplate | null>(null);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
   const [selectedModules, setSelectedModules] = useState<Set<string>>(new Set());
   
@@ -66,13 +67,16 @@ export default function CreateOrderFromDiagnostic({
   async function loadTemplateModules(templateId: string) {
     try {
       const templateResponse = await getSolutionTemplate(templateId);
-      if (templateResponse.success && templateResponse.data.modules) {
-        setModules(templateResponse.data.modules);
-        // Auto-seleccionar módulos requeridos
-        const requiredModules = templateResponse.data.modules
-          .filter(m => m.is_required)
-          .map(m => m.id);
-        setSelectedModules(new Set(requiredModules));
+      if (templateResponse.success && templateResponse.data) {
+        setSelectedTemplate(templateResponse.data);
+        if (templateResponse.data.modules) {
+          setModules(templateResponse.data.modules);
+          // Auto-seleccionar módulos requeridos
+          const requiredModules = templateResponse.data.modules
+            .filter(m => m.is_required)
+            .map(m => m.id);
+          setSelectedModules(new Set(requiredModules));
+        }
         // Establecer precio base del template
         setFormData(prev => ({
           ...prev,
@@ -157,7 +161,7 @@ export default function CreateOrderFromDiagnostic({
         {/* Template de Solución */}
         <div>
           <label htmlFor="solution_template" className="block text-sm font-medium text-gray-700 mb-2">
-            Template de Solución *
+            Solución *
           </label>
           <select
             id="solution_template"
@@ -167,17 +171,72 @@ export default function CreateOrderFromDiagnostic({
               setSelectedTemplateId(e.target.value);
               if (e.target.value) {
                 loadTemplateModules(e.target.value);
+              } else {
+                setSelectedTemplate(null);
+                setModules([]);
+                setSelectedModules(new Set());
               }
             }}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
           >
-            <option value="">Seleccionar template...</option>
+            <option value="">Seleccionar solución...</option>
             {templates.map((template) => (
               <option key={template.id} value={template.id}>
-                {template.name} - ${template.base_price.toLocaleString()} {template.currency}
+                {template.icon && `${template.icon} `}{template.name} 
+                {template.is_prefabricated ? ' (Prefabricada)' : ' (Personalizada)'}
+                {' - $'}{template.base_price.toLocaleString()} {template.currency}
               </option>
             ))}
           </select>
+          {selectedTemplate && (
+            <div className="mt-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-start gap-3 mb-3">
+                {selectedTemplate.icon && (
+                  <span className="text-3xl">{selectedTemplate.icon}</span>
+                )}
+                <div className="flex-1">
+                  <h4 className="font-semibold text-gray-900 mb-1">{selectedTemplate.name}</h4>
+                  <p className="text-sm text-gray-600 mb-2">
+                    {selectedTemplate.description_detailed || selectedTemplate.description}
+                  </p>
+                  <div className="flex items-center gap-4 text-xs text-gray-500">
+                    <span>Tipo: <strong>{selectedTemplate.is_prefabricated ? 'App Prefabricada' : 'Desarrollo Personalizado'}</strong></span>
+                    {selectedTemplate.estimated_delivery_days && (
+                      <span>Entrega: <strong>{selectedTemplate.estimated_delivery_days} días</strong></span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Funcionalidades Incluidas */}
+              {selectedTemplate.features_list && Array.isArray(selectedTemplate.features_list) && selectedTemplate.features_list.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-blue-200">
+                  <h5 className="font-medium text-sm text-gray-900 mb-2">Funcionalidades Incluidas:</h5>
+                  <div className="space-y-2">
+                    {selectedTemplate.features_list
+                      .filter((f: any) => f.included && f.category === 'core')
+                      .slice(0, 5)
+                      .map((feature: any, index: number) => (
+                        <div key={index} className="flex items-start gap-2 text-sm">
+                          <span className="text-green-600 font-bold mt-0.5">✓</span>
+                          <div>
+                            <span className="font-medium text-gray-900">{feature.name}</span>
+                            {feature.description && (
+                              <span className="text-gray-600 ml-2">- {feature.description}</span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    {selectedTemplate.features_list.filter((f: any) => f.included && f.category === 'core').length > 5 && (
+                      <p className="text-xs text-gray-500 mt-2">
+                        +{selectedTemplate.features_list.filter((f: any) => f.included && f.category === 'core').length - 5} funcionalidades más
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Módulos */}

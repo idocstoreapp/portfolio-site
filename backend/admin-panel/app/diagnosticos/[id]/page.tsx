@@ -6,7 +6,7 @@ import AuthGuard from '@/components/auth/AuthGuard';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
 import DiagnosticForm from '@/components/diagnosticos/DiagnosticForm';
-import CostosReales from '../../components/proyectos/CostosReales';
+import CostosReales from '@/components/proyectos/CostosReales';
 import { getDiagnostic, getDiagnosticResult } from '@/lib/api';
 import type { Diagnostic } from '@/lib/api';
 import Link from 'next/link';

@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import AuthGuard from '@/components/auth/AuthGuard';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
-import { getOrder } from '@/lib/api';
+import { getOrder, getSolutionTemplate, type SolutionTemplate } from '@/lib/api';
 import type { Order } from '@/types/order';
 import Link from 'next/link';
 import { format } from 'date-fns';
@@ -27,6 +27,7 @@ export default function OrderDetailPage() {
   const [error, setError] = useState('');
   const [showPDFModal, setShowPDFModal] = useState(false);
   const [showChangeOrderForm, setShowChangeOrderForm] = useState(false);
+  const [solutionTemplate, setSolutionTemplate] = useState<SolutionTemplate | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -41,6 +42,17 @@ export default function OrderDetailPage() {
 
       if (response.success) {
         setOrder(response.data);
+        // Cargar template de solución si existe
+        if (response.data.solution_template_id) {
+          try {
+            const templateResponse = await getSolutionTemplate(response.data.solution_template_id);
+            if (templateResponse.success) {
+              setSolutionTemplate(templateResponse.data);
+            }
+          } catch (err) {
+            console.error('Error loading solution template:', err);
+          }
+        }
       } else {
         setError('No se pudo cargar la orden');
       }
@@ -192,6 +204,32 @@ export default function OrderDetailPage() {
                   </div>
                 </div>
 
+                {/* Solución/App */}
+                {solutionTemplate && (
+                  <div className="bg-white rounded-lg shadow-md p-6">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Solución Seleccionada</h2>
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="flex items-start gap-4">
+                        {solutionTemplate.icon && (
+                          <span className="text-4xl">{solutionTemplate.icon}</span>
+                        )}
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-gray-900 mb-1">{solutionTemplate.name}</h3>
+                          <p className="text-sm text-gray-600 mb-2">
+                            {solutionTemplate.description_detailed || solutionTemplate.description}
+                          </p>
+                          <div className="flex items-center gap-4 text-xs text-gray-500">
+                            <span>Tipo: <strong>{solutionTemplate.is_prefabricated ? 'App Prefabricada' : 'Desarrollo Personalizado'}</strong></span>
+                            {solutionTemplate.estimated_delivery_days && (
+                              <span>Entrega estimada: <strong>{solutionTemplate.estimated_delivery_days} días</strong></span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Alcance del Proyecto */}
                 {order.scope_description && (
                   <div className="bg-white rounded-lg shadow-md p-6">
@@ -206,6 +244,7 @@ export default function OrderDetailPage() {
                     moduleIds={order.included_modules} 
                     title="Módulos Incluidos"
                     variant="included"
+                    solutionTemplateId={order.solution_template_id}
                   />
                 )}
 

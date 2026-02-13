@@ -1,21 +1,38 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getSolutionModules, type SolutionModule } from '@/lib/api';
+import { getSolutionModules, getSolutionTemplate, type SolutionModule, type SolutionTemplate } from '@/lib/api';
 
 interface ModulesDisplayProps {
   moduleIds: string[];
   title: string;
   variant?: 'included' | 'excluded';
+  solutionTemplateId?: string;
 }
 
-export default function ModulesDisplay({ moduleIds, title, variant = 'included' }: ModulesDisplayProps) {
+export default function ModulesDisplay({ moduleIds, title, variant = 'included', solutionTemplateId }: ModulesDisplayProps) {
   const [modules, setModules] = useState<SolutionModule[]>([]);
   const [loading, setLoading] = useState(true);
+  const [solutionTemplate, setSolutionTemplate] = useState<SolutionTemplate | null>(null);
 
   useEffect(() => {
     loadModules();
-  }, [moduleIds]);
+    if (solutionTemplateId) {
+      loadSolutionTemplate();
+    }
+  }, [moduleIds, solutionTemplateId]);
+
+  async function loadSolutionTemplate() {
+    if (!solutionTemplateId) return;
+    try {
+      const response = await getSolutionTemplate(solutionTemplateId);
+      if (response.success) {
+        setSolutionTemplate(response.data);
+      }
+    } catch (error) {
+      console.error('Error loading solution template:', error);
+    }
+  }
 
   async function loadModules() {
     if (!moduleIds || moduleIds.length === 0) {
@@ -36,6 +53,11 @@ export default function ModulesDisplay({ moduleIds, title, variant = 'included' 
     } finally {
       setLoading(false);
     }
+  }
+
+  function isDefaultModule(moduleId: string): boolean {
+    if (!solutionTemplate?.included_modules_default) return false;
+    return solutionTemplate.included_modules_default.includes(moduleId);
   }
 
   if (loading) {
@@ -75,7 +97,7 @@ export default function ModulesDisplay({ moduleIds, title, variant = 'included' 
                 {module.description && (
                   <p className="text-sm text-gray-600 mt-1">{module.description}</p>
                 )}
-                <div className="flex items-center gap-3 mt-2">
+                <div className="flex items-center gap-3 mt-2 flex-wrap">
                   <span className={`px-2 py-1 text-xs rounded-full ${
                     module.category === 'core' ? 'bg-blue-100 text-blue-800' :
                     module.category === 'advanced' ? 'bg-purple-100 text-purple-800' :
@@ -86,6 +108,16 @@ export default function ModulesDisplay({ moduleIds, title, variant = 'included' 
                   {module.is_required && (
                     <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
                       Requerido
+                    </span>
+                  )}
+                  {solutionTemplate && isDefaultModule(module.id) && !module.is_required && (
+                    <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
+                      Por Defecto
+                    </span>
+                  )}
+                  {solutionTemplate && !isDefaultModule(module.id) && !module.is_required && (
+                    <span className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">
+                      Extra
                     </span>
                   )}
                   <span className="text-sm text-gray-500">

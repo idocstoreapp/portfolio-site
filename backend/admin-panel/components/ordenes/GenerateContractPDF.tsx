@@ -6,7 +6,7 @@ import html2canvas from 'html2canvas';
 import type { Order } from '@/types/order';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { getSolutionModules, type SolutionModule } from '@/lib/api';
+import { getSolutionModules, getSolutionTemplate, type SolutionModule, type SolutionTemplate } from '@/lib/api';
 
 interface GenerateContractPDFProps {
   order: Order;
@@ -40,12 +40,27 @@ export default function GenerateContractPDF({
   const [generating, setGenerating] = useState(false);
   const [includedModulesData, setIncludedModulesData] = useState<SolutionModule[]>([]);
   const [excludedModulesData, setExcludedModulesData] = useState<SolutionModule[]>([]);
+  const [solutionTemplate, setSolutionTemplate] = useState<SolutionTemplate | null>(null);
   const [loadingModules, setLoadingModules] = useState(true);
 
-  // Cargar nombres de módulos
+  // Cargar nombres de módulos y template de solución
   useEffect(() => {
     loadModules();
+    loadSolutionTemplate();
   }, [order]);
+
+  async function loadSolutionTemplate() {
+    if (order.solution_template_id) {
+      try {
+        const response = await getSolutionTemplate(order.solution_template_id);
+        if (response.success && response.data) {
+          setSolutionTemplate(response.data);
+        }
+      } catch (error) {
+        console.error('Error loading solution template:', error);
+      }
+    }
+  }
 
   async function loadModules() {
     setLoadingModules(true);
@@ -270,6 +285,60 @@ export default function GenerateContractPDF({
                 )}
               </div>
             </div>
+
+            {/* Solución Seleccionada */}
+            {solutionTemplate && (
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold mb-3" style={{ color: 'rgb(0, 0, 0)' }}>Solución Seleccionada</h2>
+                <div className="p-4 rounded border-2" style={{ backgroundColor: 'rgb(239, 246, 255)', borderColor: 'rgb(59, 130, 246)' }}>
+                  <div className="flex items-start gap-4 mb-4">
+                    {solutionTemplate.icon && (
+                      <span className="text-4xl">{solutionTemplate.icon}</span>
+                    )}
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold mb-2" style={{ color: 'rgb(0, 0, 0)' }}>
+                        {solutionTemplate.name}
+                      </h3>
+                      <p className="text-sm mb-3" style={{ color: 'rgb(75, 85, 99)' }}>
+                        {solutionTemplate.description_detailed || solutionTemplate.description}
+                      </p>
+                      <div className="flex items-center gap-4 text-xs" style={{ color: 'rgb(107, 114, 128)' }}>
+                        <span>Tipo: <strong>{solutionTemplate.is_prefabricated ? 'App Prefabricada' : 'Desarrollo Personalizado'}</strong></span>
+                        {solutionTemplate.estimated_delivery_days && (
+                          <span>Entrega estimada: <strong>{solutionTemplate.estimated_delivery_days} días</strong></span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Funcionalidades Incluidas */}
+                  {solutionTemplate.features_list && Array.isArray(solutionTemplate.features_list) && solutionTemplate.features_list.length > 0 && (
+                    <div className="mt-4 pt-4 border-t" style={{ borderColor: 'rgb(229, 231, 235)' }}>
+                      <h4 className="font-semibold mb-3" style={{ color: 'rgb(0, 0, 0)' }}>Funcionalidades Incluidas:</h4>
+                      <div className="space-y-3">
+                        {solutionTemplate.features_list
+                          .filter((f: any) => f.included && f.category === 'core')
+                          .map((feature: any, index: number) => (
+                            <div key={index} className="flex items-start gap-2">
+                              <span className="text-green-600 font-bold mt-0.5">✓</span>
+                              <div className="flex-1">
+                                <p className="font-medium text-sm" style={{ color: 'rgb(0, 0, 0)' }}>
+                                  {feature.name}
+                                </p>
+                                {feature.description && (
+                                  <p className="text-xs mt-1" style={{ color: 'rgb(75, 85, 99)' }}>
+                                    {feature.description}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Descripción del Proyecto */}
             <div className="mb-6">

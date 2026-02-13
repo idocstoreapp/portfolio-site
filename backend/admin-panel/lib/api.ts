@@ -326,11 +326,28 @@ export async function deleteOrder(id: string): Promise<void> {
 // SOLUTION TEMPLATES & MODULES API
 // ============================================
 
+export interface Feature {
+  name: string;
+  description: string;
+  included: boolean;
+  category: 'core' | 'optional';
+  module_id?: string;
+  price?: number;
+}
+
 export interface SolutionTemplate {
   id: string;
   slug: string;
   name: string;
   description?: string;
+  description_detailed?: string;
+  features_list?: Feature[];
+  included_modules_default?: string[];
+  base_functionality?: string;
+  is_prefabricated: boolean;
+  estimated_delivery_days?: number;
+  use_cases?: string[];
+  screenshots_urls?: string[];
   icon?: string;
   base_price: number;
   currency: string;

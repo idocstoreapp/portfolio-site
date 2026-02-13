@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { updateOrder, getSolutionModules, getLegalTemplates, getDefaultLegalTemplate, getSolutionModules as fetchModules, type SolutionModule, type LegalTemplate } from '@/lib/api';
+import { updateOrder, getSolutionModules, getLegalTemplates, getDefaultLegalTemplate, getSolutionModules as fetchModules, getSolutionTemplates, getSolutionTemplate, type SolutionModule, type LegalTemplate, type SolutionTemplate } from '@/lib/api';
 import type { Order, UpdateOrderRequest, OrderStatus } from '@/types/order';
 import { format } from 'date-fns';
 
@@ -16,6 +16,9 @@ export default function EditOrderForm({ order, onUpdate }: EditOrderFormProps) {
   const [modules, setModules] = useState<SolutionModule[]>([]);
   const [legalTemplates, setLegalTemplates] = useState<LegalTemplate[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState<LegalTemplate | null>(null);
+  const [solutionTemplates, setSolutionTemplates] = useState<SolutionTemplate[]>([]);
+  const [currentSolutionTemplate, setCurrentSolutionTemplate] = useState<SolutionTemplate | null>(null);
+  const [selectedModules, setSelectedModules] = useState<Set<string>>(new Set(order.included_modules || []));
   
   const [formData, setFormData] = useState<UpdateOrderRequest>({
     status: order.status,
@@ -36,12 +39,15 @@ export default function EditOrderForm({ order, onUpdate }: EditOrderFormProps) {
     estimated_completion_date: order.estimated_completion_date,
     internal_notes: order.internal_notes,
     client_notes: order.client_notes,
+    solution_template_id: order.solution_template_id,
   });
 
   useEffect(() => {
     if (showForm) {
+      loadSolutionTemplates();
       if (order.solution_template_id) {
-        loadModules();
+        loadCurrentSolutionTemplate(order.solution_template_id);
+        loadModules(order.solution_template_id);
       }
       loadLegalTemplates();
       if ((order as any).legal_template_id) {
@@ -49,6 +55,13 @@ export default function EditOrderForm({ order, onUpdate }: EditOrderFormProps) {
       }
     }
   }, [showForm, order.solution_template_id]);
+
+  useEffect(() => {
+    // Actualizar módulos seleccionados cuando cambia formData.included_modules
+    if (formData.included_modules) {
+      setSelectedModules(new Set(formData.included_modules));
+    }
+  }, [formData.included_modules]);
 
   async function loadLegalTemplates() {
     try {
@@ -106,15 +119,83 @@ export default function EditOrderForm({ order, onUpdate }: EditOrderFormProps) {
     }
   }
 
-  async function loadModules() {
+  async function loadSolutionTemplates() {
     try {
-      const response = await getSolutionModules(order.solution_template_id);
+      const response = await getSolutionTemplates();
+      if (response.success) {
+        setSolutionTemplates(response.data.filter(t => t.is_active));
+      }
+    } catch (error) {
+      console.error('Error loading solution templates:', error);
+    }
+  }
+
+  async function loadCurrentSolutionTemplate(templateId: string) {
+    try {
+      const response = await getSolutionTemplate(templateId);
+      if (response.success) {
+        setCurrentSolutionTemplate(response.data);
+        // Actualizar precio base si no está establecido
+        if (!formData.base_price && response.data.base_price) {
+          setFormData(prev => ({ ...prev, base_price: response.data.base_price }));
+        }
+      }
+    } catch (error) {
+      console.error('Error loading current solution template:', error);
+    }
+  }
+
+  async function loadModules(templateId: string) {
+    try {
+      const response = await getSolutionModules(templateId);
       if (response.success) {
         setModules(response.data);
       }
     } catch (error) {
       console.error('Error loading modules:', error);
     }
+  }
+
+  async function handleSolutionTemplateChange(templateId: string) {
+    setFormData(prev => ({ ...prev, solution_template_id: templateId }));
+    if (templateId) {
+      await loadCurrentSolutionTemplate(templateId);
+      await loadModules(templateId);
+      // Resetear módulos seleccionados
+      setSelectedModules(new Set());
+      setFormData(prev => ({ ...prev, included_modules: [] }));
+    } else {
+      setCurrentSolutionTemplate(null);
+      setModules([]);
+      setSelectedModules(new Set());
+    }
+  }
+
+  function handleModuleToggle(moduleId: string) {
+    const module = modules.find(m => m.id === moduleId);
+    if (module?.is_required) {
+      return; // No permitir deseleccionar módulos requeridos
+    }
+
+    const newSelected = new Set(selectedModules);
+    if (newSelected.has(moduleId)) {
+      newSelected.delete(moduleId);
+    } else {
+      newSelected.add(moduleId);
+    }
+    setSelectedModules(newSelected);
+    
+    // Calcular precio de módulos
+    const selectedModulesArray = Array.from(newSelected);
+    const modulesPrice = modules
+      .filter(m => selectedModulesArray.includes(m.id))
+      .reduce((sum, m) => sum + (m.base_price || 0), 0);
+    
+    setFormData(prev => ({
+      ...prev,
+      included_modules: selectedModulesArray,
+      modules_price: modulesPrice,
+    }));
   }
 
   function calculateTotal() {
@@ -131,9 +212,20 @@ export default function EditOrderForm({ order, onUpdate }: EditOrderFormProps) {
       // Calcular total si no está definido manualmente
       const total = formData.total_price || calculateTotal();
       
+      // Si cambió la solución, recalcular precio base
+      let basePrice = formData.base_price;
+      if (formData.solution_template_id && formData.solution_template_id !== order.solution_template_id) {
+        const template = solutionTemplates.find(t => t.id === formData.solution_template_id);
+        if (template) {
+          basePrice = template.base_price;
+        }
+      }
+      
       await updateOrder(order.id, {
         ...formData,
+        base_price: basePrice,
         total_price: total,
+        solution_template_id: formData.solution_template_id,
       });
       
       alert('Orden actualizada correctamente');

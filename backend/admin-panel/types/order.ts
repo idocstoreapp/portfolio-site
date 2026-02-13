@@ -163,6 +163,7 @@ export interface CreateOrderFromDiagnosticRequest {
 
 export interface UpdateOrderRequest {
   status?: OrderStatus;
+  solution_template_id?: string;
   client_name?: string;
   client_email?: string;
   client_phone?: string;

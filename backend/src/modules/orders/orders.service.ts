@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseService } from '../../common/supabase/supabase.service';
+import { SolutionTemplatesService } from '../solution-templates/solution-templates.service';
+import { PricingCalculatorService } from '../pricing-calculator/pricing-calculator.service';
+import { SolutionTypeDeterminerService } from './solution-type-determiner.service';
 import { CreateOrderDto, OrderStatus, ProjectType } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderDto, OrderWithRelationsDto } from './dto/order.dto';
@@ -7,7 +10,12 @@ import { CreateOrderFromDiagnosticDto } from './dto/create-order-from-diagnostic
 
 @Injectable()
 export class OrdersService {
-  constructor(private supabaseService: SupabaseService) {}
+  constructor(
+    private supabaseService: SupabaseService,
+    private solutionTemplatesService: SolutionTemplatesService,
+    private pricingCalculatorService: PricingCalculatorService,
+    private solutionTypeDeterminer: SolutionTypeDeterminerService,
+  ) {}
 
   /**
    * Genera un número de orden único
@@ -298,35 +306,87 @@ export class OrdersService {
       throw new Error(`Diagnostic with id ${createFromDiagnosticDto.diagnostico_id} not found`);
     }
 
-    // Determinar solution_template_id si no se proporcionó
+    // Determinar tipo de solución usando el servicio inteligente
+    let solutionDecision;
     let solutionTemplateId = createFromDiagnosticDto.solution_template_id;
-    if (!solutionTemplateId && diagnostic.solucion_principal) {
-      // Buscar template por slug basado en solucion_principal
-      const { data: template } = await supabase
-        .from('solution_templates')
-        .select('id')
-        .eq('slug', diagnostic.solucion_principal)
-        .eq('is_active', true)
-        .single();
+    let includedModules = createFromDiagnosticDto.included_modules;
+    let basePrice: number | undefined = undefined;
+    let modulesPrice = 0;
+    let customAdjustments = createFromDiagnosticDto.custom_adjustments || 0;
+    let scopeDescription: string | undefined = undefined;
 
-      if (template) {
-        solutionTemplateId = template.id;
+    if (!solutionTemplateId) {
+      // Usar lógica inteligente para determinar solución
+      solutionDecision = await this.solutionTypeDeterminer.determineSolutionType(diagnostic);
+
+      if (solutionDecision.type === 'prefabricated' && solutionDecision.template) {
+        // App prefabricada
+        solutionTemplateId = solutionDecision.template.id;
+        includedModules = solutionDecision.modules || includedModules;
+        basePrice = solutionDecision.template.base_price || basePrice;
+        
+        // Calcular precio de módulos adicionales
+        if (includedModules && includedModules.length > 0) {
+          const { data: modules } = await supabase
+            .from('solution_modules')
+            .select('id, base_price')
+            .in('id', includedModules);
+          
+          if (modules) {
+            modulesPrice = modules.reduce((sum, m) => sum + (parseFloat(m.base_price) || 0), 0);
+          }
+        }
+
+        // Construir descripción del alcance con funcionalidades
+        const featuresList = solutionDecision.template.features_list || [];
+        const coreFeatures = featuresList.filter((f: any) => f.included && f.category === 'core');
+        scopeDescription = `Solución Prefabricada: ${solutionDecision.template.name}\n\n` +
+          `Descripción: ${solutionDecision.template.description_detailed || solutionDecision.template.description}\n\n` +
+          `Funcionalidades Incluidas:\n${coreFeatures.map((f: any) => `• ${f.name}: ${f.description}`).join('\n')}`;
+      } else {
+        // App personalizada - calcular pricing
+        const pricingResult = await this.pricingCalculatorService.calculateCustomAppPricing({
+          sections: solutionDecision.estimatedSections || 5,
+          functions: solutionDecision.estimatedFunctions || 3,
+          integrations: solutionDecision.estimatedIntegrations || 0,
+          complexity: 'medium',
+        });
+
+        basePrice = pricingResult.total;
+        customAdjustments = 0;
+        scopeDescription = `Solución Personalizada\n\n` +
+          `Secciones estimadas: ${solutionDecision.estimatedSections}\n` +
+          `Funciones estimadas: ${solutionDecision.estimatedFunctions}\n` +
+          `Integraciones estimadas: ${solutionDecision.estimatedIntegrations}\n\n` +
+          `Descripción detallada: ${diagnostic.necesidadesAdicionales || 'A definir según requerimientos específicos'}`;
       }
+    } else {
+      // Si ya se proporcionó template, obtener información completa
+      const template = await this.solutionTemplatesService.getTemplateById(solutionTemplateId);
+      const featuresList = template.features_list || [];
+      const coreFeatures = featuresList.filter((f: any) => f.included && f.category === 'core');
+      
+      scopeDescription = scopeDescription || `Solución: ${template.name}\n\n` +
+        `Descripción: ${template.description_detailed || template.description}\n\n` +
+        `Funcionalidades Incluidas:\n${coreFeatures.map((f: any) => `• ${f.name}: ${f.description}`).join('\n')}`;
     }
 
     // Determinar project_type si no se proporcionó
     let projectType: ProjectType = createFromDiagnosticDto.project_type || ProjectType.SISTEMA;
     if (!createFromDiagnosticDto.project_type) {
-      // Inferir del diagnóstico
-      if (diagnostic.solucion_principal === 'desarrollo-web') {
+      if (solutionTemplateId) {
+        const template = await this.solutionTemplatesService.getTemplateById(solutionTemplateId);
+        if (template.slug === 'desarrollo-web' || !template.is_prefabricated) {
+          projectType = ProjectType.WEB;
+        } else {
+          projectType = ProjectType.SISTEMA;
+        }
+      } else if (diagnostic.solucion_principal === 'desarrollo-web') {
         projectType = ProjectType.WEB;
-      } else {
-        projectType = ProjectType.SISTEMA;
       }
     }
 
     // Obtener módulos recomendados del template si no se proporcionaron
-    let includedModules = createFromDiagnosticDto.included_modules;
     if (!includedModules && solutionTemplateId) {
       const { data: modules } = await supabase
         .from('solution_modules')
@@ -385,6 +445,24 @@ export class OrdersService {
       }
     }
 
+    // Calcular precio base si no se proporcionó
+    if (!basePrice && solutionTemplateId) {
+      const template = await this.solutionTemplatesService.getTemplateById(solutionTemplateId);
+      basePrice = template.base_price;
+    }
+
+    // Calcular precio de módulos si no se proporcionó
+    if (!modulesPrice && includedModules && includedModules.length > 0) {
+      const { data: modules } = await supabase
+        .from('solution_modules')
+        .select('id, base_price')
+        .in('id', includedModules);
+      
+      if (modules) {
+        modulesPrice = modules.reduce((sum, m) => sum + (parseFloat(m.base_price) || 0), 0);
+      }
+    }
+
     // Crear DTO para crear orden
     const createOrderDto: CreateOrderDto = {
       diagnostico_id: createFromDiagnosticDto.diagnostico_id,
@@ -396,14 +474,16 @@ export class OrdersService {
       project_type: projectType,
       status: OrderStatus.DRAFT,
       included_modules: includedModules,
-      custom_adjustments: createFromDiagnosticDto.custom_adjustments,
-      discount_amount: createFromDiagnosticDto.discount_amount,
+      base_price: basePrice || 0,
+      modules_price: modulesPrice,
+      custom_adjustments: customAdjustments,
+      discount_amount: createFromDiagnosticDto.discount_amount || 0,
       payment_terms: paymentTerms || createFromDiagnosticDto.payment_terms,
       warranty_text: warrantyText,
       maintenance_policy: maintenancePolicy,
       exclusions_text: exclusionsText,
       internal_notes: createFromDiagnosticDto.internal_notes,
-      scope_description: `Orden generada desde diagnóstico ${createFromDiagnosticDto.diagnostico_id}`,
+      scope_description: scopeDescription || `Orden generada desde diagnóstico ${createFromDiagnosticDto.diagnostico_id}`,
     };
 
     const order = await this.createOrder(createOrderDto, userId);
