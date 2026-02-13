@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import GenerateOrderPDF from './GenerateOrderPDF';
+import CreateOrderFromDiagnostic from '@/components/ordenes/CreateOrderFromDiagnostic';
 
 interface DiagnosticFormProps {
   diagnostic: Diagnostic;
@@ -28,6 +29,7 @@ export default function DiagnosticForm({
   const [saving, setSaving] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [showOrderModal, setShowOrderModal] = useState(false);
+  const [showCreateOrderModal, setShowCreateOrderModal] = useState(false);
 
   useEffect(() => {
     loadCurrentUser();
@@ -69,6 +71,7 @@ export default function DiagnosticForm({
   }
 
   const canGenerateOrder = formData.status === 'proyecto' || formData.status === 'cerrado';
+  const canCreateOrder = formData.status === 'cotizando' || formData.status === 'proyecto' || formData.status === 'cerrado';
 
   return (
     <div className="space-y-6">
@@ -243,6 +246,17 @@ export default function DiagnosticForm({
               {saving ? 'Guardando...' : 'Guardar Cambios'}
             </button>
 
+            {/* Botón para crear orden - disponible desde cotizando */}
+            {canCreateOrder && (
+              <button
+                onClick={() => setShowCreateOrderModal(true)}
+                className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
+              >
+                📋 Crear Orden desde Diagnóstico
+              </button>
+            )}
+
+            {/* Botón para generar PDF - solo para proyectos completados */}
             {canGenerateOrder && (
               <button
                 onClick={() => setShowOrderModal(true)}
@@ -264,6 +278,33 @@ export default function DiagnosticForm({
           trabajoRealHoras={formData.trabajoRealHoras}
           onClose={() => setShowOrderModal(false)}
         />
+      )}
+
+      {/* Modal para crear orden desde diagnóstico */}
+      {showCreateOrderModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-gray-900">Crear Orden desde Diagnóstico</h2>
+                <button
+                  onClick={() => setShowCreateOrderModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  ✕
+                </button>
+              </div>
+              <CreateOrderFromDiagnostic
+                diagnostic={diagnostic}
+                onSuccess={() => {
+                  setShowCreateOrderModal(false);
+                  onUpdate();
+                }}
+                onCancel={() => setShowCreateOrderModal(false)}
+              />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

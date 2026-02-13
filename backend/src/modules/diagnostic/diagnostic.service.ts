@@ -647,43 +647,110 @@ export class DiagnosticService {
   }
 
   /**
-   * Lista todos los diagnósticos (con paginación)
+   * Lista todos los diagnósticos (con paginación y filtros)
    */
-  async getAllDiagnostics(page: number = 1, limit: number = 20): Promise<{
+  async getAllDiagnostics(
+    page: number = 1, 
+    limit: number = 20,
+    filters?: {
+      estado?: string;
+      tipoEmpresa?: string;
+      search?: string;
+    }
+  ): Promise<{
     data: DiagnosticResultDto[];
     total: number;
     page: number;
     limit: number;
   }> {
+    // Verificar si Supabase está configurado
+    if (!this.supabaseService.isConfigured()) {
+      console.warn('⚠️  Supabase not configured. Returning empty list.');
+      return {
+        data: [],
+        total: 0,
+        page,
+        limit,
+      };
+    }
+
     // Usar admin client para evitar problemas con RLS
     let supabase;
+    let usingAdminClient = false;
     try {
       supabase = this.supabaseService.getAdminClient();
-    } catch {
+      usingAdminClient = true;
+      console.log('💾 Using admin client (service_role) for fetching diagnostics - RLS bypassed');
+    } catch (error) {
+      console.warn('⚠️  Service role key not configured. Using anon client - RLS restrictions apply');
+      console.warn('⚠️  To fix: Add SUPABASE_SERVICE_ROLE_KEY to backend/.env');
       supabase = this.supabaseService.getClient();
+      console.log('💾 Using regular client (anon_key) - may have RLS restrictions');
     }
     
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
+    // Construir query con filtros
+    let countQuery = supabase.from('diagnosticos').select('*', { count: 'exact', head: true });
+    let dataQuery = supabase.from('diagnosticos').select('*');
+
+    // Aplicar filtros
+    if (filters?.estado) {
+      countQuery = countQuery.eq('estado', filters.estado);
+      dataQuery = dataQuery.eq('estado', filters.estado);
+    }
+
+    if (filters?.tipoEmpresa) {
+      countQuery = countQuery.eq('tipo_empresa', filters.tipoEmpresa);
+      dataQuery = dataQuery.eq('tipo_empresa', filters.tipoEmpresa);
+    }
+
+    if (filters?.search) {
+      const searchTerm = `%${filters.search}%`;
+      // Usar or() con múltiples condiciones ilike - sintaxis correcta de Supabase
+      const searchFilter = `nombre.ilike.${searchTerm},empresa.ilike.${searchTerm},email.ilike.${searchTerm}`;
+      countQuery = countQuery.or(searchFilter);
+      dataQuery = dataQuery.or(searchFilter);
+    }
+
     // Obtener total
-    const { count } = await supabase
-      .from('diagnosticos')
-      .select('*', { count: 'exact', head: true });
+    const { count, error: countError } = await countQuery;
+
+    if (countError) {
+      console.error('❌ Error counting diagnostics:', countError);
+      throw new Error(`Error counting diagnostics: ${countError.message}`);
+    }
 
     // Obtener datos paginados
-    const { data, error } = await supabase
-      .from('diagnosticos')
-      .select('*')
+    const { data, error } = await dataQuery
       .order('created_at', { ascending: false })
       .range(from, to);
 
     if (error) {
+      console.error('❌ Error fetching diagnostics:', error);
+      console.error('❌ Error details:', JSON.stringify(error, null, 2));
+      
+      // Si es un error de RLS y no estamos usando admin client, dar un mensaje más claro
+      if (error.message?.includes('row-level security') || error.code === '42501') {
+        console.error('🔒 RLS Policy Error: The anon key cannot read diagnostics due to RLS policies.');
+        console.error('🔒 Solution: Configure SUPABASE_SERVICE_ROLE_KEY in backend/.env');
+        throw new Error('Cannot read diagnostics: RLS policy restriction. Please configure SUPABASE_SERVICE_ROLE_KEY in backend/.env');
+      }
+      
       throw new Error(`Error fetching diagnostics: ${error.message}`);
     }
+    
+    // Log para debugging
+    console.log(`📊 Found ${count || 0} total diagnostics, returning ${data?.length || 0} items`);
+    if (usingAdminClient && count === 0) {
+      console.log('ℹ️  No diagnostics found in database (this is normal if no one has completed the wizard yet)');
+    }
+
+    console.log(`✅ Fetched ${data?.length || 0} diagnostics (total: ${count || 0})`);
 
     return {
-      data: data.map(item => this.mapToDto(item)),
+      data: (data || []).map(item => this.mapToDto(item)),
       total: count || 0,
       page,
       limit,

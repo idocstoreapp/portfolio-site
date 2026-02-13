@@ -26,31 +26,71 @@ export default function GenerateOrderPDF({
   const [generating, setGenerating] = useState(false);
 
   async function generatePDF() {
-    if (!pdfRef.current) return;
+    if (!pdfRef.current) {
+      alert('Error: No se pudo acceder al contenido del PDF');
+      return;
+    }
 
     setGenerating(true);
     try {
+      // Configuración mejorada de html2canvas para evitar errores de color
       const canvas = await html2canvas(pdfRef.current, {
         scale: 2,
         useCORS: true,
         logging: false,
+        backgroundColor: '#ffffff',
+        removeContainer: false,
+        allowTaint: true,
+        // Evitar funciones de color modernas que causan problemas
+        onclone: (clonedDoc) => {
+          // Convertir todos los estilos a RGB para evitar problemas con lab()
+          const elements = clonedDoc.querySelectorAll('*');
+          elements.forEach((el) => {
+            const htmlEl = el as HTMLElement;
+            if (htmlEl.style) {
+              // Forzar colores RGB
+              const computedStyle = window.getComputedStyle(htmlEl);
+              if (computedStyle.color && computedStyle.color.includes('lab')) {
+                htmlEl.style.color = '#000000';
+              }
+              if (computedStyle.backgroundColor && computedStyle.backgroundColor.includes('lab')) {
+                htmlEl.style.backgroundColor = '#ffffff';
+              }
+            }
+          });
+        },
       });
 
-      const imgData = canvas.toDataURL('image/png');
+      const imgData = canvas.toDataURL('image/png', 0.95);
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 210;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
       
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      const pdfWidth = 210; // A4 width in mm
+      const pdfHeight = 297; // A4 height in mm
+      const imgWidth = pdfWidth;
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      // Si el contenido es más alto que una página, dividirlo en múltiples páginas
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pdfHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pdfHeight;
+      }
       
       // Generar nombre de archivo
       const fileName = `Orden-${diagnostic.empresa || diagnostic.nombre || 'Diagnostico'}-${format(new Date(), 'yyyy-MM-dd')}.pdf`;
       pdf.save(fileName);
       
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating PDF:', error);
-      alert('Error al generar el PDF');
+      alert(`Error al generar el PDF: ${error.message || 'Error desconocido'}`);
     } finally {
       setGenerating(false);
     }

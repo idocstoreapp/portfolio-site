@@ -17,6 +17,10 @@ export default function Sidebar() {
   const menuItems = [
     { href: '/', label: 'Dashboard', icon: '📊' },
     { href: '/diagnosticos', label: 'Diagnósticos', icon: '🔍' },
+    { href: '/ordenes', label: 'Órdenes', icon: '📋' },
+    { href: '/precios', label: 'Precios', icon: '💰' },
+    { href: '/templates-modulos', label: 'Templates y Módulos', icon: '📦' },
+    { href: '/garantias', label: 'Garantías', icon: '🛡️' },
     { href: '/proyectos', label: 'Proyectos', icon: '📁' },
   ];
 

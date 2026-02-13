@@ -51,8 +51,26 @@ async function bootstrap() {
   // Prefijo global para API
   app.setGlobalPrefix('api');
 
+  // Ruta de salud para verificar que el servidor está funcionando
+  app.getHttpAdapter().get('/', (req, res) => {
+    res.json({
+      message: 'Maestro Digital Backend API',
+      version: '1.0.0',
+      endpoints: {
+        diagnostic: '/api/diagnostic',
+        solutionTemplates: '/api/solution-templates',
+        solutionModules: '/api/solution-modules',
+        orders: '/api/orders',
+        clients: '/api/clients',
+        auth: '/api/auth',
+      },
+      docs: 'All endpoints are under /api prefix',
+    });
+  });
+
   await app.listen(port);
   console.log(`🚀 Backend API running on: http://localhost:${port}/api`);
+  console.log(`📋 Health check: http://localhost:${port}/`);
 }
 
 bootstrap();

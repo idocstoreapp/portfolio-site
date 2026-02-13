@@ -5,6 +5,12 @@ import { SolutionsModule } from './modules/solutions/solutions.module';
 import { ClientsModule } from './modules/clients/clients.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { SupabaseModule } from './common/supabase/supabase.module';
+import { SolutionTemplatesModule } from './modules/solution-templates/solution-templates.module';
+import { SolutionModulesModule } from './modules/solution-modules/solution-modules.module';
+import { OrdersModule } from './modules/orders/orders.module';
+import { PricingConfigModule } from './modules/pricing-config/pricing-config.module';
+import { LegalTemplatesModule } from './modules/legal-templates/legal-templates.module';
+import { ChangeOrdersModule } from './modules/change-orders/change-orders.module';
 
 @Module({
   imports: [
@@ -19,6 +25,12 @@ import { SupabaseModule } from './common/supabase/supabase.module';
     SolutionsModule,
     ClientsModule,
     AuthModule,
+    SolutionTemplatesModule,
+    SolutionModulesModule,
+    OrdersModule,
+    PricingConfigModule,
+    LegalTemplatesModule,
+    ChangeOrdersModule,
   ],
 })
 export class AppModule {}

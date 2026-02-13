@@ -157,6 +157,7 @@ export default function ConversationalDiagnosticWizard() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+
   // Prevenir envío si se abandona el wizard antes de completarlo
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -535,11 +536,15 @@ export default function ConversationalDiagnosticWizard() {
           paddingRight: isMobile ? '0.5rem' : '2rem',
           paddingBottom: isMobile ? '1rem' : '0'
         }}>
-          {BUSINESS_SECTORS.map((sector) => {
+          {BUSINESS_SECTORS.map((sector, index) => {
             const isSelected = selectedSector === sector.value;
+            // Usar una key única combinando value y extendedType, o el índice como fallback
+            const uniqueKey = sector.extendedType 
+              ? `${sector.value}-${sector.extendedType}` 
+              : `${sector.value}-${index}`;
             return (
             <button
-              key={sector.value}
+              key={uniqueKey}
                 className={`option-card sector-option-card ${isSelected ? 'selected' : ''}`}
               style={{
                   background: isSelected ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' : '#FFFFFF',
@@ -745,24 +750,53 @@ export default function ConversationalDiagnosticWizard() {
 
   // Renderizar paso de selección de servicios
   if (isServicesStep) {
-    const recommendedServices = getRecommendedServicesForSector(selectedSector);
-    const allServicesList = Object.values(SERVICES).flat();
+    // Obtener el extendedType de las respuestas
+    const extendedType = answers.extendedType as ExtendedBusinessType | undefined;
+    const recommendedServices = getRecommendedServicesForSector(selectedSector!, extendedType);
+    const recommendedServiceIds = new Set(recommendedServices.map(s => s.id));
+    
+    // Filtrar servicios: solo mostrar los recomendados para este sector
+    const filteredCategories = SERVICE_CATEGORIES.map(category => {
+      const categoryServices = SERVICES[category.id];
+      const relevantServices = categoryServices.filter(service => 
+        recommendedServiceIds.has(service.id)
+      );
+      return {
+        ...category,
+        services: relevantServices
+      };
+    }).filter(category => category.services.length > 0);
     
     return (
       <div className="wizard-step active" style={{ display: 'block' }}>
         <div className="step-header">
           <div className="conversational-intro">
-            <h3 className="step-title">¿Qué servicios te interesan?</h3>
+            <h3 className="step-title">Servicios recomendados para tu negocio</h3>
             <p className="step-description">
-              Selecciona los servicios que te gustaría conocer o implementar. Puedes elegir varios o ninguno.
+              Basado en tu tipo de negocio, estos son los servicios más relevantes para ti. Selecciona los que te interesan.
             </p>
           </div>
         </div>
 
-        {/* Categorías de servicios */}
+        {/* Mensaje si no hay servicios recomendados */}
+        {filteredCategories.length === 0 && (
+          <div style={{
+            padding: '2rem',
+            textAlign: 'center',
+            background: '#F6F5F2',
+            borderRadius: '12px',
+            marginTop: '2rem'
+          }}>
+            <p style={{ color: '#6B7280', margin: 0 }}>
+              No hay servicios específicos recomendados para tu tipo de negocio. 
+              Puedes continuar con el diagnóstico.
+            </p>
+          </div>
+        )}
+
+        {/* Categorías de servicios - Solo las que tienen servicios relevantes */}
         <div style={{ marginTop: '2rem' }}>
-          {SERVICE_CATEGORIES.map((category) => {
-            const categoryServices = SERVICES[category.id];
+          {filteredCategories.map((category) => {
             const isCategoryExpanded = currentServiceCategory === category.id;
             
             return (
@@ -828,9 +862,9 @@ export default function ConversationalDiagnosticWizard() {
                     gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))',
                     gap: '1rem'
                   }}>
-                    {categoryServices.map((service) => {
+                    {category.services.map((service) => {
                       const isSelected = selectedServices.includes(service.id);
-                      const isRecommended = recommendedServices.some(s => s.id === service.id);
+                      const isRecommended = recommendedServiceIds.has(service.id);
                       
                       return (
                         <button

@@ -36,12 +36,19 @@ const {
   <!-- Author -->
   <div class="testimonial-author">
     {avatar ? (
-      <img 
-        src={avatar} 
-        alt={name}
-        class="author-avatar"
-        loading="lazy"
-      />
+      // Si el avatar es un emoji o no empieza con http/https, mostrar como texto
+      avatar.startsWith('http://') || avatar.startsWith('https://') || avatar.startsWith('/') ? (
+        <img 
+          src={avatar} 
+          alt={name}
+          class="author-avatar"
+          loading="lazy"
+        />
+      ) : (
+        <div class="author-avatar-emoji">
+          <span>{avatar}</span>
+        </div>
+      )
     ) : (
       <div class="author-avatar-placeholder">
         <span>{name.charAt(0)}</span>
@@ -126,7 +133,8 @@ const {
   }
   
   .author-avatar,
-  .author-avatar-placeholder {
+  .author-avatar-placeholder,
+  .author-avatar-emoji {
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 50%;
@@ -146,6 +154,15 @@ const {
     color: #FFFFFF;
     font-weight: 700;
     font-size: 1.25rem;
+  }
+  
+  .author-avatar-emoji {
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    border: 2px solid rgba(88, 101, 242, 0.2);
   }
   
   .author-info {
@@ -177,7 +194,8 @@ const {
     }
     
     .author-avatar,
-    .author-avatar-placeholder {
+    .author-avatar-placeholder,
+    .author-avatar-emoji {
       width: 3rem;
       height: 3rem;
       font-size: 1rem;

@@ -127,17 +127,26 @@ export class DiagnosticController {
 
   /**
    * GET /api/diagnostic
-   * Lista todos los diagnósticos (con paginación)
+   * Lista todos los diagnósticos (con paginación y filtros)
    */
   @Get()
   async getAllDiagnostics(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
+    @Query('estado') estado?: string,
+    @Query('tipoEmpresa') tipoEmpresa?: string,
+    @Query('search') search?: string,
   ) {
     const pageNum = page ? parseInt(page, 10) : 1;
     const limitNum = limit ? parseInt(limit, 10) : 20;
 
-    const result = await this.diagnosticService.getAllDiagnostics(pageNum, limitNum);
+    const filters = {
+      estado: estado || undefined,
+      tipoEmpresa: tipoEmpresa || undefined,
+      search: search || undefined,
+    };
+
+    const result = await this.diagnosticService.getAllDiagnostics(pageNum, limitNum, filters);
     return {
       success: true,
       ...result,
