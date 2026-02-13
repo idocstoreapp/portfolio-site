@@ -48,7 +48,7 @@ export default function PreciosContent() {
       ]);
 
       // Cargar pricing configs (puede fallar si no existe la tabla)
-      let configsRes = { success: true, data: [] };
+      let configsRes: { success: boolean; data: PricingConfig[] } = { success: true, data: [] };
       try {
         configsRes = await getPricingConfigs();
       } catch (err: any) {
