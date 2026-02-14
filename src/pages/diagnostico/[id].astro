@@ -3559,18 +3559,19 @@ try {
             diagnosticData.urgency = 'medium';
           }
           
-          // Guardar en sessionStorage y recargar UNA VEZ
-          // Después de recargar, verificar si hay datos en sessionStorage para renderizar
+          // Verificar si ya se intentó recargar para evitar loops infinitos
           const urlParams = new URLSearchParams(window.location.search);
           const hasData = urlParams.get('_hasData') === 'true';
+          const reloadAttempted = sessionStorage.getItem(`diagnostic-reload-attempted-${diagnosticId}`);
           
-          if (!hasData) {
+          if (!hasData && !reloadAttempted) {
             // Primera vez: guardar en sessionStorage y recargar con flag
             sessionStorage.setItem('diagnostic-result-data', stored);
+            sessionStorage.setItem(`diagnostic-reload-attempted-${diagnosticId}`, 'true');
             const newUrl = `${window.location.pathname}?_hasData=true`;
             window.location.href = newUrl;
             return;
-          } else {
+          } else if (hasData) {
             // Ya tiene el flag: leer desde sessionStorage
             const sessionData = sessionStorage.getItem('diagnostic-result-data');
             
@@ -3607,8 +3608,13 @@ try {
               
               // Limpiar sessionStorage
               sessionStorage.removeItem('diagnostic-result-data');
+              sessionStorage.removeItem(`diagnostic-reload-attempted-${diagnosticId}`);
               return;
             }
+          } else if (reloadAttempted && !hasData) {
+            // Ya se intentó recargar pero no funcionó, evitar loop infinito
+            console.warn('⚠️ [CLIENT] Reload already attempted, preventing infinite loop');
+            sessionStorage.removeItem(`diagnostic-reload-attempted-${diagnosticId}`);
           }
         } else {
           console.error('❌ [CLIENT] Diagnostic not found in localStorage');

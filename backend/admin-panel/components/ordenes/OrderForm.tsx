@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { updateOrder, type Order } from '@/lib/api';
+import { updateOrder } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
-import type { OrderStatus, UpdateOrderRequest } from '@/types/order';
+import type { Order, OrderStatus, UpdateOrderRequest } from '@/types/order';
 
 interface OrderFormProps {
   order: Order;
@@ -24,20 +24,11 @@ export default function OrderForm({ order, onUpdate }: OrderFormProps) {
     status: order.status,
   });
   const [saving, setSaving] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
 
   useEffect(() => {
-    loadCurrentUser();
     // Sincronizar estado cuando cambie la orden
     setFormData({ status: order.status });
   }, [order.status]);
-
-  async function loadCurrentUser() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      setCurrentUser(user);
-    }
-  }
 
   async function handleSave() {
     if (!formData.status) {
@@ -50,9 +41,10 @@ export default function OrderForm({ order, onUpdate }: OrderFormProps) {
       await updateOrder(order.id, formData);
       alert('Orden actualizada correctamente');
       onUpdate();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating order:', error);
-      alert(`Error al actualizar: ${error.message || 'Error desconocido'}`);
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      alert(`Error al actualizar: ${errorMessage}`);
     } finally {
       setSaving(false);
     }

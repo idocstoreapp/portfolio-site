@@ -5,7 +5,7 @@ nixPkgs = ["nodejs-18_x"]
 cmds = ["npm ci"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = ["npm run build", "ls -la dist/", "test -f dist/src/main.js || (echo 'Build failed - dist/src/main.js not found' && exit 1)"]
 
 [start]
 cmd = "node dist/src/main"
