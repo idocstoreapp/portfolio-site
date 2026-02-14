@@ -193,7 +193,6 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
   
   // Si no hay servicios seleccionados, usar recomendados según el tipo extendido
   if (selectedServicesList.length === 0) {
-    const { getRecommendedServicesForSector } = require('../utils/services');
     selectedServicesList = getRecommendedServicesForSector(sector, extendedType);
   }
   
