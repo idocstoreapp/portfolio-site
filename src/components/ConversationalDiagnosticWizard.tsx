@@ -320,6 +320,11 @@ export default function ConversationalDiagnosticWizard() {
     
     // Verificar que todas las preguntas tengan respuesta
     for (const question of allQuestions) {
+      // Las preguntas numéricas opcionales pueden estar vacías
+      if (question.type === 'number' && question.validation?.required === false) {
+        continue;
+      }
+      
       const answer = answers[question.id];
       if (!answer || (Array.isArray(answer) && answer.length === 0)) {
         return false;
@@ -1286,7 +1291,7 @@ export default function ConversationalDiagnosticWizard() {
                     setCurrentStep(currentStep + 1);
                   }
                 }}
-                disabled={!selectedValue || selectedValue < (question.validation?.min || 1)}
+                disabled={question.validation?.required !== false && (!selectedValue || selectedValue < (question.validation?.min || 1))}
               >
                 Continuar →
               </button>

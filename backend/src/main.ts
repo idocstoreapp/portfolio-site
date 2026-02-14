@@ -56,6 +56,7 @@ async function bootstrap() {
     res.json({
       message: 'Maestro Digital Backend API',
       version: '1.0.0',
+      status: 'running',
       endpoints: {
         diagnostic: '/api/diagnostic',
         solutionTemplates: '/api/solution-templates',
@@ -65,6 +66,23 @@ async function bootstrap() {
         auth: '/api/auth',
       },
       docs: 'All endpoints are under /api prefix',
+    });
+  });
+
+  // Ruta de salud en /api también
+  app.getHttpAdapter().get('/api', (req, res) => {
+    res.json({
+      message: 'Maestro Digital Backend API',
+      version: '1.0.0',
+      status: 'running',
+      endpoints: {
+        diagnostic: '/api/diagnostic',
+        solutionTemplates: '/api/solution-templates',
+        solutionModules: '/api/solution-modules',
+        orders: '/api/orders',
+        clients: '/api/clients',
+        auth: '/api/auth',
+      },
     });
   });
 

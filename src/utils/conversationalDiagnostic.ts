@@ -366,52 +366,14 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
       id: 'pedidos-diarios',
       sector: 'restaurante',
       title: '¿Cuántos pedidos manejas aproximadamente al día?',
-      subtitle: 'Esto ayuda a entender el volumen de trabajo',
+      subtitle: 'Esto ayuda a entender el volumen de trabajo y calcular mejor los ahorros',
       type: 'number',
       placeholder: 'Ej: 50, 100, 200...',
       validation: {
         min: 1,
         max: 10000,
         required: false
-      },
-      options: [
-        {
-          value: 'menos-50',
-          label: 'Menos de 50 pedidos',
-          description: 'Negocio pequeño',
-          costImpact: {
-            timeHours: 2,
-            moneyCost: 50
-          }
-        },
-        {
-          value: '50-100',
-          label: 'Entre 50 y 100 pedidos',
-          description: 'Negocio mediano',
-          costImpact: {
-            timeHours: 5,
-            moneyCost: 150
-          }
-        },
-        {
-          value: '100-200',
-          label: 'Entre 100 y 200 pedidos',
-          description: 'Negocio grande',
-          costImpact: {
-            timeHours: 10,
-            moneyCost: 300
-          }
-        },
-        {
-          value: 'mas-200',
-          label: 'Más de 200 pedidos',
-          description: 'Negocio muy grande',
-          costImpact: {
-            timeHours: 15,
-            moneyCost: 500
-          }
-        }
-      ]
+      }
     },
     {
       id: 'mesas-restaurante',

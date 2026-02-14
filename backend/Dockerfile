@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Verificar que el build fue exitoso
-RUN ls -la dist/ && test -f dist/main.js || (echo "Build failed - dist/main.js not found" && exit 1)
+RUN ls -la dist/ && (test -f dist/main.js || test -f dist/src/main.js) || (echo "Build failed - dist/main.js or dist/src/main.js not found" && exit 1)
 
 # Imagen de producción
 FROM node:18-alpine
@@ -34,5 +34,5 @@ COPY --from=builder /app/dist ./dist
 # Exponer puerto
 EXPOSE 3000
 
-# Comando de inicio
-CMD ["node", "dist/main"]
+# Comando de inicio (NestJS compila a dist/src/main.js cuando sourceRoot es "src")
+CMD ["node", "dist/src/main"]

@@ -363,6 +363,7 @@ export interface SolutionModule {
   category?: string;
   base_price: number;
   is_required: boolean;
+  is_active: boolean;
   manual_title?: string;
   manual_description?: string;
   manual_instructions?: string;
