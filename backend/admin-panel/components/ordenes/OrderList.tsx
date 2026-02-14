@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getOrders, type Order } from '@/lib/api';
+import { getOrders } from '@/lib/api';
 import OrderCard from './OrderCard';
 import OrderFilters from './OrderFilters';
-import type { OrderStatus, ProjectType } from '@/types/order';
+import type { Order, OrderStatus, ProjectType } from '@/types/order';
 
 interface OrderListProps {
   initialOrders?: Order[];

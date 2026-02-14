@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { updateOrder } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
-import type { Order, OrderStatus, UpdateOrderRequest } from '@/types/order';
+import type { OrderStatus, UpdateOrderRequest } from '@/types/order';
+import type { Order } from '@/types/order';
 
 interface OrderFormProps {
   order: Order;
