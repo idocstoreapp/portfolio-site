@@ -368,6 +368,7 @@ export interface SolutionModule {
   manual_instructions?: string;
   display_order: number;
   estimated_hours: number;
+  solution_template_id?: string;
 }
 
 /**
