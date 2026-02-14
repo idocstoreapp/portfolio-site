@@ -1,8 +1,19 @@
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
+const rawBackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
+// Asegurar que la URL tenga protocolo (evita recibir HTML en lugar de JSON)
+const BACKEND_URL =
+  rawBackendUrl.startsWith('http://') || rawBackendUrl.startsWith('https://')
+    ? rawBackendUrl.replace(/\/$/, '')
+    : `https://${rawBackendUrl.replace(/\/$/, '')}`;
 
 // Log para debugging
 if (typeof window !== 'undefined') {
   console.log('🔧 [ADMIN] BACKEND_URL configured:', BACKEND_URL);
+  if (BACKEND_URL.startsWith('http://localhost') && window.location.hostname !== 'localhost') {
+    console.warn(
+      '⚠️ [ADMIN] En producción debes definir NEXT_PUBLIC_BACKEND_URL con la URL de tu backend (ej. Railway). ' +
+      'En Vercel: Project → Settings → Environment Variables → NEXT_PUBLIC_BACKEND_URL → Redeploy.'
+    );
+  }
 }
 
 export interface Diagnostic {
