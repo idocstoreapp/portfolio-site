@@ -120,6 +120,9 @@ export async function getDiagnostics(
     return data;
   } catch (error) {
     console.error('❌ [ADMIN] Fetch error:', error);
+    if (typeof window !== 'undefined' && BACKEND_URL.startsWith('http://localhost') && (error as Error).message?.includes('fetch')) {
+      console.warn('💡 [ADMIN] En desarrollo: inicia el backend con "cd backend && npm run start:dev"');
+    }
     throw error;
   }
 }

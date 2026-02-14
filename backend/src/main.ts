@@ -5,45 +5,25 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+
+  // CORS: middleware que pone cabeceras en TODAS las respuestas (incl. 500)
+  // Así el admin en Vercel puede ver errores aunque el backend falle
+  app.use((req: any, res: any, next: () => void) => {
+    const origin = req.headers.origin;
+    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept');
+    if (req.method === 'OPTIONS') {
+      res.status(204).end();
+      return;
+    }
+    next();
+  });
+
   // Obtener configuración
   const configService = app.get(ConfigService);
   const port = configService.get('PORT') || 3000;
-  // Permitir múltiples orígenes para desarrollo y producción
-  const corsOrigin = configService.get('CORS_ORIGIN') || '';
-  const allowedOrigins = corsOrigin
-    ? corsOrigin.split(',').map((o: string) => o.trim()).filter(Boolean)
-    : (process.env.NODE_ENV === 'production' ? [] : ['http://localhost:4322']);
-
-  if (process.env.NODE_ENV === 'production' && allowedOrigins.length === 0) {
-    console.warn('⚠️ CORS_ORIGIN no definido en producción: se permiten todos los orígenes. Para restringir, define CORS_ORIGIN en Railway (ej: https://tu-admin.vercel.app).');
-  }
-
-  // Habilitar CORS
-  app.enableCors({
-    origin: (origin, callback) => {
-      // Permitir requests sin origin (Postman, mobile apps, etc.)
-      if (!origin) return callback(null, true);
-      // Si en producción no hay CORS_ORIGIN, permitir todos (evitar bloqueos)
-      if (process.env.NODE_ENV === 'production' && allowedOrigins.length === 0) {
-        return callback(null, true);
-      }
-      // Verificar si el origin está permitido
-      if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
-        callback(null, true);
-      } else {
-        // En desarrollo, permitir localhost en cualquier puerto
-        if (process.env.NODE_ENV !== 'production' && origin.includes('localhost')) {
-          callback(null, true);
-        } else {
-          callback(new Error('Not allowed by CORS'));
-        }
-      }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
-  });
 
   // Validación global
   app.useGlobalPipes(
