@@ -10,15 +10,24 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get('PORT') || 3000;
   // Permitir múltiples orígenes para desarrollo y producción
-  const corsOrigin = configService.get('CORS_ORIGIN') || 'http://localhost:4322';
-  const allowedOrigins = corsOrigin.split(',').map(origin => origin.trim());
+  const corsOrigin = configService.get('CORS_ORIGIN') || '';
+  const allowedOrigins = corsOrigin
+    ? corsOrigin.split(',').map((o: string) => o.trim()).filter(Boolean)
+    : (process.env.NODE_ENV === 'production' ? [] : ['http://localhost:4322']);
+
+  if (process.env.NODE_ENV === 'production' && allowedOrigins.length === 0) {
+    console.warn('⚠️ CORS_ORIGIN no definido en producción: se permiten todos los orígenes. Para restringir, define CORS_ORIGIN en Railway (ej: https://tu-admin.vercel.app).');
+  }
 
   // Habilitar CORS
   app.enableCors({
     origin: (origin, callback) => {
       // Permitir requests sin origin (Postman, mobile apps, etc.)
       if (!origin) return callback(null, true);
-      
+      // Si en producción no hay CORS_ORIGIN, permitir todos (evitar bloqueos)
+      if (process.env.NODE_ENV === 'production' && allowedOrigins.length === 0) {
+        return callback(null, true);
+      }
       // Verificar si el origin está permitido
       if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
         callback(null, true);

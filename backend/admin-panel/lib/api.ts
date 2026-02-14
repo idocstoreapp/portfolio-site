@@ -92,11 +92,10 @@ export async function getDiagnostics(
 
   const url = `${BACKEND_URL}/api/diagnostic?${params.toString()}`;
   console.log('🔍 [ADMIN] Fetching diagnostics from:', url);
-  console.log('🔍 [ADMIN] BACKEND_URL:', BACKEND_URL);
 
   try {
     const response = await fetch(url);
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error('❌ [ADMIN] Error response:', response.status, response.statusText);
@@ -104,8 +103,20 @@ export async function getDiagnostics(
       throw new Error(`Error fetching diagnostics: ${response.status} ${response.statusText}`);
     }
 
-    const data = await response.json();
-    console.log('✅ [ADMIN] Diagnostics fetched:', data.total || 0, 'total');
+    const contentType = response.headers.get('content-type') || '';
+    const text = await response.text();
+    if (!contentType.includes('application/json')) {
+      console.error('❌ [ADMIN] La respuesta no es JSON. ¿URL correcta? ¿CORS en Railway? Body:', text.slice(0, 200));
+      throw new Error('El backend devolvió HTML en lugar de JSON. Revisa NEXT_PUBLIC_BACKEND_URL (con https://) y en Railway la variable CORS_ORIGIN con la URL de tu admin.');
+    }
+    let data: DiagnosticListResponse;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      console.error('❌ [ADMIN] JSON inválido. Body:', text.slice(0, 200));
+      throw new Error('Respuesta del backend no válida. Revisa CORS_ORIGIN en Railway (ej: https://tu-admin.vercel.app).');
+    }
+    console.log('✅ [ADMIN] Diagnostics fetched:', data.total ?? data.data?.length ?? 0, 'total');
     return data;
   } catch (error) {
     console.error('❌ [ADMIN] Fetch error:', error);
