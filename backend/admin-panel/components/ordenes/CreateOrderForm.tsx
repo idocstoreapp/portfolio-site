@@ -88,7 +88,7 @@ export default function CreateOrderForm() {
 
   function calculatePrices() {
     let modulesPrice = 0;
-    let basePrice = formData.base_price;
+    let basePrice = formData.base_price || 0;
 
     // Calcular precio de módulos seleccionados
     selectedModules.forEach(moduleId => {
@@ -149,7 +149,7 @@ export default function CreateOrderForm() {
     }
   }
 
-  const totalPrice = formData.base_price + formData.modules_price + (formData.custom_adjustments || 0) - (formData.discount_amount || 0);
+  const totalPrice = (formData.base_price || 0) + (formData.modules_price || 0) + (formData.custom_adjustments || 0) - (formData.discount_amount || 0);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -362,7 +362,7 @@ export default function CreateOrderForm() {
               type="number"
               required
               min="0"
-              value={formData.base_price}
+              value={formData.base_price || 0}
               onChange={(e) => setFormData(prev => ({ ...prev, base_price: parseFloat(e.target.value) || 0 }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             />
@@ -376,7 +376,7 @@ export default function CreateOrderForm() {
               id="modules_price"
               type="number"
               readOnly
-              value={formData.modules_price}
+              value={formData.modules_price || 0}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50"
             />
           </div>
@@ -388,7 +388,7 @@ export default function CreateOrderForm() {
             <input
               id="custom_adjustments"
               type="number"
-              value={formData.custom_adjustments}
+              value={formData.custom_adjustments || 0}
               onChange={(e) => setFormData(prev => ({ ...prev, custom_adjustments: parseFloat(e.target.value) || 0 }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             />
@@ -402,7 +402,7 @@ export default function CreateOrderForm() {
               id="discount_amount"
               type="number"
               min="0"
-              value={formData.discount_amount}
+              value={formData.discount_amount || 0}
               onChange={(e) => setFormData(prev => ({ ...prev, discount_amount: parseFloat(e.target.value) || 0 }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent"
             />
