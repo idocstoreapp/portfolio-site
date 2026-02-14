@@ -577,6 +577,19 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
           }
         }
       ]
+    },
+    {
+      id: 'reparaciones-mes',
+      sector: 'servicio-tecnico',
+      title: '¿Cuántas reparaciones manejas aproximadamente al mes?',
+      subtitle: 'Esto ayuda a entender el volumen de trabajo y calcular mejor los ahorros',
+      type: 'number',
+      placeholder: 'Ej: 20, 50, 100...',
+      validation: {
+        min: 1,
+        max: 10000,
+        required: false
+      }
     }
   ],
 
@@ -659,6 +672,19 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
           }
         }
       ]
+    },
+    {
+      id: 'vehiculos-mes',
+      sector: 'taller',
+      title: '¿Cuántos vehículos reparas aproximadamente al mes?',
+      subtitle: 'Esto ayuda a entender el volumen de trabajo y calcular mejor los ahorros',
+      type: 'number',
+      placeholder: 'Ej: 30, 60, 120...',
+      validation: {
+        min: 1,
+        max: 10000,
+        required: false
+      }
     }
   ],
 

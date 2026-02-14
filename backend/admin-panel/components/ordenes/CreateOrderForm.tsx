@@ -99,7 +99,7 @@ export default function CreateOrderForm() {
     });
 
     // Calcular total
-    const total = basePrice + modulesPrice + formData.custom_adjustments - formData.discount_amount;
+    const total = basePrice + modulesPrice + (formData.custom_adjustments || 0) - (formData.discount_amount || 0);
 
     setFormData(prev => ({
       ...prev,
@@ -149,7 +149,7 @@ export default function CreateOrderForm() {
     }
   }
 
-  const totalPrice = formData.base_price + formData.modules_price + formData.custom_adjustments - formData.discount_amount;
+  const totalPrice = formData.base_price + formData.modules_price + (formData.custom_adjustments || 0) - (formData.discount_amount || 0);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">

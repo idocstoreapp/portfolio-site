@@ -3,8 +3,8 @@ import { randomUUID } from 'crypto';
 import { SupabaseService } from '../../common/supabase/supabase.service';
 import { CreateDiagnosticDto } from './dto/create-diagnostic.dto';
 import { DiagnosticResultDto } from './dto/diagnostic-result.dto';
-import { processDiagnostic, DiagnosticResult } from '../../../diagnostic-engine';
-import { processEnhancedDiagnostic, DiagnosticEnvelope, EnhancedDiagnosticAnswers, BusinessType } from '../../../enhanced-diagnostic-engine';
+import { processDiagnostic, DiagnosticResult } from '../../diagnostic-engine';
+import { processEnhancedDiagnostic, DiagnosticEnvelope, EnhancedDiagnosticAnswers, BusinessType } from '../../enhanced-diagnostic-engine';
 
 // Funciones auxiliares para el sistema conversacional
 function getSolutionTitleForSector(sector: string): string {
