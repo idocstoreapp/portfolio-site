@@ -212,7 +212,7 @@ export class DiagnosticService {
         soluciones_complementarias: result.complementarySolutions.map(s => s.id || s.title.toLowerCase().replace(/\s+/g, '-')),
         urgencia: result.urgency,
         match_score: result.primarySolution.matchScore,
-        estado: 'nuevo',
+        estado: 'contactado',
         ip_address: createDiagnosticDto.ipAddress || null,
         user_agent: createDiagnosticDto.userAgent || null,
         source: 'web',

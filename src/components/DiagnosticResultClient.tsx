@@ -16,10 +16,62 @@ interface DiagnosticResultClientProps {
   diagnosticId: string;
 }
 
+const MAX_PREVIEW_CHARS = 100;
+const MAX_HIGHLIGHTS_PREVIEW = 3;
+const MAX_OPPORTUNITY_DESC_CHARS = 80;
+
 export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResultClientProps) {
   const [diagnosticData, setDiagnosticData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<{ situation?: boolean; opportunities?: Record<number, boolean>; impact?: Record<number, boolean> }>({});
+  const [visible, setVisible] = useState<Record<string, boolean>>({});
+  const [countUp, setCountUp] = useState({ hours: 0, money: 0, roi: 0 });
+  const [countUpDone, setCountUpDone] = useState(false);
+
+  useEffect(() => {
+    if (!diagnosticData) return;
+    const els = document.querySelectorAll('[data-reveal-id]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const id = entry.target.getAttribute('data-reveal-id');
+          if (id && entry.isIntersecting) setVisible((v) => ({ ...v, [id]: true }));
+        });
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -50px 0px' }
+    );
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [diagnosticData]);
+
+  useEffect(() => {
+    if (!visible.hero || !diagnosticData || countUpDone) return;
+    const summary = diagnosticData.summary;
+    const targetHours = Math.round(summary?.totalPotentialSavings?.timeHours ?? 0);
+    const targetMoney = Math.round(summary?.totalPotentialSavings?.moneyCost ?? 0);
+    const targetRoi = summary?.roi != null ? Math.round(summary.roi) : 0;
+    const duration = 800;
+    const steps = 24;
+    const interval = duration / steps;
+    let step = 0;
+    const t = setInterval(() => {
+      step += 1;
+      const p = Math.min(1, step / steps);
+      const ease = 1 - (1 - p) * (1 - p);
+      setCountUp({
+        hours: Math.round(ease * targetHours),
+        money: Math.round(ease * targetMoney),
+        roi: Math.round(ease * targetRoi),
+      });
+      if (step >= steps) {
+        clearInterval(t);
+        setCountUp({ hours: targetHours, money: targetMoney, roi: targetRoi });
+        setCountUpDone(true);
+      }
+    }, interval);
+    return () => clearInterval(t);
+  }, [visible.hero, diagnosticData, countUpDone]);
 
   useEffect(() => {
     try {
@@ -155,17 +207,155 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
     };
   });
 
+  const summary = diagnosticData.summary;
+  const hoursSave = Math.round(summary?.totalPotentialSavings?.timeHours ?? 0);
+  const moneySave = Math.round(summary?.totalPotentialSavings?.moneyCost ?? 0);
+  const roi = summary?.roi != null ? Math.round(summary.roi) : null;
+  const opportunities = diagnosticData.opportunities || [];
+  const errorReduction = opportunities.find((o: any) => o.impact?.errors != null)?.impact?.errors ?? '9%';
+  const impactTime = (o: any) => o.impact?.timeHours != null ? `${Math.round(o.impact.timeHours)}h` : o.impact?.time;
+  const impactMoney = (o: any) => o.impact?.moneyCost != null ? `$${Math.round(o.impact.moneyCost)}` : o.impact?.money;
+  const baseCards = opportunities.slice(0, 4).map((opp: any) => ({
+    title: opp.title,
+    description: opp.description?.slice(0, 120) + (opp.description?.length > 120 ? '…' : '') || 'Mejora concreta para tu operación.',
+    metric: impactTime(opp) || impactMoney(opp) || (opp.impact ? Object.values(opp.impact)[0] : null),
+    icon: opp.title?.toLowerCase().includes('orden') ? '📋' : opp.title?.toLowerCase().includes('automat') ? '⚙️' : opp.title?.toLowerCase().includes('impacto') ? '📈' : '⏰',
+  }));
+  const fallbacks: { title: string; description: string; metric: string; icon: string }[] = [];
+  if (hoursSave > 0) fallbacks.push({ title: 'Más tiempo libre', description: `Con ${hoursSave} horas semanales liberadas puedes dedicar más tiempo a estrategias o disfrutar tu tiempo libre.`, metric: `${hoursSave} Horas Ahorradas`, icon: '⏰' });
+  if (moneySave > 0) fallbacks.push({ title: 'Impacto operativo positivo', description: 'Operativa más eficiente y controlada, mejorando la libertad y gestión del negocio.', metric: `$${moneySave} Ahorro Mensual`, icon: '📈' });
+  fallbacks.push({ title: 'Menos errores', description: 'Automatización y procesos claros reducen equivocaciones y reprocesos.', metric: `-${typeof errorReduction === 'string' ? errorReduction : errorReduction + '%'} errores`, icon: '✓' });
+  fallbacks.push({ title: 'Más control', description: 'Visibilidad total de tu operación y decisiones basadas en datos.', metric: 'Control total', icon: '🎯' });
+  fallbacks.push({ title: 'Crecimiento', description: 'Escala tu negocio sin multiplicar horas ni costos operativos.', metric: roi != null ? `${roi}% ROI` : 'ROI positivo', icon: '📈' });
+  const benefitCards = [...baseCards, ...fallbacks].slice(0, 6);
+
   return (
     <>
-      {/* Mensaje Personalizado */}
-      <div className="result-header">
-        <h1 className="result-title">{diagnosticData.personalizedMessage?.greeting || 'Hola'}</h1>
-        <p className="result-subtitle">{diagnosticData.personalizedMessage?.context || 'He analizado tu negocio'}</p>
+      {/* SECCIÓN 1 — Hero de resultado premium */}
+      <div
+        className={`result-hero-premium ${visible.hero ? 'result-reveal-visible' : ''}`}
+        data-reveal-id="hero"
+      >
+        <div className="result-hero-premium-inner">
+          <h1 className="result-hero-premium-title">Tu diagnóstico está listo</h1>
+          <p className="result-hero-premium-subtitle">
+            Estas son las oportunidades detectadas para mejorar tu negocio
+          </p>
+          <div className="result-hero-premium-metrics">
+            <div className="result-hero-metric-block">
+              <div className="result-hero-metric-ring" style={{ ['--progress' as string]: Math.min(100, (hoursSave || 1) / 20 * 100) }}>
+                <span className="result-hero-metric-value">+{countUp.hours}h</span>
+                <span className="result-hero-metric-label">Horas ahorradas</span>
+              </div>
+            </div>
+            <div className="result-hero-metric-block">
+              <div className="result-hero-metric-ring result-hero-metric-ring-money" style={{ ['--progress' as string]: Math.min(100, (moneySave || 1) / 500 * 100) }}>
+                <span className="result-hero-metric-value">${countUp.money}</span>
+                <span className="result-hero-metric-label">Ahorro mensual</span>
+              </div>
+            </div>
+            <div className="result-hero-metric-block">
+              <div className="result-hero-metric-ring result-hero-metric-ring-roi" style={{ ['--progress' as string]: roi != null ? Math.min(100, roi) : 0 }}>
+                <span className="result-hero-metric-value">{countUp.roi}%</span>
+                <span className="result-hero-metric-label">ROI</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Grid de 4 beneficios (icono + descripción corta + métrica) */}
+      {benefitCards.length > 0 && (
+        <div
+          id="beneficios-clave"
+          className={`result-beneficios-grid result-reveal ${visible['beneficios-grid'] ? 'result-reveal-visible' : ''}`}
+          data-reveal-id="beneficios-grid"
+        >
+          <h2 className="result-beneficios-title">Beneficios Clave Detectados</h2>
+          <div className="result-beneficios-cards">
+            {benefitCards.map((card: { title: string; description: string; metric: string | number | null; icon: string }, idx: number) => (
+              <div key={idx} className="result-beneficio-card">
+                <div className="result-beneficio-icon">{card.icon}</div>
+                <h3 className="result-beneficio-card-title">{card.title}</h3>
+                <p className="result-beneficio-card-desc">{card.description}</p>
+                {card.metric && (
+                  <div className="result-beneficio-metric">
+                    <span className="result-beneficio-metric-icon">{String(card.metric).startsWith('$') ? '💰' : '⏱️'}</span>
+                    <span>{card.metric}</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* SECCIÓN 3 — Comparación visual: Situación actual vs optimizada */}
+      {diagnosticData.summary && (
+        <div
+          className={`result-comparison-section result-reveal ${visible['comparison'] ? 'result-reveal-visible' : ''}`}
+          data-reveal-id="comparison"
+        >
+          <h2 className="result-comparison-title">Comparación visual</h2>
+          <p className="result-comparison-subtitle">Situación actual vs situación optimizada</p>
+          <div className="result-comparison-cards">
+            <div className="result-comparison-card result-comparison-card-actual">
+              <div className="result-comparison-card-label">Situación actual</div>
+              <div className="result-comparison-metric">
+                <span className="result-comparison-value">{Math.round(diagnosticData.summary.totalCurrentCost?.timeHours || 0)}h</span>
+                <span className="result-comparison-metric-label">por semana</span>
+              </div>
+              <div className="result-comparison-metric">
+                <span className="result-comparison-value">${Math.round(diagnosticData.summary.totalCurrentCost?.moneyCost || 0)}</span>
+                <span className="result-comparison-metric-label">por mes</span>
+              </div>
+              <p className="result-comparison-card-desc">Tiempo y dinero en procesos manuales</p>
+            </div>
+            <div className="result-comparison-card result-comparison-card-optimized">
+              <div className="result-comparison-card-label">Situación optimizada</div>
+              <div className="result-comparison-metric">
+                <span className="result-comparison-value">-{Math.round(diagnosticData.summary.totalPotentialSavings?.timeHours || 0)}h</span>
+                <span className="result-comparison-metric-label">por semana</span>
+              </div>
+              <div className="result-comparison-metric">
+                <span className="result-comparison-value">+${Math.round(diagnosticData.summary.totalPotentialSavings?.moneyCost || 0)}</span>
+                <span className="result-comparison-metric-label">ahorro mensual</span>
+              </div>
+              <p className="result-comparison-card-desc">Con automatización y mejores procesos</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Testimonial + CTA verde */}
+      <div
+        className={`result-testimonial-cta result-reveal ${visible['testimonial'] ? 'result-reveal-visible' : ''}`}
+        data-reveal-id="testimonial"
+      >
+        <div className="result-testimonial">
+          <span className="result-testimonial-quote">"</span>
+          <p className="result-testimonial-text">
+            Las oportunidades detectadas me han permitido ahorrar tiempo y reducir errores en mi negocio. Estoy muy satisfecho con los resultados y el impacto positivo que ha tenido en mi operativa diaria.
+          </p>
+          <p className="result-testimonial-author">Jonathan Guarirap, Dueño de negocio.</p>
+          <div className="result-testimonial-stars">★★★★★</div>
+          <div className="result-testimonial-photo-wrap">
+            <div className="result-testimonial-photo" aria-hidden />
+          </div>
+        </div>
+        <a href="/contacto" className="result-cta-green">
+          <span className="result-cta-green-icon">✉️</span>
+          Contáctanos Para Saber Más →
+        </a>
       </div>
 
       {/* Servicios Seleccionados - Diseño mejorado y más visual */}
       {selectedServicesList.length > 0 && (
-        <div className="selected-services-section-modern" style={{ margin: '4rem 0' }}>
+        <div
+          className={`selected-services-section-modern result-reveal ${visible.services ? 'result-reveal-visible' : ''}`}
+          data-reveal-id="services"
+          style={{ margin: '4rem 0' }}
+        >
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <h2 style={{ fontSize: '2.5rem', fontWeight: 700, color: '#0f172a', marginBottom: '1rem' }}>
               Servicios Recomendados para Ti
@@ -392,22 +582,45 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
         </div>
       )}
 
-      {/* Situación Actual */}
+      {/* Situación Actual - poco texto visible, imagen protagonista */}
       {diagnosticData.currentSituation && (
-        <div className="current-situation-section-modern">
+        <div
+          className={`current-situation-section-modern diagnostic-result-mobile result-reveal ${visible.situation ? 'result-reveal-visible' : ''}`}
+          data-reveal-id="situation"
+        >
           <div className="current-situation-content">
             <div className="current-situation-text">
               <h2 className="current-situation-title">{diagnosticData.currentSituation.title}</h2>
-              <p className="current-situation-description">{diagnosticData.currentSituation.description}</p>
+              <div className="result-description-wrap">
+                <p className={`current-situation-description result-description ${expanded.situation ? 'result-expanded' : ''}`}>
+                  {diagnosticData.currentSituation.description}
+                </p>
+                {diagnosticData.currentSituation.description && diagnosticData.currentSituation.description.length > MAX_PREVIEW_CHARS && (
+                  <button
+                    type="button"
+                    className="result-ver-mas"
+                    onClick={() => setExpanded(e => ({ ...e, situation: !e.situation }))}
+                  >
+                    {expanded.situation ? 'Ver menos' : 'Ver más'}
+                  </button>
+                )}
+              </div>
               {diagnosticData.currentSituation.highlights && diagnosticData.currentSituation.highlights.length > 0 && (
-                <ul className="current-situation-highlights">
-                  {diagnosticData.currentSituation.highlights.map((highlight: string, idx: number) => (
-                    <li key={idx} className="current-situation-highlight-item">
-                      <span className="highlight-icon">✓</span>
-                      <span className="highlight-text">{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
+                <>
+                  <ul className="current-situation-highlights">
+                    {(expanded.situation ? diagnosticData.currentSituation.highlights : diagnosticData.currentSituation.highlights.slice(0, MAX_HIGHLIGHTS_PREVIEW)).map((highlight: string, idx: number) => (
+                      <li key={idx} className="current-situation-highlight-item highlight-chip">
+                        <span className="highlight-icon">✓</span>
+                        <span className="highlight-text">{highlight.length > 60 ? highlight.slice(0, 60) + (highlight.length > 60 ? '…' : '') : highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  {!expanded.situation && diagnosticData.currentSituation.highlights.length > MAX_HIGHLIGHTS_PREVIEW && (
+                    <button type="button" className="result-ver-mas" onClick={() => setExpanded(e => ({ ...e, situation: true }))}>
+                      Ver {diagnosticData.currentSituation.highlights.length - MAX_HIGHLIGHTS_PREVIEW} más
+                    </button>
+                  )}
+                </>
               )}
             </div>
             <div className="current-situation-image-wrapper">
@@ -429,248 +642,12 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
         </div>
       )}
 
-      {/* Dashboard: ROI/Ahorro Estimado - Rediseñado como Dashboard */}
-      {diagnosticData.summary && (
-        <div style={{
-          margin: '4rem 0',
-          padding: '3rem 2rem',
-          background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
-          borderRadius: '32px',
-          maxWidth: '1400px',
-          marginLeft: 'auto',
-          marginRight: 'auto'
-        }}>
-          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <h2 style={{
-              fontSize: '2.5rem',
-              fontWeight: 700,
-              color: '#0f172a',
-              marginBottom: '1rem',
-              letterSpacing: '-0.02em'
-            }}>
-              Tu Ahorro Estimado
-            </h2>
-            <p style={{
-              fontSize: '1.25rem',
-              color: '#64748b',
-              maxWidth: '700px',
-              margin: '0 auto',
-              lineHeight: 1.6
-            }}>
-              Comparación entre tu situación actual y el potencial con nuestras soluciones
-            </p>
-          </div>
-
-          {/* Cards de Comparación */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '2rem',
-            marginBottom: '2rem'
-          }}>
-            {/* Card: Costos Actuales (Rojo) */}
-            <div style={{
-              background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
-              borderRadius: '24px',
-              padding: '2.5rem',
-              color: '#ffffff',
-              boxShadow: '0 12px 40px rgba(220, 38, 38, 0.3)',
-              position: 'relative',
-              overflow: 'hidden'
-            }}>
-              <div style={{
-                position: 'absolute',
-                top: '-50%',
-                right: '-50%',
-                width: '200%',
-                height: '200%',
-                background: 'radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%)',
-                pointerEvents: 'none'
-              }} />
-              <div style={{
-                fontSize: '0.875rem',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                marginBottom: '1.5rem',
-                opacity: 0.9
-              }}>
-                Costos Actuales
-              </div>
-              <div style={{ marginBottom: '1rem' }}>
-                <div style={{
-                  fontSize: '2.5rem',
-                  fontWeight: 700,
-                  marginBottom: '0.5rem',
-                  lineHeight: 1.2
-                }}>
-                  {Math.round(diagnosticData.summary.totalCurrentCost?.timeHours || 0)}h
-                </div>
-                <div style={{
-                  fontSize: '1.125rem',
-                  opacity: 0.9,
-                  marginBottom: '1.5rem'
-                }}>
-                  por semana
-                </div>
-                <div style={{
-                  fontSize: '2.5rem',
-                  fontWeight: 700,
-                  marginBottom: '0.5rem',
-                  lineHeight: 1.2
-                }}>
-                  ${Math.round(diagnosticData.summary.totalCurrentCost?.moneyCost || 0)}
-                </div>
-                <div style={{
-                  fontSize: '1.125rem',
-                  opacity: 0.9
-                }}>
-                  por mes
-                </div>
-              </div>
-              <div style={{
-                fontSize: '0.9375rem',
-                opacity: 0.8,
-                lineHeight: 1.6,
-                marginTop: '1.5rem',
-                paddingTop: '1.5rem',
-                borderTop: '1px solid rgba(255, 255, 255, 0.2)'
-              }}>
-                Tiempo y dinero que estás perdiendo en procesos manuales
-              </div>
-            </div>
-
-            {/* Card: Ahorro Potencial (Verde) */}
-            <div style={{
-              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-              borderRadius: '24px',
-              padding: '2.5rem',
-              color: '#ffffff',
-              boxShadow: '0 12px 40px rgba(16, 185, 129, 0.3)',
-              position: 'relative',
-              overflow: 'hidden'
-            }}>
-              <div style={{
-                position: 'absolute',
-                top: '-50%',
-                right: '-50%',
-                width: '200%',
-                height: '200%',
-                background: 'radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%)',
-                pointerEvents: 'none'
-              }} />
-              <div style={{
-                fontSize: '0.875rem',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                marginBottom: '1.5rem',
-                opacity: 0.9
-              }}>
-                Tu Ahorro con Maestro Digital
-              </div>
-              <div style={{ marginBottom: '1rem' }}>
-                <div style={{
-                  fontSize: '2.5rem',
-                  fontWeight: 700,
-                  marginBottom: '0.5rem',
-                  lineHeight: 1.2
-                }}>
-                  -{Math.round(diagnosticData.summary.totalPotentialSavings?.timeHours || 0)}h
-                </div>
-                <div style={{
-                  fontSize: '1.125rem',
-                  opacity: 0.9,
-                  marginBottom: '1.5rem'
-                }}>
-                  por semana
-                </div>
-                <div style={{
-                  fontSize: '2.5rem',
-                  fontWeight: 700,
-                  marginBottom: '0.5rem',
-                  lineHeight: 1.2
-                }}>
-                  +${Math.round(diagnosticData.summary.totalPotentialSavings?.moneyCost || 0)}
-                </div>
-                <div style={{
-                  fontSize: '1.125rem',
-                  opacity: 0.9
-                }}>
-                  por mes
-                </div>
-              </div>
-              <div style={{
-                fontSize: '0.9375rem',
-                opacity: 0.8,
-                lineHeight: 1.6,
-                marginTop: '1.5rem',
-                paddingTop: '1.5rem',
-                borderTop: '1px solid rgba(255, 255, 255, 0.2)'
-              }}>
-                Tiempo y dinero que puedes ahorrar con automatización
-              </div>
-            </div>
-
-            {/* Card: ROI Estimado */}
-            {diagnosticData.summary.roi && (
-              <div style={{
-                background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                borderRadius: '24px',
-                padding: '2.5rem',
-                color: '#ffffff',
-                boxShadow: '0 12px 40px rgba(59, 130, 246, 0.3)',
-                position: 'relative',
-                overflow: 'hidden',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center'
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  top: '-50%',
-                  right: '-50%',
-                  width: '200%',
-                  height: '200%',
-                  background: 'radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%)',
-                  pointerEvents: 'none'
-                }} />
-                <div style={{
-                  fontSize: '0.875rem',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                  marginBottom: '1.5rem',
-                  opacity: 0.9
-                }}>
-                  ROI Estimado
-                </div>
-                <div style={{
-                  fontSize: '4rem',
-                  fontWeight: 700,
-                  lineHeight: 1,
-                  marginBottom: '1rem'
-                }}>
-                  {Math.round(diagnosticData.summary.roi)}%
-                </div>
-                <div style={{
-                  fontSize: '1.125rem',
-                  opacity: 0.9,
-                  lineHeight: 1.6
-                }}>
-                  Retorno de inversión proyectado
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Oportunidades */}
+      {/* Oportunidades - tarjetas modernas con expand */}
       {diagnosticData.opportunities && diagnosticData.opportunities.length > 0 && (
-        <div className="opportunities-section-modern">
+        <div
+          className={`opportunities-section-modern diagnostic-result-mobile result-reveal ${visible.opportunities ? 'result-reveal-visible' : ''}`}
+          data-reveal-id="opportunities"
+        >
           <h2 className="opportunities-section-title">Oportunidades Detectadas</h2>
           <div className="opportunities-slider-wrapper">
             <div className="opportunities-slider" id="opportunities-slider">
@@ -679,6 +656,10 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
                 if (!imageUrl && opportunity.title) {
                   imageUrl = getOpportunityImageUrl(sector, opportunity.title);
                 }
+                const oppExpanded = expanded.opportunities?.[index];
+                const shortDesc = opportunity.description && opportunity.description.length > MAX_OPPORTUNITY_DESC_CHARS
+                  ? opportunity.description.slice(0, MAX_OPPORTUNITY_DESC_CHARS) + '…'
+                  : opportunity.description;
                 return (
                   <div key={index} className="opportunity-slide">
                     <div className="opportunity-card-modern">
@@ -693,9 +674,20 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
                       </div>
                       <div className="opportunity-content-modern">
                         <h3 className="opportunity-title-modern">{opportunity.title}</h3>
-                        <p className="opportunity-description-modern">{opportunity.description}</p>
+                        {opportunity.description && (
+                          <div className="opportunity-desc-wrap">
+                            <p className={`opportunity-description-modern result-description ${oppExpanded ? 'result-expanded' : ''}`}>
+                              {oppExpanded ? opportunity.description : shortDesc}
+                            </p>
+                            {opportunity.description.length > MAX_OPPORTUNITY_DESC_CHARS && (
+                              <button type="button" className="result-ver-mas" onClick={() => setExpanded(e => ({ ...e, opportunities: { ...e.opportunities, [index]: !oppExpanded } }))}>
+                                {oppExpanded ? 'Ver menos' : 'Ver más'}
+                              </button>
+                            )}
+                          </div>
+                        )}
                         {opportunity.impact && (
-                          <div className="opportunity-impact-modern">
+                          <div className="opportunity-impact-modern impact-pills">
                             {Object.entries(opportunity.impact).map(([key, value]: [string, any]) => (
                               <div key={key} className="impact-item-modern">
                                 <span className="impact-icon">{key === 'time' ? '⏱️' : key === 'money' ? '💰' : '📈'}</span>
@@ -705,14 +697,21 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
                           </div>
                         )}
                         {opportunity.improvements && opportunity.improvements.length > 0 && (
-                          <ul className="improvement-list-modern">
-                            {opportunity.improvements.map((improvement: string, idx: number) => (
-                              <li key={idx} className="improvement-item-modern">
-                                <span className="improvement-icon">✓</span>
-                                {improvement}
-                              </li>
-                            ))}
-                          </ul>
+                          <div className="improvements-wrap">
+                            <ul className="improvement-list-modern">
+                              {opportunity.improvements.slice(0, oppExpanded ? undefined : 2).map((improvement: string, idx: number) => (
+                                <li key={idx} className="improvement-item-modern">
+                                  <span className="improvement-icon">✓</span>
+                                  {improvement}
+                                </li>
+                              ))}
+                            </ul>
+                            {!oppExpanded && opportunity.improvements.length > 2 && (
+                              <button type="button" className="result-ver-mas" onClick={() => setExpanded(e => ({ ...e, opportunities: { ...e.opportunities, [index]: true } }))}>
+                                Ver {opportunity.improvements.length - 2} beneficios más
+                              </button>
+                            )}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -724,44 +723,50 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
         </div>
       )}
 
-      {/* Impacto Operativo */}
+      {/* Impacto Operativo - imagen y título destacados, texto breve */}
       {diagnosticData.operationalImpact && (
-        <div className="operational-impact-section-modern">
+        <div
+          className={`operational-impact-section-modern diagnostic-result-mobile result-reveal ${visible.impact ? 'result-reveal-visible' : ''}`}
+          data-reveal-id="impact"
+        >
           <h2 className="operational-impact-title">{diagnosticData.operationalImpact.title}</h2>
-          <p className="operational-impact-description">{diagnosticData.operationalImpact.description}</p>
+          <p className="operational-impact-description result-description result-expanded">{diagnosticData.operationalImpact.description}</p>
           {diagnosticData.operationalImpact.consequences && diagnosticData.operationalImpact.consequences.length > 0 && (
             <div className="operational-impact-consequences">
               {diagnosticData.operationalImpact.consequences.map((consequence: any, index: number) => {
                 const areaLower = consequence.area?.toLowerCase() || '';
                 let impactArea: 'tiempo' | 'costos' | 'errores' | 'crecimiento' = 'tiempo';
-                
                 if (areaLower.includes('tiempo')) impactArea = 'tiempo';
                 else if (areaLower.includes('costo')) impactArea = 'costos';
                 else if (areaLower.includes('error')) impactArea = 'errores';
                 else if (areaLower.includes('crecimiento')) impactArea = 'crecimiento';
-                
                 let imageUrl = consequence.imageUrl;
-                if (!imageUrl) {
-                  imageUrl = getOperationalImpactImageUrl(sector, impactArea);
-                }
-                
+                if (!imageUrl) imageUrl = getOperationalImpactImageUrl(sector, impactArea);
                 const isEven = index % 2 === 0;
-                
+                const impactExp = expanded.impact?.[index];
+                const shortImpact = consequence.impact && consequence.impact.length > MAX_PREVIEW_CHARS
+                  ? consequence.impact.slice(0, MAX_PREVIEW_CHARS) + '…'
+                  : consequence.impact;
                 return (
                   <div key={index} className={`consequence-card-modern ${isEven ? 'text-left' : 'image-left'}`}>
                     {isEven ? (
                       <>
                         <div className="consequence-content-modern">
                           <h3 className="consequence-area-modern">{consequence.area}</h3>
-                          <p className="consequence-impact-modern">{consequence.impact}</p>
+                          <div className="result-description-wrap">
+                            <p className={`consequence-impact-modern result-description ${impactExp ? 'result-expanded' : ''}`}>
+                              {impactExp ? consequence.impact : shortImpact}
+                            </p>
+                            {consequence.impact && consequence.impact.length > MAX_PREVIEW_CHARS && (
+                              <button type="button" className="result-ver-mas" onClick={() => setExpanded(e => ({ ...e, impact: { ...e.impact, [index]: !impactExp } }))}>
+                                {impactExp ? 'Ver menos' : 'Ver más'}
+                              </button>
+                            )}
+                          </div>
                         </div>
                         {imageUrl && (
                           <div className="consequence-image-wrapper">
-                            <img 
-                              src={imageUrl} 
-                              alt={consequence.area}
-                              className="consequence-image-modern"
-                            />
+                            <img src={imageUrl} alt={consequence.area} className="consequence-image-modern" />
                           </div>
                         )}
                       </>
@@ -769,16 +774,21 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
                       <>
                         {imageUrl && (
                           <div className="consequence-image-wrapper">
-                            <img 
-                              src={imageUrl} 
-                              alt={consequence.area}
-                              className="consequence-image-modern"
-                            />
+                            <img src={imageUrl} alt={consequence.area} className="consequence-image-modern" />
                           </div>
                         )}
                         <div className="consequence-content-modern">
                           <h3 className="consequence-area-modern">{consequence.area}</h3>
-                          <p className="consequence-impact-modern">{consequence.impact}</p>
+                          <div className="result-description-wrap">
+                            <p className={`consequence-impact-modern result-description ${impactExp ? 'result-expanded' : ''}`}>
+                              {impactExp ? consequence.impact : shortImpact}
+                            </p>
+                            {consequence.impact && consequence.impact.length > MAX_PREVIEW_CHARS && (
+                              <button type="button" className="result-ver-mas" onClick={() => setExpanded(e => ({ ...e, impact: { ...e.impact, [index]: !impactExp } }))}>
+                                {impactExp ? 'Ver menos' : 'Ver más'}
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </>
                     )}
@@ -792,7 +802,10 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
 
       {/* Visión Futura */}
       {diagnosticData.futureVision && (
-        <div className="future-vision-section-modern">
+        <div
+          className={`future-vision-section-modern result-reveal ${visible.future ? 'result-reveal-visible' : ''}`}
+          data-reveal-id="future"
+        >
           <div className="future-vision-content">
             <div className="future-vision-left">
               {(() => {
@@ -839,7 +852,10 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
 
       {/* CTA Final Prominente con Pulso y Gradiente */}
       {diagnosticData.nextSteps?.primary && (
-        <div style={{
+        <div
+          className={`result-reveal ${visible.cta ? 'result-reveal-visible' : ''}`}
+          data-reveal-id="cta"
+          style={{
           margin: '6rem 0 4rem',
           padding: '4rem 2rem',
           background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
@@ -903,7 +919,7 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
             lineHeight: 1.2,
             letterSpacing: '-0.02em'
           }}>
-            ¡No pierdas más tiempo ni dinero!
+            Tu negocio puede mejorar significativamente
           </h2>
           
           <p style={{
@@ -915,16 +931,15 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
             marginLeft: 'auto',
             marginRight: 'auto'
           }}>
-            Agenda tu demo gratuita hoy y recibe un 15% de descuento en la implementación.
+            Agenda una demo o habla con un especialista para llevar estos resultados a la práctica.
           </p>
           
-          {/* CTA Principal con Pulso */}
-          <div style={{ position: 'relative', display: 'inline-block' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
             <a 
               href={diagnosticData.nextSteps.primary.link || '/contacto'}
               style={{
                 display: 'inline-block',
-                padding: '1.5rem 3rem',
+                padding: '1.25rem 2.5rem',
                 background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
                 color: '#ffffff',
                 textDecoration: 'none',
@@ -934,75 +949,25 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
                 boxShadow: '0 8px 32px rgba(16, 185, 129, 0.4)',
                 transition: 'all 0.3s ease',
                 position: 'relative',
-                zIndex: 1,
-                animation: 'pulse-button 2s ease-in-out infinite'
+                zIndex: 1
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)';
-                e.currentTarget.style.boxShadow = '0 12px 48px rgba(16, 185, 129, 0.6)';
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 12px 48px rgba(16, 185, 129, 0.5)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                e.currentTarget.style.transform = 'translateY(0)';
                 e.currentTarget.style.boxShadow = '0 8px 32px rgba(16, 185, 129, 0.4)';
               }}
             >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <span>💬</span>
-                <span>¡Quiero Mi Transformación Ahora!</span>
-              </span>
+              Agendar demo
             </a>
-          </div>
-          
-          {/* Social Proof */}
-          <div style={{
-            marginTop: '2.5rem',
-            fontSize: '1rem',
-            color: 'rgba(255, 255, 255, 0.7)',
-            fontWeight: 500
-          }}>
-            ⭐⭐⭐⭐⭐ Más de 500 negocios ya confían en nosotros
-          </div>
-          
-          {/* CTAs Secundarios */}
-          <div style={{
-            display: 'flex',
-            gap: '1rem',
-            justifyContent: 'center',
-            marginTop: '2rem',
-            flexWrap: 'wrap'
-          }}>
-            {diagnosticData.nextSteps.secondary && (
-              <a 
-                href={diagnosticData.nextSteps.secondary.link || '/servicios'}
-                style={{
-                  padding: '0.875rem 1.75rem',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: '2px solid rgba(255, 255, 255, 0.2)',
-                  color: '#ffffff',
-                  textDecoration: 'none',
-                  borderRadius: '12px',
-                  fontWeight: 600,
-                  fontSize: '1rem',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                }}
-              >
-                {diagnosticData.nextSteps.secondary.text || 'Ver servicios'}
-              </a>
-            )}
             <a 
               href="/contacto"
               style={{
                 padding: '0.875rem 1.75rem',
                 background: 'rgba(255, 255, 255, 0.1)',
-                border: '2px solid rgba(255, 255, 255, 0.2)',
+                border: '2px solid rgba(255, 255, 255, 0.3)',
                 color: '#ffffff',
                 textDecoration: 'none',
                 borderRadius: '12px',
@@ -1012,14 +977,14 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
               }}
             >
-              Hablar con un especialista
+              Hablar con especialista
             </a>
           </div>
         </div>

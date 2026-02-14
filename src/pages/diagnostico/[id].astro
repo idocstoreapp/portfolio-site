@@ -973,7 +973,7 @@ try {
   )}
 </Layout>
 
-<style>
+<style is:global>
   .diagnostic-result {
     min-height: 100vh;
     padding: 6rem 2rem 4rem;
@@ -1029,6 +1029,353 @@ try {
     font-size: clamp(1.125rem, 2vw, 1.5rem);
     color: var(--color-grey-medium, #9A9A97);
     line-height: 1.6;
+  }
+
+  /* ========== SECCIÓN 1 — HERO PREMIUM (Tu diagnóstico listo + 3 métricas) ========== */
+  .result-hero-premium {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    border-radius: 24px;
+    padding: 3rem 2rem 3.5rem;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .result-hero-premium::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.2), transparent),
+                radial-gradient(ellipse 60% 40% at 100% 50%, rgba(59, 130, 246, 0.12), transparent);
+    pointer-events: none;
+  }
+  .result-hero-premium.result-reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .result-hero-premium-inner {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .result-hero-premium-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.25;
+  }
+  .result-hero-premium-subtitle {
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 2.5rem 0;
+    line-height: 1.5;
+  }
+  .result-hero-premium-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    align-items: center;
+    justify-items: center;
+  }
+  @media (max-width: 700px) {
+    .result-hero-premium-metrics {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+  }
+  .result-hero-metric-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .result-hero-metric-ring {
+    --progress: 70;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: conic-gradient(#34d399 calc(var(--progress) * 1%), rgba(255, 255, 255, 0.1) 0);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 0.5rem;
+  }
+  .result-hero-metric-ring::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    background: #1e293b;
+  }
+  .result-hero-metric-value,
+  .result-hero-metric-label {
+    position: relative;
+    z-index: 1;
+  }
+  .result-hero-metric-value {
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 800;
+    color: #34d399;
+    line-height: 1.2;
+  }
+  .result-hero-metric-label {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.75);
+    text-align: center;
+  }
+  .result-hero-metric-ring-money .result-hero-metric-value { color: #6ee7b7; }
+  .result-hero-metric-ring-roi {
+    background: conic-gradient(#60a5fa calc(var(--progress) * 1%), rgba(255, 255, 255, 0.1) 0);
+  }
+  .result-hero-metric-ring-roi .result-hero-metric-value { color: #93c5fd; }
+
+  /* ========== SECCIÓN 3 — Comparación visual ========== */
+  .result-comparison-section {
+    margin-bottom: 3rem;
+  }
+  .result-comparison-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    color: #0c4a6e;
+    text-align: center;
+    margin: 0 0 0.5rem 0;
+  }
+  .result-comparison-subtitle {
+    font-size: 1rem;
+    color: #64748b;
+    text-align: center;
+    margin: 0 0 1.5rem 0;
+  }
+  .result-comparison-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  @media (max-width: 700px) {
+    .result-comparison-cards { grid-template-columns: 1fr; }
+  }
+  .result-comparison-card {
+    border-radius: 20px;
+    padding: 2rem;
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    position: relative;
+    overflow: hidden;
+  }
+  .result-comparison-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .result-comparison-card-actual {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  }
+  .result-comparison-card-optimized {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  }
+  .result-comparison-card-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.95;
+    margin-bottom: 1.25rem;
+    position: relative;
+    z-index: 1;
+  }
+  .result-comparison-metric {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 0.75rem;
+  }
+  .result-comparison-value {
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    font-weight: 800;
+    display: block;
+    line-height: 1.2;
+  }
+  .result-comparison-metric-label {
+    font-size: 0.9375rem;
+    opacity: 0.9;
+  }
+  .result-comparison-card-desc {
+    font-size: 0.875rem;
+    opacity: 0.85;
+    margin: 1rem 0 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Grid Beneficios clave (hasta 6 cards, hover lift) */
+  .result-beneficios-grid {
+    margin-bottom: 3rem;
+  }
+  .result-beneficios-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    color: #0c4a6e;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .result-beneficios-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  @media (max-width: 900px) {
+    .result-beneficios-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .result-beneficios-cards { grid-template-columns: 1fr; }
+  }
+  .result-beneficio-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .result-beneficio-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+  }
+  .result-beneficio-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .result-beneficio-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0c4a6e;
+    margin: 0 0 0.5rem 0;
+  }
+  .result-beneficio-card-desc {
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.5;
+    margin: 0 0 0.75rem 0;
+  }
+  .result-beneficio-metric {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0369a1;
+  }
+  .result-beneficio-metric-icon { font-size: 1rem; }
+
+  /* Testimonial + CTA verde */
+  .result-testimonial-cta {
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+  .result-testimonial {
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 2rem 2rem 2.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .result-testimonial-quote {
+    font-size: 4rem;
+    line-height: 1;
+    color: #0ea5e9;
+    opacity: 0.4;
+    position: absolute;
+    top: 0.5rem;
+    left: 1.5rem;
+    font-family: Georgia, serif;
+  }
+  .result-testimonial-text {
+    font-size: 1.1rem;
+    color: #334155;
+    line-height: 1.65;
+    margin: 0 0 1rem 0;
+    padding-left: 0.5rem;
+  }
+  .result-testimonial-author {
+    font-weight: 600;
+    color: #0c4a6e;
+    margin: 0 0 0.5rem 0;
+  }
+  .result-testimonial-stars {
+    color: #f59e0b;
+    font-size: 1.25rem;
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+  }
+  .result-testimonial-photo-wrap {
+    display: flex;
+    justify-content: center;
+  }
+  .result-testimonial-photo {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #94a3b8, #64748b);
+  }
+  .result-cta-green {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #fff;
+    padding: 1rem 1.75rem;
+    border-radius: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .result-cta-green:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
+  }
+  .result-cta-green-icon { font-size: 1.2rem; }
+
+  /* Reveal al scroll */
+  .result-reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .result-reveal.result-reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .result-reveal-visible .current-situation-image {
+    animation: resultImageReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .result-reveal-visible .opportunity-image-modern {
+    animation: resultImageReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .result-reveal-visible .consequence-image-modern {
+    animation: resultImageReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes resultImageReveal {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
   }
 
   /* Insight */
@@ -2507,7 +2854,7 @@ try {
     overflow: hidden;
     box-shadow: 
       0 20px 60px rgba(0, 0, 0, 0.15),
-      0 8px 24px r0gba(0, 0, 0, 0.1);
+      0 8px 24px rgba(0, 0, 0, 0.1);
     background: #FFFFFF;
     height: 100%;
     display: flex;
@@ -2641,6 +2988,13 @@ try {
     max-width: 100%;
     overflow: hidden;
     box-sizing: border-box;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .opportunity-card-modern:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   }
 
   .opportunity-image-wrapper {
@@ -2856,6 +3210,79 @@ try {
 
     .opportunity-title-modern {
       font-size: 1.5rem;
+    }
+  }
+
+  /* ========== RESULTADO LEGIBLE Y BONITO (móvil primero) ========== */
+  .diagnostic-result-mobile .result-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .diagnostic-result-mobile .result-description.result-expanded {
+    -webkit-line-clamp: unset;
+    display: block;
+  }
+  .result-ver-mas {
+    margin-top: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #059669;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    appearance: none;
+  }
+  .result-ver-mas:hover {
+    color: #047857;
+  }
+  @media (max-width: 768px) {
+    .diagnostic-result-mobile .current-situation-content {
+      padding: 1.5rem 1rem;
+      gap: 1.5rem;
+    }
+    .diagnostic-result-mobile .current-situation-description {
+      font-size: 0.9375rem;
+      line-height: 1.5;
+    }
+    .diagnostic-result-mobile .highlight-chip .highlight-text {
+      font-size: 0.875rem;
+    }
+    .diagnostic-result-mobile .current-situation-highlight-item {
+      padding: 0.6rem 1rem;
+    }
+    .diagnostic-result-mobile .opportunity-content-modern {
+      padding: 1.5rem 1rem;
+      gap: 1rem;
+    }
+    .diagnostic-result-mobile .opportunity-title-modern {
+      font-size: 1.25rem;
+    }
+    .diagnostic-result-mobile .opportunity-description-modern {
+      font-size: 0.9375rem;
+      -webkit-line-clamp: 2;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .diagnostic-result-mobile .opportunity-description-modern.result-expanded {
+      -webkit-line-clamp: unset;
+      display: block;
+    }
+    .diagnostic-result-mobile .impact-pills .impact-item-modern {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+    }
+    .diagnostic-result-mobile .impact-pills {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .diagnostic-result-mobile .consequence-content-modern .consequence-impact-modern {
+      font-size: 0.9375rem;
     }
   }
 
