@@ -196,14 +196,14 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'operacion-diaria',
       sector: 'restaurante',
-      title: 'Cuéntame, ¿cómo funciona tu restaurante día a día?',
-      subtitle: 'Quiero entender cómo operas actualmente',
+      title: '¿Cómo registras actualmente los pedidos y la operación del día a día?',
+      subtitle: 'Queremos entender cómo operas hoy',
       type: 'single',
       options: [
         {
           value: 'papel-comandas',
-          label: 'Todo en papel',
-          description: 'Anoto pedidos en papel y comandas físicas',
+          label: 'En papel',
+          description: 'Registros manuales en cuadernos o comandas físicas',
           icon: '📝',
           costImpact: {
             timeHours: 10, // 10 horas/semana perdiendo órdenes, buscando comandas
@@ -235,8 +235,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
         },
         {
           value: 'sistema-completo',
-          label: 'Ya tengo un sistema',
-          description: 'Tengo sistema pero quiero mejorar',
+          label: 'Sistema',
+          description: 'Uso un software especializado para el negocio',
           icon: '⚙️',
           costImpact: {
             timeHours: 2,
@@ -249,14 +249,14 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'menu-digital',
       sector: 'restaurante',
-      title: '¿Tus clientes ven el menú en papel o digital?',
-      subtitle: 'Esto afecta cuánto gastas cada vez que cambias precios',
+      title: '¿Cómo ven tus clientes el menú y los precios?',
+      subtitle: 'Así estimamos el costo de actualizar precios y menús',
       type: 'single',
       options: [
         {
           value: 'solo-impreso',
-          label: 'Solo menú impreso',
-          description: 'Menús físicos en papel o cartón',
+          label: 'Solo impreso',
+          description: 'Menús en papel o cartón que hay que reimprimir al cambiar precios',
           icon: '📄',
           costImpact: {
             timeHours: 2, // Tiempo en actualizar, imprimir, distribuir
@@ -323,13 +323,13 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'inventario-restaurante',
       sector: 'restaurante',
-      title: '¿Sabes exactamente qué ingredientes tienes en stock?',
-      subtitle: 'Esto afecta desperdicio y compras innecesarias',
+      title: '¿Sabes en todo momento qué ingredientes tienes en stock?',
+      subtitle: 'Así vemos si hay desperdicio o compras de más',
       type: 'single',
       options: [
         {
           value: 'no-se',
-          label: 'No, no sé',
+          label: 'No',
           description: 'No sé qué tengo hasta que me falta',
           icon: '❌',
           costImpact: {
@@ -340,7 +340,7 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
         },
         {
           value: 'manual',
-          label: 'Sí, pero lo anoto manualmente',
+          label: 'Sí, manual',
           description: 'Llevo inventario en papel o Excel',
           icon: '📝',
           costImpact: {
@@ -351,8 +351,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
         },
         {
           value: 'sistema',
-          label: 'Sí, tengo sistema',
-          description: 'Tengo sistema que controla inventario',
+          label: 'Sí, con sistema',
+          description: 'Uso un sistema que controla inventario',
           icon: '📦',
           costImpact: {
             timeHours: 1,
@@ -365,8 +365,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'pedidos-diarios',
       sector: 'restaurante',
-      title: '¿Cuántos pedidos manejas aproximadamente al día?',
-      subtitle: 'Esto ayuda a entender el volumen de trabajo y calcular mejor los ahorros',
+      title: 'Aproximadamente, ¿cuántos pedidos manejas al día?',
+      subtitle: 'Así dimensionamos el volumen y los ahorros posibles',
       type: 'number',
       placeholder: 'Ej: 50, 100, 200...',
       validation: {
@@ -407,14 +407,14 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'gestion-ordenes',
       sector: 'servicio-tecnico',
-      title: '¿Cómo llevas el registro de las reparaciones?',
-      subtitle: 'Quiero entender cómo gestionas las órdenes de servicio',
+      title: '¿Dónde registras actualmente las órdenes de tus clientes?',
+      subtitle: 'Así vemos cuánto tiempo se va en buscar y anotar',
       type: 'single',
       options: [
         {
           value: 'papel',
-          label: 'Todo en papel',
-          description: 'Anoto órdenes en papel o libretas',
+          label: 'En papel',
+          description: 'Registros manuales en cuadernos o hojas',
           icon: '📝',
           costImpact: {
             timeHours: 12, // Tiempo buscando papeles, perdiendo órdenes
@@ -424,8 +424,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
         },
         {
           value: 'excel',
-          label: 'En Excel o planilla',
-          description: 'Llevo registro en planillas',
+          label: 'Excel',
+          description: 'Uso hojas de cálculo para gestionar la información',
           icon: '📊',
           costImpact: {
             timeHours: 8,
@@ -435,8 +435,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
         },
         {
           value: 'whatsapp',
-          label: 'Por WhatsApp',
-          description: 'Recibo órdenes por WhatsApp',
+          label: 'WhatsApp',
+          description: 'Recibo y anoto órdenes por WhatsApp',
           icon: '💬',
           costImpact: {
             timeHours: 6,
@@ -446,8 +446,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
         },
         {
           value: 'sistema',
-          label: 'Con un sistema',
-          description: 'Uso un sistema para gestionar',
+          label: 'Sistema',
+          description: 'Uso un software especializado para gestionar',
           icon: '⚙️',
           costImpact: {
             timeHours: 2,
@@ -460,8 +460,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'comisiones-tecnicos',
       sector: 'servicio-tecnico',
-      title: '¿Pagas comisiones a tus técnicos?',
-      subtitle: 'Esto afecta cuánto tiempo tomas calculando pagos',
+      title: '¿Pagas comisiones a tus técnicos y cómo las calculas?',
+      subtitle: 'Así estimamos el tiempo que dedicas a pagos y liquidaciones',
       type: 'single',
       options: [
         {
@@ -472,7 +472,7 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
         },
         {
           value: 'manual',
-          label: 'Sí, pero lo calculo manualmente',
+          label: 'Sí, manual',
           description: 'Calculo comisiones a mano o en Excel',
           icon: '📝',
           costImpact: {
@@ -497,8 +497,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'inventario-repuestos',
       sector: 'servicio-tecnico',
-      title: '¿Sabes qué repuestos tienes en stock?',
-      subtitle: 'Esto afecta compras innecesarias o faltantes',
+      title: '¿Sabes en todo momento qué repuestos tienes en stock?',
+      subtitle: 'Así vemos si hay compras de más o faltantes',
       type: 'single',
       options: [
         {
@@ -539,8 +539,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'comunicacion-clientes',
       sector: 'servicio-tecnico',
-      title: '¿Los clientes te llaman constantemente preguntando por su reparación?',
-      subtitle: 'Esto consume tiempo que podrías usar en reparar',
+      title: '¿Con qué frecuencia te llaman o escriben preguntando por el estado de su reparación?',
+      subtitle: 'Así estimamos el tiempo que se va en atender consultas',
       type: 'single',
       options: [
         {
@@ -581,8 +581,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'reparaciones-mes',
       sector: 'servicio-tecnico',
-      title: '¿Cuántas reparaciones manejas aproximadamente al mes?',
-      subtitle: 'Esto ayuda a entender el volumen de trabajo y calcular mejor los ahorros',
+      title: 'Aproximadamente, ¿cuántas reparaciones manejas al mes?',
+      subtitle: 'Así dimensionamos el volumen y los ahorros posibles',
       type: 'number',
       placeholder: 'Ej: 20, 50, 100...',
       validation: {
@@ -597,14 +597,14 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'gestion-ordenes-taller',
       sector: 'taller',
-      title: '¿Cómo llevas el registro de las reparaciones?',
-      subtitle: 'Quiero entender cómo gestionas las órdenes de servicio',
+      title: '¿Dónde registras actualmente las órdenes de trabajo del taller?',
+      subtitle: 'Así vemos cuánto tiempo se va en anotar y buscar información',
       type: 'single',
       options: [
         {
           value: 'papel',
-          label: 'Todo en papel',
-          description: 'Anoto órdenes en papel o libretas',
+          label: 'En papel',
+          description: 'Registros manuales en cuadernos o hojas',
           icon: '📝',
           costImpact: {
             timeHours: 12,
@@ -614,8 +614,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
         },
         {
           value: 'excel',
-          label: 'En Excel o planilla',
-          description: 'Llevo registro en planillas',
+          label: 'Excel',
+          description: 'Uso hojas de cálculo para gestionar',
           icon: '📊',
           costImpact: {
             timeHours: 8,
@@ -625,8 +625,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
         },
         {
           value: 'sistema',
-          label: 'Con un sistema',
-          description: 'Uso un sistema para gestionar',
+          label: 'Sistema',
+          description: 'Uso un software especializado',
           icon: '⚙️',
           costImpact: {
             timeHours: 2,
@@ -639,8 +639,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'comisiones-mecanicos',
       sector: 'taller',
-      title: '¿Pagas comisiones a tus mecánicos?',
-      subtitle: 'Esto afecta cuánto tiempo tomas calculando pagos',
+      title: '¿Pagas comisiones a tus mecánicos y cómo las calculas?',
+      subtitle: 'Así estimamos el tiempo en liquidaciones y pagos',
       type: 'single',
       options: [
         {
@@ -676,8 +676,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'vehiculos-mes',
       sector: 'taller',
-      title: '¿Cuántos vehículos reparas aproximadamente al mes?',
-      subtitle: 'Esto ayuda a entender el volumen de trabajo y calcular mejor los ahorros',
+      title: 'Aproximadamente, ¿cuántos vehículos reparas al mes?',
+      subtitle: 'Así dimensionamos el volumen y los ahorros posibles',
       type: 'number',
       placeholder: 'Ej: 30, 60, 120...',
       validation: {
@@ -692,8 +692,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'cotizaciones',
       sector: 'fabrica',
-      title: '¿Haces cotizaciones para tus clientes?',
-      subtitle: 'Quiero entender cómo generas presupuestos',
+      title: '¿Generas cotizaciones o presupuestos para tus clientes?',
+      subtitle: 'Así vemos cómo trabajas hoy con los presupuestos',
       type: 'single',
       options: [
         {
@@ -713,13 +713,13 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'como-cotiza',
       sector: 'fabrica',
-      title: '¿Cómo generas las cotizaciones?',
-      subtitle: 'Esto determina cuánto tiempo tomas en cada cotización',
+      title: '¿Cómo armas hoy las cotizaciones?',
+      subtitle: 'Así estimamos el tiempo por cada cotización',
       type: 'single',
       options: [
         {
           value: 'manual',
-          label: 'Cotizo a mano',
+          label: 'A mano',
           description: 'Calculo y escribo las cotizaciones a mano',
           icon: '📝',
           costImpact: {
@@ -755,8 +755,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'calculo-costos',
       sector: 'fabrica',
-      title: '¿Cómo calculas los costos reales de producción?',
-      subtitle: 'Esto afecta tu margen de ganancia',
+      title: '¿Cómo calculas hoy los costos reales de cada trabajo o producto?',
+      subtitle: 'Así vemos si hay riesgo de vender a pérdida o descontrol',
       type: 'single',
       options: [
         {
@@ -811,14 +811,14 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'gestion-ventas',
       sector: 'comercio',
-      title: '¿Cómo llevas el registro de tus ventas?',
-      subtitle: 'Quiero entender cómo operas actualmente',
+      title: '¿Dónde registras actualmente las ventas y el movimiento del negocio?',
+      subtitle: 'Así vemos cuánto tiempo se va en anotar y controlar',
       type: 'single',
       options: [
         {
           value: 'papel',
-          label: 'Todo en papel',
-          description: 'Anoto ventas en papel',
+          label: 'En papel',
+          description: 'Registros manuales en cuadernos o hojas',
           icon: '📝',
           costImpact: {
             timeHours: 10,
@@ -856,14 +856,14 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
     {
       id: 'gestion-servicios',
       sector: 'servicios',
-      title: '¿Cómo gestionas tus servicios y clientes?',
-      subtitle: 'Quiero entender cómo operas actualmente',
+      title: '¿Dónde registras actualmente tus servicios, citas y clientes?',
+      subtitle: 'Así vemos cuánto tiempo se va en organizar y seguir todo',
       type: 'single',
       options: [
         {
           value: 'papel',
-          label: 'Todo en papel',
-          description: 'Anoto servicios y clientes en papel',
+          label: 'En papel',
+          description: 'Registros manuales en cuadernos o agendas',
           icon: '📝',
           costImpact: {
             timeHours: 10,
@@ -884,8 +884,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
         },
         {
           value: 'sistema',
-          label: 'Tengo un sistema',
-          description: 'Tengo sistema pero quiero mejorar',
+          label: 'Sistema',
+          description: 'Uso un software especializado',
           icon: '⚙️',
           costImpact: {
             timeHours: 2,
@@ -904,8 +904,8 @@ export const SECTOR_QUESTIONS: Record<BusinessSector, ConversationalQuestion[]> 
 export const TRANSVERSAL_QUESTIONS: ConversationalQuestion[] = [
   {
     id: 'empleados',
-    title: '¿Cuántos empleados tienes?',
-    subtitle: 'Esto me ayuda a entender el tamaño de tu operación',
+    title: '¿Cuántas personas trabajan actualmente en tu negocio?',
+    subtitle: 'Así dimensionamos el tamaño de tu operación',
     type: 'single',
     options: [
       {
@@ -936,8 +936,8 @@ export const TRANSVERSAL_QUESTIONS: ConversationalQuestion[] = [
   },
   {
     id: 'sucursales',
-    title: '¿Tienes más de una ubicación?',
-    subtitle: 'Esto afecta cómo gestionas tu negocio',
+    title: '¿Tienes más de un local o sucursal?',
+    subtitle: 'Así vemos si hay que coordinar entre varias ubicaciones',
     type: 'single',
     options: [
       {
@@ -961,8 +961,8 @@ export const TRANSVERSAL_QUESTIONS: ConversationalQuestion[] = [
   },
   {
     id: 'presencia-web',
-    title: '¿Tienes página web?',
-    subtitle: 'Esto afecta cómo te encuentran los clientes',
+    title: '¿Tu negocio tiene presencia en internet (página web o redes)?',
+    subtitle: 'Así vemos cómo te encuentran los clientes hoy',
     type: 'single',
     options: [
       {
@@ -1447,14 +1447,18 @@ export function generatePersonalizedMessage(
     context += ` No es que estés haciendo algo mal, simplemente hay oportunidades de mejora que podrían darte más libertad y tranquilidad.`;
   }
   
-  // Oportunidad personalizada
-  let opportunity = `Actualmente${empresa ? `, en ${empresa}` : ''}, inviertes aproximadamente ${Math.round(summary.totalCurrentCost.timeHours)} horas semanales y $${Math.round(summary.totalCurrentCost.moneyCost)} mensuales en procesos manuales que son necesarios pero que consumen mucho tiempo.`;
-  if (nombre) {
-    opportunity += ` ${nombre}, con las herramientas adecuadas, podrías recuperar ${Math.round(summary.totalPotentialSavings.timeHours)} horas semanales y ahorrar $${Math.round(summary.totalPotentialSavings.moneyCost)} mensuales.`;
-  } else {
-    opportunity += ` Con las herramientas adecuadas, podrías recuperar ${Math.round(summary.totalPotentialSavings.timeHours)} horas semanales y ahorrar $${Math.round(summary.totalPotentialSavings.moneyCost)} mensuales.`;
+  const hoursWeek = Math.round(summary.totalCurrentCost.timeHours);
+  const moneyMonth = Math.round(summary.totalCurrentCost.moneyCost);
+  const hoursSaved = Math.round(summary.totalPotentialSavings.timeHours);
+  const moneySaved = Math.round(summary.totalPotentialSavings.moneyCost);
+  let opportunity = `Actualmente estás dedicando aproximadamente ${hoursWeek} horas por semana a tareas que podrían automatizarse.`;
+  if (moneyMonth > 0) {
+    opportunity += ` Esto representa cerca de $${moneyMonth} mensuales en tiempo y recursos.`;
   }
-  opportunity += ` Son estimaciones conservadoras basadas en experiencias reales.`;
+  opportunity += ` Negocios similares al tuyo reducen este tiempo hasta en un 80% al implementar un sistema adecuado.`;
+  if (hoursSaved > 0 || moneySaved > 0) {
+    opportunity += ` En tu caso, la estimación conservadora es recuperar ${hoursSaved} horas semanales${moneySaved > 0 ? ` y ahorrar $${moneySaved} mensuales` : ''}.`;
+  }
   
   // Visión personalizada
   let vision = `Imagina${nombre ? `, ${nombre}` : ''} tener ${Math.round(summary.totalPotentialSavings.timeHours)} horas más cada semana.`;

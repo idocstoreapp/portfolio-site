@@ -16,6 +16,7 @@ import {
   generateEnhancedResultStructure,
   type ConversationalQuestion
 } from '../utils/conversationalDiagnostic';
+import { deriveDiagnosticInsights } from '../utils/diagnosticResultDerivation';
 import { createDiagnostic } from '../utils/backendClient';
 import { getIconFileName } from '../utils/iconMapping';
 import { 
@@ -147,6 +148,8 @@ export default function ConversationalDiagnosticWizard() {
   const [error, setError] = useState('');
   const [isMobile, setIsMobile] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false); // Flag para saber si se completó
+  const [stepDirection, setStepDirection] = useState<'forward' | 'back'>('forward');
+  const [justSelectedOption, setJustSelectedOption] = useState(false); // Micro-feedback: show check then auto-advance
 
   useEffect(() => {
     const checkMobile = () => {
@@ -411,7 +414,17 @@ export default function ConversationalDiagnosticWizard() {
         ? 'Ver solución específica para mi negocio'
         : 'Solicitar consulta personalizada';
       
-      const fullResult = {
+      // Derived result extras (hoursBreakdown, before/after, impactEquivalents, opportunityPlan, personalized summary)
+        const derived = deriveDiagnosticInsights(
+          enhancedStructure.summary,
+          insights,
+          enhancedStructure.opportunities || [],
+          selectedSector || undefined,
+          nombre || undefined,
+          empresa || undefined
+        );
+
+        const fullResult = {
         ...diagnosticData,
         id: diagnosticId,
         type: 'conversational',
@@ -419,6 +432,15 @@ export default function ConversationalDiagnosticWizard() {
         extendedType: answers.extendedType || diagnosticData.extendedType,
         servicePage: answers.servicePage || diagnosticData.servicePage,
         selectedServices: selectedServices || diagnosticData.selectedServices,
+        // Derived fields for richer result UI (add-on only)
+        hoursBreakdown: derived.hoursBreakdown,
+        financialProjection: derived.financialProjection,
+        beforeState: derived.beforeState,
+        afterState: derived.afterState,
+        impactEquivalents: derived.impactEquivalents,
+        opportunityPlan: derived.opportunityPlan,
+        personalizedSummaryParagraph: derived.personalizedSummaryParagraph,
+        psychological: derived.psychological,
         // Agregar nextSteps y urgency si no existen
         nextSteps: {
           primary: {
@@ -484,14 +506,29 @@ export default function ConversationalDiagnosticWizard() {
   if (isSectorSelection) {
     return (
       <div className="wizard-step active" style={{ display: 'block' }}>
-        {/* Barra de progreso elegante */}
+        {/* Indicador paso 1 + barra de progreso */}
+        <div style={{
+          textAlign: 'center',
+          marginBottom: '1.5rem'
+        }}>
+          <span style={{
+            display: 'inline-block',
+            fontSize: '0.875rem',
+            fontWeight: 700,
+            color: '#0d9488',
+            background: 'rgba(13, 148, 136, 0.12)',
+            padding: '0.35rem 0.75rem',
+            borderRadius: '999px',
+            letterSpacing: '0.03em'
+          }}>Paso 1 — Elige tu negocio</span>
+        </div>
         <div style={{
           position: 'relative',
           width: '100%',
-          maxWidth: '600px',
+          maxWidth: '560px',
           margin: '0 auto 2rem',
-          height: '4px',
-          background: 'rgba(59, 130, 246, 0.1)',
+          height: '6px',
+          background: 'rgba(13, 148, 136, 0.15)',
           borderRadius: '999px',
           overflow: 'hidden'
         }}>
@@ -501,10 +538,10 @@ export default function ConversationalDiagnosticWizard() {
             left: 0,
             height: '100%',
             width: `${progressPercentage}%`,
-            background: 'linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%)',
+            background: 'linear-gradient(90deg, #0d9488 0%, #14b8a6 100%)',
             borderRadius: '999px',
-            transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-            boxShadow: '0 0 12px rgba(59, 130, 246, 0.4)'
+            transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+            boxShadow: '0 0 16px rgba(13, 148, 136, 0.4)'
           }} />
         </div>
 
@@ -552,20 +589,20 @@ export default function ConversationalDiagnosticWizard() {
               key={uniqueKey}
                 className={`option-card sector-option-card ${isSelected ? 'selected' : ''}`}
               style={{
-                  background: isSelected ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' : '#FFFFFF',
-                  border: isSelected ? '3px solid #3b82f6' : '2px solid #e2e8f0',
-                  borderRadius: '20px',
+                  background: isSelected ? 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)' : '#FFFFFF',
+                  border: isSelected ? '3px solid #0d9488' : '2px solid #e2e8f0',
+                  borderRadius: '24px',
                   padding: 0,
                 textAlign: 'left',
                 cursor: 'pointer',
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
                 display: 'flex',
                   flexDirection: 'column',
                   overflow: 'hidden',
                 position: 'relative',
                   boxShadow: isSelected 
-                    ? '0 12px 32px rgba(59, 130, 246, 0.3), 0 0 0 4px rgba(59, 130, 246, 0.1)' 
-                    : '0 4px 12px rgba(0, 0, 0, 0.08)',
+                    ? '0 16px 40px rgba(13, 148, 136, 0.35), 0 0 0 4px rgba(13, 148, 136, 0.12)' 
+                    : '0 8px 24px rgba(0, 0, 0, 0.06)',
                 width: '100%',
                 transform: 'scale(1)',
                   transformOrigin: 'center',
@@ -573,16 +610,16 @@ export default function ConversationalDiagnosticWizard() {
               }}
               onMouseEnter={(e) => {
                   if (!isMobile && !isSelected) {
-                    e.currentTarget.style.borderColor = '#3b82f6';
+                    e.currentTarget.style.borderColor = '#0d9488';
                     e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
-                    e.currentTarget.style.boxShadow = '0 16px 40px rgba(59, 130, 246, 0.2)';
+                    e.currentTarget.style.boxShadow = '0 20px 48px rgba(13, 148, 136, 0.18)';
                 }
               }}
               onMouseLeave={(e) => {
                   if (!isMobile && !isSelected) {
                     e.currentTarget.style.borderColor = '#e2e8f0';
                     e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
+                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.06)';
                 }
               }}
               onClick={() => {
@@ -689,7 +726,7 @@ export default function ConversationalDiagnosticWizard() {
                     justifyContent: 'center',
                     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
                   }}>
-                    <span style={{ color: '#3b82f6', fontSize: '1.125rem', fontWeight: 'bold' }}>✓</span>
+                    <span style={{ color: '#0d9488', fontSize: '1.125rem', fontWeight: 'bold' }}>✓</span>
                 </div>
               )}
             </button>
@@ -912,7 +949,7 @@ export default function ConversationalDiagnosticWizard() {
                               position: 'absolute',
                               top: '0.75rem',
                               right: '0.75rem',
-                              background: '#3B82F6',
+                              background: '#0d9488',
                               color: '#FFFFFF',
                               fontSize: '0.75rem',
                               fontWeight: 600,
@@ -1078,7 +1115,7 @@ export default function ConversationalDiagnosticWizard() {
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2rem' }}>
           <button
             className="btn-back"
-            onClick={() => setCurrentStep(currentStep - 1)}
+            onClick={() => { setStepDirection('back'); setCurrentStep(currentStep - 1); }}
             style={{
               padding: '0.75rem 1.5rem',
               background: '#F6F5F2',
@@ -1098,14 +1135,15 @@ export default function ConversationalDiagnosticWizard() {
             onClick={handleSubmit}
             disabled={loading || !isAllQuestionsAnswered()}
             style={{
-              padding: '0.75rem 1.5rem',
-              background: loading || !isAllQuestionsAnswered() ? '#9CA3AF' : '#2B2B2B',
+              padding: '0.875rem 1.75rem',
+              background: loading || !isAllQuestionsAnswered() ? '#9CA3AF' : 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)',
               border: 'none',
-              borderRadius: '8px',
+              borderRadius: '14px',
               color: '#FFFFFF',
               cursor: loading || !isAllQuestionsAnswered() ? 'not-allowed' : 'pointer',
-              fontSize: '1rem',
-              fontWeight: 500,
+              fontSize: '1.0625rem',
+              fontWeight: 600,
+              boxShadow: loading || !isAllQuestionsAnswered() ? 'none' : '0 8px 24px rgba(13, 148, 136, 0.35)',
               transition: 'all 0.3s ease'
             }}
           >
@@ -1172,79 +1210,91 @@ export default function ConversationalDiagnosticWizard() {
     const questionProgress = ((currentStep + 1) / allQuestions.length) * 100;
 
     return (
-      <div className="wizard-step active">
-        {/* Barra de progreso elegante y delgada */}
-        <div style={{
-          position: 'relative',
-          width: '100%',
-          maxWidth: '800px',
-          margin: '0 auto 2rem',
-          height: '3px',
-          background: 'rgba(59, 130, 246, 0.1)',
-          borderRadius: '999px',
-          overflow: 'hidden'
+      <div className={`wizard-step active wizard-step-${stepDirection}`} key={currentStep}>
+        {/* Indicador visual superior: Pregunta X de N + propósito + barra animada */}
+        <div className="wizard-step-indicator" style={{
+          marginBottom: '1.5rem',
+          textAlign: 'center'
         }}>
           <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            height: '100%',
-            width: `${questionProgress}%`,
-            background: 'linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%)',
+            fontSize: '0.9375rem',
+            fontWeight: 700,
+            color: '#0d9488',
+            background: 'rgba(13, 148, 136, 0.12)',
+            padding: '0.4rem 0.9rem',
             borderRadius: '999px',
-            transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-            boxShadow: '0 0 8px rgba(59, 130, 246, 0.4)'
-          }} />
-        </div>
-
-        {/* Mensaje motivacional */}
-        <div style={{
-          textAlign: 'center',
-          marginBottom: '1.5rem'
-        }}>
-          <p style={{
-            fontSize: '0.875rem',
-            color: '#64748b',
-            fontWeight: 500,
-            margin: 0
+            display: 'inline-block',
+            marginBottom: '0.5rem',
+            letterSpacing: '0.02em'
           }}>
-            ¡Estás cerca de tu diagnóstico personalizado!
+            Pregunta {currentStep + 1} de {allQuestions.length}
+          </div>
+          <p style={{
+            fontSize: '0.8125rem',
+            color: '#64748b',
+            margin: 0,
+            maxWidth: '480px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            lineHeight: 1.4
+          }}>
+            Esto nos permite calcular cuánto tiempo podrías recuperar
           </p>
+          <div style={{
+            position: 'relative',
+            width: '100%',
+            maxWidth: '600px',
+            margin: '1rem auto 0',
+            height: '6px',
+            background: 'rgba(13, 148, 136, 0.15)',
+            borderRadius: '999px',
+            overflow: 'hidden'
+          }}>
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              height: '100%',
+              width: `${questionProgress}%`,
+              background: 'linear-gradient(90deg, #0d9488 0%, #14b8a6 100%)',
+              borderRadius: '999px',
+              transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+              boxShadow: '0 0 16px rgba(13, 148, 136, 0.4)'
+            }} />
+          </div>
         </div>
 
         <div className="step-header">
           <div className="conversational-question">
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.5rem',
-              marginBottom: '1rem',
-              fontSize: '0.875rem',
-              color: '#64748b',
-              fontWeight: 500
-            }}>
-              <span>Paso {currentStep + 1} de {allQuestions.length}</span>
-            </div>
             <h3 className="step-title" style={{
-              fontSize: isMobile ? '1.5rem' : '2.25rem',
+              fontSize: isMobile ? '1.5rem' : '2rem',
               fontWeight: 700,
               color: '#0f172a',
-              marginBottom: '0.5rem',
-              lineHeight: 1.2,
+              marginBottom: '0.75rem',
+              lineHeight: 1.25,
               letterSpacing: '-0.02em',
               textAlign: 'center'
             }}>{question.title}</h3>
             {question.subtitle && (
               <p className="step-description" style={{
-                fontSize: isMobile ? '0.875rem' : '1.125rem',
-                color: '#64748b',
+                fontSize: isMobile ? '0.9375rem' : '1.0625rem',
+                color: '#475569',
                 lineHeight: 1.5,
                 textAlign: 'center',
-                maxWidth: '700px',
-                margin: '0 auto'
+                maxWidth: '640px',
+                margin: '0 auto 0.5rem'
               }}>{question.subtitle}</p>
             )}
+            <p style={{
+              fontSize: '0.8125rem',
+              color: '#94a3b8',
+              textAlign: 'center',
+              maxWidth: '520px',
+              margin: '0 auto',
+              lineHeight: 1.4
+            }}>
+              Tu respuesta nos permite estimar con precisión el impacto en tu negocio
+            </p>
           </div>
         </div>
 
@@ -1266,7 +1316,7 @@ export default function ConversationalDiagnosticWizard() {
               {!isFirstQuestion && (
                 <button
                   className="btn-back"
-                  onClick={() => setCurrentStep(currentStep - 1)}
+                  onClick={() => { setStepDirection('back'); setCurrentStep(currentStep - 1); }}
                   style={{
                     padding: '0.75rem 1.5rem',
                     background: '#F6F5F2',
@@ -1285,8 +1335,9 @@ export default function ConversationalDiagnosticWizard() {
               <button
                 className="btn-continue"
                 onClick={() => {
+                  setStepDirection('forward');
                   if (isLastQuestion) {
-                  setCurrentStep(SERVICES_STEP);
+                    setCurrentStep(SERVICES_STEP);
                   } else {
                     setCurrentStep(currentStep + 1);
                   }
@@ -1314,7 +1365,7 @@ export default function ConversationalDiagnosticWizard() {
               {!isFirstQuestion && (
                 <button
                   className="btn-back"
-                  onClick={() => setCurrentStep(currentStep - 1)}
+                  onClick={() => { setStepDirection('back'); setCurrentStep(currentStep - 1); }}
                   style={{
                     padding: '0.75rem 1.5rem',
                     background: '#F6F5F2',
@@ -1333,8 +1384,9 @@ export default function ConversationalDiagnosticWizard() {
               <button
                 className="btn-continue"
                 onClick={() => {
+                  setStepDirection('forward');
                   if (isLastQuestion) {
-                  setCurrentStep(SERVICES_STEP);
+                    setCurrentStep(SERVICES_STEP);
                   } else {
                     setCurrentStep(currentStep + 1);
                   }
@@ -1383,38 +1435,38 @@ export default function ConversationalDiagnosticWizard() {
                   className={`option-card ${isMultiple ? 'multi-select' : ''} ${isSelected ? 'selected' : ''}`}
                   style={{
                     background: isSelected 
-                      ? 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)' 
+                      ? 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)' 
                       : '#FFFFFF',
                     border: isSelected 
-                      ? '3px solid #3b82f6' 
+                      ? '3px solid #0d9488' 
                       : '2px solid #e2e8f0',
-                    borderRadius: '20px',
+                    borderRadius: '24px',
                     padding: isMobile && optionsCount >= 10 ? '1rem 0.75rem' : '0',
                     textAlign: 'left',
                     cursor: 'pointer',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
                     display: 'flex',
                     flexDirection: 'column',
                     overflow: 'hidden',
                     position: 'relative',
                     boxShadow: isSelected 
-                      ? '0 12px 32px rgba(59, 130, 246, 0.3), 0 0 0 4px rgba(59, 130, 246, 0.1)' 
-                      : '0 4px 12px rgba(0, 0, 0, 0.08)',
+                      ? '0 16px 40px rgba(13, 148, 136, 0.35), 0 0 0 4px rgba(13, 148, 136, 0.12)' 
+                      : '0 8px 24px rgba(0, 0, 0, 0.06)',
                     minHeight: isMobile && optionsCount >= 10 ? '140px' : (isMobile ? '280px' : '320px'),
                     width: '100%'
                   }}
                   onMouseEnter={(e) => {
                     if (!isSelected && !isMobile) {
-                      e.currentTarget.style.borderColor = '#3b82f6';
+                      e.currentTarget.style.borderColor = '#0d9488';
                       e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
-                      e.currentTarget.style.boxShadow = '0 16px 40px rgba(59, 130, 246, 0.2)';
+                      e.currentTarget.style.boxShadow = '0 20px 48px rgba(13, 148, 136, 0.18)';
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isSelected && !isMobile) {
                       e.currentTarget.style.borderColor = '#e2e8f0';
                       e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
+                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.06)';
                     }
                   }}
                   onClick={() => {
@@ -1426,15 +1478,17 @@ export default function ConversationalDiagnosticWizard() {
                       setAnswers({ ...answers, [question.id]: newValue });
                     } else {
                       setAnswers({ ...answers, [question.id]: option.value });
-                      // Auto-avanzar después de un breve delay para mejor UX
-                      // Si es la última pregunta, avanzar al paso de servicios
-                        setTimeout(() => {
+                      setJustSelectedOption(true);
+                      // Micro-feedback: check visible, luego continuar automáticamente a los 400ms
+                      setTimeout(() => {
+                        setJustSelectedOption(false);
+                        setStepDirection('forward');
                         if (isLastQuestion) {
                           setCurrentStep(SERVICES_STEP);
                         } else {
                           setCurrentStep(currentStep + 1);
                         }
-                        }, 300);
+                      }, 400);
                     }
                   }}
                 >
@@ -1576,7 +1630,7 @@ export default function ConversationalDiagnosticWizard() {
                       justifyContent: 'center',
                       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
                     }}>
-                      <span style={{ color: '#3b82f6', fontSize: '1.125rem', fontWeight: 'bold' }}>✓</span>
+                      <span style={{ color: '#0d9488', fontSize: '1.125rem', fontWeight: 'bold' }}>✓</span>
                     </div>
                   )}
                 </button>
@@ -1592,7 +1646,7 @@ export default function ConversationalDiagnosticWizard() {
             {!isFirstQuestion && (
               <button
                 className="btn-back"
-                onClick={() => setCurrentStep(currentStep - 1)}
+                onClick={() => { setStepDirection('back'); setCurrentStep(currentStep - 1); }}
                 style={{
                   padding: '0.75rem 1.5rem',
                   background: '#F6F5F2',
@@ -1624,7 +1678,7 @@ export default function ConversationalDiagnosticWizard() {
             {!isFirstQuestion && (
               <button
                 className="btn-back"
-                onClick={() => setCurrentStep(currentStep - 1)}
+                onClick={() => { setStepDirection('back'); setCurrentStep(currentStep - 1); }}
                 style={{
                   padding: '0.75rem 1.5rem',
                   background: '#F6F5F2',
@@ -1643,6 +1697,7 @@ export default function ConversationalDiagnosticWizard() {
             <button
               className="btn-continue"
               onClick={() => {
+                setStepDirection('forward');
                 if (isLastQuestion) {
                   setCurrentStep(SERVICES_STEP);
                 } else {
@@ -1687,7 +1742,7 @@ export default function ConversationalDiagnosticWizard() {
               {!isFirstQuestion && (
                 <button
                   className="btn-back"
-                  onClick={() => setCurrentStep(currentStep - 1)}
+                  onClick={() => { setStepDirection('back'); setCurrentStep(currentStep - 1); }}
                   style={{
                     padding: '0.75rem 1.5rem',
                     background: '#F6F5F2',
@@ -1741,17 +1796,38 @@ export default function ConversationalDiagnosticWizard() {
       {renderQuestion()}
       <style>{`
         @keyframes pulse-ring {
-          0% {
-            transform: translate(-50%, -50%) scale(0.8);
-            opacity: 1;
+          0% { transform: translate(-50%, -50%) scale(0.8); opacity: 1; }
+          50% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+          100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0; }
+        }
+        .wizard-step-forward {
+          animation: wizardSlideForward 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .wizard-step-back {
+          animation: wizardSlideBack 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes wizardSlideForward {
+          from { opacity: 0; transform: translateX(20px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes wizardSlideBack {
+          from { opacity: 0; transform: translateX(-20px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        .option-card.selected {
+          transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @media (max-width: 768px) {
+          .option-card, .sector-option-card {
+            min-height: 56px;
+            padding: 1rem 1.25rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border-radius: 16px;
           }
-          50% {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 0.5;
-          }
-          100% {
-            transform: translate(-50%, -50%) scale(1.2);
-            opacity: 0;
+          .btn-back, .btn-continue, .btn-submit {
+            min-height: 48px;
+            padding: 0.875rem 1.5rem !important;
+            font-size: 1rem !important;
           }
         }
       `}</style>

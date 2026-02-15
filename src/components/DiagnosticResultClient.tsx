@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { BusinessSector } from '../utils/conversationalDiagnostic';
 import { getServiceById, getRecommendedServicesForSector, getServicePageForExtendedType } from '../utils/services';
 import type { Service } from '../utils/services';
+import { deriveDiagnosticInsights } from '../utils/diagnosticResultDerivation';
 import { 
   getCurrentSituationImageUrl, 
   getOpportunityImageUrl, 
@@ -14,15 +15,17 @@ import {
 
 interface DiagnosticResultClientProps {
   diagnosticId: string;
+  /** Si viene del backend, pasar los datos para mostrar la misma UI que en localStorage */
+  initialData?: any;
 }
 
 const MAX_PREVIEW_CHARS = 100;
 const MAX_HIGHLIGHTS_PREVIEW = 3;
 const MAX_OPPORTUNITY_DESC_CHARS = 80;
 
-export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResultClientProps) {
-  const [diagnosticData, setDiagnosticData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+export default function DiagnosticResultClient({ diagnosticId, initialData }: DiagnosticResultClientProps) {
+  const [diagnosticData, setDiagnosticData] = useState<any>(initialData ?? null);
+  const [loading, setLoading] = useState(!initialData);
   const [error, setError] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<{ situation?: boolean; opportunities?: Record<number, boolean>; impact?: Record<number, boolean> }>({});
   const [visible, setVisible] = useState<Record<string, boolean>>({});
@@ -74,27 +77,23 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
   }, [visible.hero, diagnosticData, countUpDone]);
 
   useEffect(() => {
+    if (initialData) {
+      setDiagnosticData(initialData);
+      setLoading(false);
+      return;
+    }
     try {
       const stored = localStorage.getItem(`diagnostic-${diagnosticId}`);
       if (stored) {
         const data = JSON.parse(stored);
         
-        // Asegurar que tenga nextSteps y urgency
         if (!data.nextSteps) {
           data.nextSteps = {
-            primary: {
-              text: 'Solicitar consulta personalizada',
-              link: '/contacto'
-            },
-            secondary: {
-              text: 'Ver todos los servicios',
-              link: '/servicios'
-            }
+            primary: { text: 'Solicitar consulta personalizada', link: '/contacto' },
+            secondary: { text: 'Ver todos los servicios', link: '/servicios' }
           };
         }
-        if (!data.urgency) {
-          data.urgency = 'medium';
-        }
+        if (!data.urgency) data.urgency = 'medium';
         
         setDiagnosticData(data);
         setLoading(false);
@@ -106,7 +105,7 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
       setError(err.message || 'Error al cargar el diagnóstico');
       setLoading(false);
     }
-  }, [diagnosticId]);
+  }, [diagnosticId, initialData]);
 
   if (loading) {
     return (
@@ -228,149 +227,214 @@ export default function DiagnosticResultClient({ diagnosticId }: DiagnosticResul
   fallbacks.push({ title: 'Crecimiento', description: 'Escala tu negocio sin multiplicar horas ni costos operativos.', metric: roi != null ? `${roi}% ROI` : 'ROI positivo', icon: '📈' });
   const benefitCards = [...baseCards, ...fallbacks].slice(0, 6);
 
+  const nombre = diagnosticData?.nombre || diagnosticData?.contactName || '';
+  const empresa = diagnosticData?.empresa || diagnosticData?.contactCompany || '';
+  const insights = diagnosticData?.insights || [];
+  const opps = diagnosticData?.opportunities || [];
+
+  const derivedFromServer = diagnosticData as typeof diagnosticData & {
+    hoursBreakdown?: Array<{ id: string; label: string; hoursSavedPerWeek: number; description: string }>;
+    financialProjection?: { monthlySavings: number; yearlySavings: number; yearlyHoursSaved: number };
+    beforeState?: { hoursPerWeekCurrent: number; monthlyCostCurrent: number; errorRateCurrent: number };
+    afterState?: { hoursPerWeekAfter: number; monthlyCostAfter: number; errorRateAfter: number };
+    impactEquivalents?: { hoursSavedPerMonth: number; workDaysSavedPerYear: number; workWeeksSavedPerYear: number };
+    opportunityPlan?: Array<{ order: number; title: string; description: string }>;
+    personalizedSummaryParagraph?: string;
+    psychological?: {
+      heroImpact: { title: string; subtitlePersonalized: string; hoursLostPerWeek: number; equivalents: { hoursPerMonth: number; hoursPerYear: number; workDaysPerYear: number } };
+      realLifeEquivalent: Array<{ title: string; description: string }>;
+      problemBreakdown: Array<{ label: string; hoursLostPerWeek: number }>;
+      beforeAfter: { beforeHours: number; afterHours: number; resultSummary: string };
+      emotionalOutcome: { paragraph: string };
+    };
+  };
+
+  const hasServerDerived = !!(derivedFromServer.personalizedSummaryParagraph || (derivedFromServer.hoursBreakdown && derivedFromServer.hoursBreakdown.length > 0) || derivedFromServer.financialProjection || derivedFromServer.impactEquivalents || (derivedFromServer.opportunityPlan && derivedFromServer.opportunityPlan.length > 0));
+  const clientDerived = !hasServerDerived && summary ? deriveDiagnosticInsights(summary, insights, opps, sector, nombre, empresa) : null;
+
+  const derived = (clientDerived ? {
+    ...derivedFromServer,
+    hoursBreakdown: clientDerived.hoursBreakdown,
+    financialProjection: clientDerived.financialProjection,
+    beforeState: clientDerived.beforeState,
+    afterState: clientDerived.afterState,
+    impactEquivalents: clientDerived.impactEquivalents,
+    opportunityPlan: clientDerived.opportunityPlan,
+    personalizedSummaryParagraph: clientDerived.personalizedSummaryParagraph,
+    psychological: clientDerived.psychological,
+  } : derivedFromServer) as typeof derivedFromServer;
+
+  const psych = derived.psychological;
+
+  const currentHours = Math.round(diagnosticData.summary?.totalCurrentCost?.timeHours || 0);
+  const afterHours = Math.max(0, currentHours - hoursSave);
+  const workDaysPerYear = derived.impactEquivalents?.workDaysSavedPerYear ?? Math.round((hoursSave * 52) / 8);
+  const hoursPerMonth = derived.impactEquivalents?.hoursSavedPerMonth ?? Math.round(hoursSave * 4.33 * 10) / 10;
+  const workDaysPerMonth = Math.round((hoursSave * 4.33) / 8);
+  const monthsLaboralesPerYear = derived.impactEquivalents?.workWeeksSavedPerYear ? Math.round(derived.impactEquivalents.workWeeksSavedPerYear / 4) : Math.round((hoursSave * 52) / 160);
+
+  const heroSubtitle = psych?.heroImpact?.subtitlePersonalized ?? (nombre
+    ? `${nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase()}, tu negocio está perdiendo tiempo valioso cada semana`
+    : 'Tu negocio está perdiendo tiempo valioso cada semana');
+
   return (
     <>
-      {/* SECCIÓN 1 — Hero de resultado premium */}
+      {/* SECCIÓN 1 — HERO DE IMPACTO */}
       <div
-        className={`result-hero-premium ${visible.hero ? 'result-reveal-visible' : ''}`}
+        className={`result-hero-impact ${visible.hero ? 'result-reveal-visible' : ''}`}
         data-reveal-id="hero"
       >
-        <div className="result-hero-premium-inner">
-          <h1 className="result-hero-premium-title">Tu diagnóstico está listo</h1>
-          <p className="result-hero-premium-subtitle">
-            Estas son las oportunidades detectadas para mejorar tu negocio
-          </p>
-          <div className="result-hero-premium-metrics">
-            <div className="result-hero-metric-block">
-              <div className="result-hero-metric-ring" style={{ ['--progress' as string]: Math.min(100, (hoursSave || 1) / 20 * 100) }}>
-                <span className="result-hero-metric-value">+{countUp.hours}h</span>
-                <span className="result-hero-metric-label">Horas ahorradas</span>
-              </div>
+        <div className="result-hero-impact-inner">
+          <h1 className="result-hero-impact-title">{psych?.heroImpact?.title ?? 'Tu diagnóstico está listo'}</h1>
+          <p className="result-hero-impact-subtitle">{heroSubtitle}</p>
+          {psych?.heroImpact?.equivalents && (
+            <div className="result-hero-equivalents">
+              <p className="result-hero-equivalents-intro">Esto equivale a:</p>
+              <ul className="result-hero-equivalents-list">
+                <li><strong>{psych.heroImpact.equivalents.hoursPerMonth}</strong> horas al mes</li>
+                <li><strong>{psych.heroImpact.equivalents.hoursPerYear}</strong> horas al año</li>
+                <li><strong>{psych.heroImpact.equivalents.workDaysPerYear}</strong> días laborales al año</li>
+              </ul>
             </div>
-            <div className="result-hero-metric-block">
-              <div className="result-hero-metric-ring result-hero-metric-ring-money" style={{ ['--progress' as string]: Math.min(100, (moneySave || 1) / 500 * 100) }}>
-                <span className="result-hero-metric-value">${countUp.money}</span>
-                <span className="result-hero-metric-label">Ahorro mensual</span>
-              </div>
+          )}
+          <div className="result-hero-impact-cards">
+            <div className="result-hero-impact-card">
+              <span className="result-hero-impact-number">{countUp.hours}h</span>
+              <span className="result-hero-impact-card-label">recuperables por semana</span>
             </div>
-            <div className="result-hero-metric-block">
-              <div className="result-hero-metric-ring result-hero-metric-ring-roi" style={{ ['--progress' as string]: roi != null ? Math.min(100, roi) : 0 }}>
-                <span className="result-hero-metric-value">{countUp.roi}%</span>
-                <span className="result-hero-metric-label">ROI</span>
-              </div>
+            <div className="result-hero-impact-card">
+              <span className="result-hero-impact-number">${countUp.money}</span>
+              <span className="result-hero-impact-card-label">ahorro mensual</span>
+            </div>
+            <div className="result-hero-impact-card">
+              <span className="result-hero-impact-number">{workDaysPerYear}</span>
+              <span className="result-hero-impact-card-label">días laborales recuperables al año</span>
             </div>
           </div>
+          <a href="#que-significa" className="result-hero-impact-cta">Ver cómo recuperar este tiempo</a>
         </div>
       </div>
 
-      {/* Grid de 4 beneficios (icono + descripción corta + métrica) */}
-      {benefitCards.length > 0 && (
+      {/* SECCIÓN 2 — QUÉ SIGNIFICA ESTO (cards emocionales si hay psychological) */}
+      <div
+        id="que-significa"
+        className={`result-means-section result-reveal ${visible.hero ? 'result-reveal-visible' : ''}`}
+        data-reveal-id="means"
+      >
+        <h2 className="result-section-title">{psych?.realLifeEquivalent?.length ? 'Qué significa esto' : 'Qué significa en la práctica'}</h2>
+        {psych?.realLifeEquivalent && psych.realLifeEquivalent.length > 0 ? (
+          <>
+            <div className="result-means-cards result-means-cards-equivalent">
+              {psych.realLifeEquivalent.map((card, idx) => (
+                <div key={idx} className="result-means-card">
+                  <span className="result-means-value">{card.title}</span>
+                  <span className="result-means-label">{card.description}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="result-means-intro">Esto significa que cada mes estás perdiendo:</p>
+            <div className="result-means-cards">
+              <div className="result-means-card">
+                <span className="result-means-value">{hoursPerMonth}h</span>
+                <span className="result-means-label">de trabajo</span>
+              </div>
+              <div className="result-means-card">
+                <span className="result-means-value">{workDaysPerMonth}</span>
+                <span className="result-means-label">días laborales equivalentes</span>
+              </div>
+              <div className="result-means-card">
+                <span className="result-means-value">{monthsLaboralesPerYear}</span>
+                <span className="result-means-label">meses laborales al año</span>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* SECCIÓN 3 — DE DÓNDE SALE ESTO (breakdown) */}
+      {((psych?.problemBreakdown?.length ?? 0) > 0 || derived.hoursBreakdown?.length > 0 || opportunities.length > 0) && (
         <div
-          id="beneficios-clave"
-          className={`result-beneficios-grid result-reveal ${visible['beneficios-grid'] ? 'result-reveal-visible' : ''}`}
-          data-reveal-id="beneficios-grid"
+          className={`result-causes-section result-reveal ${visible['beneficios-grid'] ? 'result-reveal-visible' : ''}`}
+          data-reveal-id="causes"
         >
-          <h2 className="result-beneficios-title">Beneficios Clave Detectados</h2>
-          <div className="result-beneficios-cards">
-            {benefitCards.map((card: { title: string; description: string; metric: string | number | null; icon: string }, idx: number) => (
-              <div key={idx} className="result-beneficio-card">
-                <div className="result-beneficio-icon">{card.icon}</div>
-                <h3 className="result-beneficio-card-title">{card.title}</h3>
-                <p className="result-beneficio-card-desc">{card.description}</p>
-                {card.metric && (
-                  <div className="result-beneficio-metric">
-                    <span className="result-beneficio-metric-icon">{String(card.metric).startsWith('$') ? '💰' : '⏱️'}</span>
-                    <span>{card.metric}</span>
-                  </div>
-                )}
+          <h2 className="result-section-title">De dónde sale esto</h2>
+          <div className="result-causes-cards">
+            {(psych?.problemBreakdown && psych.problemBreakdown.length > 0
+              ? psych.problemBreakdown.map((item, idx) => ({ id: `pb-${idx}`, label: item.label, hoursSavedPerWeek: item.hoursLostPerWeek }))
+              : derived.hoursBreakdown && derived.hoursBreakdown.length > 0
+                ? derived.hoursBreakdown.map((item: { id: string; label: string; hoursSavedPerWeek: number }) => ({ id: item.id, label: item.label, hoursSavedPerWeek: item.hoursSavedPerWeek }))
+                : opportunities.slice(0, 4).map((o: any, idx: number) => {
+                    const h = o.impact?.timeHours ?? (typeof o.impact?.time === 'string' ? parseFloat(o.impact.time.replace(/\D/g, '')) || null : null) ?? (hoursSave / Math.max(1, opportunities.length));
+                    return { id: `opp-${idx}`, label: o.title || 'Proceso manual', hoursSavedPerWeek: Math.round(h * 10) / 10 || 1 };
+                  })
+            ).map((item: { id: string; label: string; hoursSavedPerWeek: number }) => (
+              <div key={item.id} className="result-cause-card">
+                <h3 className="result-cause-title">{item.label}</h3>
+                <p className="result-cause-hours">{item.hoursSavedPerWeek}h perdidas por semana</p>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* SECCIÓN 3 — Comparación visual: Situación actual vs optimizada */}
-      {diagnosticData.summary && (
+      {/* SECCIÓN 4 — ANTES VS DESPUÉS */}
+      {(psych?.beforeAfter || diagnosticData.summary) && (
         <div
-          className={`result-comparison-section result-reveal ${visible['comparison'] ? 'result-reveal-visible' : ''}`}
+          className={`result-before-after result-reveal ${visible['comparison'] ? 'result-reveal-visible' : ''}`}
           data-reveal-id="comparison"
         >
-          <h2 className="result-comparison-title">Comparación visual</h2>
-          <p className="result-comparison-subtitle">Situación actual vs situación optimizada</p>
-          <div className="result-comparison-cards">
-            <div className="result-comparison-card result-comparison-card-actual">
-              <div className="result-comparison-card-label">Situación actual</div>
-              <div className="result-comparison-metric">
-                <span className="result-comparison-value">{Math.round(diagnosticData.summary.totalCurrentCost?.timeHours || 0)}h</span>
-                <span className="result-comparison-metric-label">por semana</span>
-              </div>
-              <div className="result-comparison-metric">
-                <span className="result-comparison-value">${Math.round(diagnosticData.summary.totalCurrentCost?.moneyCost || 0)}</span>
-                <span className="result-comparison-metric-label">por mes</span>
-              </div>
-              <p className="result-comparison-card-desc">Tiempo y dinero en procesos manuales</p>
+          <h2 className="result-section-title">Antes vs después</h2>
+          <div className="result-before-after-grid">
+            <div className="result-ba-block result-ba-before">
+              <span className="result-ba-label">Antes</span>
+              <span className="result-ba-value">{psych?.beforeAfter?.beforeHours ?? currentHours}h</span>
+              <span className="result-ba-sublabel">por semana perdidas</span>
             </div>
-            <div className="result-comparison-card result-comparison-card-optimized">
-              <div className="result-comparison-card-label">Situación optimizada</div>
-              <div className="result-comparison-metric">
-                <span className="result-comparison-value">-{Math.round(diagnosticData.summary.totalPotentialSavings?.timeHours || 0)}h</span>
-                <span className="result-comparison-metric-label">por semana</span>
-              </div>
-              <div className="result-comparison-metric">
-                <span className="result-comparison-value">+${Math.round(diagnosticData.summary.totalPotentialSavings?.moneyCost || 0)}</span>
-                <span className="result-comparison-metric-label">ahorro mensual</span>
-              </div>
-              <p className="result-comparison-card-desc">Con automatización y mejores procesos</p>
+            <div className="result-ba-block result-ba-after">
+              <span className="result-ba-label">Después</span>
+              <span className="result-ba-value">{psych?.beforeAfter?.afterHours ?? afterHours}h</span>
+              <span className="result-ba-sublabel">por semana</span>
+            </div>
+            <div className="result-ba-block result-ba-result">
+              <span className="result-ba-label">Resultado</span>
+              <span className="result-ba-value">{psych?.beforeAfter?.resultSummary ?? `Recuperas ${hoursSave}h cada semana`}</span>
+              <span className="result-ba-sublabel">cada semana</span>
             </div>
           </div>
         </div>
       )}
 
-      {/* Testimonial + CTA verde */}
+      {/* SECCIÓN 5 — RESULTADO EMOCIONAL */}
       <div
-        className={`result-testimonial-cta result-reveal ${visible['testimonial'] ? 'result-reveal-visible' : ''}`}
-        data-reveal-id="testimonial"
+        className={`result-emotional result-reveal ${visible['comparison'] ? 'result-reveal-visible' : ''}`}
+        data-reveal-id="emotional"
       >
-        <div className="result-testimonial">
-          <span className="result-testimonial-quote">"</span>
-          <p className="result-testimonial-text">
-            Las oportunidades detectadas me han permitido ahorrar tiempo y reducir errores en mi negocio. Estoy muy satisfecho con los resultados y el impacto positivo que ha tenido en mi operativa diaria.
-          </p>
-          <p className="result-testimonial-author">Jonathan Guarirap, Dueño de negocio.</p>
-          <div className="result-testimonial-stars">★★★★★</div>
-          <div className="result-testimonial-photo-wrap">
-            <div className="result-testimonial-photo" aria-hidden />
-          </div>
-        </div>
-        <a href="/contacto" className="result-cta-green">
-          <span className="result-cta-green-icon">✉️</span>
-          Contáctanos Para Saber Más →
-        </a>
+        <p className="result-emotional-text">
+          {psych?.emotionalOutcome?.paragraph ?? 'Con estas mejoras, tu negocio funcionará con más control, menos errores y menos estrés. Tendrás claridad total y más tiempo para crecer.'}
+        </p>
       </div>
 
-      {/* Servicios Seleccionados - Diseño mejorado y más visual */}
+      {/* SECCIÓN — CÓMO CALCULAMOS ESTE RESULTADO */}
+      <div
+        className={`result-credibility result-reveal ${visible.credibility ? 'result-reveal-visible' : ''}`}
+        data-reveal-id="credibility"
+      >
+        <h2 className="result-section-title">Cómo calculamos este resultado</h2>
+        <p className="result-credibility-text">Este diagnóstico se basa en tus respuestas al cuestionario: tipo de negocio, cómo registras órdenes, inventarios, comisiones y horas dedicadas. Las estimaciones de tiempo y ahorro son conservadoras y están alineadas con experiencias reales de negocios similares al tuyo.</p>
+      </div>
+
+      {/* SECCIÓN 6 — SERVICIOS RECOMENDADOS */}
       {selectedServicesList.length > 0 && (
         <div
-          className={`selected-services-section-modern result-reveal ${visible.services ? 'result-reveal-visible' : ''}`}
+          className={`result-services-section result-reveal ${visible.services ? 'result-reveal-visible' : ''}`}
           data-reveal-id="services"
-          style={{ margin: '4rem 0' }}
         >
-          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 700, color: '#0f172a', marginBottom: '1rem' }}>
-              Servicios Recomendados para Ti
-            </h2>
-            <p style={{ fontSize: '1.25rem', color: '#64748b', maxWidth: '700px', margin: '0 auto', lineHeight: 1.6 }}>
-              Basado en tu diagnóstico, estos son los servicios que mejor se adaptan a las necesidades de tu negocio
-            </p>
-          </div>
-          
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', 
-            gap: '2rem', 
-            maxWidth: '1400px', 
-            margin: '0 auto' 
-          }}>
+          <h2 className="result-section-title">Servicios recomendados</h2>
+          <p className="result-services-intro">Estos servicios se adaptan a lo que tu negocio necesita.</p>
+          <div className="result-services-grid">
             {servicesWithPages.map((service: Service & { servicePage?: string }) => (
               <div 
                 key={service.id}

@@ -22,7 +22,7 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
 <style>
   .diagnostic-wizard-section {
     padding: 2rem 4rem;
-    background: var(--color-elephant-white, #F6F5F2);
+    background: linear-gradient(160deg, #f0fdfa 0%, #f6f5f2 50%, #ecfdf5 100%);
     min-height: 100vh;
     position: relative;
     display: flex;
@@ -66,9 +66,10 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
     min-height: 100%;
     flex: 1;
     background: #FFFFFF;
-    border-radius: 20px;
+    border-radius: 28px;
     padding: 3rem 4rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 32px rgba(13, 148, 136, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(13, 148, 136, 0.12);
     display: flex;
     flex-direction: column;
   }
@@ -200,33 +201,33 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
   :global(.option-card) {
     background: #FFFFFF !important;
     border: none !important;
-    border-radius: 16px !important;
+    border-radius: 24px !important;
     padding: 2rem 1.5rem !important;
     text-align: center !important;
     cursor: pointer !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     gap: 1rem !important;
     min-height: 200px !important;
     position: relative !important;
-    box-shadow: 3px 5px 16px rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06) !important;
     outline: none !important;
   }
 
-  :global(.option-card:hover) {
+  :global(.option-card:hover:not(.selected)) {
     border: none !important;
     transform: translateY(-4px) !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
-    background: #F6F5F2 !important;
+    box-shadow: 0 20px 48px rgba(13, 148, 136, 0.12) !important;
+    background: #f0fdfa !important;
   }
 
   :global(.option-card.selected) {
     border: none !important;
-    background: var(--color-graphite-dark, #2B2B2B) !important;
+    background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%) !important;
     color: #FFFFFF !important;
-    box-shadow: 0 8px 24px rgba(43, 43, 43, 0.2) !important;
+    box-shadow: 0 16px 40px rgba(13, 148, 136, 0.35) !important;
   }
 
   :global(.option-card.selected .card-title),
@@ -329,11 +330,11 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
 
   :global(.option-card.selected .check-icon) {
     background: #FFFFFF !important;
-    color: var(--color-graphite-dark, #2B2B2B) !important;
+    color: #0d9488 !important;
   }
 
   :global(.option-card.multi-select.selected .check-icon) {
-    background: var(--color-graphite-dark, #2B2B2B) !important;
+    background: #0d9488 !important;
     color: #FFFFFF !important;
   }
 
@@ -371,23 +372,24 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
     display: block !important;
     width: 100% !important;
     padding: 1rem 2rem !important;
-    background: var(--color-graphite-dark, #2B2B2B) !important;
+    background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%) !important;
     color: #FFFFFF !important;
     border: none !important;
-    border-radius: 12px !important;
-    font-size: 1.125rem !important;
+    border-radius: 14px !important;
+    font-size: 1.0625rem !important;
     font-weight: 600 !important;
     cursor: pointer !important;
     transition: all 0.3s ease !important;
     margin-top: 1rem !important;
     font-family: inherit !important;
+    box-shadow: 0 8px 24px rgba(13, 148, 136, 0.35) !important;
   }
 
   :global(.btn-continue:hover:not(:disabled)),
   :global(.btn-submit:hover:not(:disabled)) {
-    background: #1A1A1A !important;
+    background: linear-gradient(135deg, #0f766e 0%, #115e59 100%) !important;
     transform: translateY(-2px) !important;
-    box-shadow: 0 4px 12px rgba(43, 43, 43, 0.3) !important;
+    box-shadow: 0 12px 32px rgba(13, 148, 136, 0.4) !important;
   }
 
   :global(.btn-continue:disabled),
@@ -588,24 +590,20 @@ import ConversationalWizard from './ConversationalDiagnosticWizard';
     
     :global(.option-card.sector-option-card.selected) {
       border: none !important;
-      background: #FFFFFF !important;
+      background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%) !important;
       transform: scale(1.03) !important;
-      box-shadow: 
-        0 12px 24px rgba(0, 0, 0, 0.15),
-        0 6px 12px rgba(0, 0, 0, 0.12),
-        0 3px 6px rgba(0, 0, 0, 0.08),
-        0 1px 2px rgba(0, 0, 0, 0.04) !important;
+      box-shadow: 0 16px 40px rgba(13, 148, 136, 0.35) !important;
       z-index: 10 !important;
       outline: none !important;
     }
     
     :global(.option-card.sector-option-card.selected .card-title) {
-      color: #2B2B2B !important;
+      color: #FFFFFF !important;
       font-weight: 700 !important;
     }
     
     :global(.option-card.sector-option-card.selected .card-description) {
-      color: #2B2B2B !important;
+      color: rgba(255, 255, 255, 0.9) !important;
     }
     
     :global(.sector-option-card .card-icon) {

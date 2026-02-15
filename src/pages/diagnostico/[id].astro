@@ -213,7 +213,7 @@ try {
     <section class="diagnostic-result">
       <div class="result-container">
         {(() => {
-          // Si necesita cargar desde localStorage, usar el componente React del cliente
+          // Siempre usar el mismo diseño: componente React (localStorage o datos del backend)
           if (diagnosticResult._loadFromLocalStorage) {
             return (
               <DiagnosticResultClient 
@@ -223,548 +223,50 @@ try {
             );
           }
           
-          // Detectar si es un diagnóstico conversacional
           const isConversational = diagnosticResult.type === 'conversational' ||
                                   diagnosticResult.summary !== undefined ||
                                   diagnosticResult.insights !== undefined;
           
-          // Detectar si es un envelope mejorado
-          const isEnhanced = !isConversational && 
-                           diagnosticResult.opportunity !== undefined && 
+          // Diagnósticos conversacionales desde backend: misma UI que localStorage
+          if (isConversational) {
+            const resultForClient = { ...diagnosticResult, id: diagnosticResult.id || id };
+            return (
+              <DiagnosticResultClient 
+                client:only="react" 
+                diagnosticId={id} 
+                initialData={resultForClient}
+              />
+            );
+          }
+          
+          const isEnhanced = diagnosticResult.opportunity !== undefined && 
                            diagnosticResult.recommendation !== undefined;
           
-          if (isConversational) {
-            // Vista consultiva conversacional
+          if (isEnhanced) {
             return (
               <>
-                {/* Mensaje Personalizado */}
-                <div class="result-header">
-                  <h1 class="result-title">{diagnosticResult.personalizedMessage?.greeting || 'Hola'}</h1>
-                  <p class="result-subtitle">{diagnosticResult.personalizedMessage?.context || 'He analizado tu negocio'}</p>
-                </div>
-
-                {/* Servicios Seleccionados - Nueva Sección */}
-                {(() => {
-                  const extendedType = diagnosticResult.extendedType;
-                  const servicePage = diagnosticResult.servicePage;
-                  const selectedServicesIds = diagnosticResult.selectedServices || diagnosticData?.selectedServices || [];
-                  
-                  // Obtener servicios seleccionados o recomendados
-                  let selectedServicesList: Service[] = selectedServicesIds
-                    .map((id: string) => getServiceById(id))
-                    .filter((s: Service | undefined): s is Service => s !== undefined);
-                  
-                  // Si no hay servicios seleccionados, usar recomendados
-                  if (selectedServicesList.length === 0) {
-                    selectedServicesList = getRecommendedServicesForSector(diagnosticResult.sector || 'restaurante', extendedType);
-                  }
-                  
-                  // Agregar información de página específica
-                  const servicesWithPages = selectedServicesList.map(service => {
-                    const specificPage = servicePage || getServicePageForExtendedType(extendedType);
-                    return {
-                      ...service,
-                      servicePage: specificPage || `/contacto?service=${service.id}`
-                    };
-                  });
-                  
-                  if (servicesWithPages.length > 0) {
-                    return (
-                      <div class="selected-services-section-modern" style="margin: 4rem 0;">
-                        <div style="text-align: center; margin-bottom: 3rem;">
-                          <h2 style="font-size: 2.5rem; font-weight: 700; color: #0f172a; margin-bottom: 1rem;">
-                            Servicios Recomendados para Ti
-                          </h2>
-                          <p style="font-size: 1.25rem; color: #64748b; max-width: 700px; margin: 0 auto; line-height: 1.6;">
-                            Basado en tu diagnóstico, estos son los servicios que mejor se adaptan a las necesidades de tu negocio
-                          </p>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; max-width: 1400px; margin: 0 auto;">
-                          {servicesWithPages.map((service: Service & { servicePage?: string }) => (
-                            <div 
-                              class="service-card-result-enhanced"
-                              style={`
-                                background: ${service.popular ? 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)' : '#ffffff'};
-                                border: ${service.popular ? '3px solid #3b82f6' : '2px solid #e2e8f0'};
-                                border-radius: 24px;
-                                padding: 2rem;
-                                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                                position: relative;
-                                box-shadow: ${service.popular ? '0 12px 40px rgba(59, 130, 246, 0.2)' : '0 4px 20px rgba(0, 0, 0, 0.08)'};
-                                overflow: hidden;
-                              `}
-                              onmouseenter="this.style.transform = 'translateY(-8px) scale(1.02)'; this.style.boxShadow = '0 20px 60px rgba(59, 130, 246, 0.3)'; this.style.borderColor = '#3b82f6';"
-                              onmouseleave={`this.style.transform = 'translateY(0) scale(1)'; const isPopular = ${service.popular}; this.style.boxShadow = isPopular ? '0 12px 40px rgba(59, 130, 246, 0.2)' : '0 4px 20px rgba(0, 0, 0, 0.08)'; this.style.borderColor = isPopular ? '#3b82f6' : '#e2e8f0';`}
-                            >
-                              {service.popular && (
-                                <span style="
-                                  position: absolute;
-                                  top: 1.5rem;
-                                  right: 1.5rem;
-                                  background: linear-gradient(135deg, #00C2FF 0%, #7C4DFF 100%);
-                                  color: #ffffff;
-                                  padding: 0.5rem 1.25rem;
-                                  border-radius: 999px;
-                                  font-size: 0.875rem;
-                                  font-weight: 700;
-                                  box-shadow: 0 4px 16px rgba(0, 194, 255, 0.4);
-                                  z-index: 10;
-                                ">
-                                  ⭐ Más Popular
-                                </span>
-                              )}
-
-                              <!-- Icono grande y destacado -->
-                              <div style="display: flex; justify-content: center; margin-bottom: 1.5rem;">
-                                <div style="
-                                  width: 80px;
-                                  height: 80px;
-                                  border-radius: 20px;
-                                  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-                                  display: flex;
-                                  align-items: center;
-                                  justify-content: center;
-                                  font-size: 2.5rem;
-                                  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
-                                ">
-                                  {service.icon || '⚙️'}
-                                </div>
-                              </div>
-                              
-                              <h3 style="
-                                font-size: 1.5rem;
-                                font-weight: 700;
-                                color: #0f172a;
-                                margin-bottom: 1rem;
-                                margin-top: 0;
-                                line-height: 1.3;
-                                text-align: center;
-                              ">
-                                {service.name}
-                              </h3>
-                              
-                              <p style="
-                                font-size: 1rem;
-                                color: #64748b;
-                                line-height: 1.7;
-                                margin-bottom: 1.5rem;
-                                text-align: center;
-                              ">
-                                {service.description}
-                              </p>
-                              
-                              {service.features && service.features.length > 0 && (
-                                <div style="
-                                  background: #f8fafc;
-                                  border-radius: 16px;
-                                  padding: 1.5rem;
-                                  margin-bottom: 1.5rem;
-                                ">
-                                  <ul style="
-                                    list-style: none;
-                                    padding: 0;
-                                    margin: 0;
-                                    display: flex;
-                                    flex-direction: column;
-                                    gap: 0.75rem;
-                                  ">
-                                    {service.features.slice(0, 4).map((feature) => (
-                                      <li style="
-                                        display: flex;
-                                        align-items: start;
-                                        gap: 0.75rem;
-                                        font-size: 0.9375rem;
-                                        color: #475569;
-                                        line-height: 1.6;
-                                      ">
-                                        <span style="color: #3b82f6; flex-shrink: 0; font-size: 1.125rem; font-weight: 700; margin-top: 0.125rem;">✓</span>
-                                        <span style="flex: 1;">{feature}</span>
-                                      </li>
-                                    ))}
-                                    {service.features.length > 4 && (
-                                      <li style="
-                                        font-size: 0.875rem;
-                                        color: #94a3b8;
-                                        font-weight: 600;
-                                        margin-top: 0.5rem;
-                                        text-align: center;
-                                      ">
-                                        +{service.features.length - 4} características adicionales
-                                      </li>
-                                    )}
-                                  </ul>
-                                </div>
-                              )}
-                              
-                              {service.includesHardware && (
-                                <div style="
-                                  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.1) 100%);
-                                  border: 2px solid rgba(59, 130, 246, 0.3);
-                                  border-radius: 12px;
-                                  padding: 1rem;
-                                  margin-bottom: 1.5rem;
-                                  text-align: center;
-                                ">
-                                  <p style="
-                                    font-size: 0.9375rem;
-                                    font-weight: 700;
-                                    color: #3b82f6;
-                                    margin: 0;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    gap: 0.5rem;
-                                  ">
-                                    <span style="font-size: 1.25rem;">📦</span>
-                                    <span>Incluye hardware completo</span>
-                                  </p>
-                                </div>
-                              )}
-                              
-                              <a 
-                                href={service.servicePage || `/contacto?service=${service.id}`}
-                                style={`
-                                  display: block;
-                                  width: 100%;
-                                  text-align: center;
-                                  padding: 1rem 2rem;
-                                  background: ${service.popular ? 'linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)' : '#0f172a'};
-                                  color: #ffffff;
-                                  text-decoration: none;
-                                  border-radius: 12px;
-                                  font-weight: 700;
-                                  font-size: 1rem;
-                                  transition: all 0.3s ease;
-                                  box-shadow: ${service.popular ? '0 4px 16px rgba(59, 130, 246, 0.4)' : '0 4px 12px rgba(15, 23, 42, 0.2)'};
-                                `}
-                                onmouseenter={`this.style.transform = 'translateY(-2px)'; const isPopular = ${service.popular}; this.style.boxShadow = isPopular ? '0 8px 24px rgba(59, 130, 246, 0.5)' : '0 8px 20px rgba(15, 23, 42, 0.3)';`}
-                                onmouseleave={`this.style.transform = 'translateY(0)'; const isPopular = ${service.popular}; this.style.boxShadow = isPopular ? '0 4px 16px rgba(59, 130, 246, 0.4)' : '0 4px 12px rgba(15, 23, 42, 0.2)';`}
-                              >
-                                {service.servicePage ? 'Ver solución completa →' : `Solicitar ${service.name.split('(')[0].trim()}`}
-                              </a>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  }
-                  return null;
-                })()}
-
-                {/* Situación Actual - Rediseñada */}
-                {diagnosticResult.currentSituation && (
-                  <CurrentSituationSection 
-                    currentSituation={diagnosticResult.currentSituation}
-                    sector={diagnosticResult?.sector as BusinessSector}
-                  />
-                )}
-
-                {/* Resumen de Costos y Ahorros - Rediseñado */}
-                {diagnosticResult.summary && (
-                  <CostSummarySection summary={diagnosticResult.summary} />
-                )}
-
-                {/* Oportunidades - Rediseñado con Slider */}
-                {diagnosticResult.opportunities && diagnosticResult.opportunities.length > 0 && (
-                  <OpportunitiesSection 
-                    opportunities={diagnosticResult.opportunities}
-                    sector={diagnosticResult?.sector as BusinessSector}
-                  />
-                )}
-
-                {/* Impacto Operativo - Rediseñado */}
-                {diagnosticResult.operationalImpact && (
-                  <div class="operational-impact-section-modern">
-                    <h2 class="operational-impact-title">{diagnosticResult.operationalImpact.title}</h2>
-                    <p class="operational-impact-description">{diagnosticResult.operationalImpact.description}</p>
-                    {diagnosticResult.operationalImpact.consequences && diagnosticResult.operationalImpact.consequences.length > 0 && (
-                      <div class="operational-impact-consequences">
-                        {diagnosticResult.operationalImpact.consequences.map((consequence: any, index: number) => {
-                          const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
-                          let imageUrl = consequence.imageUrl;
-                          
-                          // Si no hay imageUrl, generarlo basándose en el área
-                          if (!imageUrl && consequence.area) {
-                            const areaLower = consequence.area.toLowerCase();
-                            let impactArea: 'tiempo' | 'costos' | 'errores' | 'crecimiento' = 'tiempo';
-                            
-                            if (areaLower.includes('tiempo')) impactArea = 'tiempo';
-                            else if (areaLower.includes('costo')) impactArea = 'costos';
-                            else if (areaLower.includes('error')) impactArea = 'errores';
-                            else if (areaLower.includes('crecimiento')) impactArea = 'crecimiento';
-                            
-                            imageUrl = getOperationalImpactImageUrl(sector, impactArea);
-                            console.log('🔄 [RESULT PAGE] Generated consequence imageUrl:', { area: consequence.area, impactArea, imageUrl });
-                          }
-                          
-                          // Alternar posición: índice par = texto izquierda, imagen derecha
-                          // índice impar = imagen izquierda, texto derecha
-                          const isEven = index % 2 === 0;
-                          
-                          return (
-                            <div class={`consequence-card-modern ${isEven ? 'text-left' : 'image-left'}`}>
-                              {isEven ? (
-                                <>
-                                  <div class="consequence-content-modern">
-                                    <h3 class="consequence-area-modern">{consequence.area}</h3>
-                                    <p class="consequence-impact-modern">{consequence.impact}</p>
-                                  </div>
-                                  {imageUrl ? (
-                                    <div class="consequence-image-wrapper">
-                                      <img 
-                                        src={imageUrl} 
-                                        alt={consequence.area}
-                                        class="consequence-image-modern"
-                                      />
-                                    </div>
-                                  ) : null}
-                                </>
-                              ) : (
-                                <>
-                                  {imageUrl ? (
-                                    <div class="consequence-image-wrapper">
-                                      <img 
-                                        src={imageUrl} 
-                                        alt={consequence.area}
-                                        class="consequence-image-modern"
-                                      />
-                                    </div>
-                                  ) : null}
-                                  <div class="consequence-content-modern">
-                                    <h3 class="consequence-area-modern">{consequence.area}</h3>
-                                    <p class="consequence-impact-modern">{consequence.impact}</p>
-                                  </div>
-                                </>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Visión Futura - Rediseñado */}
-                {diagnosticResult.futureVision && (
-                  <div class="future-vision-section-modern">
-                    <div class="future-vision-content">
-                      <div class="future-vision-left">
-                        {(() => {
-                          const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
-                          let imageUrl = diagnosticResult.futureVision.imageUrl;
-                          
-                          // Si no hay imageUrl, generarlo usando la función de utilidad
-                          if (!imageUrl) {
-                            imageUrl = getFutureVisionImageUrl(sector);
-                            console.log('🔄 [RESULT PAGE] Generated futureVision imageUrl:', imageUrl);
-                          }
-                          
-                          return (
-                            <div class="future-vision-image-wrapper">
-                              <img 
-                                src={imageUrl} 
-                                alt={diagnosticResult.futureVision.title}
-                                class="future-vision-image"
-                              />
-                              <div class="future-vision-text-overlay">
-                                <h2 class="future-vision-title-overlay">{diagnosticResult.futureVision.title}</h2>
-                                <p class="future-vision-description-overlay">{diagnosticResult.futureVision.description}</p>
-                              </div>
-                            </div>
-                          );
-                        })()}
-                      </div>
-                      {diagnosticResult.futureVision.benefits && diagnosticResult.futureVision.benefits.length > 0 && (
-                        <div class="future-vision-benefits">
-                          {diagnosticResult.futureVision.benefits.map((benefit: any, index: number) => {
-                            const totalBenefits = diagnosticResult.futureVision.benefits.length;
-                            const isLastRow = index >= totalBenefits - (totalBenefits % 2 === 0 ? 0 : 1);
-                            const isAloneInLastRow = totalBenefits % 2 !== 0 && index === totalBenefits - 1;
-                            return (
-                              <div 
-                                class={`benefit-card-modern ${isAloneInLastRow ? 'benefit-card-full-width' : ''}`}
-                              >
-                                <div class="benefit-icon-modern">{benefit.icon}</div>
-                                <h3 class="benefit-title-modern">{benefit.title}</h3>
-                                <p class="benefit-description-modern">{benefit.description}</p>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Oportunidad - Rediseñado */}
-                {diagnosticResult.personalizedMessage?.opportunity && (
-                  <div class="opportunity-section-modern">
-                    {(() => {
-                      const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
-                      const imageUrl = getOpportunitySectionImageUrl(sector);
-                      
-                      return (
-                        <div class="opportunity-image-wrapper">
-                          <img 
-                            src={imageUrl} 
-                            alt="La Oportunidad"
-                            class="opportunity-background-image"
-                          />
-                          <div class="opportunity-content-overlay">
-                            <div class="opportunity-title-box">
-                              <h2 class="opportunity-title-overlay">La Oportunidad</h2>
-                            </div>
-                            <div class="opportunity-text-box">
-                              <p class="opportunity-text-overlay">{diagnosticResult.personalizedMessage.opportunity}</p>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })()}
-                  </div>
-                )}
-
-                {/* Insights Específicos - Rediseñado */}
-                {diagnosticResult.insights && diagnosticResult.insights.length > 0 && (
-                  <div class="insights-section-modern">
-                    {(() => {
-                      const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
-                      const insightImageUrl = getInsightImageUrl(sector, 'problemas-identificados');
-                      
-                      return (
-                        <div class="insights-header-image">
-                          <img 
-                            src={insightImageUrl} 
-                            alt="Problemas Identificados y Soluciones"
-                            class="insights-background-image"
-                          />
-                          <div class="insights-title-overlay">
-                            <h2 class="insights-title-text">Problemas Identificados y Soluciones</h2>
-                          </div>
-                        </div>
-                      );
-                    })()}
-                    {diagnosticResult.insights.map((insight: any, index: number) => (
-                      <div class="insight-card-modern">
-                        <div class="insight-problem-header">
-                          <h3 class="insight-problem-title">{insight.problem}</h3>
-                        </div>
-                        <div class="insight-content-wrapper">
-                          {insight.impact && (
-                            <div class="insight-impact-card">
-                              <div class="impact-item-modern">
-                                <strong>Impacto operativo:</strong> {insight.impact.operational}
-                              </div>
-                              <div class="impact-item-modern">
-                                <strong>Impacto financiero:</strong> {insight.impact.financial}
-                              </div>
-                              <div class="impact-item-modern">
-                                <strong>Impacto en crecimiento:</strong> {insight.impact.growth}
-                              </div>
-                            </div>
-                          )}
-                          <div class="insight-right-column">
-                            <div class="insight-main-card">
-                              <div class="insight-costs-column">
-                                <div class="cost-row">
-                                  <span class="cost-label-modern">Tiempo perdido:</span>
-                                  <span class="cost-value-modern">{Math.round(insight.currentCost?.timeHours || 0)} horas/semana</span>
-                                </div>
-                                <div class="cost-row">
-                                  <span class="cost-label-modern">Costo mensual:</span>
-                                  <span class="cost-value-modern">${Math.round(insight.currentCost?.moneyCost || 0)}</span>
-                                </div>
-                                {insight.currentCost?.errorRate > 0 && (
-                                  <div class="cost-row">
-                                    <span class="cost-label-modern">Tasa de errores:</span>
-                                    <span class="cost-value-modern">{insight.currentCost.errorRate}%</span>
-                                  </div>
-                                )}
-                              </div>
-                              <div class="insight-savings-column">
-                                <div class="savings-label-modern">Ahorro potencial:</div>
-                                <div class="savings-value-time">{Math.round(insight.potentialSavings?.timeHours || 0)} horas/semana</div>
-                                <div class="savings-value-money">${Math.round(insight.potentialSavings?.moneyCost || 0)}/mes</div>
-                              </div>
-                            </div>
-                            {insight.recommendation && (
-                              <div class="insight-recommendation-card">
-                                <h4 class="recommendation-title-modern">Recomendación: {insight.recommendation.tool}</h4>
-                                <p class="recommendation-description-modern">{insight.recommendation.description}</p>
-                                {insight.recommendation.benefits && insight.recommendation.benefits.length > 0 && (
-                                  <ul class="benefits-list-modern">
-                                    {insight.recommendation.benefits.map((benefit: string, i: number) => (
-                                      <li class="benefit-item-modern">✓ {benefit}</li>
-                                    ))}
-                                  </ul>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Visión - Rediseñado */}
-                {diagnosticResult.personalizedMessage?.vision && (
-                  <div class="vision-section-modern">
-                    {(() => {
-                      const sector = (diagnosticResult?.sector || 'restaurante') as BusinessSector;
-                      const imageUrl = getFutureVisionImageUrl(sector);
-                      
-                      return (
-                        <div class="vision-image-wrapper">
-                          <img 
-                            src={imageUrl} 
-                            alt="Tu Visión"
-                            class="vision-background-image"
-                          />
-                          <div class="vision-content-overlay">
-                            <div class="vision-title-overlay">
-                              <h2 class="vision-title-text">Tu Visión</h2>
-                            </div>
-                            <div class="vision-text-overlay">
-                              <p class="vision-text-content">{diagnosticResult.personalizedMessage.vision}</p>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })()}
-                  </div>
-                )}
-              </>
-            );
-          } else if (isEnhanced) {
-            // Vista mejorada con envelope completo
-            return (
-              <>
-                {/* Header con mensaje personalizado */}
+                {/* Vista mejorada con envelope completo (legacy) */}
                 <div class="result-header">
                   <div class="result-icon-large">💡</div>
-                  <h1 class="result-title">{diagnosticResult.personalizedMessage.title}</h1>
-                  <p class="result-subtitle">{diagnosticResult.personalizedMessage.subtitle}</p>
+                  <h1 class="result-title">{diagnosticResult.personalizedMessage?.title}</h1>
+                  <p class="result-subtitle">{diagnosticResult.personalizedMessage?.subtitle}</p>
                 </div>
 
-                {/* Insight personalizado */}
                 <div class="result-insight">
-                  <p>{diagnosticResult.personalizedMessage.insight}</p>
+                  <p>{diagnosticResult.personalizedMessage?.insight}</p>
                 </div>
 
-                {/* Oportunidad Detectada */}
                 <div class="opportunity-section">
                   <div class="opportunity-header">
-                    <h2 class="opportunity-title">{diagnosticResult.opportunity.title}</h2>
-                    <p class="opportunity-description">{diagnosticResult.opportunity.description}</p>
+                    <h2 class="opportunity-title">{diagnosticResult.opportunity?.title}</h2>
+                    <p class="opportunity-description">{diagnosticResult.opportunity?.description}</p>
                   </div>
 
                   <div class="opportunity-details">
                     <div class="pain-points">
                       <h3 class="section-title">Problemas Identificados</h3>
                       <ul class="points-list">
-                        {diagnosticResult.opportunity.painPoints.map((point: string) => (
+                        {(diagnosticResult.opportunity?.painPoints || []).map((point: string) => (
                           <li>{point}</li>
                         ))}
                       </ul>
@@ -773,7 +275,7 @@ try {
                     <div class="benefits">
                       <h3 class="section-title">Beneficios de la Solución</h3>
                       <ul class="points-list">
-                        {diagnosticResult.opportunity.benefits.map((benefit: string) => (
+                        {(diagnosticResult.opportunity?.benefits || []).map((benefit: string) => (
                           <li>{benefit}</li>
                         ))}
                       </ul>
@@ -1031,7 +533,214 @@ try {
     line-height: 1.6;
   }
 
-  /* ========== SECCIÓN 1 — HERO PREMIUM (Tu diagnóstico listo + 3 métricas) ========== */
+  /* ========== NUEVA JERARQUÍA — HERO DE IMPACTO + SECCIONES 2-6 ========== */
+  .result-section-title {
+    font-size: clamp(1.35rem, 3vw, 1.75rem);
+    font-weight: 700;
+    color: #0f172a;
+    text-align: center;
+    margin: 0 0 1rem 0;
+  }
+  .result-hero-impact {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    border-radius: 24px;
+    padding: 2.5rem 1.5rem 3rem;
+    margin-bottom: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .result-hero-impact::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.18), transparent);
+    pointer-events: none;
+  }
+  .result-hero-impact.result-reveal-visible { opacity: 1; transform: translateY(0); }
+  .result-hero-impact-inner { position: relative; z-index: 1; text-align: center; }
+  .result-hero-impact-title {
+    font-size: clamp(1.6rem, 4vw, 2.25rem);
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 0.4rem 0;
+  }
+  .result-hero-impact-subtitle {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: rgba(255,255,255,0.9);
+    margin: 0 0 1.75rem 0;
+  }
+  .result-hero-impact-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+  @media (max-width: 700px) {
+    .result-hero-impact-cards { grid-template-columns: 1fr; }
+  }
+  .result-hero-impact-card {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 1.25rem;
+    text-align: center;
+  }
+  .result-hero-impact-number {
+    display: block;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 800;
+    color: #34d399;
+    line-height: 1.2;
+  }
+  .result-hero-impact-card-label {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.85);
+  }
+  .result-hero-impact-cta {
+    display: inline-block;
+    background: #34d399;
+    color: #0f172a;
+    padding: 0.9rem 1.75rem;
+    border-radius: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .result-hero-impact-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(52,211,153,0.4); }
+
+  .result-hero-equivalents {
+    margin: 1.25rem 0 1.5rem 0;
+    padding: 1rem 1.5rem;
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    display: inline-block;
+  }
+  .result-hero-equivalents-intro {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.9);
+    margin: 0 0 0.5rem 0;
+  }
+  .result-hero-equivalents-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.95);
+  }
+  .result-hero-equivalents-list li { margin: 0.25rem 0; }
+  .result-hero-equivalents-list strong { font-size: 1.15rem; margin-right: 0.35rem; }
+
+  .result-credibility {
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+  }
+  .result-credibility-text {
+    font-size: 1rem;
+    color: #475569;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 640px;
+  }
+
+  .result-means-section { margin-bottom: 2.5rem; }
+  .result-means-cards-equivalent .result-means-value { font-size: clamp(1rem, 2vw, 1.2rem); font-weight: 700; }
+  .result-means-intro {
+    text-align: center;
+    color: #475569;
+    margin: 0 0 1rem 0;
+    font-size: 1.05rem;
+  }
+  .result-means-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  @media (max-width: 600px) { .result-means-cards { grid-template-columns: 1fr; } }
+  .result-means-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    text-align: center;
+  }
+  .result-means-value { display: block; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; color: #0c4a6e; }
+  .result-means-label { font-size: 0.9rem; color: #64748b; }
+
+  .result-causes-section { margin-bottom: 2.5rem; }
+  .result-causes-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  .result-cause-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    border-left: 4px solid #0ea5e9;
+  }
+  .result-cause-title { font-size: 1.05rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0; }
+  .result-cause-hours { font-size: 0.9rem; color: #64748b; margin: 0; }
+
+  .result-before-after { margin-bottom: 2.5rem; }
+  .result-before-after-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  @media (max-width: 600px) { .result-before-after-grid { grid-template-columns: 1fr; } }
+  .result-ba-block {
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .result-ba-before { background: linear-gradient(135deg, #dc2626, #b91c1c); color: #fff; }
+  .result-ba-after { background: linear-gradient(135deg, #059669, #047857); color: #fff; }
+  .result-ba-result { background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff; }
+  .result-ba-label { display: block; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem; opacity: 0.95; }
+  .result-ba-value { display: block; font-size: clamp(1.25rem, 2.5vw, 1.75rem); font-weight: 800; }
+  .result-ba-sublabel { font-size: 0.85rem; opacity: 0.9; }
+
+  .result-emotional {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+  }
+  .result-emotional-text {
+    font-size: clamp(1.1rem, 2vw, 1.25rem);
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+  }
+  .result-services-section { margin: 3rem 0 2rem; }
+  .result-services-intro {
+    text-align: center;
+    color: #64748b;
+    margin: 0 0 1.5rem 0;
+    font-size: 1rem;
+  }
+  .result-services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  @media (max-width: 600px) {
+    .result-services-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+  }
+
+  /* ========== LEGACY HERO (mantener por si se usa en otra ruta) ========== */
   .result-hero-premium {
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
     border-radius: 24px;
@@ -1353,6 +1062,92 @@ try {
     box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
   }
   .result-cta-green-icon { font-size: 1.2rem; }
+
+  /* Desglose de ahorro */
+  .result-savings-breakdown { margin-bottom: 3rem; }
+  .result-savings-breakdown-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+  .result-savings-breakdown-item { display: flex; flex-direction: column; align-items: flex-start; }
+  .result-savings-breakdown-item .result-beneficio-metric { margin-bottom: 0.5rem; }
+
+  /* Proyección financiera */
+  .result-projection-section { margin-bottom: 3rem; }
+  .result-projection-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .result-projection-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .result-projection-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); }
+  .result-projection-value { display: block; font-size: 1.5rem; font-weight: 800; color: #0c4a6e; }
+  .result-projection-label { font-size: 0.875rem; color: #64748b; }
+
+  /* Equivalencias */
+  .result-equivalents-section { margin-bottom: 3rem; }
+  .result-equivalents-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+  .result-equivalent-item {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    text-align: center;
+  }
+  .result-equivalent-value { display: block; font-size: 1.35rem; font-weight: 700; color: #0369a1; }
+  .result-equivalent-label { font-size: 0.875rem; color: #0c4a6e; }
+
+  /* Plan de oportunidades (pasos) */
+  .result-opportunity-plan { margin-bottom: 3rem; }
+  .result-opportunity-plan-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .result-opportunity-plan-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .result-opportunity-plan-step:last-child { border-bottom: none; }
+  .result-opportunity-plan-step-num {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0ea5e9, #0369a1);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9375rem;
+  }
+  @media (max-width: 600px) {
+    .result-savings-breakdown-list { grid-template-columns: 1fr; }
+    .result-projection-cards { grid-template-columns: 1fr; }
+    .result-equivalents-list { flex-direction: column; }
+  }
 
   /* Reveal al scroll */
   .result-reveal {
