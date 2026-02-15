@@ -18,7 +18,6 @@ import {
 } from '../utils/conversationalDiagnostic';
 import { deriveDiagnosticInsights } from '../utils/diagnosticResultDerivation';
 import { createDiagnostic } from '../utils/backendClient';
-import { getIconFileName } from '../utils/iconMapping';
 import { 
   SERVICES, 
   SERVICE_CATEGORIES, 
@@ -1517,54 +1516,33 @@ export default function ConversationalDiagnosticWizard() {
                         zIndex: 1
                       }}>
                       {(() => {
-                        // Intentar usar icono de imagen si existe
-                        const iconFileName = currentQuestion ? getIconFileName(currentQuestion.id, option.value) : null;
-                        const iconPath = iconFileName ? `/images/icons/${iconFileName}` : null;
-                        
-                        // Si es una ruta de imagen (http, /, o archivo de icono)
+                        // Solo usar <img> si la opción trae una URL o ruta explícita (assets que sí existen)
                         if (typeof option.icon === 'string' && (option.icon.startsWith('http') || option.icon.startsWith('/'))) {
                           return <img 
                             src={option.icon} 
                             alt={option.label}
                             style={{ 
-                                width: '100%',
-                                height: '100%',
+                              width: '100%',
+                              height: '100%',
                               objectFit: 'contain',
-                                filter: isSelected ? 'brightness(0) invert(1)' : 'grayscale(100%) brightness(0)',
-                                opacity: isSelected ? 1 : 0.6
+                              filter: isSelected ? 'brightness(0) invert(1)' : 'grayscale(100%) brightness(0)',
+                              opacity: isSelected ? 1 : 0.6
                             }}
                           />;
                         }
-                        
-                        // Si tenemos un icono mapeado, intentar usarlo
-                        if (iconPath) {
-                          return <img 
-                            src={iconPath} 
-                            alt={option.label}
-                            style={{ 
-                                width: '100%',
-                                height: '100%',
-                              objectFit: 'contain',
-                                filter: isSelected ? 'brightness(0) invert(1)' : 'grayscale(100%) brightness(0)',
-                                opacity: isSelected ? 1 : 0.6
-                            }}
-                          />;
-                        }
-                        
-                          // Fallback a emoji
+                        // Siempre usar emoji de la opción (evita 404: /images/icons/*.png no existen en repo)
                         if (option.icon && typeof option.icon === 'string') {
                           const iconStr = option.icon;
-                            if (!iconStr.startsWith('http') && !iconStr.startsWith('/') && !iconStr.includes('.')) {
-                              return <span style={{ 
-                                fontSize: isMobile ? '3rem' : '4rem',
+                          if (!iconStr.startsWith('http') && !iconStr.startsWith('/') && !iconStr.includes('.')) {
+                            return <span style={{ 
+                              fontSize: isMobile ? '3rem' : '4rem',
                               display: 'inline-block',
-                                filter: isSelected ? 'brightness(0) invert(1)' : 'grayscale(100%) brightness(0)',
-                                opacity: isSelected ? 1 : 0.6
-                              }}>{option.icon}</span>;
-                            }
+                              filter: isSelected ? 'brightness(0) invert(1)' : 'grayscale(100%) brightness(0)',
+                              opacity: isSelected ? 1 : 0.6
+                            }}>{option.icon}</span>;
                           }
-                          
-                          return null;
+                        }
+                        return null;
                       })()}
                     </div>
                   )}
