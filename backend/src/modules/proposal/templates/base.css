@@ -94,6 +94,11 @@ body {
   margin-bottom: 24px;
 }
 
+/* Opciones de oferta (tipo web, sistema, combo): se ocultan si están vacías */
+.offer-options { margin-top: 0.35em; }
+.offer-options p { font-size: 10pt; color: var(--color-text-muted); margin: 0.2em 0; }
+.offer-options p:empty { display: none; }
+
 /* Cover letter - Page 1 */
 .cover-header {
   display: flex;

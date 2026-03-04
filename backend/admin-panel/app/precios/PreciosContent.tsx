@@ -21,6 +21,7 @@ export default function PreciosContent() {
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [includeInactive, setIncludeInactive] = useState(false);
   const [formData, setFormData] = useState<Partial<PricingConfig>>({
     price_type: 'customization_hour',
     base_price: 0,
@@ -30,7 +31,7 @@ export default function PreciosContent() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [includeInactive]);
 
   async function loadData() {
     setLoading(true);
@@ -50,7 +51,7 @@ export default function PreciosContent() {
       // Cargar pricing configs (puede fallar si no existe la tabla)
       let configsRes: { success: boolean; data: PricingConfig[] } = { success: true, data: [] };
       try {
-        configsRes = await getPricingConfigs();
+        configsRes = await getPricingConfigs(undefined, includeInactive);
       } catch (err: any) {
         console.warn('⚠️ Pricing configs no disponibles (puede ser normal si no se ha creado la tabla):', err.message);
         // No es crítico, continuar sin pricing configs
@@ -154,8 +155,17 @@ export default function PreciosContent() {
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Configuración de Precios</h1>
             <p className="text-gray-600 mt-1">
-              Gestiona los precios de templates, módulos y servicios
+              Gestiona los precios de templates, módulos y servicios. Usa <strong>Notas</strong> para distinguir varias tarifas del mismo tipo (ej. varias &quot;hora de personalización&quot;).
             </p>
+            <label className="mt-2 flex items-center gap-2 text-sm text-gray-600">
+              <input
+                type="checkbox"
+                checked={includeInactive}
+                onChange={(e) => setIncludeInactive(e.target.checked)}
+                className="rounded border-gray-300"
+              />
+              Incluir precios inactivos
+            </label>
           </div>
           <div className="flex items-center gap-4">
             <Link
@@ -197,6 +207,12 @@ export default function PreciosContent() {
                   <option value="maintenance_month">Mes de Mantenimiento</option>
                 </select>
               </div>
+
+              {['customization_hour', 'revision', 'support_hour', 'maintenance_month'].includes(formData.price_type || '') && (
+                <p className="md:col-span-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
+                  Si tienes varias tarifas del mismo tipo (ej. varios precios por hora de personalización), usa <strong>Notas</strong> para identificarlas (ej. &quot;Estándar&quot;, &quot;Premium&quot;, &quot;Contrato anual&quot;). Así en la lista podrás distinguir cada fila.
+                </p>
+              )}
 
               {(formData.price_type === 'template' || formData.price_type === 'module') && (
                 <>
@@ -538,7 +554,10 @@ export default function PreciosContent() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Item
+                        Item / Identificador
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Descripción / Notas
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Precio
@@ -556,11 +575,19 @@ export default function PreciosContent() {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {configs.map((config) => {
-                      const itemName = config.item_code || config.item_id || 'Global';
+                      const hasItem = config.item_code || config.item_id;
+                      const itemName = hasItem
+                        ? (config.item_code || String(config.item_id))
+                        : (config.notes?.trim()
+                            ? config.notes.slice(0, 50) + (config.notes.length > 50 ? '…' : '')
+                            : 'Global (sin descripción)');
                       return (
                         <tr key={config.id}>
-                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {itemName}
+                          <td className="px-4 py-4 text-sm text-gray-900 max-w-[180px]">
+                            <span className="font-medium">{hasItem ? itemName : 'Global'}</span>
+                          </td>
+                          <td className="px-4 py-4 text-sm text-gray-500 max-w-[240px]">
+                            {config.notes?.trim() ? config.notes : '—'}
                           </td>
                           <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
                             ${config.base_price.toLocaleString()}

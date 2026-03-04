@@ -1,4 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { readFile } from 'fs/promises';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as puppeteer from 'puppeteer';
 import { SupabaseService } from '../../common/supabase/supabase.service';
 import { SolutionTemplatesService } from '../solution-templates/solution-templates.service';
 import { PricingCalculatorService } from '../pricing-calculator/pricing-calculator.service';
@@ -7,6 +11,15 @@ import { CreateOrderDto, OrderStatus, ProjectType } from './dto/create-order.dto
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { OrderDto, OrderWithRelationsDto } from './dto/order.dto';
 import { CreateOrderFromDiagnosticDto } from './dto/create-order-from-diagnostic.dto';
+
+function escapeHtml(text: string): string {
+  if (!text) return '';
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 
 @Injectable()
 export class OrdersService {
@@ -834,6 +847,132 @@ export class OrdersService {
 
     if (error) {
       throw new Error(`Error deleting order: ${error.message}`);
+    }
+  }
+
+  /**
+   * Genera el PDF del Acta de entrega para una orden (completada o no).
+   * Estilo editorial, legal, con bloques de firma para cliente y proveedor.
+   */
+  async generateActaEntregaPdf(orderId: string): Promise<Buffer> {
+    const orderWithRelations = await this.getOrderById(orderId, true) as OrderWithRelationsDto;
+    const order = orderWithRelations as OrderDto;
+
+    const modules = orderWithRelations.modules || [];
+    const moduleNames = modules
+      .map((om: any) => om.solution_modules?.name || om.module_id)
+      .filter(Boolean);
+    const variables = this.buildActaEntregaVariables(order, moduleNames);
+
+    const templatePath = this.getActaEntregaTemplatePath();
+    let html = await readFile(templatePath, 'utf-8');
+    html = this.injectVariablesForActa(html, variables);
+
+    return this.generatePdfFromHtmlForActa(html);
+  }
+
+  private getActaEntregaTemplatePath(): string {
+    const fromSrc = path.join(process.cwd(), 'src', 'modules', 'orders', 'templates', 'acta-entrega', 'template.html');
+    const fromDist = path.join(process.cwd(), 'dist', 'modules', 'orders', 'templates', 'acta-entrega', 'template.html');
+    if (fs.existsSync(fromSrc)) return fromSrc;
+    return fromDist;
+  }
+
+  private buildActaEntregaVariables(order: OrderDto, moduleNames: string[]): Record<string, string> {
+    const completedAt = order.completed_at ? new Date(order.completed_at) : new Date();
+    const fechaEntrega = completedAt.toLocaleDateString('es-CL', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+    const fechaGeneracion = new Date().toLocaleDateString('es-CL', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+
+    const projectTypeLabels: Record<string, string> = {
+      web: 'Página web',
+      sistema: 'Sistema de gestión',
+      app: 'Aplicación',
+      combinado: 'Solución combinada (web + sistema)',
+    };
+    const projectTypeLabel = projectTypeLabels[order.project_type as string] || order.project_type || 'Proyecto';
+
+    const clientCompanyLine = order.client_company?.trim()
+      ? ` / ${order.client_company.trim()}`
+      : '';
+
+    let modulesSection = '';
+    if (moduleNames.length > 0) {
+      const listItems = moduleNames.map((n) => `<li>${escapeHtml(n)}</li>`).join('');
+      modulesSection = `<div class="section-title">Módulos incluidos</div><ul class="modules-list">${listItems}</ul>`;
+    } else {
+      modulesSection = '<p style="font-size: 10.5pt; color: #555;">No se detallaron módulos en esta orden.</p>';
+    }
+
+    const totalFormatted = `${Number(order.total_price).toLocaleString('es-CL')} ${order.currency || 'CLP'}`;
+    const warrantyBlock = order.warranty_text
+      ? `<p><strong>Garantía:</strong> ${escapeHtml(order.warranty_text)}</p>`
+      : '<p><strong>Garantía:</strong> Según términos acordados en la orden.</p>';
+    const maintenanceBlock = order.maintenance_policy
+      ? `<p><strong>Mantenimiento:</strong> ${escapeHtml(order.maintenance_policy)}</p>`
+      : '';
+    const exclusionsBlock = order.exclusions_text
+      ? escapeHtml(order.exclusions_text)
+      : 'Ninguna adicional a las indicadas en la orden.';
+
+    const scopeDescription = order.scope_description?.trim()
+      ? escapeHtml(order.scope_description.trim())
+      : 'Según alcance acordado en la orden y documentos asociados.';
+
+    return {
+      order_number: order.order_number || 'N/A',
+      client_name: escapeHtml(order.client_name || 'Cliente'),
+      client_company_line: escapeHtml(clientCompanyLine),
+      client_email: order.client_email?.trim() ? escapeHtml(order.client_email.trim()) : '—',
+      client_phone: order.client_phone?.trim() ? escapeHtml(order.client_phone.trim()) : '—',
+      fecha_entrega: fechaEntrega,
+      fecha_generacion: fechaGeneracion,
+      project_type_label: projectTypeLabel,
+      scope_description: scopeDescription,
+      modules_section: modulesSection,
+      total_formatted: totalFormatted,
+      warranty_block: warrantyBlock,
+      maintenance_block: maintenanceBlock,
+      exclusions_block: exclusionsBlock,
+    };
+  }
+
+  private injectVariablesForActa(html: string, variables: Record<string, string>): string {
+    let out = html;
+    for (const [key, value] of Object.entries(variables)) {
+      const re = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+      out = out.replace(re, () => value);
+    }
+    return out;
+  }
+
+  private async generatePdfFromHtmlForActa(html: string): Promise<Buffer> {
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+    });
+    try {
+      const page = await browser.newPage();
+      await page.setContent(html, {
+        waitUntil: 'load',
+        timeout: 60000,
+      });
+      await page.evaluate(() => document.fonts.ready);
+      const pdfBuffer = await page.pdf({
+        format: 'A4',
+        printBackground: true,
+        margin: { top: 0, right: 0, bottom: 0, left: 0 },
+      });
+      return Buffer.from(pdfBuffer);
+    } finally {
+      await browser.close();
     }
   }
 

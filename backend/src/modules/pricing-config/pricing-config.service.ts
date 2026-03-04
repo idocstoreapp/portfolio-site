@@ -20,18 +20,23 @@ export interface PricingConfig {
 export class PricingConfigService {
   constructor(private supabaseService: SupabaseService) {}
 
-  async getAllPricingConfigs(): Promise<PricingConfig[]> {
+  async getAllPricingConfigs(includeInactive = false): Promise<PricingConfig[]> {
     if (!this.supabaseService.isConfigured()) {
       throw new Error('Supabase is not configured');
     }
 
     const supabase = this.supabaseService.getAdminClient();
-    const { data, error } = await supabase
+    let query = supabase
       .from('pricing_config')
       .select('*')
-      .eq('is_active', true)
       .order('price_type', { ascending: true })
       .order('created_at', { ascending: false });
+
+    if (!includeInactive) {
+      query = query.eq('is_active', true);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       throw new Error(`Error fetching pricing configs: ${error.message}`);

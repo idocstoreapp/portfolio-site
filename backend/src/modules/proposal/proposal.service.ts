@@ -11,6 +11,7 @@ import { SupabaseService } from '../../common/supabase/supabase.service';
 import { createProposalsTable } from '../../database/migrations/create_proposals_table';
 import { createProposalTemplateBlocksTable } from '../../database/migrations/create_proposal_template_blocks';
 import { GeneratePdfDto } from './dto/generate-pdf.dto';
+import { PRICING_CATALOG, PlanKey, PlanConfig, ProductConfig } from './pricing-catalog';
 import * as puppeteer from 'puppeteer';
 
 const BUCKET_NAME = 'proposals';
@@ -66,8 +67,6 @@ export const TEMPLATE_META: Record<
 
 const DEFAULT_COLOR_PRIMARY = '#c41e3a';
 const DEFAULT_COLOR_SECONDARY = '#2d2d2d';
-
-import { PRICING_CATALOG, PlanKey, ProductConfig } from './pricing-catalog';
 
 const DEFAULT_TEMPLATE_BLOCKS: Record<string, Record<string, string>> = {
   generic: {
@@ -436,6 +435,26 @@ export class ProposalService implements OnModuleInit {
     const colorPrimary = dto.colorPrimary ?? '#c41e3a';
     const colorSecondary = dto.colorSecondary ?? '#2d2d2d';
     const formatPrice = (p: number) => p.toLocaleString('es-CL');
+    const tipoWeb = (dto.tipoWeb ?? '').trim() || undefined;
+    const tipoSistema = (dto.tipoSistema ?? '').trim() || undefined;
+    const conRoles = dto.conRoles === true;
+    const tipoOferta = (dto.tipoOferta ?? '').trim() || undefined;
+
+    const tipoWebLabels: Record<string, string> = {
+      landing: 'Landing (una página)',
+      'multi-pagina': 'Sitio multi-página',
+      catalogo: 'Sitio con catálogo online',
+    };
+    const tipoSistemaLabels: Record<string, string> = {
+      'un-local': 'Un local',
+      'multi-sucursal': 'Varias sucursales',
+    };
+    const tipoOfertaLabels: Record<string, string> = {
+      'solo-web': 'Solo web',
+      'solo-sistema': 'Solo sistema',
+      combo: 'Web + sistema (combo)',
+    };
+
     return {
       cliente,
       logoCliente: dto.logoCliente && dto.logoCliente.startsWith('data:') ? dto.logoCliente : DEFAULT_LOGO_CLIENTE,
@@ -451,6 +470,17 @@ export class ProposalService implements OnModuleInit {
       precioBasico: dto.precioBasico ?? formatPrice(plans.basic?.price ?? plans.pro?.price ?? 149000),
       precioProfesional: dto.precioProfesional ?? formatPrice(plans.pro?.price ?? plans.basic?.price ?? 497000),
       precioEnterprise: dto.precioEnterprise ?? formatPrice(plans.enterprise?.price ?? plans.pro?.price ?? 670000),
+      tipoWeb: tipoWeb ?? '',
+      tipoSistema: tipoSistema ?? '',
+      tipoOferta: tipoOferta ?? '',
+      tipoWebLabel: tipoWeb ? (tipoWebLabels[tipoWeb] ?? tipoWeb) : '',
+      tipoSistemaLabel: tipoSistema ? (tipoSistemaLabels[tipoSistema] ?? tipoSistema) : '',
+      rolesLabel: conRoles ? 'Incluye perfiles: admin, técnicos, recepción' : '',
+      tipoOfertaLabel: tipoOferta ? (tipoOfertaLabels[tipoOferta] ?? tipoOferta) : '',
+      bloque_catalogo_texto: tipoWeb === 'catalogo' ? 'Incluye catálogo online con productos y precios.' : '',
+      bloque_multi_sucursal_texto: tipoSistema === 'multi-sucursal' ? 'Incluye gestión por sucursal y reportes por local.' : '',
+      bloque_roles_texto: conRoles ? 'Incluye diferentes perfiles de usuario: admin, técnicos, recepción.' : '',
+      bloque_combo_texto: tipoOferta === 'combo' ? 'Esta propuesta incluye sitio web + sistema de gestión.' : '',
     };
   }
 

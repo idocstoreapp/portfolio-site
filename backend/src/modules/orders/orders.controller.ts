@@ -8,9 +8,11 @@ import {
   Param,
   Query,
   Req,
+  Res,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -20,6 +22,24 @@ import { OrderStatus } from './dto/create-order.dto';
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
+
+  /**
+   * GET /api/orders/:orderId/documents/acta-entrega
+   * Genera y descarga el PDF del Acta de entrega (estilo editorial, con firmas).
+   * Debe declararse antes de @Get(':id') para que la ruta sea correcta.
+   */
+  @Get(':orderId/documents/acta-entrega')
+  async getActaEntregaPdf(
+    @Param('orderId') orderId: string,
+    @Res() res: Response,
+  ) {
+    const pdfBuffer = await this.ordersService.generateActaEntregaPdf(orderId);
+    const order = await this.ordersService.getOrderById(orderId, false);
+    const filename = `Acta-de-entrega-${(order as any).order_number || orderId}.pdf`;
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send(pdfBuffer);
+  }
 
   /**
    * GET /api/orders

@@ -253,6 +253,14 @@ export async function getOrder(id: string): Promise<OrderResponse> {
 }
 
 /**
+ * URL para descargar el PDF del Acta de entrega de una orden.
+ * Abrir en nueva pestaña o usar como href de un enlace para descargar.
+ */
+export function getOrderActaEntregaUrl(orderId: string): string {
+  return `${BACKEND_URL}/api/orders/${orderId}/documents/acta-entrega`;
+}
+
+/**
  * Crea una nueva orden
  */
 export async function createOrder(data: CreateOrderRequest): Promise<OrderResponse> {
@@ -459,13 +467,18 @@ export interface PricingConfig {
   updated_at: string;
 }
 
-export async function getPricingConfigs(priceType?: string): Promise<{ success: boolean; data: PricingConfig[] }> {
-  const url = priceType 
-    ? `${BACKEND_URL}/api/pricing-config?price_type=${priceType}`
-    : `${BACKEND_URL}/api/pricing-config`;
-  
+export async function getPricingConfigs(
+  priceType?: string,
+  includeInactive?: boolean
+): Promise<{ success: boolean; data: PricingConfig[] }> {
+  const params = new URLSearchParams();
+  if (priceType) params.set('price_type', priceType);
+  if (includeInactive) params.set('include_inactive', 'true');
+  const qs = params.toString();
+  const url = `${BACKEND_URL}/api/pricing-config${qs ? `?${qs}` : ''}`;
+
   const response = await fetch(url);
-  
+
   if (!response.ok) {
     throw new Error(`Error fetching pricing configs: ${response.statusText}`);
   }

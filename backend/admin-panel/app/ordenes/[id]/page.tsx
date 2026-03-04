@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import AuthGuard from '@/components/auth/AuthGuard';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
-import { getOrder, getSolutionTemplate, type SolutionTemplate } from '@/lib/api';
+import { getOrder, getSolutionTemplate, getOrderActaEntregaUrl, type SolutionTemplate } from '@/lib/api';
 import type { Order } from '@/types/order';
 import Link from 'next/link';
 import { format } from 'date-fns';
@@ -291,16 +291,26 @@ export default function OrderDetailPage() {
                   </div>
                 </div>
 
-                {/* Generar Contrato PDF */}
+                {/* Generar Contrato PDF y Acta de Entrega */}
                 <div className="bg-white rounded-lg shadow-md p-6">
                   <h2 className="text-xl font-semibold text-gray-900 mb-4">Documentos</h2>
-                  <div className="space-y-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     <button
                       onClick={() => setShowPDFModal(true)}
                       className="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
                     >
                       📄 Generar Contrato PDF
                     </button>
+                    {order.status === 'completed' && (
+                      <a
+                        href={getOrderActaEntregaUrl(order.id)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-6 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors"
+                      >
+                        📋 Descargar Acta de Entrega
+                      </a>
+                    )}
                     {order.contract_pdf_url && (
                       <a
                         href={order.contract_pdf_url}

@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build && node -e \"require('fs').cpSync('src/modules/leads/scraper', 'dist/modules/leads/scraper', {recursive:true})\" && node -e \"require('fs').cpSync('src/modules/proposal/templates', 'dist/modules/proposal/templates', {recursive:true})\"",
+    "build": "nest build && node -e \"require('fs').cpSync('src/modules/leads/scraper', 'dist/modules/leads/scraper', {recursive:true})\" && node -e \"require('fs').cpSync('src/modules/proposal/templates', 'dist/modules/proposal/templates', {recursive:true})\" && node -e \"require('fs').cpSync('src/modules/orders/templates', 'dist/modules/orders/templates', {recursive:true})\"",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
     "rebuild": "npm run clean && npm run build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

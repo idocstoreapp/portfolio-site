@@ -6,12 +6,16 @@ export class PricingConfigController {
   constructor(private readonly pricingConfigService: PricingConfigService) {}
 
   @Get()
-  async getAll(@Query('price_type') priceType?: string) {
+  async getAll(
+    @Query('price_type') priceType?: string,
+    @Query('include_inactive') includeInactive?: string,
+  ) {
     if (priceType) {
       const config = await this.pricingConfigService.getPricingConfigByType(priceType);
       return { success: true, data: config };
     }
-    const configs = await this.pricingConfigService.getAllPricingConfigs();
+    const include = includeInactive === 'true' || includeInactive === '1';
+    const configs = await this.pricingConfigService.getAllPricingConfigs(include);
     return { success: true, data: configs };
   }
 

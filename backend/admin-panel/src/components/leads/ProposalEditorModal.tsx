@@ -23,6 +23,63 @@ function fileToDataUrl(file: File): Promise<string> {
   });
 }
 
+type MockupSlot = {
+  ref: React.RefObject<HTMLInputElement | null>;
+  value: string;
+  set: (v: string) => void;
+  label: string;
+  hint: string;
+};
+
+function getMockupSlots(
+  tipoNegocio: string,
+  tipoWeb: string,
+  tipoSistema: string,
+  conRoles: boolean,
+  tipoOferta: string,
+  refs: { mockup1Ref: React.RefObject<HTMLInputElement | null>; mockup2Ref: React.RefObject<HTMLInputElement | null>; mockup3Ref: React.RefObject<HTMLInputElement | null>; mockup4Ref: React.RefObject<HTMLInputElement | null>; mockup5Ref: React.RefObject<HTMLInputElement | null> },
+  values: { mockup1: string; mockup2: string; mockup3: string; mockup4: string; mockup5: string },
+  setters: { setMockup1: (v: string) => void; setMockup2: (v: string) => void; setMockup3: (v: string) => void; setMockup4: (v: string) => void; setMockup5: (v: string) => void },
+): MockupSlot[] {
+  const { mockup1Ref, mockup2Ref, mockup3Ref, mockup4Ref, mockup5Ref } = refs;
+  const { mockup1, mockup2, mockup3, mockup4, mockup5 } = values;
+  const { setMockup1, setMockup2, setMockup3, setMockup4, setMockup5 } = setters;
+
+  if (tipoNegocio === 'servicio-tecnico') {
+    return [
+      { ref: mockup1Ref, value: mockup1, set: setMockup1, label: 'Mockup móvil', hint: 'Prompt 4.0 · Portada · panel en celular' },
+      { ref: mockup2Ref, value: mockup2, set: setMockup2, label: 'Mockup escritorio', hint: 'Prompt 4.1 · Portada · panel de órdenes' },
+      { ref: mockup3Ref, value: mockup3, set: setMockup3, label: 'PDF orden de trabajo', hint: 'Prompt 4.3 · Pág 2 · cómo se ve el PDF' },
+      { ref: mockup4Ref, value: mockup4, set: setMockup4, label: 'Panel / detalle', hint: conRoles ? 'Prompt 4.2 o 4.5 · Pág 3 · detalle o usuarios y roles' : 'Prompt 4.1 o 4.2 · Pág 3 · panel o detalle' },
+      { ref: mockup5Ref, value: mockup5, set: setMockup5, label: 'Inventario o roles', hint: conRoles ? 'Prompt 4.5 · Pág 4 · usuarios y roles' : 'Prompt 4.4 · Pág 4 · inventario repuestos' },
+    ];
+  }
+  if (tipoNegocio === 'taller') {
+    return [
+      { ref: mockup1Ref, value: mockup1, set: setMockup1, label: 'Web móvil', hint: 'Prompt 3.2 · Portada y pág. 2 · web en celular' },
+      { ref: mockup2Ref, value: mockup2, set: setMockup2, label: 'Panel admin', hint: tipoSistema === 'multi-sucursal' ? 'Prompt 3.4 · Portada y pág. 3 · panel con sucursales' : 'Prompt 3.3 · Portada y pág. 3 · panel un local' },
+      { ref: mockup3Ref, value: mockup3, set: setMockup3, label: 'PDF orden de trabajo', hint: 'Prompt 3.6 · Portada y pág. 5 · PDF para el cliente' },
+      { ref: mockup4Ref, value: mockup4, set: setMockup4, label: 'Métricas / órdenes', hint: 'Prompt 3.8 · Pág. 4 · dashboard u órdenes' },
+      { ref: mockup5Ref, value: mockup5, set: setMockup5, label: 'Inventario o roles', hint: conRoles ? 'Prompt 3.9 · Pág. 5 · usuarios y roles' : 'Prompt 3.7 · Pág. 5 · inventario repuestos' },
+    ];
+  }
+  if (tipoNegocio === 'restaurante') {
+    return [
+      { ref: mockup1Ref, value: mockup1, set: setMockup1, label: 'Menú digital en móvil', hint: 'Prompt 2.1 · Portada y pág. 2 · menú QR comensal' },
+      { ref: mockup2Ref, value: mockup2, set: setMockup2, label: 'Panel mesas / pedidos', hint: 'Prompt 2.2 · Portada y pág. 3 · gestión mesas' },
+      { ref: mockup3Ref, value: mockup3, set: setMockup3, label: 'Métricas o boleta', hint: 'Prompt 2.3 o 2.4 · Pág. 4 · dashboard o boleta' },
+    ];
+  }
+  // generic (web)
+  const catalogo = tipoWeb === 'catalogo';
+  const multi = tipoWeb === 'multi-pagina';
+  return [
+    { ref: mockup2Ref, value: mockup2, set: setMockup2, label: 'Vista escritorio', hint: catalogo ? 'Prompt 1.4 · Portada · catálogo escritorio' : multi ? 'Prompt 1.3 · Portada · multi-página' : 'Prompt 1.1 · Portada · landing escritorio' },
+    { ref: mockup1Ref, value: mockup1, set: setMockup1, label: 'Vista móvil', hint: catalogo ? 'Prompt 1.5 · Portada · catálogo móvil' : 'Prompt 1.2 · Portada · landing móvil' },
+    { ref: mockup3Ref, value: mockup3, set: setMockup3, label: 'Sección interna / detalle', hint: catalogo ? 'Prompt 1.6 · Pág. 4 · detalle producto o sección' : 'Prompt 1.6 · Pág. 4 · servicios, contacto o catálogo' },
+  ];
+}
+
 export default function ProposalEditorModal({
   proposalId,
   businessName,
@@ -39,14 +96,27 @@ export default function ProposalEditorModal({
   const [colorPrimary, setColorPrimary] = useState('#c41e3a');
   const [colorSecondary, setColorSecondary] = useState('#2d2d2d');
   const [tipoNegocio, setTipoNegocio] = useState('generic');
+  const [tipoOferta, setTipoOferta] = useState<'solo-web' | 'solo-sistema' | 'combo'>('solo-web');
+  const [tipoWeb, setTipoWeb] = useState<'landing' | 'multi-pagina' | 'catalogo'>('landing');
+  const [tipoSistema, setTipoSistema] = useState<'un-local' | 'multi-sucursal'>('un-local');
+  const [conRoles, setConRoles] = useState(false);
   const [templateList, setTemplateList] = useState<TemplateItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const logoClienteRef = useRef<HTMLInputElement>(null);
 
+  const isSystemTemplate = tipoNegocio === 'taller' || tipoNegocio === 'servicio-tecnico' || tipoNegocio === 'restaurante';
+  const hasWeb = tipoOferta === 'solo-web' || tipoOferta === 'combo';
+  const hasSistema = tipoOferta === 'solo-sistema' || tipoOferta === 'combo';
+
   useEffect(() => {
     getTemplateList().then(setTemplateList).catch(() => setTemplateList([]));
   }, []);
+
+  useEffect(() => {
+    const isSystem = tipoNegocio === 'taller' || tipoNegocio === 'servicio-tecnico' || tipoNegocio === 'restaurante';
+    setTipoOferta(isSystem ? 'solo-sistema' : 'solo-web');
+  }, [tipoNegocio]);
   const logoTuRef = useRef<HTMLInputElement>(null);
   const mockup1Ref = useRef<HTMLInputElement>(null);
   const mockup2Ref = useRef<HTMLInputElement>(null);
@@ -76,6 +146,10 @@ export default function ProposalEditorModal({
         colorPrimary,
         colorSecondary,
         tipoNegocio,
+        tipoOferta,
+        tipoWeb: hasWeb ? tipoWeb : undefined,
+        tipoSistema: hasSistema && isSystemTemplate ? tipoSistema : undefined,
+        conRoles: hasSistema && isSystemTemplate ? conRoles : undefined,
       };
       if (logoCliente) payload.logoCliente = logoCliente;
       if (logoTu) payload.logoTu = logoTu;
@@ -149,6 +223,67 @@ export default function ProposalEditorModal({
             <p className="mt-1 text-xs text-gray-500">
               Restaurante = diseño cálido; Taller = industrial; Servicio técnico = azul; Genérica = web/app.
             </p>
+          </div>
+
+          {/* Opciones de la oferta: tipo web, tipo sistema, combo, roles */}
+          <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4 space-y-4">
+            <h3 className="text-sm font-semibold text-gray-800">Opciones de la oferta</h3>
+            {isSystemTemplate && (
+              <div>
+                <label className="mb-1 block text-xs font-medium text-gray-700">Qué incluye la oferta</label>
+                <select
+                  value={tipoOferta}
+                  onChange={(e) => setTipoOferta(e.target.value as 'solo-web' | 'solo-sistema' | 'combo')}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900"
+                >
+                  <option value="solo-sistema">Solo sistema (panel, órdenes, inventario)</option>
+                  <option value="combo">Combo: web + sistema</option>
+                </select>
+                <p className="mt-0.5 text-xs text-gray-500">Combo muestra en el PDF tanto la web como el sistema para justificar el valor.</p>
+              </div>
+            )}
+            {hasWeb && (
+              <div>
+                <label className="mb-1 block text-xs font-medium text-gray-700">Tipo de web</label>
+                <select
+                  value={tipoWeb}
+                  onChange={(e) => setTipoWeb(e.target.value as 'landing' | 'multi-pagina' | 'catalogo')}
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900"
+                >
+                  <option value="landing">Landing (una página)</option>
+                  <option value="multi-pagina">Multi-página (varias secciones)</option>
+                  <option value="catalogo">Con catálogo online</option>
+                </select>
+                <p className="mt-0.5 text-xs text-gray-500">Define qué mockups conviene subir (landing vs catálogo vs multi-página).</p>
+              </div>
+            )}
+            {hasSistema && isSystemTemplate && (
+              <>
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-gray-700">Alcance del sistema</label>
+                  <select
+                    value={tipoSistema}
+                    onChange={(e) => setTipoSistema(e.target.value as 'un-local' | 'multi-sucursal')}
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900"
+                  >
+                    <option value="un-local">Un solo local</option>
+                    <option value="multi-sucursal">Varias sucursales</option>
+                  </select>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    id="conRoles"
+                    type="checkbox"
+                    checked={conRoles}
+                    onChange={(e) => setConRoles(e.target.checked)}
+                    className="h-4 w-4 rounded border-gray-300"
+                  />
+                  <label htmlFor="conRoles" className="text-sm text-gray-700">
+                    Incluye roles (admin, técnicos, recepción, etc.)
+                  </label>
+                </div>
+              </>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -240,70 +375,19 @@ export default function ProposalEditorModal({
                 cliente.
               </p>
             )}
+            <p className="mb-2 text-xs text-gray-500">
+              Los números de prompt (ej. 1.1, 3.4) corresponden a la guía de mockups del proyecto (backend/src/modules/proposal/mockup-prompts.md). Úsalos para generar imágenes con IA si lo necesitas.
+            </p>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {(tipoNegocio === 'servicio-tecnico'
-                ? [
-                    { ref: mockup1Ref, value: mockup1, set: setMockup1, label: 'Mockup móvil', hint: 'Portada · vista en celular' },
-                    { ref: mockup2Ref, value: mockup2, set: setMockup2, label: 'Mockup escritorio', hint: 'Portada · vista en PC / panel' },
-                    { ref: mockup3Ref, value: mockup3, set: setMockup3, label: 'Muestra PDF orden de trabajo', hint: 'Pág 2 · vertical (cómo se verá el PDF)' },
-                    { ref: mockup4Ref, value: mockup4, set: setMockup4, label: 'Imagen página 3', hint: 'Ej. panel, dashboard, listado' },
-                    { ref: mockup5Ref, value: mockup5, set: setMockup5, label: 'Imagen página 4', hint: 'Ej. reportes, permisos, pantalla' },
-                  ]
-                : tipoNegocio === 'taller'
-                ? [
-                    { ref: mockup1Ref, value: mockup1, set: setMockup1, label: 'Web móvil', hint: 'Portada y pág. 2 · diseño web en celular' },
-                    { ref: mockup2Ref, value: mockup2, set: setMockup2, label: 'Panel admin / escritorio', hint: 'Portada y pág. 3 · catálogo e inventario' },
-                    { ref: mockup3Ref, value: mockup3, set: setMockup3, label: 'PDF orden de trabajo', hint: 'Portada y pág. 5 · cómo se ve el PDF al cliente' },
-                    { ref: mockup4Ref, value: mockup4, set: setMockup4, label: 'Métricas / órdenes en curso', hint: 'Pág. 4 · dashboard, lista de órdenes, ventas' },
-                    { ref: mockup5Ref, value: mockup5, set: setMockup5, label: 'Control de stock', hint: 'Pág. 5 · inventario de repuestos y accesorios' },
-                  ]
-                : tipoNegocio === 'restaurante'
-                ? [
-                    {
-                      ref: mockup1Ref,
-                      value: mockup1,
-                      set: setMockup1,
-                      label: 'Menú digital en móvil',
-                      hint: 'Portada y pág. 2 · menú QR como lo ve el comensal en su celular',
-                    },
-                    {
-                      ref: mockup2Ref,
-                      value: mockup2,
-                      set: setMockup2,
-                      label: 'Panel de mesas / pedidos (escritorio)',
-                      hint: 'Portada y pág. 3 · vista de gestión de mesas, pedidos y estados',
-                    },
-                    {
-                      ref: mockup3Ref,
-                      value: mockup3,
-                      set: setMockup3,
-                      label: 'Métricas, boletas y comandas',
-                      hint: 'Pág. 4 · dashboard de ventas o ejemplo de boleta/comanda PDF',
-                    },
-                  ]
-                : [
-                    {
-                      ref: mockup2Ref,
-                      value: mockup2,
-                      set: setMockup2,
-                      label: 'Vista escritorio (home)',
-                      hint: 'Portada · diseño de la página de inicio en escritorio',
-                    },
-                    {
-                      ref: mockup1Ref,
-                      value: mockup1,
-                      set: setMockup1,
-                      label: 'Vista móvil (home)',
-                      hint: 'Portada · cómo se ve la web en el celular',
-                    },
-                    {
-                      ref: mockup3Ref,
-                      value: mockup3,
-                      set: setMockup3,
-                      label: 'Sección interna / detalle',
-                      hint: 'Ej. página de servicios, contacto o catálogo',
-                    },
-                  ]
+              {getMockupSlots(
+                tipoNegocio,
+                tipoWeb,
+                tipoSistema,
+                conRoles,
+                tipoOferta,
+                { mockup1Ref, mockup2Ref, mockup3Ref, mockup4Ref, mockup5Ref },
+                { mockup1, mockup2, mockup3, mockup4, mockup5 },
+                { setMockup1, setMockup2, setMockup3, setMockup4, setMockup5 },
               ).map(({ ref: r, value, set, label, hint }) => (
                 <div key={label}>
                   <span className="block text-xs font-medium text-gray-700 mb-1">{label}</span>

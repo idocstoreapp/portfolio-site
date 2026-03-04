@@ -1,4 +1,4 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsBoolean } from 'class-validator';
 
 export class GeneratePdfDto {
   /** Data URL (base64) del logo del cliente */
@@ -46,6 +46,26 @@ export class GeneratePdfDto {
   @IsOptional()
   @IsString()
   tipoNegocio?: string;
+
+  /** Tipo de web (cuando hay web): landing | multi-pagina | catalogo */
+  @IsOptional()
+  @IsString()
+  tipoWeb?: string;
+
+  /** Tipo de sistema (cuando hay sistema): un-local | multi-sucursal */
+  @IsOptional()
+  @IsString()
+  tipoSistema?: string;
+
+  /** Si el sistema incluye roles (admin, técnicos, empleados): true | false */
+  @IsOptional()
+  @IsBoolean()
+  conRoles?: boolean;
+
+  /** Tipo de oferta: solo-web | solo-sistema | combo */
+  @IsOptional()
+  @IsString()
+  tipoOferta?: string;
 
   /** Precios en texto (ej: "150.000") */
   @IsOptional()

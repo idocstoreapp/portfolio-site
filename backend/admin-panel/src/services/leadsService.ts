@@ -107,6 +107,14 @@ export interface GeneratePdfPayload {
   colorPrimary?: string;
   colorSecondary?: string;
   tipoNegocio?: string;
+  /** landing | multi-pagina | catalogo (cuando hay web) */
+  tipoWeb?: string;
+  /** un-local | multi-sucursal (cuando hay sistema) */
+  tipoSistema?: string;
+  /** Si el sistema incluye roles (admin, técnicos, empleados) */
+  conRoles?: boolean;
+  /** solo-web | solo-sistema | combo */
+  tipoOferta?: string;
   precioBasico?: string;
   precioProfesional?: string;
   precioEnterprise?: string;
