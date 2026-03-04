@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Propuesta diseño web · {{cliente}}</title>
+  <link rel="stylesheet" href="../base.css" />
+  <style>
+    .proposal-page { --color-primary: {{colorPrimary}}; --color-secondary: {{colorSecondary}}; }
+  </style>
+</head>
+<body>
+  <!-- PÁGINA 1: Portada editorial – contenido y barra lateral en FLEX (nunca se superponen) -->
+  <section class="proposal-page web-cover">
+    <div class="client-logo-watermark" aria-hidden="true"><img src="{{logoCliente}}" alt="" /></div>
+
+    <header class="web-cover-header">
+      <div class="web-cover-logos">
+        <img src="{{logoCliente}}" alt="{{cliente}}" class="web-cover-logo-client" />
+        <img src="{{logoTu}}" alt="Maestro Digital" class="web-cover-logo-you" />
+      </div>
+      <div class="web-cover-title-block">
+        <p class="web-cover-pre">Propuesta de diseño web</p>
+        <h1 class="web-cover-h1">{{cliente}}</h1>
+        <p class="web-cover-sub">{{subtitle}}</p>
+      </div>
+    </header>
+
+    <div class="web-cover-wrap">
+      <div class="web-cover-main">
+        <!-- Fila 1: carta (izq) + mockup MÓVIL (derecha) – visible y repartido -->
+        <div class="web-cover-row web-cover-row-1">
+          <div class="web-cover-letter">{{cover_letter_text}}</div>
+          <div class="web-cover-mockup-cell web-cover-mockup-mobile">
+            <span class="web-mockup-label">Vista móvil</span>
+            <div class="web-mockup-frame"><img src="{{mockup1}}" alt="Web en móvil" /></div>
+          </div>
+        </div>
+        <!-- Fila 2: mockup ESCRITORIO (izq) + beneficios (derecha) -->
+        <div class="web-cover-row web-cover-row-2">
+          <div class="web-cover-mockup-cell web-cover-mockup-desktop">
+            <span class="web-mockup-label">Vista escritorio</span>
+            <div class="web-mockup-frame"><img src="{{mockup2}}" alt="Web en escritorio" /></div>
+          </div>
+          <div class="web-cover-benefits">{{page1_after_mockup}}</div>
+        </div>
+        <!-- Fila 3: tercer mockup (sección interna) centrado o a un lado -->
+        <div class="web-cover-row web-cover-row-3">
+          <div class="web-cover-extra-mockup">
+            <span class="web-mockup-label">Sección interna / detalle</span>
+            <div class="web-mockup-frame"><img src="{{mockup3}}" alt="Sección de la web" /></div>
+          </div>
+        </div>
+      </div>
+      <aside class="web-cover-sidebar">
+        <p class="web-sidebar-cta">¿Consultas?</p>
+        <p class="web-sidebar-text">Escanea y contacta por WhatsApp</p>
+        <div class="web-sidebar-qr">{{qr_html}}</div>
+        <p class="web-sidebar-contact">Jonathan Guarirapa<br/>+56 9 6261 4851</p>
+      </aside>
+    </div>
+    <div class="web-cover-footer">
+      <p class="web-cover-footer-line">Atentamente,</p>
+      <p class="web-cover-footer-name">Jonathan Guarirapa</p>
+    </div>
+  </section>
+
+  <!-- PÁGINA 2: Experiencia en escritorio – una imagen grande que llene -->
+  <section class="proposal-page web-inner">
+    <div class="web-inner-vbar"></div>
+    <div class="web-inner-header">
+      <h2 class="web-inner-h2">Así se ve en escritorio</h2>
+      <p class="web-inner-p">Diseño de la página de inicio o principal, adaptable a su identidad.</p>
+    </div>
+    <div class="web-inner-hero">
+      <img src="{{mockup2}}" alt="Vista escritorio de la web" />
+    </div>
+    <p class="web-inner-caption">Ejemplo de cómo podría verse la portada de su sitio en pantalla grande. Colores, textos y fotos se adaptan a su marca.</p>
+    <div class="web-inner-guide">
+      <h3 class="web-inner-guide-title">Qué suele llevar esta vista (guía para el mockup)</h3>
+      <p class="web-inner-guide-intro">Use esta lista como referencia al preparar o pedir la captura de escritorio para la propuesta.</p>
+      <ul class="web-inner-guide-list">
+        <li><strong>Hero / portada:</strong> imagen o video de fondo, título principal y un botón de llamada a la acción (ej. “Ver servicios”, “Contactar”).</li>
+        <li><strong>Bloque de servicios o productos:</strong> tarjetas o filas con ícono, título corto y descripción (2–4 ítems visibles sin scroll).</li>
+        <li><strong>Sección de confianza:</strong> testimonios, logos de clientes, cifras o garantías en una franja horizontal.</li>
+        <li><strong>Pie de página:</strong> enlaces (nosotros, contacto, legal), redes sociales y datos de contacto.</li>
+      </ul>
+    </div>
+    <div class="web-inner-highlights web-inner-highlights-desktop">
+      <div class="web-inner-chip">
+        <span class="web-inner-chip-title">Hero con llamada a la acción</span>
+        <span class="web-inner-chip-text">Botones claros para que el cliente sepa dónde hacer clic.</span>
+      </div>
+      <div class="web-inner-chip">
+        <span class="web-inner-chip-title">Bloques de servicios</span>
+        <span class="web-inner-chip-text">Secciones para mostrar qué ofrece su negocio.</span>
+      </div>
+      <div class="web-inner-chip">
+        <span class="web-inner-chip-title">Confianza</span>
+        <span class="web-inner-chip-text">Espacio para testimonios, logos de clientes o garantías.</span>
+      </div>
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 2 de 5</span></div>
+  </section>
+
+  <!-- PÁGINA 3: Experiencia en móvil – imagen grande -->
+  <section class="proposal-page web-inner">
+    <div class="web-inner-vbar"></div>
+    <div class="web-inner-header">
+      <h2 class="web-inner-h2">Así se ve en móvil</h2>
+      <p class="web-inner-p">La misma web, optimizada para celulares y tablets.</p>
+    </div>
+    <div class="web-inner-hero web-inner-hero-mobile">
+      <img src="{{mockup1}}" alt="Vista móvil de la web" />
+    </div>
+    <p class="web-inner-caption">Su sitio se verá bien en cualquier dispositivo; los visitantes pueden navegar desde el celular sin perder contenido.</p>
+    <div class="web-inner-guide">
+      <h3 class="web-inner-guide-title">Qué suele llevar esta vista (guía para el mockup)</h3>
+      <p class="web-inner-guide-intro">Use esta lista al preparar la captura móvil: misma página de inicio que en escritorio, pero adaptada a pantalla vertical.</p>
+      <ul class="web-inner-guide-list">
+        <li><strong>Header compacto:</strong> logo, menú hamburguesa y, si aplica, botón de llamada o WhatsApp fijo.</li>
+        <li><strong>Hero en vertical:</strong> título, subtítulo y un CTA principal; imagen que no ocupe toda la pantalla para que se vea el mensaje.</li>
+        <li><strong>Contenido en bloques:</strong> servicios o productos en lista o tarjetas apiladas; botones y enlaces con área táctil grande.</li>
+        <li><strong>Pie y contacto:</strong> enlaces esenciales, teléfono o WhatsApp con “tap to call” y redes sociales.</li>
+      </ul>
+    </div>
+    <div class="web-inner-highlights web-inner-highlights-mobile">
+      <div class="web-inner-chip">
+        <span class="web-inner-chip-title">Menús pensados para dedo</span>
+        <span class="web-inner-chip-text">Botones grandes, texto legible y navegación sencilla.</span>
+      </div>
+      <div class="web-inner-chip">
+        <span class="web-inner-chip-title">Carga rápida</span>
+        <span class="web-inner-chip-text">Imágenes optimizadas para que no se demore en abrir.</span>
+      </div>
+      <div class="web-inner-chip">
+        <span class="web-inner-chip-title">Acciones directas</span>
+        <span class="web-inner-chip-text">Llamar, escribir por WhatsApp o pedir desde el sitio.</span>
+      </div>
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 3 de 5</span></div>
+  </section>
+
+  <!-- PÁGINA 4: Secciones internas – imagen grande -->
+  <section class="proposal-page web-inner">
+    <div class="web-inner-vbar"></div>
+    <div class="web-inner-header">
+      <h2 class="web-inner-h2">Secciones internas</h2>
+      <p class="web-inner-p">Páginas de servicios, contacto, catálogo o las que necesite su negocio.</p>
+    </div>
+    <div class="web-inner-hero">
+      <img src="{{mockup3}}" alt="Sección interna de la web" />
+    </div>
+    <p class="web-inner-caption">Cada sección se diseña con la misma línea visual: menú, textos y llamados a la acción claros.</p>
+    <div class="web-inner-guide">
+      <h3 class="web-inner-guide-title">Qué suele llevar esta vista (guía para el mockup)</h3>
+      <p class="web-inner-guide-intro">Puede ser una página de servicio, contacto, catálogo o “sobre nosotros”. Use esta guía según el tipo de sección que quiera mostrar.</p>
+      <ul class="web-inner-guide-list">
+        <li><strong>Página de servicio o producto:</strong> título de la sección, imagen destacada, descripción en párrafos o listas y un CTA (ej. “Solicitar presupuesto”, “Agregar al carrito”).</li>
+        <li><strong>Contacto:</strong> formulario (nombre, correo, mensaje), teléfono, correo y/o botón de WhatsApp; opcional: mapa o horarios.</li>
+        <li><strong>Catálogo o listado:</strong> filtros o categorías, tarjetas con imagen, nombre, precio y enlace; paginación o “ver más” si aplica.</li>
+        <li><strong>Sobre nosotros:</strong> texto institucional, fotos del equipo o del local y enlaces a redes o contacto.</li>
+      </ul>
+    </div>
+    <div class="web-inner-highlights web-inner-highlights-internal">
+      <div class="web-inner-chip">
+        <span class="web-inner-chip-title">Servicios / productos</span>
+        <span class="web-inner-chip-text">Listado ordenado con fotos, descripciones y precios.</span>
+      </div>
+      <div class="web-inner-chip">
+        <span class="web-inner-chip-title">Formulario de contacto</span>
+        <span class="web-inner-chip-text">Para que las consultas lleguen directo a su correo o WhatsApp.</span>
+      </div>
+      <div class="web-inner-chip">
+        <span class="web-inner-chip-title">Información clave</span>
+        <span class="web-inner-chip-text">Horarios, dirección, mapa y enlaces a redes sociales.</span>
+      </div>
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 4 de 5</span></div>
+  </section>
+
+  <!-- PÁGINA 5: Propuesta final y precios -->
+  <section class="proposal-page web-final">
+    <div class="web-inner-vbar"></div>
+    <div class="web-final-main">
+      <h2 class="web-inner-h2">Propuesta final</h2>
+      <p class="web-inner-p">Pasos y precios</p>
+      <p class="body-text">{{body_text}}</p>
+      <div class="web-pricing">
+        <div class="web-price-card">
+          <h3>Básico</h3>
+          <div class="web-price">{{precioBasico}}</div>
+          <div class="web-price-unit">CLP</div>
+          <ul><li>Página web estática</li><li>Hasta 5 secciones</li><li>Formulario de contacto</li></ul>
+        </div>
+        <div class="web-price-card web-price-card-featured">
+          <span class="web-badge">Recomendado</span>
+          <h3>Profesional</h3>
+          <div class="web-price">{{precioProfesional}}</div>
+          <div class="web-price-unit">CLP</div>
+          <ul><li>Web con catálogo</li><li>Panel administrativo</li><li>WhatsApp integrado</li></ul>
+        </div>
+        <div class="web-price-card">
+          <h3>Enterprise</h3>
+          <div class="web-price">{{precioEnterprise}}</div>
+          <div class="web-price-unit">CLP</div>
+          <ul><li>Web + catálogo + más</li><li>Admin completo</li><li>Soporte prioritario</li></ul>
+        </div>
+      </div>
+      <div class="web-cta">
+        <p>Iniciar transformación</p>
+        <div class="web-cta-contact">Jonathan Guarirapa · +56 9 6261 4851 · WhatsApp</div>
+      </div>
+      <div class="web-signature">
+        <p>Atentamente,</p>
+        <p class="web-signature-name">Jonathan Guarirapa</p>
+      </div>
+      <p class="closing-message">{{closing_message}}</p>
+      <div class="footer-logos">
+        <img src="{{logoCliente}}" alt="{{cliente}}" class="footer-logo-client" />
+        <img src="{{logoTu}}" alt="Maestro Digital" class="footer-logo-you" />
+      </div>
+    </div>
+    <aside class="web-final-sidebar">
+      <p class="web-sidebar-cta">Escanea y contacta</p>
+      <div class="web-sidebar-qr">{{qr_html}}</div>
+    </aside>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 5 de 5</span></div>
+  </section>
+</body>
+</html>

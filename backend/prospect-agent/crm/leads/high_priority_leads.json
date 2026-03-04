@@ -1,0 +1,1028 @@
+[
+  {
+    "nombre": "CellHome",
+    "direccion": "San Diego 140, local 1, 8330250 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56933121479",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.2,
+    "reviews_count": 0,
+    "categoria": "Tienda de accesorios para móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 90,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas",
+      "Rating bajo (< 4.3)"
+    ]
+  },
+  {
+    "nombre": "PuntoApple San Miguel",
+    "direccion": "Gran Av. José Miguel Carrera 3840, Oficina 310 Piso 3, 8900000 San Miguel, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56937020577",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.1,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 90,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas",
+      "Rating bajo (< 4.3)"
+    ]
+  },
+  {
+    "nombre": "ALCA MOBILE CHILE",
+    "direccion": "PLACER 880, CALLE 6 CON 14, LOCAL 966, Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56922232854",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 3,
+    "reviews_count": 0,
+    "categoria": "Importador",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "DESCONOCIDO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": true,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 90,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas",
+      "Rating bajo (< 4.3)"
+    ]
+  },
+  {
+    "nombre": "smartfix",
+    "direccion": "Av Vitacura 6980, 7640538 Vitacura, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56945038065",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.4,
+    "reviews_count": 0,
+    "categoria": "Tienda de móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "DESCONOCIDO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "Epa Import Spa- Punto Blue Express",
+    "direccion": "Av. Manuel Antonio Matta 611, 8320000 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56978328500",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.8,
+    "reviews_count": 0,
+    "categoria": "Tienda de accesorios para móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "El Que Repara | Servicio Tecnico iPhone, Samsung. Reparación de Celulares",
+    "direccion": "Av. Vicuña Mackenna 601, Oficina Nº 4, 8330400 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56936754413",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.8,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "DESCONOCIDO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "Servicio Técnico Para Celulares Y Accesorios - Happy Phone Store",
+    "direccion": "Nataniel Cox 679, local 3, 8320000 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56954265304",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.5,
+    "reviews_count": 0,
+    "categoria": "Tienda de accesorios para móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "Touch movil",
+    "direccion": "Serrano 73, oficina 310, 8320000 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56936206349",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.9,
+    "reviews_count": 0,
+    "categoria": "Servicio de reparación de teléfonos",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "STFGLOBAL servicio tecnico celulares",
+    "direccion": "Catedral 1043, 8320351 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56999831962",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 5,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "DESCONOCIDO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "Phone Master | Servicio Técnico Especializado",
+    "direccion": "Monjitas 756, 8320000 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56951197690",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.9,
+    "reviews_count": 0,
+    "categoria": "Servicio de reparación de teléfonos",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "ABIERTO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "Servicio Técnico Movilwave",
+    "direccion": "Gral. Jofré 254, 8330151 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56999320058",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.8,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "DESCONOCIDO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "R-Store",
+    "direccion": "Serrano 73, oficina 903, 8320000 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56934276260",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.9,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "TECNOCITY",
+    "direccion": "Franklin Placer 932 Local 181-182 Santiago, 8361424, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56937065239",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.9,
+    "reviews_count": 0,
+    "categoria": "Servicio de reparación de teléfonos",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "DESCONOCIDO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "Ktech Servicio Tecnico",
+    "direccion": "8330214, San diego 144 , Local 4 Galería Mol Chileno, Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56979254968",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.6,
+    "reviews_count": 0,
+    "categoria": null,
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "LifeMax - Tecnologia + Servicio Tecnico",
+    "direccion": "San Diego 144, Local 15, 8330214 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56966263774",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.3,
+    "reviews_count": 0,
+    "categoria": "Tienda de informática",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "ABIERTO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "GSM Electronic",
+    "direccion": "Paseo Ahumada 85, local 110, 8360000 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+34627996286",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.9,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "Curso de Reparacion de Celulares - Uniphone Pro",
+    "direccion": "San Antonio 31, Oficina 502, 8320263 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56967193358",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 5,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "DESCONOCIDO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "sipho_chile",
+    "direccion": "San Diego 120, local 19, 8330250 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56991668911",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 5,
+    "reviews_count": 0,
+    "categoria": "Servicio de reparación de teléfonos",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "Reparación de celulares | Tecnópolis | Accesorios para celulares",
+    "direccion": "Av. Sta. Rosa 2260, Local 61, 8361351 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56965101319",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.9,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "Worldigital",
+    "direccion": "MERCED 547 - Merced 547, 8320108 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56931270556",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 5,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "My Phone Express: Reparación de Celulares Express. Nº1 en Chile",
+    "direccion": "Av. Nueva Providencia 1881, Oficina 1217 Piso 12, 7500000 Santiago, Providencia, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56966403242",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.8,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "IDocstore Santiago",
+    "direccion": "Moneda 1025, Local 123, 8320248 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56977524292",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.9,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "TECNIVEN SPA - VENTA DE REPUESTOS PARA TELEFONIA MOVIL Y SERVICIO TECNICO",
+    "direccion": "dentro de la Galeria Nueva COPACABANA - San Antonio 705, Local 22, 8320043 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": null,
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.4,
+    "reviews_count": 0,
+    "categoria": "Tienda de móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "Macinside",
+    "direccion": "Av. Providencia 2594, Local 206, 7510007 Providencia, Región Metropolitana",
+    "comuna": "Providencia",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56958316892",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 5,
+    "reviews_count": 0,
+    "categoria": "Servicio de reparación de teléfonos",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "Tecnocity Ñuñoa - Servicio Técnico de Celulares - Venta de Repuestos para Teléfonos",
+    "direccion": "Av. Pedro de Valdivia 3462, local 49A, 7750000 Ñuñoa, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56984950731",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.5,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "FonoShop Servicio Técnico | iPhone iPad Apple Samsung Xiaomi Android",
+    "direccion": "Av. Nueva Providencia 1881, Oficina 407 Piso 4, 7500520 Providencia, Región Metropolitana",
+    "comuna": "Providencia",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56976268660",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.7,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "ABIERTO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "E-lectra SpA, Ñuñoa",
+    "direccion": "Av. José Pedro Alessandri 98, 7760046 Ñuñoa, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56998449400",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.9,
+    "reviews_count": 0,
+    "categoria": null,
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "tuiPhone",
+    "direccion": "Av. Providencia 1650, 7500027 Santiago, Providencia, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56932268967",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.8,
+    "reviews_count": 0,
+    "categoria": "Tienda de móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "TECNOMOVIL - Servicio Técnico de Celulares, Tablets y Notebooks - Venta de Artículos Electrónicos - LOCAL 41 - 43 y 63.",
+    "direccion": "Av. Providencia 2169, Local 41 - 45, Providencia, Región Metropolitana",
+    "comuna": "Providencia",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56964442756",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.8,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "LB Store Chile Oficial",
+    "direccion": "Franklin 1374, 8320000 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56951839971",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 5,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "DESCONOCIDO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "Tecnoroa - Servicio técnico Celulares y Notebooks",
+    "direccion": "Av. Nueva Providencia 2260, Local 23, 7510086 Providencia, Región Metropolitana",
+    "comuna": "Providencia",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56936352977",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.9,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "Servicio tecnico Computacional Maxitec",
+    "direccion": "Serrano 73, oficina 810, 8330128 Santiago, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56922031899",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.9,
+    "reviews_count": 0,
+    "categoria": "Servicio de informática",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  },
+  {
+    "nombre": "Servicio técnico Smart Trónic Chile.",
+    "direccion": "Av. Vicuña Mackenna Poniente 6690, 8240000 La Florida, Región Metropolitana",
+    "comuna": "Santiago",
+    "ciudad": "Santiago",
+    "region": "Metropolitana",
+    "pais": "Chile",
+    "telefono": "+56975857387",
+    "website": null,
+    "website_reason": "no_button",
+    "rating": 4.6,
+    "reviews_count": 0,
+    "categoria": "Tienda de reparación de teléfonos móviles",
+    "coords": {
+      "lat": null,
+      "lng": null
+    },
+    "estado": "CERRADO",
+    "websiteAnalysis": null,
+    "reputation": {
+      "lowRating": false,
+      "fewReviews": true,
+      "hasNegativeWords": false
+    },
+    "score": 75,
+    "prioridad": "ALTA",
+    "reasons": [
+      "Sin website",
+      "Sin reseñas"
+    ]
+  }
+]

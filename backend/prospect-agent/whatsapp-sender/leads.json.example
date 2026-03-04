@@ -1,0 +1,12 @@
+[
+  {
+    "nombre": "Ejemplo 1",
+    "telefono": "+56912345678",
+    "categoria": "Servicio técnico"
+  },
+  {
+    "nombre": "Ejemplo 2",
+    "telefono": "56987654321",
+    "categoria": "Restaurante"
+  }
+]

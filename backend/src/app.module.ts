@@ -12,6 +12,8 @@ import { PricingConfigModule } from './modules/pricing-config/pricing-config.mod
 import { LegalTemplatesModule } from './modules/legal-templates/legal-templates.module';
 import { ChangeOrdersModule } from './modules/change-orders/change-orders.module';
 import { PricingCalculatorModule } from './modules/pricing-calculator/pricing-calculator.module';
+import { LeadsModule } from './modules/leads/leads.module';
+import { ProposalModule } from './modules/proposal/proposal.module';
 
 @Module({
   imports: [
@@ -33,6 +35,8 @@ import { PricingCalculatorModule } from './modules/pricing-calculator/pricing-ca
     LegalTemplatesModule,
     ChangeOrdersModule,
     PricingCalculatorModule,
+    LeadsModule,
+    ProposalModule,
   ],
 })
 export class AppModule {}

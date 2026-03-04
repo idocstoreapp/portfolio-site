@@ -1,0 +1,15 @@
+{
+  "name": "proposal-generator",
+  "version": "1.0.0",
+  "description": "High-end proposal PDF generation system",
+  "type": "module",
+  "main": "generate-proposal.js",
+  "scripts": {
+    "generate": "node generate-proposal.js",
+    "start": "node generate-proposal.js"
+  },
+  "dependencies": {
+    "node-vibrant": "^4.0.0",
+    "puppeteer": "^23.0.0"
+  }
+}

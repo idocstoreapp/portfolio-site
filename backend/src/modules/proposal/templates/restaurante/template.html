@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Propuesta restaurante · {{cliente}}</title>
+  <link rel="stylesheet" href="../base.css" />
+  <style>
+    .proposal-page { --color-primary: {{colorPrimary}}; --color-secondary: {{colorSecondary}}; }
+  </style>
+</head>
+<body>
+  <!-- PÁGINA 1: Portada editorial restaurante – flex, sin superposición -->
+  <section class="proposal-page rest-ed-cover">
+    <div class="client-logo-watermark" aria-hidden="true"><img src="{{logoCliente}}" alt="" /></div>
+    <div class="rest-ed-cover-franja"></div>
+
+    <header class="rest-ed-header">
+      <div class="rest-ed-logos">
+        <img src="{{logoCliente}}" alt="{{cliente}}" class="rest-ed-logo-client" />
+        <img src="{{logoTu}}" alt="Maestro Digital" class="rest-ed-logo-you" />
+      </div>
+      <div class="rest-ed-title-block">
+        <p class="rest-ed-pre">Propuesta para restaurante</p>
+        <h1 class="rest-ed-h1">{{cliente}}</h1>
+        <p class="rest-ed-sub">{{subtitle}}</p>
+      </div>
+    </header>
+
+    <div class="rest-ed-wrap">
+      <div class="rest-ed-main">
+        <div class="rest-ed-row rest-ed-row-1">
+          <div class="rest-ed-letter">{{cover_letter_text}}</div>
+          <div class="rest-ed-mockup-cell rest-ed-mockup-mobile">
+            <span class="rest-ed-mockup-label">Menú en mesa</span>
+            <div class="rest-ed-mockup-frame"><img src="{{mockup1}}" alt="Menú digital" /></div>
+          </div>
+        </div>
+        <div class="rest-ed-row rest-ed-row-2">
+          <div class="rest-ed-mockup-cell rest-ed-mockup-desktop">
+            <span class="rest-ed-mockup-label">Panel / pedidos</span>
+            <div class="rest-ed-mockup-frame"><img src="{{mockup2}}" alt="Panel restaurante" /></div>
+          </div>
+          <div class="rest-ed-benefits">{{page1_after_mockup}}</div>
+        </div>
+        <div class="rest-ed-row rest-ed-row-3">
+          <div class="rest-ed-extra-mockup">
+            <span class="rest-ed-mockup-label">Experiencia cliente</span>
+            <div class="rest-ed-mockup-frame"><img src="{{mockup3}}" alt="Experiencia digital" /></div>
+          </div>
+        </div>
+      </div>
+      <aside class="rest-ed-sidebar">
+        <p class="rest-ed-sidebar-cta">¿Consultas?</p>
+        <p class="rest-ed-sidebar-text">Escanea y contacta por WhatsApp</p>
+        <div class="rest-ed-sidebar-qr">{{qr_html}}</div>
+        <p class="rest-ed-sidebar-contact">Jonathan Guarirapa<br/>+56 9 6261 4851</p>
+        <p class="rest-ed-sidebar-warm">Su restaurante merece herramientas que sumen. En las siguientes páginas le mostramos cómo.</p>
+      </aside>
+    </div>
+    <div class="rest-ed-footer">
+      <p class="rest-ed-footer-note">Quedamos a su disposición para dudas o para agendar una llamada y revisar juntos.</p>
+      <p class="rest-ed-footer-line">Atentamente,</p>
+      <p class="rest-ed-footer-name">Jonathan Guarirapa</p>
+    </div>
+  </section>
+
+  <!-- PÁGINA 2: Menú digital – imagen grande + guía + chips -->
+  <section class="proposal-page rest-ed-inner">
+    <span class="rest-ed-pagenum" aria-hidden="true">01</span>
+    <div class="rest-ed-inner-vbar"></div>
+    <div class="rest-ed-inner-header">
+      <h2 class="rest-ed-inner-h2">Menú digital y experiencia en mesa</h2>
+      <p class="rest-ed-inner-p">QR en mesa, menú con fotos y precios, pedidos desde el celular del comensal.</p>
+    </div>
+    <div class="rest-ed-inner-hero">
+      <img src="{{mockup1}}" alt="Menú digital en dispositivo" />
+    </div>
+    <p class="rest-ed-inner-caption">Su menú siempre actualizado: categorías, platos, fotos y precios. El cliente escanea el QR, ve el menú y puede pedir desde su celular.</p>
+    <div class="rest-ed-guide">
+      <h3 class="rest-ed-guide-title">Qué suele llevar esta vista (guía para el mockup)</h3>
+      <p class="rest-ed-guide-intro">Use esta lista al preparar la captura del menú digital o de la experiencia en mesa.</p>
+      <ul class="rest-ed-guide-list">
+        <li><strong>Header:</strong> logo del restaurante y nombre del local.</li>
+        <li><strong>Categorías:</strong> entradas, platos de fondo, bebidas, postres; cada una con foto y breve descripción.</li>
+        <li><strong>Precios visibles:</strong> por plato o por sección, sin tener que entrar a cada ítem.</li>
+        <li><strong>Botón de pedir / agregar:</strong> llamada a la acción clara para que el comensal envíe el pedido a cocina o caja.</li>
+      </ul>
+    </div>
+    <div class="rest-ed-highlights">
+      <div class="rest-ed-chip"><span class="rest-ed-chip-title">Menú siempre al día</span><span class="rest-ed-chip-text">Cambios de precios y platos sin reimprimir.</span></div>
+      <div class="rest-ed-chip"><span class="rest-ed-chip-title">Menos errores</span><span class="rest-ed-chip-text">Pedido directo a cocina, sin intermediarios.</span></div>
+      <div class="rest-ed-chip"><span class="rest-ed-chip-title">Más ventas</span><span class="rest-ed-chip-text">Fotos y descripciones invitan a sumar platos.</span></div>
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 2 de 5</span></div>
+  </section>
+
+  <!-- PÁGINA 3: Panel y operación -->
+  <section class="proposal-page rest-ed-inner">
+    <span class="rest-ed-pagenum" aria-hidden="true">02</span>
+    <div class="rest-ed-inner-vbar"></div>
+    <div class="rest-ed-inner-header">
+      <h2 class="rest-ed-inner-h2">Panel y operación</h2>
+      <p class="rest-ed-inner-p">Pedidos en tiempo real, estado por mesa, cocina y caja en un solo lugar.</p>
+    </div>
+    <div class="rest-ed-inner-hero">
+      <img src="{{mockup2}}" alt="Panel de pedidos" />
+    </div>
+    <p class="rest-ed-inner-caption">Vista del panel donde se gestionan pedidos, mesas y flujo cocina–caja. Todo centralizado para que nada se pierda.</p>
+    <div class="rest-ed-guide">
+      <h3 class="rest-ed-guide-title">Qué suele llevar esta vista (guía para el mockup)</h3>
+      <p class="rest-ed-guide-intro">Captura del panel administrativo o de la pantalla de pedidos/cocina.</p>
+      <ul class="rest-ed-guide-list">
+        <li><strong>Lista de pedidos o mesas:</strong> estado (nuevo, en cocina, listo, entregado) y hora.</li>
+        <li><strong>Detalle del pedido:</strong> mesa, ítems, cantidades, observaciones y total.</li>
+        <li><strong>Acciones rápidas:</strong> marcar en preparación, listo para servir, cobrado.</li>
+        <li><strong>Resumen del día (opcional):</strong> cantidad de pedidos, venta acumulada o tickets.</li>
+      </ul>
+    </div>
+    <div class="rest-ed-highlights">
+      <div class="rest-ed-chip"><span class="rest-ed-chip-title">Todo en tiempo real</span><span class="rest-ed-chip-text">Cocina y caja ven lo mismo al instante.</span></div>
+      <div class="rest-ed-chip"><span class="rest-ed-chip-title">Menos esperas</span><span class="rest-ed-chip-text">Flujo claro para que los platos salgan ordenados.</span></div>
+      <div class="rest-ed-chip"><span class="rest-ed-chip-title">Reportes</span><span class="rest-ed-chip-text">Ventas por producto y por turno.</span></div>
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 3 de 5</span></div>
+  </section>
+
+  <!-- PÁGINA 4: Experiencia cliente / flujo completo -->
+  <section class="proposal-page rest-ed-inner">
+    <span class="rest-ed-pagenum" aria-hidden="true">03</span>
+    <div class="rest-ed-inner-vbar"></div>
+    <div class="rest-ed-inner-header">
+      <h2 class="rest-ed-inner-h2">Experiencia cliente y flujo completo</h2>
+      <p class="rest-ed-inner-p">Desde que el comensal escanea el QR hasta que paga: un solo flujo integrado.</p>
+    </div>
+    <div class="rest-ed-inner-hero">
+      <img src="{{mockup3}}" alt="Experiencia cliente" />
+    </div>
+    <p class="rest-ed-inner-caption">Puede ser la vista del menú en el celular del cliente, la pantalla de cocina o la de caja; lo importante es mostrar cómo se conectan pedido, cocina y pago.</p>
+    <div class="rest-ed-guide">
+      <h3 class="rest-ed-guide-title">Qué suele llevar esta vista (guía para el mockup)</h3>
+      <p class="rest-ed-guide-intro">Según lo que quiera destacar: app del comensal, pantalla cocina o caja, o resumen de flujo.</p>
+      <ul class="rest-ed-guide-list">
+        <li><strong>Si es vista comensal:</strong> carrito, resumen del pedido y opción de pedir ayuda o la cuenta.</li>
+        <li><strong>Si es vista cocina:</strong> tickets por mesa, ítems pendientes y botones para marcar listo.</li>
+        <li><strong>Si es vista caja:</strong> total por mesa, opciones de pago e impresión de cuenta o ticket.</li>
+      </ul>
+    </div>
+    <div class="rest-ed-highlights">
+      <div class="rest-ed-chip"><span class="rest-ed-chip-title">Un solo sistema</span><span class="rest-ed-chip-text">Menú, pedidos, cocina y caja conectados.</span></div>
+      <div class="rest-ed-chip"><span class="rest-ed-chip-title">Capacitación incluida</span><span class="rest-ed-chip-text">Su equipo aprende a usar el panel en poco tiempo.</span></div>
+      <div class="rest-ed-chip"><span class="rest-ed-chip-title">Soporte</span><span class="rest-ed-chip-text">Resolución de dudas y mejoras continuas.</span></div>
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 4 de 5</span></div>
+  </section>
+
+  <!-- PÁGINA 5: Propuesta final y precios -->
+  <section class="proposal-page rest-ed-final">
+    <span class="rest-ed-pagenum rest-ed-pagenum-final" aria-hidden="true">04</span>
+    <div class="rest-ed-inner-vbar"></div>
+    <div class="rest-ed-final-main">
+      <h2 class="rest-ed-inner-h2">Propuesta final</h2>
+      <p class="rest-ed-inner-p">Pasos y precios</p>
+      <p class="body-text">{{body_text}}</p>
+      <div class="rest-ed-pricing">
+        <div class="rest-ed-price-card">
+          <h3>Básico</h3>
+          <div class="rest-ed-price">{{precioBasico}}</div>
+          <div class="rest-ed-price-unit">CLP</div>
+          <ul><li>Menú digital estático</li><li>Hasta 5 categorías</li><li>QR en mesa</li></ul>
+        </div>
+        <div class="rest-ed-price-card rest-ed-price-card-featured">
+          <span class="rest-ed-badge">Recomendado</span>
+          <h3>Profesional</h3>
+          <div class="rest-ed-price">{{precioProfesional}}</div>
+          <div class="rest-ed-price-unit">CLP</div>
+          <ul><li>Menú + pedidos</li><li>Panel admin</li><li>WhatsApp integrado</li></ul>
+        </div>
+        <div class="rest-ed-price-card">
+          <h3>Enterprise</h3>
+          <div class="rest-ed-price">{{precioEnterprise}}</div>
+          <div class="rest-ed-price-unit">CLP</div>
+          <ul><li>Todo + cocina y caja</li><li>Múltiples sucursales</li><li>Soporte prioritario</li></ul>
+        </div>
+      </div>
+      <div class="rest-ed-cta">
+        <p>Iniciar transformación</p>
+        <div class="rest-ed-cta-contact">Jonathan Guarirapa · +56 9 6261 4851 · WhatsApp</div>
+      </div>
+      <div class="rest-ed-signature">
+        <p>Atentamente,</p>
+        <p class="rest-ed-signature-name">Jonathan Guarirapa</p>
+      </div>
+      <p class="closing-message">{{closing_message}}</p>
+      <div class="footer-logos">
+        <img src="{{logoCliente}}" alt="{{cliente}}" class="footer-logo-client" />
+        <img src="{{logoTu}}" alt="Maestro Digital" class="footer-logo-you" />
+      </div>
+    </div>
+    <aside class="rest-ed-final-sidebar">
+      <p class="rest-ed-sidebar-cta">Escanea y contacta</p>
+      <div class="rest-ed-sidebar-qr">{{qr_html}}</div>
+    </aside>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 5 de 5</span></div>
+  </section>
+</body>
+</html>

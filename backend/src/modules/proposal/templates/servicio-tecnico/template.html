@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evaluación y propuesta de sistema · {{cliente}}</title>
+  <link rel="stylesheet" href="../base.css" />
+  <style>
+    .proposal-page { --color-primary: {{colorPrimary}}; --color-secondary: {{colorSecondary}}; }
+  </style>
+</head>
+<body>
+  <!-- PÁGINA 1: barra azul al tope (logos + título), contenido blanco + barra lateral con QR -->
+  <section class="proposal-page svc-cover">
+    <div class="svc-diag svc-diag-bl" aria-hidden="true"></div>
+    <div class="client-logo-watermark" aria-hidden="true"><img src="{{logoCliente}}" alt="" /></div>
+
+    <!-- Barra azul desde el inicio de la hoja: logos grandes + título (sin espacio blanco arriba) -->
+    <header class="svc-cover-top">
+      <div class="svc-cover-top-inner">
+        <div class="svc-cover-logos">
+          <div class="svc-cover-logo-box"><img src="{{logoCliente}}" alt="{{cliente}}" class="svc-cover-logo-img" /></div>
+          <div class="svc-cover-logo-box svc-cover-logo-you-box"><img src="{{logoTu}}" alt="Maestro Digital" class="svc-cover-logo-img" /></div>
+        </div>
+        <p class="svc-cover-strip-pre">Evaluación y propuesta de sistema</p>
+        <h1 class="svc-cover-strip-title">{{cliente}}</h1>
+        <p class="svc-cover-strip-sub">{{subtitle}}</p>
+      </div>
+    </header>
+
+    <!-- Cuerpo blanco + barra lateral azul (QR y CTA). Mockups distribuidos entre el texto, estilo carta -->
+    <div class="svc-cover-wrap">
+      <div class="svc-cover-body">
+        <!-- Fila 1: carta (izq) + mockup móvil (der) -->
+        <div class="svc-cover-row svc-cover-row-1">
+          <div class="svc-letter">{{cover_letter_text}}</div>
+          <div class="svc-cover-mockup-wrap svc-cover-mockup-mobile">
+            <span class="svc-slot-label">Vista móvil</span>
+            <div class="svc-slot-inner"><img src="{{mockup1}}" alt="Aplicación en móvil" /></div>
+          </div>
+        </div>
+        <!-- Fila 2: mockup escritorio (izq) + beneficios (der) -->
+        <div class="svc-cover-row svc-cover-row-2">
+          <div class="svc-cover-mockup-wrap svc-cover-mockup-desktop">
+            <span class="svc-slot-label">Vista escritorio / panel</span>
+            <div class="svc-slot-inner"><img src="{{mockup2}}" alt="Panel en escritorio" /></div>
+          </div>
+          <div class="svc-cover-benefits">{{page1_after_mockup}}</div>
+        </div>
+        <!-- Franja inferior fija: rellena el hueco con resumen de la propuesta -->
+        <div class="svc-cover-bottom-strip">
+          <p class="svc-cover-bottom-title">Qué incluye esta propuesta</p>
+          <ul class="svc-cover-bottom-list">
+            <li>Configuración inicial del sistema para su servicio técnico de Netbook / Notebook, con los datos básicos de su negocio.</li>
+            <li>Puesta en marcha acompañada: trabajamos con 1 o 2 casos reales para que el equipo se familiarice con las órdenes y el panel.</li>
+            <li>Capacitación práctica para el equipo que usará el sistema (recepción, técnicos, administración).</li>
+            <li>Soporte para ajustes iniciales y mejoras según su forma real de trabajar, durante el período de implementación.</li>
+          </ul>
+        </div>
+        <div class="svc-cover-signature">
+          <p>Atentamente,</p>
+          <p class="svc-cover-signature-name">Jonathan Guarirapa</p>
+        </div>
+      </div>
+      <!-- Barra lateral: QR y llamado a la acción (nada se superpone aquí) -->
+      <aside class="svc-cover-sidebar">
+        <div class="svc-sidebar-cta-box">
+          <p class="svc-sidebar-cta-title">¿Consultas?</p>
+          <p class="svc-sidebar-cta-text">Escanea y contacta por WhatsApp</p>
+        </div>
+        <div class="svc-sidebar-qr">{{qr_html}}</div>
+        <p class="svc-sidebar-contact">Jonathan Guarirapa<br/>+56 9 6261 4851</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Página 2: Órdenes y seguimiento (una idea por página, con mockups) -->
+  <section class="proposal-page svc-page-inner">
+    <div class="svc-diag svc-diag-tr" aria-hidden="true"></div>
+    <div class="svc-vbar"></div>
+    <div class="svc-page-header">
+      <h2 class="svc-section-h2">Sistema de órdenes y seguimiento</h2>
+      <p class="svc-section-p">Órdenes de trabajo, clientes y seguimiento en una sola plataforma</p>
+      <p class="svc-section-intro">En esta sección se muestra cómo su equipo podrá crear órdenes de trabajo desde el celular o el panel, asignar técnicos, registrar repuestos y mantener el historial de cada cliente en un solo lugar. Las pantallas de ejemplo ilustran la experiencia en móvil y en escritorio.</p>
+    </div>
+    <div class="svc-card-grid">
+      <div class="svc-card">
+        <div class="svc-card-icon">O</div>
+        <h4>Órdenes de trabajo</h4>
+        <p>Cliente, equipo, servicio, repuestos y total en un solo documento.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-card-icon">P</div>
+        <h4>Panel administrativo</h4>
+        <p>Gestión de órdenes, técnicos y reportes en tiempo real.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-card-icon">C</div>
+        <h4>Clientes</h4>
+        <p>Historial de servicios y comunicación integrada.</p>
+      </div>
+    </div>
+    <div class="svc-page-mockups">
+      <div class="svc-page-slot">
+        <span class="svc-slot-label">Mockup móvil</span>
+        <img src="{{mockup1}}" alt="Órdenes en móvil" />
+      </div>
+      <div class="svc-page-slot svc-page-slot-wide">
+        <span class="svc-slot-label">Mockup escritorio</span>
+        <img src="{{mockup2}}" alt="Panel en escritorio" />
+      </div>
+    </div>
+    <div class="page-footer"><span>Evaluación y propuesta · {{cliente}}</span><span>Página 2 de 6</span></div>
+  </section>
+
+  <!-- Página 3: Generación del PDF de la orden de trabajo (texto + muestra del PDF para que se vea y lea bien) -->
+  <section class="proposal-page svc-page-inner svc-page-pdf">
+    <div class="svc-diag svc-diag-bl" aria-hidden="true"></div>
+    <div class="svc-vbar"></div>
+    <div class="svc-page-header">
+      <h2 class="svc-section-h2">Generación del PDF de la orden de trabajo</h2>
+      <p class="svc-section-p">Así se verá el documento que entrega el sistema al cliente</p>
+      <div class="svc-header-accent"></div>
+      <p class="svc-section-intro">Cada orden de trabajo puede imprimirse o enviarse como PDF profesional: con logo del negocio, datos del cliente, detalle del servicio, repuestos y total. El sistema genera este documento de forma automática para que el técnico o la recepción lo entreguen al cliente sin tener que escribir nada a mano. A continuación, una muestra de cómo se ve ese PDF.</p>
+    </div>
+    <div class="svc-page-pdf-block">
+      <div class="svc-page-pdf-slot">
+        <img src="{{mockup3}}" alt="Muestra del PDF de orden de trabajo" />
+      </div>
+      <p class="svc-page-pdf-note">Muestra del PDF generado por el sistema (orden de trabajo lista para imprimir o enviar por correo/WhatsApp).</p>
+    </div>
+    <div class="page-footer"><span>Evaluación y propuesta · {{cliente}}</span><span>Página 3 de 6</span></div>
+  </section>
+
+  <!-- Página 4: Sistema administrativo (más vida visual) -->
+  <section class="proposal-page svc-page-inner svc-page-highlight">
+    <div class="svc-diag svc-diag-bl" aria-hidden="true"></div>
+    <div class="svc-vbar"></div>
+    <div class="svc-page-header">
+      <h2 class="svc-section-h2">Sistema administrativo</h2>
+      <p class="svc-section-p">Control desde un solo panel</p>
+      <div class="svc-header-accent"></div>
+      <p class="svc-section-intro">El panel permite gestionar órdenes, clientes, técnicos y reportes desde un único acceso. Incluye dashboard con métricas en tiempo real, listados filtrables y exportación de datos. Todo pensado para que el responsable del servicio técnico tenga el control sin depender de planillas ni correos.</p>
+    </div>
+    <div class="svc-card-grid svc-card-grid-6">
+      <div class="svc-card"><div class="svc-card-icon">P</div><h4>Panel</h4><p>Dashboard y métricas</p></div>
+      <div class="svc-card"><div class="svc-card-icon">C</div><h4>Clientes</h4><p>Historial y gestión</p></div>
+      <div class="svc-card"><div class="svc-card-icon">O</div><h4>Órdenes</h4><p>Estados y seguimiento</p></div>
+      <div class="svc-card"><div class="svc-card-icon">D</div><h4>Dashboard</h4><p>Resúmenes en tiempo real</p></div>
+      <div class="svc-card"><div class="svc-card-icon">M</div><h4>Métricas</h4><p>Reportes exportables</p></div>
+      <div class="svc-card"><div class="svc-card-icon">+</div><h4>Más</h4><p>Escalable a su medida</p></div>
+    </div>
+    <div class="svc-page-visual">
+      <p class="svc-page-visual-label">Así se ve el panel</p>
+      <div class="svc-page-visual-mockup"><img src="{{mockup4}}" alt="Panel / dashboard" /></div>
+    </div>
+    <div class="page-footer"><span>Evaluación y propuesta · {{cliente}}</span><span>Página 4 de 6</span></div>
+  </section>
+
+  <!-- Página 5: Funcionalidades avanzadas -->
+  <section class="proposal-page svc-page-inner svc-page-highlight">
+    <div class="svc-diag svc-diag-tr" aria-hidden="true"></div>
+    <div class="svc-vbar"></div>
+    <div class="svc-page-header">
+      <h2 class="svc-section-h2">Funcionalidades avanzadas</h2>
+      <p class="svc-section-p">Seguridad, roles y control total</p>
+      <div class="svc-header-accent"></div>
+      <p class="svc-section-intro">La solución incluye roles (administrador, técnico, vendedor), permisos por pantalla y acción, y estadísticas para tomar decisiones. Además: auditoría de cambios, respaldos automáticos y opción de soporte técnico en planes superiores. Todo para que el negocio escale con tranquilidad.</p>
+    </div>
+    <div class="svc-card-grid">
+      <div class="svc-card"><div class="svc-card-icon">R</div><h4>Roles</h4><p>Admin, técnico, vendedor</p></div>
+      <div class="svc-card"><div class="svc-card-icon">P</div><h4>Permisos</h4><p>Por pantalla y acción</p></div>
+      <div class="svc-card"><div class="svc-card-icon">E</div><h4>Estadísticas</h4><p>Reportes y gráficos</p></div>
+    </div>
+    <div class="svc-alert">
+      <h4>Control total de su negocio</h4>
+      <ul>
+        <li>Auditoría de cambios y accesos</li>
+        <li>Respaldos automáticos</li>
+        <li>Soporte técnico en planes superiores</li>
+      </ul>
+    </div>
+    <div class="svc-page-visual">
+      <p class="svc-page-visual-label">Vista del sistema</p>
+      <div class="svc-page-visual-mockup"><img src="{{mockup5}}" alt="Reportes / permisos" /></div>
+    </div>
+    <div class="page-footer"><span>Evaluación y propuesta · {{cliente}}</span><span>Página 5 de 6</span></div>
+  </section>
+
+  <!-- Página 6: Propuesta final y precios -->
+  <section class="proposal-page svc-final">
+    <div class="svc-diag svc-diag-bl" aria-hidden="true"></div>
+    <div class="client-logo-watermark" aria-hidden="true"><img src="{{logoCliente}}" alt="" /></div>
+    <div class="svc-vbar"></div>
+    <div class="svc-final-main">
+      <div class="svc-page-header">
+        <h2 class="svc-section-h2">Propuesta final</h2>
+        <p class="svc-section-p">Pasos y precios</p>
+      </div>
+      <p class="body-text">{{body_text}}</p>
+      <div class="svc-pricing">
+        <div class="svc-price-card">
+          <h3>Básico</h3>
+          <div class="svc-price">{{precioBasico}}</div>
+          <div class="svc-price-unit">CLP</div>
+          <ul><li>Web estática</li><li>Hasta 5 secciones</li></ul>
+        </div>
+        <div class="svc-price-card svc-price-card-featured">
+          <span class="svc-badge">Recomendado</span>
+          <h3>Profesional</h3>
+          <div class="svc-price">{{precioProfesional}}</div>
+          <div class="svc-price-unit">CLP</div>
+          <ul><li>Órdenes + clientes</li><li>Panel admin</li><li>WhatsApp</li></ul>
+        </div>
+        <div class="svc-price-card">
+          <h3>Enterprise</h3>
+          <div class="svc-price">{{precioEnterprise}}</div>
+          <div class="svc-price-unit">CLP</div>
+          <ul><li>Todo + reportes</li><li>Soporte prioritario</li></ul>
+        </div>
+      </div>
+      <div class="svc-cta">
+        <p>Iniciar transformación</p>
+        <div class="svc-cta-contact">Jonathan Guarirapa · +56 9 6261 4851 · WhatsApp</div>
+      </div>
+      <p class="closing-message">{{closing_message}}</p>
+      <div class="footer-logos">
+        <img src="{{logoCliente}}" alt="{{cliente}}" class="footer-logo-client" />
+        <img src="{{logoTu}}" alt="Maestro Digital" class="footer-logo-you" />
+      </div>
+    </div>
+    <aside class="svc-sidebar">
+      <p class="svc-sidebar-cta">Escanea y contacta</p>
+      <div class="svc-sidebar-qr">{{qr_html}}</div>
+    </aside>
+    <div class="page-footer"><span>Evaluación y propuesta · {{cliente}}</span><span>Página 6 de 6</span></div>
+  </section>
+</body>
+</html>

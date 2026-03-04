@@ -1,10 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import * as express from 'express';
 import { AppModule } from './app.module';
 
+const BODY_LIMIT = '20mb';
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bodyParser: false });
+  app.use(express.json({ limit: BODY_LIMIT }));
+  app.use(express.urlencoded({ extended: true, limit: BODY_LIMIT }));
 
   // CORS: middleware que pone cabeceras en TODAS las respuestas (incl. 500)
   // Así el admin en Vercel puede ver errores aunque el backend falle

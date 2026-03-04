@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Propuesta para {{cliente}}</title>
+  <link rel="stylesheet" href="../base.css" />
+  <style>
+    .proposal-page { --color-primary: {{colorPrimary}}; --color-secondary: {{colorSecondary}}; }
+    .accent-bar, .cover-title-block, .sidebar--dark, .cta-section, .icon-box .icon, .pricing-card .price, .feature-card { border-left-color: {{colorPrimary}}; }
+    .cover-title-block, .sidebar--dark, .cta-section { background: {{colorPrimary}} !important; }
+    .icon-box .icon { background: {{colorPrimary}} !important; }
+    .pricing-card .price { color: {{colorPrimary}} !important; }
+  </style>
+</head>
+<body>
+  <!-- PAGE 1 - COVER LETTER -->
+  <section class="proposal-page has-sidebar">
+    <div class="accent-bar"></div>
+    <div class="cover-header">
+      <img src="{{logoCliente}}" alt="{{cliente}}" class="cover-logo-client" />
+      <img src="{{logoTu}}" alt="Logo" class="cover-logo-you" />
+    </div>
+    <div class="cover-title-block">
+      <h1 class="page-title">Propuesta personalizada para {{cliente}}</h1>
+      <p class="page-subtitle">{{subtitle}}</p>
+    </div>
+    <div class="cover-letter-text">
+      <span class="drop-cap">E</span>stimado equipo de {{cliente}}, es un gusto presentar esta propuesta personalizada para potenciar su negocio. Hemos preparado una solución a medida que incluye experiencia digital, sistema administrativo y funcionalidades avanzadas, con precios transparentes y un proceso claro. A continuación encontrará el detalle de cada módulo y la propuesta final.
+    </div>
+    <div class="cover-mockup-wrap">
+      <img src="{{mockup1}}" alt="Experiencia digital" />
+    </div>
+    <aside class="sidebar">
+      <p class="cta-text">Escanea y contacta</p>
+      <div class="qr-placeholder">QR WhatsApp</div>
+      <div class="contact-info">Jonathan Guarirapa<br/>+56 9 6261 4851</div>
+    </aside>
+  </section>
+
+  <!-- PAGE 2 - DIGITAL EXPERIENCE -->
+  <section class="proposal-page">
+    <div class="accent-bar"></div>
+    <h2 class="page-title page-title--accent">Experiencia Digital</h2>
+    <p class="page-subtitle page-subtitle--muted">Plataforma moderna y fácil de usar para sus clientes y su equipo</p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>Catálogo interactivo</h4>
+        <p>Exploración fluida de productos y servicios con filtros y búsqueda.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Panel administrativo</h4>
+        <p>Gestión centralizada de contenido, pedidos y reportes en tiempo real.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Contacto WhatsApp</h4>
+        <p>Integración directa para consultas rápidas y seguimiento de clientes.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Gestión de clientes</h4>
+        <p>Base de datos unificada con historial y comunicación integrada.</p>
+      </div>
+    </div>
+    <div class="mockup-row">
+      <img src="{{mockup1}}" alt="Mockup 1" />
+      <img src="{{mockup2}}" alt="Mockup 2" />
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 2 de 5</span></div>
+  </section>
+
+  <!-- PAGE 3 - SYSTEM FEATURES PART 1 -->
+  <section class="proposal-page">
+    <div class="accent-bar"></div>
+    <h2 class="page-title">Sistema Administrativo</h2>
+    <p class="page-subtitle page-subtitle--muted">Control total desde un solo panel</p>
+    <div class="icon-grid">
+      <div class="icon-box">
+        <div class="icon">P</div>
+        <h4>Panel admin</h4>
+        <p>Dashboard con métricas y accesos rápidos.</p>
+      </div>
+      <div class="icon-box">
+        <div class="icon">C</div>
+        <h4>Gestión clientes</h4>
+        <p>CRUD de clientes, historial y notas.</p>
+      </div>
+      <div class="icon-box">
+        <div class="icon">O</div>
+        <h4>Órdenes de trabajo</h4>
+        <p>Creación, estados y seguimiento.</p>
+      </div>
+      <div class="icon-box">
+        <div class="icon">D</div>
+        <h4>Dashboard</h4>
+        <p>Resúmenes y gráficos en tiempo real.</p>
+      </div>
+      <div class="icon-box">
+        <div class="icon">M</div>
+        <h4>Métricas</h4>
+        <p>Ventas, rendimiento y reportes.</p>
+      </div>
+      <div class="icon-box">
+        <div class="icon">+</div>
+        <h4>Más módulos</h4>
+        <p>Escalable según sus necesidades.</p>
+      </div>
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 3 de 5</span></div>
+  </section>
+
+  <!-- PAGE 4 - SYSTEM FEATURES PART 2 -->
+  <section class="proposal-page">
+    <div class="accent-bar"></div>
+    <h2 class="page-title">Funcionalidades avanzadas</h2>
+    <p class="page-subtitle page-subtitle--muted">Seguridad, roles y control total</p>
+    <div class="icon-grid">
+      <div class="icon-box">
+        <div class="icon">R</div>
+        <h4>Roles</h4>
+        <p>Administrador, técnico, vendedor, etc.</p>
+      </div>
+      <div class="icon-box">
+        <div class="icon">P</div>
+        <h4>Permisos</h4>
+        <p>Acceso por pantalla y por acción.</p>
+      </div>
+      <div class="icon-box">
+        <div class="icon">E</div>
+        <h4>Estadísticas</h4>
+        <p>Reportes exportables y gráficos.</p>
+      </div>
+    </div>
+    <div class="alert-box">
+      <h4>Control total de su negocio</h4>
+      <ul>
+        <li>Auditoría de cambios y accesos</li>
+        <li>Respaldos automáticos de información</li>
+        <li>Soporte técnico incluido en planes superiores</li>
+      </ul>
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 4 de 5</span></div>
+  </section>
+
+  <!-- PAGE 5 - FINAL PROPOSAL AND PRICING -->
+  <section class="proposal-page has-sidebar">
+    <div class="accent-bar"></div>
+    <h2 class="page-title page-title--accent">Propuesta final</h2>
+    <p class="page-subtitle page-subtitle--muted">Pasos y precios</p>
+    <p class="body-text">A continuación encontrará los planes disponibles. Cada uno incluye implementación, capacitación básica y soporte por correo. Los precios son referenciales y pueden ajustarse según alcance acordado.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <h3>Básico</h3>
+        <div class="price">{{precioBasico}}</div>
+        <div class="price-unit">CLP</div>
+        <ul>
+          <li>Página web estática</li>
+          <li>Hasta 5 secciones</li>
+          <li>Formulario de contacto</li>
+        </ul>
+      </div>
+      <div class="pricing-card pricing-card--featured">
+        <h3>Profesional</h3>
+        <div class="price">{{precioProfesional}}</div>
+        <div class="price-unit">CLP</div>
+        <ul>
+          <li>Web con catálogo</li>
+          <li>Panel administrativo</li>
+          <li>WhatsApp integrado</li>
+          <li>Hasta 50 productos</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <h3>Enterprise</h3>
+        <div class="price">{{precioEnterprise}}</div>
+        <div class="price-unit">CLP</div>
+        <ul>
+          <li>Web + catálogo + compra online</li>
+          <li>Admin completo</li>
+          <li>Órdenes de trabajo</li>
+          <li>Soporte prioritario</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cta-section">
+      <p>Iniciar transformación</p>
+      <div class="contact">Jonathan Guarirapa · +56 9 6261 4851 · WhatsApp</div>
+    </div>
+    <p class="closing-message">Espero con entusiasmo su pronta respuesta para avanzar en este proyecto. Quedo atento a cualquier consulta.</p>
+    <aside class="sidebar sidebar--dark">
+      <p class="cta-text">Escanea y contacta</p>
+      <div class="qr-placeholder" style="background:#fff;">QR WhatsApp</div>
+    </aside>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 5 de 5</span></div>
+  </section>
+</body>
+</html>

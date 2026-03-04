@@ -1,0 +1,755 @@
+/* ========== SERVICIO TÉCNICO: diseño editorial (diagonales, bloques, slots móvil/escritorio) ========== */
+body.theme-servicio-tecnico { --color-bg: #f8fafc; --color-border: #c5d4e4; }
+
+/* Diagonales decorativas (estilo MiMoto: franjas en esquinas) */
+.svc-diag {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+.svc-diag-tr {
+  right: -50px;
+  top: -20%;
+  width: 220px;
+  height: 140%;
+  background: var(--color-primary);
+  transform: skewY(-9deg);
+  opacity: 0.9;
+}
+.svc-diag-bl {
+  left: -40px;
+  top: 50%;
+  width: 160px;
+  height: 100%;
+  background: var(--color-secondary);
+  transform: skewY(7deg);
+  opacity: 0.2;
+}
+
+/* ========== PORTADA: debe caber en UNA sola página A4 (evitar que se rompa y desborde a pág 2) ========== */
+.svc-cover {
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  padding-right: 20px !important; /* Evitar que la barra lateral se corte en el borde de la hoja */
+  position: relative;
+  overflow: hidden;
+  max-height: 297mm;
+  min-height: 297mm;
+  height: 297mm;
+  box-sizing: border-box;
+}
+.svc-cover .svc-diag-bl { top: 40%; }
+/* Barra azul desde el inicio de la hoja: sin espacio blanco arriba */
+.svc-cover-top {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  color: #fff;
+  padding: 8px var(--page-padding) 10px;
+  margin-left: calc(-1 * var(--page-padding));
+  margin-right: calc(-1 * var(--page-padding));
+  margin-bottom: 0;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+}
+.svc-cover-top-inner {
+  max-width: 100%;
+}
+/* Logos dentro de la barra (compactos para que quepa todo en 1 página) */
+.svc-cover-logos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  gap: 10px;
+}
+.svc-cover-logo-box {
+  background: rgba(255,255,255,0.95);
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+}
+.svc-cover-logo-you-box {
+  min-height: 40px;
+}
+.svc-cover-logo-img {
+  max-height: 40px;
+  max-width: 140px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+.svc-cover-top .svc-cover-logo-you-box .svc-cover-logo-img {
+  max-height: 44px;
+  max-width: 160px;
+}
+.svc-cover-strip-pre {
+  font-size: 10pt;
+  color: rgba(255,255,255,0.92);
+  margin: 0 0 4px 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.svc-cover-top .svc-cover-strip-title {
+  font-size: 14pt;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 1px 0;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.svc-cover-top .svc-cover-strip-sub {
+  font-size: 8pt;
+  color: rgba(255,255,255,0.95);
+  margin: 0;
+  font-weight: 600;
+}
+/* Cuerpo blanco + barra lateral: el texto NUNCA se superpone a la barra */
+.svc-cover-wrap {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  gap: 20px;
+}
+.svc-cover-body {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: calc(100% - 148px);
+  padding: 18px var(--page-padding) 24px 22px;
+  padding-right: 24px;
+  background: rgba(255,255,255,0.82);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+/* Carta con mockups: rellenar mejor la hoja (fila 1 = texto + móvil, fila 2 = escritorio + beneficios) */
+.svc-cover-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px 18px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+.svc-cover-row-2 {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  margin-bottom: 0;
+  margin-top: 4px;
+}
+.svc-cover-row .svc-letter {
+  margin-bottom: 0;
+  /* Aprovechar la hoja: más texto visible; si sobra, se recorta suavemente */
+  max-height: 20em;
+  overflow: hidden;
+}
+.svc-letter {
+  font-size: 9.5pt;
+  line-height: 1.55;
+  color: var(--color-text);
+  min-width: 0;
+}
+.svc-letter .drop-cap {
+  font-size: 38pt;
+  font-weight: 700;
+  color: var(--color-primary);
+  float: left;
+  line-height: 0.85;
+  margin-right: 6px;
+  margin-top: 0;
+}
+.svc-cover-mockup-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.svc-cover-mockup-wrap .svc-slot-inner {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  background: #fff;
+  border: 2px solid var(--color-border);
+}
+.svc-cover-mockup-mobile .svc-slot-inner {
+  max-width: 120px;
+  max-height: 200px;
+}
+.svc-cover-mockup-mobile .svc-slot-inner img {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  object-fit: cover;
+  display: block;
+}
+.svc-cover-mockup-desktop .svc-slot-inner {
+  max-width: 260px;
+  max-height: 165px;
+}
+.svc-cover-mockup-desktop .svc-slot-inner img {
+  width: 100%;
+  height: auto;
+  max-height: 165px;
+  object-fit: contain;
+  display: block;
+}
+.svc-cover-mockup-wrap .svc-slot-label {
+  font-size: 8.5pt;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.svc-cover-benefits {
+  min-width: 0;
+}
+.svc-cover-benefits .cover-benefits {
+  margin: 0;
+  padding-left: 1.2em;
+}
+.svc-cover-benefits .cover-benefits {
+  font-size: 9pt;
+}
+.svc-cover-benefits .cover-benefits li {
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+/* Franja inferior fija en portada: rellena el espacio y resume la propuesta */
+.svc-cover-bottom-strip {
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(37,99,235,0.06) 0%, rgba(15,23,42,0.06) 100%);
+  border-left: 4px solid var(--color-primary);
+  border-radius: 0 10px 10px 0;
+}
+.svc-cover-bottom-title {
+  margin: 0 0 4px 0;
+  font-size: 9.5pt;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.svc-cover-bottom-list {
+  margin: 0;
+  padding-left: 1.1em;
+  font-size: 9.3pt;
+  color: var(--color-text);
+}
+.svc-cover-bottom-list li {
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+.svc-cover-signature {
+  margin-top: 8px;
+  font-size: 9pt;
+  color: var(--color-text);
+}
+.svc-cover-signature p {
+  margin: 0;
+}
+.svc-cover-signature-name {
+  margin-top: 2px;
+  font-weight: 600;
+}
+/* Logo del cliente como watermark en portada y página final: que se vea (no tapado por fondo) */
+body.theme-servicio-tecnico .svc-cover .client-logo-watermark,
+body.theme-servicio-tecnico .svc-final .client-logo-watermark {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+body.theme-servicio-tecnico .svc-cover .client-logo-watermark img,
+body.theme-servicio-tecnico .svc-final .client-logo-watermark img {
+  max-width: 70%;
+  max-height: 70%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  opacity: 0.22;
+}
+/* Barra lateral: fija a la derecha, nunca tapa el texto */
+.svc-cover-sidebar {
+  flex: 0 0 128px;
+  width: 128px;
+  min-width: 128px;
+  background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  box-shadow: -4px 0 20px rgba(0,0,0,0.08);
+}
+.svc-sidebar-cta-box {
+  background: rgba(255,255,255,0.2);
+  border: 2px solid rgba(255,255,255,0.5);
+  border-radius: 10px;
+  padding: 12px 10px;
+  text-align: center;
+}
+.svc-sidebar-cta-title {
+  font-size: 11pt;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 4px 0;
+}
+.svc-sidebar-cta-text {
+  font-size: 8pt;
+  color: rgba(255,255,255,0.95);
+  margin: 0;
+  font-weight: 600;
+}
+.svc-cover-sidebar .svc-sidebar-qr .qr-placeholder {
+  width: 68px;
+  height: 68px;
+  background: #fff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 7pt;
+  color: #666;
+}
+.svc-cover-sidebar .svc-sidebar-qr .qr-image {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #fff;
+}
+.svc-sidebar-contact {
+  font-size: 8pt;
+  color: rgba(255,255,255,0.95);
+  text-align: center;
+  margin: 0;
+  line-height: 1.4;
+}
+/* Pie: logos en páginas interiores */
+body.theme-servicio-tecnico .footer-logo-you,
+body.theme-servicio-tecnico .footer-logo-client {
+  max-height: 52px;
+  max-width: 160px;
+}
+/* Página 3: Generación del PDF (texto + imagen que quepa y se lea en una sola página) */
+.svc-page-pdf .svc-section-intro {
+  margin-bottom: 20px;
+}
+.svc-page-pdf-block {
+  margin-top: 16px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-left: 4px solid var(--color-primary);
+  border-radius: 0 12px 12px 0;
+  position: relative;
+  z-index: 1;
+}
+/* Imagen grande para rellenar la mitad inferior de la página 3 */
+.svc-page-pdf-slot {
+  max-width: 320px;
+  width: 100%;
+  max-height: 185mm;
+  margin: 0 auto 16px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  border: 2px solid var(--color-border);
+  background: #fff;
+}
+.svc-page-pdf-slot img {
+  width: 100%;
+  height: auto;
+  max-height: 185mm;
+  object-fit: contain;
+  object-position: center top;
+  display: block;
+}
+.svc-page-pdf-note {
+  font-size: 9pt;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* Páginas internas */
+.svc-page-inner {
+  position: relative;
+  overflow: hidden;
+}
+.svc-page-inner .svc-diag {
+  z-index: 0;
+}
+.svc-vbar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  border-radius: 0 4px 4px 0;
+  z-index: 1;
+}
+.svc-page-header {
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+}
+.svc-section-h2 {
+  font-size: 22pt;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+.svc-section-p {
+  font-size: 11pt;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
+}
+.svc-header-accent {
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+.svc-page-highlight .svc-section-intro {
+  background: linear-gradient(135deg, #eef2f7 0%, #f8fafc 100%);
+  border-left-color: var(--color-primary);
+}
+.svc-page-highlight .svc-card {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  border-left-width: 6px;
+}
+.svc-page-highlight .svc-alert {
+  background: linear-gradient(135deg, #eef2f7 0%, #f1f5f9 100%);
+  border-left-width: 6px;
+}
+/* Bloque de imagen en páginas 3 y 4 para que no queden solo texto */
+.svc-page-visual {
+  margin-top: 28px;
+  position: relative;
+  z-index: 1;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, rgba(37,99,235,0.05) 0%, rgba(15,23,42,0.05) 100%);
+  border-radius: 0 14px 14px 0;
+  border-left: 4px solid var(--color-primary);
+}
+.svc-page-visual-label {
+  font-size: 10pt;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.svc-page-visual-mockup {
+  max-width: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  border: 2px solid var(--color-border);
+  background: #fff;
+}
+.svc-page-visual-mockup img {
+  width: 100%;
+  height: auto;
+  max-height: 260px;
+  object-fit: contain;
+  display: block;
+}
+.svc-section-intro {
+  font-size: 10pt;
+  color: var(--color-text);
+  line-height: 1.6;
+  max-width: 95%;
+  margin-bottom: 24px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-left: 4px solid var(--color-primary);
+  border-radius: 0 10px 10px 0;
+}
+.svc-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 24px 0;
+  position: relative;
+  z-index: 1;
+}
+.svc-card-grid-6 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.svc-card {
+  padding: 24px 20px;
+  background: #fff;
+  border: 2px solid var(--color-border);
+  border-left: 5px solid var(--color-primary);
+  border-radius: 0 12px 12px 0;
+  text-align: left;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+.svc-card-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 14px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 20pt;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+.svc-card h4 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 8px 0;
+}
+.svc-card p {
+  font-size: 9.5pt;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Mockups en páginas internas: más grandes y con fondo para que no se vean vacías */
+.svc-page-mockups {
+  display: flex;
+  gap: 28px;
+  align-items: flex-end;
+  margin-top: 28px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+  padding: 24px 28px;
+  background: linear-gradient(135deg, rgba(37,99,235,0.04) 0%, rgba(15,23,42,0.04) 100%);
+  border-radius: 0 16px 16px 0;
+  border-left: 4px solid var(--color-primary);
+}
+.svc-page-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.svc-page-slot .svc-slot-label {
+  font-size: 9pt;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.svc-page-slot img {
+  max-height: 220px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  border: 2px solid var(--color-border);
+}
+.svc-page-slot-wide img {
+  max-height: 220px;
+  max-width: 380px;
+}
+
+.svc-alert {
+  background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+  border: 2px solid var(--color-border);
+  border-left: 6px solid var(--color-primary);
+  padding: 24px 28px;
+  margin: 24px 0;
+  border-radius: 0 12px 12px 0;
+  position: relative;
+  z-index: 1;
+}
+.svc-alert h4 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 12px 0;
+}
+.svc-alert ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.svc-alert li {
+  font-size: 9.5pt;
+  color: var(--color-text-muted);
+  padding: 5px 0;
+  padding-left: 20px;
+  position: relative;
+}
+.svc-alert li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 6px;
+  height: 6px;
+  background: var(--color-primary);
+  border-radius: 50%;
+}
+
+/* Página 5 */
+.svc-final {
+  display: flex;
+  flex-direction: row;
+  padding-right: 0 !important;
+  position: relative;
+  overflow: hidden;
+}
+.svc-final .svc-diag { z-index: 0; }
+.svc-final .client-logo-watermark { z-index: 0; }
+.svc-final .svc-vbar { z-index: 1; }
+.svc-final-main {
+  flex: 1;
+  padding-right: 28px;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+  background: rgba(255,255,255,0.88);
+}
+.svc-sidebar {
+  width: 120px;
+  min-height: 200px;
+  background: linear-gradient(180deg, var(--color-secondary) 0%, #1e293b 100%);
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 0 12px 12px 0;
+  position: relative;
+  z-index: 1;
+}
+.svc-sidebar-cta {
+  font-size: 9pt;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.svc-sidebar-qr .qr-placeholder {
+  width: 80px;
+  height: 80px;
+  background: #fff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8pt;
+  color: #666;
+}
+.svc-sidebar-qr .qr-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #fff;
+}
+.svc-pricing {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 24px 0;
+}
+.svc-price-card {
+  padding: 24px 20px;
+  background: #fff;
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  position: relative;
+}
+.svc-price-card-featured {
+  border-color: var(--color-primary);
+  background: linear-gradient(180deg, rgba(37,99,235,0.08) 0%, #fff 30%);
+  box-shadow: 0 8px 28px rgba(37,99,235,0.15);
+}
+.svc-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 8pt;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.svc-price-card h3 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 16px 0 10px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.svc-price-card .svc-price {
+  font-size: 24pt;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin: 8px 0 4px;
+}
+.svc-price-card .svc-price-unit {
+  font-size: 10pt;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+.svc-price-card ul {
+  list-style: none;
+  margin: 14px 0 0 0;
+  padding: 0;
+  text-align: left;
+}
+.svc-price-card li {
+  font-size: 9.5pt;
+  color: var(--color-text-muted);
+  padding: 6px 0;
+  padding-left: 20px;
+  position: relative;
+}
+.svc-price-card li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+.svc-cta {
+  margin-top: 24px;
+  padding: 24px 28px;
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  color: #fff;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+}
+.svc-cta p {
+  font-size: 12pt;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+.svc-cta-contact {
+  font-size: 10pt;
+  opacity: 0.95;
+}

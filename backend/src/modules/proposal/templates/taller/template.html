@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Propuesta taller · {{cliente}}</title>
+  <link rel="stylesheet" href="../base.css" />
+  <style>
+    .proposal-page { --color-primary: {{colorPrimary}}; --color-secondary: {{colorSecondary}}; }
+  </style>
+</head>
+<body>
+  <!-- PÁGINA 1: Portada editorial taller – estilo MiMoto, flex sin superposición -->
+  <section class="proposal-page tall-ed-cover">
+    <div class="client-logo-watermark" aria-hidden="true"><img src="{{logoCliente}}" alt="" /></div>
+    <div class="tall-ed-franja tall-ed-franja-1"></div>
+    <div class="tall-ed-franja tall-ed-franja-2"></div>
+
+    <header class="tall-ed-header">
+      <div class="tall-ed-logos">
+        <img src="{{logoCliente}}" alt="{{cliente}}" class="tall-ed-logo-client" />
+        <img src="{{logoTu}}" alt="Maestro Digital" class="tall-ed-logo-you" />
+      </div>
+      <div class="tall-ed-title-block">
+        <p class="tall-ed-pre">Propuesta sistema integral</p>
+        <h1 class="tall-ed-h1">{{cliente}}</h1>
+        <p class="tall-ed-sub">{{subtitle}}</p>
+      </div>
+    </header>
+
+    <div class="tall-ed-wrap">
+      <div class="tall-ed-main">
+        <div class="tall-ed-row tall-ed-row-1">
+          <div class="tall-ed-letter">{{cover_letter_text}}</div>
+          <div class="tall-ed-mockup-cell tall-ed-mockup-mobile">
+            <span class="tall-ed-mockup-label">Web móvil</span>
+            <div class="tall-ed-mockup-frame"><img src="{{mockup1}}" alt="Web en móvil" /></div>
+          </div>
+        </div>
+        <div class="tall-ed-row tall-ed-row-2">
+          <div class="tall-ed-mockup-cell tall-ed-mockup-desktop">
+            <span class="tall-ed-mockup-label">Panel admin / escritorio</span>
+            <div class="tall-ed-mockup-frame"><img src="{{mockup2}}" alt="Panel taller" /></div>
+          </div>
+          <div class="tall-ed-benefits">{{page1_after_mockup}}</div>
+        </div>
+        <div class="tall-ed-row tall-ed-row-3">
+          <div class="tall-ed-extra-mockup">
+            <span class="tall-ed-mockup-label">PDF orden de trabajo</span>
+            <div class="tall-ed-mockup-frame"><img src="{{mockup3}}" alt="Orden PDF" /></div>
+          </div>
+        </div>
+      </div>
+      <aside class="tall-ed-sidebar">
+        <p class="tall-ed-sidebar-cta">¿Consultas?</p>
+        <p class="tall-ed-sidebar-text">Escanea y contacta por WhatsApp</p>
+        <div class="tall-ed-sidebar-qr">{{qr_html}}</div>
+        <p class="tall-ed-sidebar-contact">Jonathan Guarirapa<br/>+56 9 6261 4851</p>
+        <p class="tall-ed-sidebar-warm">Su taller merece un sistema que ordene órdenes, inventario y ventas. En las siguientes páginas le mostramos cómo.</p>
+      </aside>
+    </div>
+    <div class="tall-ed-footer">
+      <p class="tall-ed-footer-note">Quedamos a su disposición para dudas o para agendar una llamada y revisar juntos.</p>
+      <p class="tall-ed-footer-line">Atentamente,</p>
+      <p class="tall-ed-footer-name">Jonathan Guarirapa</p>
+    </div>
+  </section>
+
+  <!-- PÁGINA 2: Web móvil y escritorio -->
+  <section class="proposal-page tall-ed-inner">
+    <span class="tall-ed-pagenum" aria-hidden="true">01</span>
+    <div class="tall-ed-vbar"></div>
+    <div class="tall-ed-inner-header">
+      <h2 class="tall-ed-inner-h2">Web: diseño móvil y escritorio</h2>
+      <p class="tall-ed-inner-p">Sitio profesional para su taller: servicios, catálogo de repuestos y accesorios, contacto y WhatsApp.</p>
+    </div>
+    <div class="tall-ed-inner-hero">
+      <img src="{{mockup1}}" alt="Web en móvil" />
+    </div>
+    <p class="tall-ed-inner-caption">La misma web se adapta a celular y a escritorio: sus clientes pueden ver servicios, repuestos y contactarlos desde cualquier dispositivo.</p>
+    <div class="tall-ed-guide">
+      <h3 class="tall-ed-guide-title">Qué suele llevar esta vista (guía para el mockup)</h3>
+      <p class="tall-ed-guide-intro">Use esta lista al preparar la captura de la web del taller (móvil o escritorio).</p>
+      <ul class="tall-ed-guide-list">
+        <li><strong>Header:</strong> logo, menú (servicios, repuestos, contacto).</li>
+        <li><strong>Hero o servicios:</strong> qué hace el taller, mantención, reparaciones.</li>
+        <li><strong>Catálogo o repuestos:</strong> productos destacados, categorías, precios o “consultar”.</li>
+        <li><strong>Contacto / WhatsApp:</strong> botón claro para consultas o cotizaciones.</li>
+      </ul>
+    </div>
+    <div class="tall-ed-highlights">
+      <div class="tall-ed-chip"><span class="tall-ed-chip-title">Presencia profesional</span><span class="tall-ed-chip-text">Su taller se ve ordenado y confiable en Google y redes.</span></div>
+      <div class="tall-ed-chip"><span class="tall-ed-chip-title">Catálogo visible</span><span class="tall-ed-chip-text">Repuestos y accesorios al alcance del cliente.</span></div>
+      <div class="tall-ed-chip"><span class="tall-ed-chip-title">Contacto directo</span><span class="tall-ed-chip-text">WhatsApp integrado para consultas y cotizaciones.</span></div>
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 2 de 6</span></div>
+  </section>
+
+  <!-- PÁGINA 3: Panel admin y catálogo -->
+  <section class="proposal-page tall-ed-inner">
+    <span class="tall-ed-pagenum" aria-hidden="true">02</span>
+    <div class="tall-ed-vbar"></div>
+    <div class="tall-ed-inner-header">
+      <h2 class="tall-ed-inner-h2">Panel admin y catálogo de repuestos</h2>
+      <p class="tall-ed-inner-p">Gestión de productos, precios y stock desde un solo panel en escritorio.</p>
+    </div>
+    <div class="tall-ed-inner-hero">
+      <img src="{{mockup2}}" alt="Panel admin taller" />
+    </div>
+    <p class="tall-ed-inner-caption">Desde aquí se mantiene el catálogo de repuestos y accesorios: alta, edición, precios y control de stock para ventas y órdenes de trabajo.</p>
+    <div class="tall-ed-guide">
+      <h3 class="tall-ed-guide-title">Qué suele llevar esta vista (guía para el mockup)</h3>
+      <p class="tall-ed-guide-intro">Captura del panel administrativo en modo escritorio: catálogo, inventario o dashboard.</p>
+      <ul class="tall-ed-guide-list">
+        <li><strong>Menú lateral:</strong> Dashboard, Órdenes, Catálogo, Inventario, Técnicos, Reportes.</li>
+        <li><strong>Listado o grid:</strong> productos con imagen, nombre, precio, stock.</li>
+        <li><strong>Acciones:</strong> editar, activar/pausar, ajustar stock.</li>
+      </ul>
+    </div>
+    <div class="tall-ed-highlights">
+      <div class="tall-ed-chip"><span class="tall-ed-chip-title">Todo en un lugar</span><span class="tall-ed-chip-text">Catálogo y stock sincronizados con órdenes y ventas.</span></div>
+      <div class="tall-ed-chip"><span class="tall-ed-chip-title">Control de stock</span><span class="tall-ed-chip-text">Alertas de bajo stock y descontado al usar en órdenes.</span></div>
+      <div class="tall-ed-chip"><span class="tall-ed-chip-title">Escalable</span><span class="tall-ed-chip-text">Añada categorías y productos sin límite.</span></div>
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 3 de 6</span></div>
+  </section>
+
+  <!-- PÁGINA 4: Órdenes de trabajo y métricas -->
+  <section class="proposal-page tall-ed-inner">
+    <span class="tall-ed-pagenum" aria-hidden="true">03</span>
+    <div class="tall-ed-vbar"></div>
+    <div class="tall-ed-inner-header">
+      <h2 class="tall-ed-inner-h2">Órdenes de trabajo y métricas de ventas</h2>
+      <p class="tall-ed-inner-p">Cómo se generan las órdenes, cómo se ven en curso y los reportes de ventas en tiempo real.</p>
+    </div>
+    <div class="tall-ed-inner-hero">
+      <img src="{{mockup4}}" alt="Órdenes y métricas" />
+    </div>
+    <p class="tall-ed-inner-caption">Lista de órdenes con estados (pendiente, en proceso, listo, entregado), asignación de técnico y métricas de ventas para tomar decisiones.</p>
+    <div class="tall-ed-guide">
+      <h3 class="tall-ed-guide-title">Qué suele llevar esta vista (guía para el mockup)</h3>
+      <p class="tall-ed-guide-intro">Pantalla de órdenes en curso, dashboard de ventas o reportes.</p>
+      <ul class="tall-ed-guide-list">
+        <li><strong>Lista de órdenes:</strong> cliente, vehículo, estado, técnico, total.</li>
+        <li><strong>Métricas:</strong> ventas del día/mes, órdenes pendientes, ingresos por servicio o repuesto.</li>
+        <li><strong>Filtros:</strong> por estado, técnico, rango de fechas.</li>
+      </ul>
+    </div>
+    <div class="tall-ed-highlights">
+      <div class="tall-ed-chip"><span class="tall-ed-chip-title">Seguimiento en tiempo real</span><span class="tall-ed-chip-text">Estado de cada orden sin planillas ni papeles.</span></div>
+      <div class="tall-ed-chip"><span class="tall-ed-chip-title">Decisiones con datos</span><span class="tall-ed-chip-text">Reportes de ventas, servicios más pedidos y repuestos más usados.</span></div>
+      <div class="tall-ed-chip"><span class="tall-ed-chip-title">Técnico asignado</span><span class="tall-ed-chip-text">Cada orden con responsable y historial.</span></div>
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 4 de 6</span></div>
+  </section>
+
+  <!-- PÁGINA 5: PDF orden de trabajo + control de stock -->
+  <section class="proposal-page tall-ed-inner tall-ed-inner-split">
+    <span class="tall-ed-pagenum" aria-hidden="true">04</span>
+    <div class="tall-ed-vbar"></div>
+    <div class="tall-ed-inner-header">
+      <h2 class="tall-ed-inner-h2">PDF de la orden y control de stock</h2>
+      <p class="tall-ed-inner-p">Documento que recibe el cliente y gestión de inventario de repuestos.</p>
+    </div>
+    <div class="tall-ed-split-row">
+      <div class="tall-ed-split-block">
+        <h3 class="tall-ed-split-title">Vista del PDF de la orden de trabajo</h3>
+        <div class="tall-ed-split-hero"><img src="{{mockup3}}" alt="PDF orden" /></div>
+        <p class="tall-ed-inner-caption">Cada orden se puede exportar a PDF: cliente, vehículo, servicios, repuestos, mano de obra y total. Listo para imprimir o enviar por WhatsApp.</p>
+      </div>
+      <div class="tall-ed-split-block">
+        <h3 class="tall-ed-split-title">Control de stock</h3>
+        <div class="tall-ed-split-hero"><img src="{{mockup5}}" alt="Inventario" /></div>
+        <p class="tall-ed-inner-caption">Inventario de repuestos y accesorios: stock actual, alertas de bajo stock y descuento automático al usarlos en una orden.</p>
+      </div>
+    </div>
+    <div class="tall-ed-highlights">
+      <div class="tall-ed-chip"><span class="tall-ed-chip-title">Orden profesional</span><span class="tall-ed-chip-text">PDF con su marca para el cliente.</span></div>
+      <div class="tall-ed-chip"><span class="tall-ed-chip-title">Stock bajo control</span><span class="tall-ed-chip-text">Evite quedar sin repuestos críticos.</span></div>
+      <div class="tall-ed-chip"><span class="tall-ed-chip-title">Trazabilidad</span><span class="tall-ed-chip-text">Qué se usó en cada orden y qué queda en bodega.</span></div>
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 5 de 6</span></div>
+  </section>
+
+  <!-- PÁGINA 6: Propuesta final y precios -->
+  <section class="proposal-page tall-ed-final">
+    <span class="tall-ed-pagenum tall-ed-pagenum-final" aria-hidden="true">05</span>
+    <div class="tall-ed-vbar"></div>
+    <div class="tall-ed-final-main">
+      <h2 class="tall-ed-inner-h2">Propuesta final</h2>
+      <p class="tall-ed-inner-p">Pasos y precios</p>
+      <p class="body-text">{{body_text}}</p>
+      <div class="tall-ed-pricing">
+        <div class="tall-ed-price-card">
+          <h3>Básico</h3>
+          <div class="tall-ed-price">{{precioBasico}}</div>
+          <div class="tall-ed-price-unit">CLP</div>
+          <ul><li>Web estática</li><li>Hasta 5 secciones</li><li>Formulario contacto</li></ul>
+        </div>
+        <div class="tall-ed-price-card tall-ed-price-card-featured">
+          <span class="tall-ed-badge">Recomendado</span>
+          <h3>Profesional</h3>
+          <div class="tall-ed-price">{{precioProfesional}}</div>
+          <div class="tall-ed-price-unit">CLP</div>
+          <ul><li>Órdenes + inventario</li><li>Panel admin</li><li>PDF orden · WhatsApp</li></ul>
+        </div>
+        <div class="tall-ed-price-card">
+          <h3>Enterprise</h3>
+          <div class="tall-ed-price">{{precioEnterprise}}</div>
+          <div class="tall-ed-price-unit">CLP</div>
+          <ul><li>Todo + técnicos</li><li>Reportes y métricas</li><li>Soporte prioritario</li></ul>
+        </div>
+      </div>
+      <div class="tall-ed-cta">
+        <p>Iniciar transformación</p>
+        <div class="tall-ed-cta-contact">Jonathan Guarirapa · +56 9 6261 4851 · WhatsApp</div>
+      </div>
+      <div class="tall-ed-signature">
+        <p>Atentamente,</p>
+        <p class="tall-ed-signature-name">Jonathan Guarirapa</p>
+      </div>
+      <p class="closing-message">{{closing_message}}</p>
+      <div class="footer-logos">
+        <img src="{{logoCliente}}" alt="{{cliente}}" class="footer-logo-client" />
+        <img src="{{logoTu}}" alt="Maestro Digital" class="footer-logo-you" />
+      </div>
+    </div>
+    <aside class="tall-ed-final-sidebar">
+      <p class="tall-ed-sidebar-cta">Escanea y contacta</p>
+      <div class="tall-ed-sidebar-qr">{{qr_html}}</div>
+    </aside>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 6 de 6</span></div>
+  </section>
+</body>
+</html>

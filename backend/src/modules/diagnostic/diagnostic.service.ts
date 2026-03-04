@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { SupabaseService } from '../../common/supabase/supabase.service';
 import { CreateDiagnosticDto } from './dto/create-diagnostic.dto';
@@ -815,6 +815,68 @@ export class DiagnosticService {
     }
 
     return this.mapToDto(data);
+  }
+
+  /**
+   * Crea un diagnóstico desde un lead y actualiza el lead con diagnostic_id y status.
+   * POST /api/diagnostic/from-lead/:leadId
+   */
+  async createFromLead(leadId: string): Promise<DiagnosticResultDto> {
+    const supabase = this.supabaseService.getAdminClient();
+
+    const { data: lead, error: leadError } = await supabase
+      .from('leads')
+      .select('*')
+      .eq('id', leadId)
+      .limit(1)
+      .single();
+
+    if (leadError || !lead) {
+      throw new NotFoundException('Lead not found');
+    }
+
+    const diagnosticData = {
+      nombre: lead.name ?? null,
+      empresa: lead.name ?? null,
+      telefono: lead.phone ?? null,
+      email: null,
+      tipo_empresa: lead.category ?? 'otro',
+      nivel_digital: 'basica',
+      objetivos: [],
+      tamano: '1-5',
+      necesidades_adicionales: [],
+      solucion_principal: 'sistema-gestion',
+      soluciones_complementarias: [],
+      urgencia: 'medium',
+      match_score: 0,
+      estado: 'contactado',
+      source: 'lead',
+    };
+
+    const { data: diagnostic, error: insertError } = await supabase
+      .from('diagnosticos')
+      .insert([diagnosticData])
+      .select()
+      .single();
+
+    if (insertError) {
+      throw new Error(`Error creating diagnostic: ${insertError.message}`);
+    }
+
+    const { error: updateError } = await supabase
+      .from('leads')
+      .update({
+        diagnostic_id: diagnostic.id,
+        status: 'diagnostic_completed',
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', leadId);
+
+    if (updateError) {
+      throw new Error(`Error updating lead: ${updateError.message}`);
+    }
+
+    return this.mapToDto(diagnostic);
   }
 
   /**

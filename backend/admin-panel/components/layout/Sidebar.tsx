@@ -14,12 +14,17 @@ export default function Sidebar() {
     router.push('/login');
   }
 
-  const menuItems = [
+  const flujoItems = [
     { href: '/', label: 'Dashboard', icon: '📊' },
+    { href: '/leads', label: 'Lead Scraper (Buscar negocios)', icon: '🔎' },
+    { href: '/leads-list', label: 'Leads (Embudo)', icon: '👥' },
     { href: '/diagnosticos', label: 'Diagnósticos', icon: '🔍' },
-    { href: '/ordenes', label: 'Órdenes', icon: '📋' },
+    { href: '/ordenes', label: 'Órdenes de trabajo', icon: '📋' },
+  ];
+  const herramientasItems = [
+    { href: '/plantillas-propuesta', label: 'Plantillas PDF', icon: '📄' },
+    { href: '/templates-modulos', label: 'Templates y módulos', icon: '📦' },
     { href: '/precios', label: 'Precios', icon: '💰' },
-    { href: '/templates-modulos', label: 'Templates y Módulos', icon: '📦' },
     { href: '/garantias', label: 'Garantías', icon: '🛡️' },
     { href: '/proyectos', label: 'Proyectos', icon: '📁' },
   ];
@@ -27,9 +32,30 @@ export default function Sidebar() {
   return (
     <aside className="w-64 bg-gray-900 text-white min-h-screen fixed left-0 top-0">
       <div className="p-6">
-        <h1 className="text-xl font-bold mb-8">Panel Admin</h1>
+        <h1 className="text-xl font-bold mb-6">Panel Admin</h1>
+        <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">Flujo principal</p>
+        <nav className="space-y-2 mb-6">
+          {flujoItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  isActive
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                }`}
+              >
+                <span className="text-xl">{item.icon}</span>
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+        <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">Herramientas</p>
         <nav className="space-y-2">
-          {menuItems.map((item) => {
+          {herramientasItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
@@ -60,7 +86,3 @@ export default function Sidebar() {
     </aside>
   );
 }
-
-
-
-

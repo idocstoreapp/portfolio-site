@@ -10,6 +10,7 @@ import {
   HttpCode,
   HttpStatus,
   HttpException,
+  NotFoundException,
 } from '@nestjs/common';
 import { DiagnosticService } from './diagnostic.service';
 import { CreateDiagnosticDto } from './dto/create-diagnostic.dto';
@@ -78,6 +79,33 @@ export class DiagnosticController {
           details: process.env.NODE_ENV === 'development' 
             ? (error as Error).stack 
             : undefined,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  /**
+   * POST /api/diagnostic/from-lead/:leadId
+   * Crea un diagnóstico desde un lead, actualiza el lead y retorna el diagnóstico.
+   */
+  @Post('from-lead/:leadId')
+  @HttpCode(HttpStatus.CREATED)
+  async createFromLead(@Param('leadId') leadId: string) {
+    try {
+      const diagnostic = await this.diagnosticService.createFromLead(leadId);
+      return {
+        success: true,
+        data: diagnostic,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new HttpException(
+        {
+          success: false,
+          error: (error as Error).message || 'Error interno del servidor',
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );

@@ -1,0 +1,19 @@
+{
+  "name": "prospect-agent",
+  "version": "2.0.0",
+  "description": "Scraper de Google Maps para generación de leads - búsqueda de negocios en Santiago, Chile",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node main.js",
+    "search": "node main.js"
+  },
+  "keywords": ["prospect", "google-maps", "scraping", "leads", "puppeteer"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^23.0.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  }
+}

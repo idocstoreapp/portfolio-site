@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Propuesta para {{cliente}}</title>
+  <link rel="stylesheet" href="../base.css" />
+  <style>
+    .proposal-page { --color-primary: {{colorPrimary}}; --color-secondary: {{colorSecondary}}; }
+    .accent-bar, .cover-title-block, .sidebar--dark, .cta-section, .icon-box .icon, .pricing-card .price, .feature-card { border-left-color: {{colorPrimary}}; }
+    .cover-title-block, .sidebar--dark, .cta-section { background: {{colorPrimary}} !important; }
+    .icon-box .icon { background: {{colorPrimary}} !important; }
+    .pricing-card .price { color: {{colorPrimary}} !important; }
+  </style>
+</head>
+<body>
+  <section class="proposal-page has-sidebar">
+    <div class="accent-bar"></div>
+    <div class="cover-header">
+      <img src="{{logoCliente}}" alt="{{cliente}}" class="cover-logo-client" />
+      <img src="{{logoTu}}" alt="Logo" class="cover-logo-you" />
+    </div>
+    <div class="cover-title-block">
+      <h1 class="page-title">Propuesta personalizada para {{cliente}}</h1>
+      <p class="page-subtitle">{{subtitle}}</p>
+    </div>
+    <div class="cover-letter-text">
+      <span class="drop-cap">E</span>stimado equipo de {{cliente}}, es un gusto presentar esta propuesta para su servicio técnico. Incluimos órdenes de trabajo, seguimiento de reparaciones, clientes y stock en una sola plataforma, con precios transparentes. A continuación el detalle y la propuesta final.
+    </div>
+    <div class="cover-mockup-wrap">
+      <img src="{{mockup1}}" alt="Experiencia digital" />
+    </div>
+    <aside class="sidebar">
+      <p class="cta-text">Escanea y contacta</p>
+      <div class="qr-placeholder">QR WhatsApp</div>
+      <div class="contact-info">Jonathan Guarirapa<br/>+56 9 6261 4851</div>
+    </aside>
+  </section>
+
+  <section class="proposal-page">
+    <div class="accent-bar"></div>
+    <h2 class="page-title page-title--accent">Experiencia Digital</h2>
+    <p class="page-subtitle page-subtitle--muted">Sistema que automatiza órdenes de trabajo, clientes y seguimiento</p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>Órdenes de trabajo digitales</h4>
+        <p>Cliente, equipo, servicio, repuestos y total en un solo documento.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Panel administrativo</h4>
+        <p>Gestión de órdenes, técnicos y reportes en tiempo real.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Contacto WhatsApp</h4>
+        <p>Notificaciones y envío de PDF al cliente por WhatsApp.</p>
+      </div>
+      <div class="feature-card">
+        <h4>Gestión de clientes</h4>
+        <p>Historial de equipos, reparaciones y facturación.</p>
+      </div>
+    </div>
+    <div class="mockup-row">
+      <img src="{{mockup1}}" alt="Mockup 1" />
+      <img src="{{mockup2}}" alt="Mockup 2" />
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 2 de 5</span></div>
+  </section>
+
+  <section class="proposal-page">
+    <div class="accent-bar"></div>
+    <h2 class="page-title">Sistema Administrativo</h2>
+    <p class="page-subtitle page-subtitle--muted">Panel, órdenes, técnicos y métricas</p>
+    <div class="icon-grid">
+      <div class="icon-box">
+        <div class="icon">P</div>
+        <h4>Panel admin</h4>
+        <p>Dashboard con órdenes abiertas y ventas.</p>
+      </div>
+      <div class="icon-box">
+        <div class="icon">C</div>
+        <h4>Gestión clientes</h4>
+        <p>Clientes, equipos y historial de órdenes.</p>
+      </div>
+      <div class="icon-box">
+        <div class="icon">O</div>
+        <h4>Órdenes de trabajo</h4>
+        <p>Detalle, estados, PDF imprimible y envío al cliente.</p>
+      </div>
+      <div class="icon-box">
+        <div class="icon">D</div>
+        <h4>Dashboard</h4>
+        <p>Resúmenes y gráficos en tiempo real.</p>
+      </div>
+      <div class="icon-box">
+        <div class="icon">M</div>
+        <h4>Métricas</h4>
+        <p>Ventas, rentabilidad y trabajos por técnico.</p>
+      </div>
+      <div class="icon-box">
+        <div class="icon">+</div>
+        <h4>Más módulos</h4>
+        <p>Inventario de repuestos, pagos, reportes.</p>
+      </div>
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 3 de 5</span></div>
+  </section>
+
+  <section class="proposal-page">
+    <div class="accent-bar"></div>
+    <h2 class="page-title">Funcionalidades avanzadas</h2>
+    <p class="page-subtitle page-subtitle--muted">Roles, permisos y control total</p>
+    <div class="icon-grid">
+      <div class="icon-box">
+        <div class="icon">R</div>
+        <h4>Roles</h4>
+        <p>Administrador, técnico, recepción.</p>
+      </div>
+      <div class="icon-box">
+        <div class="icon">P</div>
+        <h4>Permisos</h4>
+        <p>Acceso por pantalla y por acción.</p>
+      </div>
+      <div class="icon-box">
+        <div class="icon">E</div>
+        <h4>Estadísticas</h4>
+        <p>Reportes exportables y análisis.</p>
+      </div>
+    </div>
+    <div class="alert-box">
+      <h4>Control total de su servicio técnico</h4>
+      <ul>
+        <li>Auditoría de cambios y accesos</li>
+        <li>Respaldos automáticos</li>
+        <li>Todos los PDFs almacenados en el sistema</li>
+      </ul>
+    </div>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 4 de 5</span></div>
+  </section>
+
+  <section class="proposal-page has-sidebar">
+    <div class="accent-bar"></div>
+    <h2 class="page-title page-title--accent">Propuesta final</h2>
+    <p class="page-subtitle page-subtitle--muted">Pasos y precios</p>
+    <p class="body-text">Planes para servicio técnico. Incluyen implementación, capacitación y soporte por correo.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <h3>Básico</h3>
+        <div class="price">{{precioBasico}}</div>
+        <div class="price-unit">CLP</div>
+        <ul>
+          <li>Órdenes de trabajo</li>
+          <li>Hasta 2 usuarios</li>
+          <li>PDF por orden</li>
+        </ul>
+      </div>
+      <div class="pricing-card pricing-card--featured">
+        <h3>Profesional</h3>
+        <div class="price">{{precioProfesional}}</div>
+        <div class="price-unit">CLP</div>
+        <ul>
+          <li>Órdenes + clientes + inventario</li>
+          <li>Panel administrativo</li>
+          <li>Hasta 5 usuarios</li>
+          <li>Envío PDF por WhatsApp</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <h3>Enterprise</h3>
+        <div class="price">{{precioEnterprise}}</div>
+        <div class="price-unit">CLP</div>
+        <ul>
+          <li>Todo lo anterior + roles y permisos</li>
+          <li>Reportes avanzados</li>
+          <li>Múltiples sucursales</li>
+          <li>Soporte prioritario</li>
+        </ul>
+      </div>
+    </div>
+    <div class="cta-section">
+      <p>Iniciar transformación</p>
+      <div class="contact">Jonathan Guarirapa · +56 9 6261 4851 · WhatsApp</div>
+    </div>
+    <p class="closing-message">Quedo atento a su respuesta. Escanee el QR o escriba por WhatsApp para cualquier consulta.</p>
+    <aside class="sidebar sidebar--dark">
+      <p class="cta-text">Escanea y contacta</p>
+      <div class="qr-placeholder" style="background:#fff;">QR WhatsApp</div>
+    </aside>
+    <div class="page-footer"><span>Propuesta {{cliente}}</span><span>Página 5 de 5</span></div>
+  </section>
+</body>
+</html>

@@ -1,15 +1,1 @@
-{
-  "$schema": "https://json.schemastore.org/nest-cli",
-  "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
-  "compilerOptions": {
-    "deleteOutDir": true,
-    "webpack": false,
-    "tsConfigPath": "tsconfig.json"
-  },
-  "entryFile": "main"
-}
-
-
-
-
+{"$schema":"https://json.schemastore.org/nest-cli","collection":"@nestjs/schematics","sourceRoot":"src","compilerOptions":{"deleteOutDir":true,"webpack":false,"tsConfigPath":"tsconfig.json"},"entryFile":"main","assets":[{"include":"modules/leads/scraper/**/*.js","outDir":"dist","watchAssets":true},{"include":"modules/proposal/templates/**/*","outDir":"dist","watchAssets":true}]}

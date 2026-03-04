@@ -1,0 +1,50 @@
+[
+  {
+    "nombre": "Plaza de Armas",
+    "direccion": "Plaza de Armas, Plaza de Armas de Santiago de Chile, Santiago, Provincia de Santiago, Región Metropolitana de Santiago, 8320138, Chile",
+    "lat": -33.4374154,
+    "lon": -70.6512777,
+    "tieneWebsite": true,
+    "esNuevo": true,
+    "pocasResenas": true,
+    "score": 50,
+    "prioridad": "MEDIA",
+    "createdAt": "2026-02-26T17:02:21.016Z"
+  },
+  {
+    "nombre": "Plaza de Armas",
+    "direccion": "Plaza de Armas, Santiago, Provincia de Santiago, Región Metropolitana de Santiago, 8320000, Chile",
+    "lat": -33.4377648,
+    "lon": -70.6498071,
+    "tieneWebsite": false,
+    "esNuevo": false,
+    "pocasResenas": false,
+    "score": 40,
+    "prioridad": "MEDIA",
+    "createdAt": "2026-02-26T17:02:21.017Z"
+  },
+  {
+    "nombre": "Plaza de Armas",
+    "direccion": "Plaza de Armas, Santiago, Provincia de Santiago, Región Metropolitana de Santiago, 8320138, Chile",
+    "lat": -33.437265,
+    "lon": -70.6505989,
+    "tieneWebsite": false,
+    "esNuevo": false,
+    "pocasResenas": false,
+    "score": 40,
+    "prioridad": "MEDIA",
+    "createdAt": "2026-02-26T17:02:21.017Z"
+  },
+  {
+    "nombre": "Plaza de Armas",
+    "direccion": "Plaza de Armas, Santiago, Provincia de Santiago, Región Metropolitana de Santiago, 8320202, Chile",
+    "lat": -33.4384149,
+    "lon": -70.6504122,
+    "tieneWebsite": false,
+    "esNuevo": false,
+    "pocasResenas": false,
+    "score": 40,
+    "prioridad": "MEDIA",
+    "createdAt": "2026-02-26T17:02:21.017Z"
+  }
+]

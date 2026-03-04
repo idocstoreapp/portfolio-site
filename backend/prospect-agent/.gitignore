@@ -1,0 +1,5 @@
+node_modules/
+prospects.db
+*.db
+.env
+.DS_Store
