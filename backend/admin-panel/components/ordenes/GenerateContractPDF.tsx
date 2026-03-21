@@ -246,6 +246,24 @@ export default function GenerateContractPDF({
               backgroundColor: 'rgb(255, 255, 255)',
             }}
           >
+            {/* Estilos generales del contrato (editorial, A4, colores seguros para html2canvas) */}
+            <style>{`
+              .contract-root { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+              .contract-h1 { letter-spacing: -0.02em; }
+              .contract-section-title { letter-spacing: 0.02em; }
+              .contract-muted { color: rgb(107, 114, 128); }
+              .contract-panel { background: rgb(249, 250, 251); border: 1px solid rgb(229, 231, 235); border-radius: 10px; }
+              .contract-panel-warn { background: rgb(254, 252, 232); border: 2px solid rgb(234, 179, 8); border-radius: 10px; }
+              .contract-signatures { margin-top: 36px; padding-top: 20px; border-top: 2px solid rgb(17, 24, 39); }
+              .contract-sign-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 14px; }
+              .contract-sign-box { border: 1px solid rgb(229, 231, 235); border-radius: 12px; padding: 14px 16px; }
+              .contract-sign-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: rgb(107, 114, 128); }
+              .contract-sign-line { border-bottom: 1px solid rgb(156, 163, 175); height: 0; margin: 36px 0 10px; }
+              .contract-sign-name { font-weight: 700; color: rgb(0, 0, 0); }
+              .contract-sign-role { font-size: 12px; color: rgb(107, 114, 128); }
+            `}</style>
+
+            <div className="contract-root">
             {/* Header con Logo */}
             <div className="border-b-2 border-gray-900 pb-4 mb-6">
               <div className="flex items-center justify-between">
@@ -258,7 +276,7 @@ export default function GenerateContractPDF({
                     </svg>
                   </div>
                   <div>
-                    <h1 className="text-3xl font-bold mb-2" style={{ color: 'rgb(0, 0, 0)' }}>MAESTRO DIGITAL</h1>
+                    <h1 className="contract-h1 text-3xl font-bold mb-2" style={{ color: 'rgb(0, 0, 0)' }}>MAESTRO DIGITAL</h1>
                     <p className="text-sm" style={{ color: 'rgb(107, 114, 128)' }}>Sistemas y Soluciones Digitales</p>
                   </div>
                 </div>
@@ -272,7 +290,7 @@ export default function GenerateContractPDF({
             {/* Información del Cliente */}
             <div className="mb-6">
               <h2 className="text-lg font-semibold mb-3" style={{ color: 'rgb(0, 0, 0)' }}>Información del Cliente</h2>
-              <div className="p-4 rounded" style={{ backgroundColor: 'rgb(249, 250, 251)' }}>
+              <div className="p-4 contract-panel">
                 <p className="text-base font-medium mb-2" style={{ color: 'rgb(0, 0, 0)' }}>{order.client_name}</p>
                 {order.client_company && (
                   <p className="text-sm mb-1" style={{ color: 'rgb(75, 85, 99)' }}>Empresa: {order.client_company}</p>
@@ -365,7 +383,7 @@ export default function GenerateContractPDF({
             {includedModulesData.length > 0 && (
               <div className="mb-6">
                 <h2 className="text-lg font-semibold mb-3" style={{ color: 'rgb(0, 0, 0)' }}>Módulos Incluidos</h2>
-                <div className="p-4 rounded" style={{ backgroundColor: 'rgb(249, 250, 251)' }}>
+                <div className="p-4 contract-panel">
                   <ul className="list-disc list-inside space-y-2">
                     {includedModulesData.map((module) => (
                       <li key={module.id} className="text-sm" style={{ color: 'rgb(75, 85, 99)' }}>
@@ -430,7 +448,7 @@ export default function GenerateContractPDF({
             {order.custom_features && (
               <div className="mb-6">
                 <h2 className="text-lg font-semibold mb-3" style={{ color: 'rgb(0, 0, 0)' }}>Características Personalizadas</h2>
-                <div className="p-4 rounded" style={{ backgroundColor: 'rgb(249, 250, 251)' }}>
+                <div className="p-4 contract-panel">
                   <p className="text-sm whitespace-pre-wrap" style={{ color: 'rgb(75, 85, 99)' }}>
                     {order.custom_features}
                   </p>
@@ -441,7 +459,7 @@ export default function GenerateContractPDF({
             {/* Aspectos Económicos */}
             <div className="mb-6">
               <h2 className="text-lg font-semibold mb-3" style={{ color: 'rgb(0, 0, 0)' }}>Aspectos Económicos</h2>
-              <div className="p-4 rounded border" style={{ backgroundColor: 'rgb(249, 250, 251)', borderColor: 'rgb(229, 231, 235)' }}>
+              <div className="p-4 contract-panel">
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span style={{ color: 'rgb(75, 85, 99)' }}>Precio Base:</span>
@@ -487,7 +505,7 @@ export default function GenerateContractPDF({
             {order.payment_terms && (
               <div className="mb-6">
                 <h2 className="text-lg font-semibold mb-3" style={{ color: 'rgb(0, 0, 0)' }}>Términos de Pago</h2>
-                <div className="p-4 rounded" style={{ backgroundColor: 'rgb(249, 250, 251)' }}>
+                <div className="p-4 contract-panel">
                   <p className="text-sm whitespace-pre-wrap" style={{ color: 'rgb(75, 85, 99)' }}>
                     {order.payment_terms}
                   </p>
@@ -498,7 +516,7 @@ export default function GenerateContractPDF({
             {/* Fechas de Compromiso - OBLIGATORIAS */}
             <div className="mb-6">
               <h2 className="text-lg font-semibold mb-3" style={{ color: 'rgb(0, 0, 0)' }}>Fechas de Compromiso</h2>
-              <div className="p-4 rounded border-2" style={{ backgroundColor: 'rgb(254, 252, 232)', borderColor: 'rgb(234, 179, 8)' }}>
+              <div className="p-4 contract-panel-warn">
                 <div className="space-y-3">
                   <div className="flex justify-between py-2 border-b" style={{ borderColor: 'rgb(229, 231, 235)' }}>
                     <span className="font-medium" style={{ color: 'rgb(0, 0, 0)' }}>Fecha de Inicio:</span>
@@ -575,13 +593,35 @@ export default function GenerateContractPDF({
             {order.client_notes && (
               <div className="mb-6">
                 <h2 className="text-lg font-semibold mb-3" style={{ color: 'rgb(0, 0, 0)' }}>Notas Importantes</h2>
-                <div className="p-4 rounded" style={{ backgroundColor: 'rgb(249, 250, 251)' }}>
+                <div className="p-4 contract-panel">
                   <p className="text-sm whitespace-pre-wrap" style={{ color: 'rgb(75, 85, 99)' }}>
                     {order.client_notes}
                   </p>
                 </div>
               </div>
             )}
+
+            {/* Firmas (dos cuadros al final) */}
+            <div className="contract-signatures">
+              <h2 className="text-lg font-semibold mb-2" style={{ color: 'rgb(0, 0, 0)' }}>Firmas</h2>
+              <p className="text-sm mb-3" style={{ color: 'rgb(75, 85, 99)' }}>
+                Ambas partes firman en señal de conformidad con el alcance, fechas y términos de este contrato.
+              </p>
+              <div className="contract-sign-grid">
+                <div className="contract-sign-box">
+                  <div className="contract-sign-label">Firma del cliente / representante del negocio</div>
+                  <div className="contract-sign-line"></div>
+                  <div className="contract-sign-name">{order.client_name}</div>
+                  <div className="contract-sign-role">{order.client_company ? order.client_company : 'Cliente'}</div>
+                </div>
+                <div className="contract-sign-box">
+                  <div className="contract-sign-label">Firma del proveedor</div>
+                  <div className="contract-sign-line"></div>
+                  <div className="contract-sign-name">Jonathan Guarirapa</div>
+                  <div className="contract-sign-role">Maestro Digital</div>
+                </div>
+              </div>
+            </div>
 
             {/* Footer */}
             <div className="mt-12 pt-6 border-t-2" style={{ borderColor: 'rgb(17, 24, 39)' }}>
@@ -591,6 +631,7 @@ export default function GenerateContractPDF({
               <p className="text-xs text-center" style={{ color: 'rgb(107, 114, 128)' }}>
                 Maestro Digital - {format(new Date(), 'yyyy')} | Fecha de generación: {fechaActual}
               </p>
+            </div>
             </div>
           </div>
 

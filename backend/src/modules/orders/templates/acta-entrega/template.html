@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Acta de entrega · {{order_number}}</title>
   <style>
+    @page {
+  size: A4;
+  margin: 25mm 20mm 25mm 20mm;
+}
     @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@400;600;700&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -15,15 +19,19 @@
       background: #fff;
       padding: 0;
     }
-    .page {
+     .page {
       width: 210mm;
       min-height: 297mm;
-      padding: 42px 48px;
-      position: relative;
-    }
+      max-width: 190mm;
+      padding: 25mm 20mm 25mm 20mm;
+      margin: 25mm 20mm 25mm 20mm;
+    position: relative;
+    page-break-after: always;
+}
+
     .accent-bar {
       position: absolute;
-      left: 0;
+      left: -1mm;
       top: 0;
       bottom: 0;
       width: 4px;
@@ -129,12 +137,13 @@
     }
     .signature-block {
       text-align: center;
+      background: #fff;
     }
     .signature-line {
       width: 100%;
       max-width: 220px;
       height: 1px;
-      background: #333;
+      background: #d4d4d4;
       margin: 0 auto 8px;
       padding-top: 48px;
     }
@@ -162,9 +171,11 @@
       text-align: center;
     }
     @media print {
-      .page { min-height: auto; padding: 36px 44px; }
-      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    }
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
   </style>
 </head>
 <body>
