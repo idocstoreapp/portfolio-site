@@ -8,10 +8,16 @@ import Layout from '../layouts/Layout.astro';
   image="/images/jonadevel.jpg"
 >
   <!-- Hero Section -->
-  <section class="about-hero" style="padding: 6rem 2rem 4rem; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; text-align: center; position: relative;">
+  <section class="about-hero" style="padding: 6rem 2rem 4rem; color: white; text-align: center; position: relative; overflow: hidden;">
+    <div class="about-hero-bg">
+      <img src="/images/sistemas/idocstore-hero.png" alt="Fondo réparaciones" class="about-hero-img img1" loading="lazy" />
+      <img src="/images/sistemas/cotizador-hero.png" alt="Fondo cotizador" class="about-hero-img img2" loading="lazy" />
+      <img src="/images/sistemas/gourmet-arabe-hero.png" alt="Fondo gourmet árabe" class="about-hero-img img3" loading="lazy" />
+      <div class="about-hero-gradient"></div>
+    </div>
     <div class="container" style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;">
       <div style="margin-bottom: 2rem;">
-        <div style="margin: 0 auto 2rem; display: flex; align-items: center; justify-content: center;">
+        <div style="margin: 0 auto 2rem; display: flex; align-items: center; justify-content: center;"> 
           <img 
             src="/images/logo.png" 
             alt="Maestro Digital Logo" 
@@ -92,6 +98,43 @@ import Layout from '../layouts/Layout.astro';
             </p>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proyectos Destacados Section -->
+  <section class="featured-projects" style="padding: 4rem 2rem; background: #f8fafc;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 2.5rem;">
+        <h2 style="font-size: 2.5rem; font-weight: 700; color: #0f172a; margin-bottom: 0.8rem;">Proyectos Destacados</h2>
+        <p style="font-size: 1.15rem; color: #64748b; max-width: 800px; margin: 0 auto;">Casos reales de clientes con sistemas que ya están en producción y que muestran la calidad de nuestro trabajo.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;">
+
+        <a href="/projects/muebleria-cotizador" class="project-card">
+          <img src="/images/sistemas/cotizador-hero.png" alt="Cotizador" class="project-card-img" loading="lazy" />
+          <div class="project-card-body">
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Cotizador para Mueblería</h3>
+            <p style="margin: 0; color: #475569;">Sistema con cotizaciones automáticas, cálculo de materiales y generación de PDF.</p>
+          </div>
+        </a>
+
+        <a href="/projects/sistema-reparaciones" class="project-card">
+          <img src="/images/sistemas/idocstore-hero.png" alt="Sistema Reparaciones" class="project-card-img" loading="lazy" />
+          <div class="project-card-body">
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Sistema de Reparaciones</h3>
+            <p style="margin: 0; color: #475569;">Dashboard técnico/admin, órdenes y cálculo automático de comisiones.</p>
+          </div>
+        </a>
+
+        <a href="/projects/gourmet-arabe" class="project-card">
+          <img src="/images/sistemas/gourmet-arabe-hero.png" alt="Gourmet Árabe" class="project-card-img" loading="lazy" />
+          <div class="project-card-body">
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">Gourmet Árabe</h3>
+            <p style="margin: 0; color: #475569;">E-commerce y gestión de pedidos para restaurante con flujo completo de menú QR.</p>
+          </div>
+        </a>
+
       </div>
     </div>
   </section>
@@ -432,5 +475,67 @@ import Layout from '../layouts/Layout.astro';
     .who-i-am > div > div > div > div[style*="order: 1"] {
       order: 2 !important;
     }
+  }
+
+  .about-hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .about-hero-img {
+    position: absolute;
+    width: 130%;
+    height: 130%;
+    object-fit: cover;
+    filter: blur(14px) brightness(0.68) saturate(1.1);
+    transform-origin: center;
+    opacity: 0.55;
+    transition: transform 0.8s ease;
+  }
+
+  .about-hero-img.img1 { left: -10%; top: -10%; transform: scale(1.05) rotate(-2deg); }
+  .about-hero-img.img2 { right: -10%; top: -10%; transform: scale(1.03) rotate(2deg); }
+  .about-hero-img.img3 { left: 10%; bottom: -12%; transform: scale(1.08) rotate(-1deg); }
+
+  .about-hero-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(15,23,42,0.85) 0%, rgba(30,41,59,0.75) 50%, rgba(15,23,42,0.85) 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .about-hero:hover .about-hero-img.img1 { transform: scale(1.08) rotate(0deg); }
+  .about-hero:hover .about-hero-img.img2 { transform: scale(1.06) rotate(1deg); }
+  .about-hero:hover .about-hero-img.img3 { transform: scale(1.1) rotate(0deg); }
+
+  .project-card {
+    display: block;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.15);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    text-decoration: none;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    background: white;
+  }
+
+  .project-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
+  }
+
+  .project-card-img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    filter: saturate(1.05) contrast(1.05);
+  }
+
+  .project-card-body {
+    padding: 1rem;
   }
 </style>

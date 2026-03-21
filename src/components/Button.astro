@@ -2,28 +2,58 @@
 export interface Props {
   href: string;
   variant?: 'primary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   class?: string;
 }
 
 const { href, variant = 'primary', size = 'md', class: className = '' } = Astro.props;
 
-const baseClasses = 'inline-flex items-center justify-center padding-10 font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-400';
-
-const variantClasses = {
-  primary: 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white hover:from-cyan-500 hover:to-blue-600 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5',
-  ghost: 'text-cyan-400 border border-cyan-400 hover:bg-cyan-400 hover:text-white'
+const getPadding = (size: string) => {
+  const paddings = {
+    sm: '8px 16px',
+    md: '12px 32px',
+    lg: '16px 48px',
+    xl: '10px 30px'
+  };
+  return paddings[size as keyof typeof paddings] || paddings.md;
 };
 
-const sizeClasses = {
-  sm: 'px-4 py-2 text-sm',
-  md: 'px-6 py-3 text-base',
-  lg: 'px-10 py-8 text-lg'
+const getFontSize = (size: string) => {
+  const sizes = {
+    sm: '14px',
+    md: '16px',
+    lg: '18px',
+    xl: '22px'
+  };
+  return sizes[size as keyof typeof sizes] || sizes.md;
 };
 
-const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
+const padding = getPadding(size);
+const fontSize = getFontSize(size);
 ---
 
-<a href={href} class={classes}>
+<a 
+  href={href}
+  style={`
+    padding: ${padding};
+    font-size: ${fontSize};
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 200ms ease;
+    line-height: 1.3;
+    cursor: pointer;
+    ${variant === 'primary' 
+      ? `background: linear-gradient(135deg, #22d3ee, #3b82f6); color: white; border: none; box-shadow: 0 10px 25px rgba(34, 211, 238, 0.3);`
+      : `background: transparent; color: #22d3ee; border: 2px solid #22d3ee;`
+    }
+  `}
+  class={className}
+  onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 15px 35px rgba(34, 211, 238, 0.4)';"
+  onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='${variant === 'primary' ? '0 10px 25px rgba(34, 211, 238, 0.3)' : 'none'}';"
+>
   <slot />
 </a>
