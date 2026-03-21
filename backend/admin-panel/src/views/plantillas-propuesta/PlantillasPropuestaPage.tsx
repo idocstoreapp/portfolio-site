@@ -9,12 +9,21 @@ import {
   type TemplateItem,
 } from '@/src/services/proposalTemplatesService';
 
-const PAGES = [
+type ProposalTemplatePage = {
+  num: number;
+  title: string;
+  desc: string;
+  keys: readonly string[];
+  labels: Record<string, string>;
+  noEditableNote: string | null;
+};
+
+const PAGES: ProposalTemplatePage[] = [
   {
     num: 1,
     title: 'Portada',
     desc: 'Logos, título, carta de presentación, mockup y QR.',
-    keys: ['cover_letter_text', 'page1_after_mockup'] as const,
+    keys: ['cover_letter_text', 'page1_after_mockup'],
     labels: {
       cover_letter_text: 'Carta de presentación',
       page1_after_mockup: 'Texto adicional después del mockup (opcional)',
@@ -26,6 +35,7 @@ const PAGES = [
     title: 'Experiencia digital',
     desc: 'Características y mockups.',
     keys: [],
+    labels: {},
     noEditableNote:
       'En esta página el contenido (títulos, tarjetas e imágenes) es común a todas las propuestas de este tipo. No hay textos que editar aquí.',
   },
@@ -34,6 +44,7 @@ const PAGES = [
     title: 'Sistema administrativo',
     desc: 'Iconos y descripciones del panel.',
     keys: [],
+    labels: {},
     noEditableNote:
       'En esta página el contenido es común a todas las propuestas. No hay textos editables aquí.',
   },
@@ -42,6 +53,7 @@ const PAGES = [
     title: 'Funcionalidades avanzadas',
     desc: 'Roles, permisos y alertas.',
     keys: [],
+    labels: {},
     noEditableNote:
       'En esta página el contenido es común a todas las propuestas. No hay textos editables aquí.',
   },
