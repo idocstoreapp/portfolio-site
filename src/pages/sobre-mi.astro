@@ -19,9 +19,9 @@ import Button from '../components/Button.astro';
     <div class="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full blur-2xl animate-float opacity-20"></div>
     <div class="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full blur-2xl animate-float opacity-15" style="animation-delay: 2s;"></div>
 
-    <div class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 ">
+    <div class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 about-hero-content">
       <div class="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
-        <div class="animate-fade-in-left order-1">
+        <div class="animate-fade-in-left order-1 about-hero-copy">
           <h1 class="max-w-[18ch] text-4xl sm:text-5xl md:text-6xl font-bold mb-5 md:mb-6 text-left">
             <span class="text-gray-100">Sobre</span>
 
@@ -34,11 +34,11 @@ import Button from '../components/Button.astro';
           </p>
 
           <!-- Mobile first: botones compactos y alineados a la izquierda -->
-          <div class="flex md:hidden flex-row flex-wrap items-start gap-2.5">
-            <Button href="mailto:jona.develp@gmail.com" size="sm">
+          <div class="flex md:hidden flex-col items-stretch gap-3 w-full max-w-[260px] hero-mobile-ctas">
+            <Button href="mailto:jona.develp@gmail.com" size="sm" class="w-full text-center">
               Trabajar juntos
             </Button>
-            <Button href="/proyectos-actuales" variant="ghost" size="sm">
+            <Button href="/proyectos-actuales" variant="ghost" size="sm" class="w-full text-center">
               Ver Mis Trabajos
             </Button>
           </div>
@@ -752,6 +752,25 @@ import Button from '../components/Button.astro';
       padding-right: 1.5rem !important;
     }
 
+    .about-hero-content {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    .about-hero-copy {
+      padding-left: 0.4rem;
+      padding-right: 0.4rem;
+    }
+
+    .about-hero-copy h1,
+    .about-hero-copy p {
+      max-width: 100%;
+    }
+
+    .hero-mobile-ctas {
+      max-width: 320px;
+    }
+
     /* Sección experiencia - más padding y márgenes */
     #mi-historia {
       padding: 3rem 1.5rem !important;
@@ -807,11 +826,24 @@ import Button from '../components/Button.astro';
       padding-right: 1rem !important;
     }
 
-    .about-hero .relative.z-10,
-    .about-hero h1,
-    .about-hero p {
-      padding-left: 1.1rem !important;
-      padding-right: 1.1rem !important;
+    .about-hero .relative.z-10 {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    .about-hero-copy {
+      padding-left: 0.85rem !important;
+      padding-right: 0.85rem !important;
+    }
+
+    .about-hero-copy h1,
+    .about-hero-copy p {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    .hero-mobile-ctas {
+      max-width: 100%;
     }
 
     #mi-historia,
