@@ -48,7 +48,7 @@ import Button from '../components/Button.astro';
             <div class="w-80 h-80 mx-auto rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 p-1 animate-pulse-glow">
               <div class="w-full h-full rounded-full overflow-hidden">
                 <img 
-                  src="/jonadevel.png" 
+                  src="/jonadevel.jpg" 
                   alt="Jonathan Guarirapa - Desarrollador Web"
                   class="w-full h-full object-cover"
                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
@@ -82,7 +82,7 @@ import Button from '../components/Button.astro';
         <div class="project-card-body">
           <h3 class="text-2xl font-bold text-gray-600 mb-2">Sistema de Cotización</h3>
           <p class="text-gray-600 mb-4">Calculadora de materiales, precios y PDF de cotización en línea.</p>
-          <span class="text-white">Ver proyecto →</span>
+          <span class="text-gray-400">Ver proyecto →</span>
         </div>
       </a>
 
@@ -93,7 +93,7 @@ import Button from '../components/Button.astro';
         <div class="project-card-body">
           <h3 class="text-2xl font-bold text-white mb-2">Sistema de Gestión de Órdenes</h3>
           <p class="text-gray-600 mb-4">Dashboard técnico y administrador, órdenes, comisiones y reportes.</p>
-          <span class="text-white">Ver proyecto →</span>
+          <span class="text-gray-400">Ver proyecto →</span>
         </div>
       </a>
 
@@ -104,28 +104,98 @@ import Button from '../components/Button.astro';
         <div class="project-card-body">
           <h3 class="text-2xl font-bold text-white mb-2">Gourmet Árabe</h3>
           <p class="text-gray-600 mb-4">Ecommerce de restaurante con menú QR y pedidos online.</p>
-          <span class="text-white">Ver proyecto →</span>
+          <span class="text-gray-400">Ver proyecto →</span>
         </div>
       </a>
 
     </div>
   </section>
   <br>
-  <!-- Mi Historia -->
+  <!-- esxperiencia -->
   <section id="mi-historia" class="reveal py-20 bg-gradient-to-r from-black-600/10 to-gray-900/10" style="max-width:1100px;margin:0 auto;padding:64px 20px;">
-    <h2 class="text-4xl font-bold text-white mb-8 text-center">Mi Historia</h2>
-    <div class="space-y-6 text-gray-600 leading-relaxed">
-      <p class="text-lg" >
-        Me enfoco en construir sistemas que resuelven problemas reales en negocios: 
-cotizaciones, control de costos y automatización de procesos.
+    <h2 class="text-4xl font-bold text-white mb-8 text-center">Experiencia Relevante</h2>
+    <br>
+    <p class="text-gray-400 text-center mb-10">Desglose detallado por proyecto (problema/solución/resultado/stack) con links directos para ver la implementación completa.</p>
+    <br>
 
-No solo desarrollo interfaces, sino lógica que permite tomar decisiones y 
-evitar pérdidas.
-
-Trabajo con React, Supabase y herramientas modernas para crear soluciones 
-rápidas, claras y útiles desde el primer día.
-      </p>
+    <div class="space-y-8 text-gray-300">
+      <article class="project-detail-card bg-nextsite-bg-darker border border-white/10 rounded-2xl p-6 shadow-xl text-center" style="background-image: linear-gradient(rgba(3,12,33,.72), rgba(3,12,33,.72)), url('/images/resultados/resultado-impacto-operativo-comercio-tiempo.png'); background-size: cover; background-position: center; background-blend-mode: overlay;">
+        <br>
+        <h3 class="text-2xl font-bold text-cyan-300 mb-2 ">Sistema de Cotización (Mueblería)</h3>
+        <br>
+        <p class="text-gray-400 mb-4 text-center">Sistema de cotizaciones para mueblería con generación de PDF, cálculo de materiales, servicios y roles admin/técnico.</p>
+        <br>
+        <ul class="list-disc pl-5 mb-4 text-gray-300 space-y-1 ">
+          <li><strong>Problema:</strong> Gestión manual de cotizaciones y costos, errores en cálculos, sin reportes centralizados.</li>
+          <li><strong>Solución:</strong> CRUD de materiales/servicios, cotizador interactivo con cálculos automáticos y PDF.</li>
+          <li><strong>Resultado:</strong> reducción de tiempos y errores; cotizaciones profesionales en minutos.</li>
+          <li><strong>Stack:</strong> Astro, React, TypeScript, Tailwind CSS, Supabase, React Query, Zod.</li>
+        </ul>
+        <a href="/projects/muebleria-cotizador" class="inline-block mt-2 px-4 py-2 rounded-lg border border-cyan-400 text-cyan-300  hover:bg-cyan-400/15 justify-center">Ver detalle del proyecto →</a>
+      </article>
+      <br>
+      <article class="project-detail-card bg-nextsite-bg-darker border border-white/10 rounded-2xl p-6 shadow-xl text-center" style="background-image: linear-gradient(rgba(3,12,33,.72), rgba(3,12,33,.72)), url('/images/resultados/resultado-impacto-operativo-servicio-tecnico-tiempo.png'); background-size: cover; background-position: center; background-blend-mode: overlay;">
+        <br>
+        <h3 class="text-2xl font-bold text-cyan-300 mb-2 text-center">Sistema de Gestión de Órdenes</h3>
+        <br>
+        <p class="text-gray-400 mb-4">Dashboard de órdenes de reparación con roles diferenciados, cálculo de comisiones y reportes de productividad.</p>
+        <br>
+        <ul class="list-disc pl-5 mb-4 text-gray-300 space-y-1">
+          <li><strong>Problema:</strong> Falta de visibilidad de rendimiento técnico y cálculo manual de comisiones.</li>
+          <li><strong>Solución:</strong> dashboards por rol, comisiones automáticas, gestión de órdenes y reportes diarios/mensuales.</li>
+          <li><strong>Resultado:</strong> procesos más eficientes, visibilidad 360° y disminución de errores operativos.</li>
+          <li><strong>Stack:</strong> Astro, React, TypeScript, Tailwind CSS, Supabase, Vercel.</li>
+        </ul>
+        <a href="/projects/sistema-reparaciones" class="inline-block mt-2 px-4 py-2 rounded-lg border border-cyan-400 text-cyan-300 hover:bg-cyan-400/15">Ver detalle del proyecto →</a>
+      </article>
+      <br>
+      <article class="project-detail-card bg-nextsite-bg-darker border border-white/10 rounded-2xl p-6 shadow-xl text-center" style="background-image: linear-gradient(rgba(3,12,33,.7), rgba(3,12,33,.7)), url('/images/resultados/resultado-impacto-operativo-restaurante-tiempo.png'); background-size: cover; background-position: center; background-blend-mode: overlay;">
+        <br>
+        <h3 class="text-2xl font-bold text-cyan-300 mb-2">Gourmet Árabe</h3>
+        <br>
+        <p class="text-gray-400 mb-4">Solución de pedidos online para restaurante con UX optimizada y catálogo de productos.</p>
+        <br>
+        <ul class="list-disc pl-5 mb-4 text-gray-300 space-y-1">
+          <li><strong>Problema:</strong> Experiencia de compra móvil desordenada y gestión manual de menús.</li>
+          <li><strong>Solución:</strong> navegación fluida, visualización de mockups, pedidos online y carrito.</li>
+          <li><strong>Resultado:</strong> mayor conversión y experiencia de usuario consistente.</li>
+          <li><strong>Stack:</strong> Astro, React, TypeScript, Tailwind CSS, Supabase.</li>
+        </ul>
+        <a href="/projects/gourmet-arabe" class="inline-block mt-2 px-4 py-2 rounded-lg border border-cyan-400 text-cyan-300 hover:bg-cyan-400/15">Ver detalle del proyecto →</a>
+      </article>
+      <br>
+      <article class="project-detail-card bg-nextsite-bg-darker border border-white/10 rounded-2xl p-6 shadow-xl text-center" style="background-image: linear-gradient(rgba(3,12,33,.7), rgba(3,12,33,.7)), url('/images/resultados/resultado-impacto-operativo-servicios-tiempo.png'); background-size: cover; background-position: center; background-blend-mode: overlay;">
+        <br>
+        <h3 class="text-2xl font-bold text-cyan-300 mb-2">Kubica Mobiliario</h3>
+        <br>
+        <p class="text-gray-400 mb-4">Catálogo y gestión de inventario de muebles con filtros y búsqueda avanzada.</p>
+        <br>
+        <ul class="list-disc pl-5 mb-4 text-gray-300 space-y-1">
+          <li><strong>Problema:</strong> inventario difícil de administrar y catálogos poco atractivos.</li>
+          <li><strong>Solución:</strong> UI moderna, filtrado, edición rápida y stock en tiempo real.</li>
+          <li><strong>Resultado:</strong> reducción de pérdidas y mejora del proceso de venta.</li>
+          <li><strong>Stack:</strong> Astro, React, TypeScript, Tailwind CSS, Supabase.</li>
+        </ul>
+        <a href="/projects/kubica-mobiliario" class="inline-block mt-2 px-4 py-2 rounded-lg border border-cyan-400 text-cyan-300 hover:bg-cyan-400/15">Ver detalle del proyecto →</a>
+      </article>
+      <br>
+      <article class="project-detail-card bg-nextsite-bg-darker border border-white/10 rounded-2xl p-6 shadow-xl text-center" style="background-image: linear-gradient(rgba(3,12,33,.7), rgba(3,12,33,.7)), url('/images/resultados/resultado-impacto-operativo-comercio-crecimiento.png'); background-size: cover; background-position: center; background-blend-mode: overlay;">
+        <br>
+        <h3 class="text-2xl font-bold text-cyan-300 mb-2">Mueblería Casa Blanca</h3>
+        <br>
+        <p class="text-gray-400 mb-4">E-commerce con cotizador interno, diseño atractivo y flujo de compra optimizado.</p>
+        <br>
+        <ul class="list-disc pl-5 mb-4 text-gray-300 space-y-1">
+          <li><strong>Problema:</strong> procesos de compra lentos y conversión baja por UX desordenada.</li>
+          <li><strong>Solución:</strong> experiencia de compra rápida, cotizador integrado y workflow claro.</li>
+          <li><strong>Resultado:</strong> mayor tasa de conversión y menos abandono de carrito.</li>
+          <li><strong>Stack:</strong> Astro, React, TypeScript, Tailwind CSS, Supabase.</li>
+        </ul>
+        <a href="/projects/muebleria-casa-blanca" class="inline-block mt-2 px-4 py-2 rounded-lg border border-cyan-400 text-cyan-300 hover:bg-cyan-400/15">Ver detalle del proyecto →</a>
+      </article>
     </div>
+  </section>
+
   </section>
 
   <!-- Mis Valores -->
@@ -388,25 +458,28 @@ rápidas, claras y útiles desde el primer día.
     display: block;
     border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+    box-shadow: 0 10px 30px rgba(76, 129, 251, 0.18);
     border: 1px solid rgba(148, 163, 184, 0.22);
-    background: rgba(15,23,42,0.35);
+    background: rgb(228, 228, 228);
     transition: transform 0.32s ease, box-shadow 0.32s ease;
     text-decoration: none;
     color: inherit;
     backdrop-filter: blur(10px);
     min-height: auto;
   }
-  .project-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(15, 23, 42, 0.35); }
+  .project-card:hover { 
+    transform: translateY(-6px); 
+    box-shadow: 0 20px 50px rgba(26, 51, 111, 0.35); 
+    }
   .project-card-img-wrapper {
     width: 100%;
     aspect-ratio: 3 / 5;
-    background: rgba(15, 23, 42, 0.22);
+    background: rgba(50, 59, 150, 0.22);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    max-height: 200px;
+    max-height: 300px;
   }
   .project-card-img {
     width: auto;
@@ -419,7 +492,7 @@ rápidas, claras y útiles desde el primer día.
   .project-card:hover .project-card-img {
     transform: scale(1.05);
   }
-  .project-card-body { padding: 0.85rem; }
+  .project-card-body { padding: 1.2rem; }
   .projects-section {
     max-height: 62vh;
     overflow: hidden;
@@ -428,15 +501,15 @@ rápidas, claras y útiles desde el primer día.
     gap: 0.9rem;
   }
   .project-card h3 {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     margin-bottom: 0.35rem;
   }
   .project-card p {
-    font-size: 0.92rem;
+    font-size: 1.3rem;
     line-height: 1.35;
   }
   .project-card span {
-    font-size: 0.92rem;
+    font-size: 1.3rem;
   }
 
   @media (max-width: 1024px) {
@@ -445,7 +518,7 @@ rápidas, claras y útiles desde el primer día.
       padding-bottom: 2rem;
     }
     .project-card-img-wrapper {
-      max-height: 180px;
+      max-height: 270px;
       aspect-ratio: 9 / 16;
     }
     .project-card {
@@ -567,5 +640,74 @@ rápidas, claras y útiles desde el primer día.
     to {
       transform: scaleX(1);
     }
+  }
+
+  /* Estilos para la sección de experiencia */
+  #mi-historia h3 {
+    font-size: 1.5rem !important;
+    color: #00C2FF !important;
+    font-weight: 600 !important;
+  }
+
+  /* Estilo consistente para Hero cards de experiencia */
+  .project-detail-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 305px;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.45);
+    transition: transform .25s ease, box-shadow .25s ease;
+    color: #fff;
+  }
+
+  .project-detail-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.55);
+  }
+
+  .project-detail-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(5,9,26,.5), rgba(4,9,29,.88));
+    backdrop-filter: blur(3px);
+    z-index: 1;
+  }
+
+  .project-detail-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.08), rgba(0,0,0,0.58));
+    z-index: 1;
+  }
+
+  .project-detail-card > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  .project-detail-card h3,
+  .project-detail-card p,
+  .project-detail-card li,
+  .project-detail-card a {
+    text-shadow: 0 1px 14px rgba(0,0,0,0.7);
+  }
+
+  .project-detail-card p,
+  .project-detail-card li {
+    color: rgba(241, 247, 255, 0.92);
+  }
+
+  .project-detail-card ul {
+    margin-bottom: 0.75rem;
+  }
+
+  .project-detail-card a {
+    border-color: rgba(60, 222, 255, 0.75);
+    background: rgba(0,18,38, 0.65);
+    color: #b6f7ff;
   }
 </style>
