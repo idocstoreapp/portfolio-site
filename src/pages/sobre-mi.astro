@@ -704,10 +704,10 @@ import Button from '../components/Button.astro';
   .project-detail-card::before {
     content: "";
     position: absolute;
-    inset: -14px;
-    background: inherit;
-    filter: blur(10px) saturate(110%);
-    transform: scale(1.04);
+    inset: 0;
+    background: linear-gradient(180deg, rgba(3, 10, 28, 0.35), rgba(2, 8, 24, 0.82));
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
     z-index: 1;
   }
 
@@ -716,11 +716,9 @@ import Button from '../components/Button.astro';
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(180deg, rgba(3, 11, 28, 0.46), rgba(2, 9, 24, 0.9)),
-      radial-gradient(circle at 14% 12%, rgba(66, 225, 255, 0.22), rgba(66, 225, 255, 0) 52%);
-    backdrop-filter: blur(2.5px);
-    -webkit-backdrop-filter: blur(2.5px);
-    z-index: 2;
+      radial-gradient(circle at 14% 12%, rgba(66, 225, 255, 0.22), rgba(66, 225, 255, 0) 48%),
+      linear-gradient(160deg, rgba(2, 14, 30, 0.45), rgba(1, 9, 24, 0.8));
+    z-index: 1;
   }
 
   .project-detail-card > * {
@@ -750,11 +748,11 @@ import Button from '../components/Button.astro';
   .project-detail-card ul {
     margin-bottom: 0.95rem;
     text-align: left;
-    background: rgba(2, 13, 28, 0.74);
+    background: rgba(2, 13, 28, 0.56);
     border: 1px solid rgba(161, 230, 255, 0.22);
     border-radius: 14px;
     padding: 0.95rem 1rem 1rem 1.8rem !important;
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(4px);
   }
 
   .project-detail-card li + li {
