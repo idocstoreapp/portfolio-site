@@ -8,7 +8,7 @@ import Button from '../components/Button.astro';
   description="Conoce más sobre Jonathan Guarirapa, desarrollador web profesional especializado en crear experiencias digitales excepcionales. Mi historia, valores, habilidades y proceso de trabajo."
 >
   <!-- Hero Section -->
-  <section class="about-hero relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+  <section class="about-hero relative min-h-[78vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden py-12 md:py-0">
     <div class="about-hero-bg absolute inset-0 overflow-hidden" aria-hidden="true">
       <img src="/images/sistemas/idocstore-hero.png" alt="" class="about-hero-img img1" loading="lazy" />
       <img src="/images/sistemas/cotizador-hero.png" alt="" class="about-hero-img img2" loading="lazy" />
@@ -19,33 +19,32 @@ import Button from '../components/Button.astro';
     <div class="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full blur-2xl animate-float opacity-20"></div>
     <div class="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full blur-2xl animate-float opacity-15" style="animation-delay: 2s;"></div>
 
-    <div class="relative z-10 max-w-6xl mx-auto px-4">
-      <div class="grid lg:grid-cols-2 gap-12 items-center">
-        <div class="animate-fade-in-left">
-          <h1 class="text-5xl md:text-6xl font-bold mb-6">
+    <div class="relative z-10 max-w-6xl mx-auto px-5 sm:px-6">
+      <div class="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+        <div class="animate-fade-in-left hero-copy">
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-5 md:mb-6 text-left">
             <span class="text-black">Sobre</span>
 
             <span class="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
               Mí
             </span>
           </h1>
-          <p class="text-xl text-white mb-8 leading-relaxed">
+          <p class="text-base sm:text-lg md:text-xl text-white mb-6 md:mb-8 leading-relaxed text-left max-w-[34ch]">
             Desarrollador web enfocado en sistemas de gestión y automatización, creando soluciones con React y Supabase que optimizan procesos, controlan costos y generan impacto real en negocios.
           </p>
-          <br>
-          <div class="flex flex-col sm:flex-row gap-4">
-            <Button href="mailto:jona.develp@gmail.com" size="xl">
+          <div class="about-hero-actions flex flex-col gap-3 sm:gap-4 w-full max-w-[360px]">
+            <Button href="mailto:jona.develp@gmail.com" size="xl" class="hero-btn primary">
               Trabajar juntos
             </Button>
-            <Button href="/proyectos-actuales" variant="ghost" size="xl">
+            <Button href="/proyectos-actuales" variant="ghost" size="xl" class="hero-btn ghost">
               Ver Mis Trabajos
             </Button>
           </div>
         </div>
         
         <div class="animate-fade-in-right">
-          <div class="relative">
-            <div class="w-80 h-80 mx-auto rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 p-1 animate-pulse-glow">
+          <div class="relative pt-2 md:pt-0">
+            <div class="w-[268px] h-[268px] min-[420px]:w-[292px] min-[420px]:h-[292px] sm:w-[320px] sm:h-[320px] md:w-80 md:h-80 mx-auto rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 p-1 animate-pulse-glow">
               <div class="w-full h-full rounded-full overflow-hidden">
                 <img 
                   src="/jonadevel.jpg" 
@@ -59,21 +58,21 @@ import Button from '../components/Button.astro';
               </div>
             </div>
             <!-- Floating Elements -->
-            <div class="absolute top-10 -right-10 w-6 h-6 bg-nextsite-accent-blue rounded-full animate-float"></div>
-            <div class="absolute bottom-10 -left-10 w-4 h-4 bg-nextsite-light-blue rounded-full animate-float" style="animation-delay: 1s;"></div>
-            <div class="absolute top-1/2 -right-20 w-3 h-3 bg-white rounded-full animate-float" style="animation-delay: 2s;"></div>
+            <div class="hidden sm:block absolute top-10 -right-10 w-6 h-6 bg-nextsite-accent-blue rounded-full animate-float"></div>
+            <div class="hidden sm:block absolute bottom-10 -left-10 w-4 h-4 bg-nextsite-light-blue rounded-full animate-float" style="animation-delay: 1s;"></div>
+            <div class="hidden sm:block absolute top-1/2 -right-20 w-3 h-3 bg-white rounded-full animate-float" style="animation-delay: 2s;"></div>
           </div>
         </div>
       </div>
     </div>
   </section>
   <br>
-  <section class="py-20 projects-section">
-    <h2 class="text-4xl font-bold text-white mb-8 text-center">
+  <section class="py-14 md:py-20 projects-section">
+    <h2 class="text-3xl md:text-4xl font-bold text-white mb-8 text-center">
       Proyectos Destacados
     </h2>
   
-    <div class="grid md:grid-cols-3 gap-8">
+    <div class="grid md:grid-cols-3 gap-5 md:gap-8">
   
       <a href="/projects/muebleria-cotizador" class="project-card" style="text-decoration:none;">
         <div class="project-card-img-wrapper">
@@ -709,5 +708,152 @@ import Button from '../components/Button.astro';
     border-color: rgba(60, 222, 255, 0.75);
     background: rgba(0,18,38, 0.65);
     color: #b6f7ff;
+  }
+
+  .about-hero-actions :global(a) {
+    width: 100%;
+    justify-content: center !important;
+    text-align: center;
+  }
+
+  .about-hero-actions :global(a.hero-btn.primary) {
+    box-shadow: 0 12px 25px rgba(34, 211, 238, 0.34) !important;
+  }
+
+  @media (max-width: 768px) {
+    .about-hero {
+      padding-top: 2.4rem;
+      padding-bottom: 3.2rem;
+    }
+
+    .about-hero .hero-copy {
+      width: 100%;
+      max-width: 380px;
+      margin-inline: auto;
+      padding-inline: 0.65rem;
+    }
+
+    .about-hero .hero-copy h1 {
+      font-size: clamp(2.35rem, 10vw, 3.2rem);
+      line-height: 1.02;
+      margin-bottom: 0.9rem;
+    }
+
+    .about-hero .hero-copy p {
+      font-size: clamp(1.03rem, 4.1vw, 1.18rem);
+      line-height: 1.52;
+      margin-bottom: 1.2rem;
+      max-width: 100%;
+      text-wrap: pretty;
+    }
+
+    .about-hero-actions {
+      max-width: 100%;
+      gap: 0.75rem;
+    }
+
+    .about-hero-actions :global(a) {
+      min-height: 56px;
+      font-size: clamp(1.3rem, 5.4vw, 1.65rem) !important;
+      border-radius: 12px !important;
+    }
+
+    .about-hero-actions :global(a.hero-btn.ghost) {
+      border-width: 2px !important;
+      background: rgba(15, 23, 42, 0.35) !important;
+    }
+
+    .about-hero-img {
+      width: 145%;
+      height: 145%;
+      filter: blur(10px) brightness(0.62) saturate(1.05);
+      opacity: 0.48;
+    }
+
+    .about-hero-img.img1 { left: -30%; top: -20%; }
+    .about-hero-img.img2 { right: -32%; top: -20%; }
+    .about-hero-img.img3 { left: -4%; bottom: -28%; }
+
+    .animate-fade-in-right {
+      margin-top: 0.45rem;
+    }
+
+    .projects-section {
+      max-height: none;
+      overflow: visible;
+      padding-top: 2.5rem;
+      padding-bottom: 2.5rem;
+    }
+
+    .project-card {
+      border-radius: 12px;
+    }
+
+    .project-card-img-wrapper {
+      aspect-ratio: 16 / 9;
+      max-height: 220px;
+    }
+
+    .project-card h3 {
+      font-size: 1.15rem;
+      line-height: 1.35;
+    }
+
+    .project-card p,
+    .project-card span {
+      font-size: 0.96rem;
+      line-height: 1.45;
+    }
+
+    .project-card-body {
+      padding: 0.95rem;
+    }
+
+    .project-detail-card {
+      min-height: auto;
+      padding: 1.15rem;
+      text-align: left;
+      border-radius: 14px;
+    }
+
+    #mi-historia h3 {
+      font-size: 1.22rem !important;
+      line-height: 1.35;
+      margin-bottom: 0.45rem;
+    }
+
+    .project-detail-card p,
+    .project-detail-card li {
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+
+    .project-detail-card ul {
+      padding-left: 1rem;
+    }
+
+    .card {
+      padding: 14px;
+      border-radius: 14px;
+    }
+
+    .skill .head {
+      font-size: 0.92rem;
+    }
+
+    .steps {
+      padding-left: 1rem;
+      gap: 0.35rem;
+    }
+
+    .cta-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .cta-row .btn {
+      text-align: center;
+      width: 100%;
+    }
   }
 </style>
