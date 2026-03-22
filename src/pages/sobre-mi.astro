@@ -686,6 +686,7 @@ import Button from '../components/Button.astro';
   .project-detail-card {
     position: relative;
     overflow: hidden;
+    isolation: isolate;
     min-height: 305px;
     background-size: cover;
     background-position: center;
@@ -722,7 +723,7 @@ import Button from '../components/Button.astro';
 
   .project-detail-card > * {
     position: relative;
-    z-index: 2;
+    z-index: 3;
   }
 
   .project-detail-card h3,
