@@ -8,32 +8,43 @@ import Button from '../components/Button.astro';
   description="Conoce más sobre Jonathan Guarirapa, desarrollador web profesional especializado en crear experiencias digitales excepcionales. Mi historia, valores, habilidades y proceso de trabajo."
 >
   <!-- Hero Section -->
-  <section class="about-hero relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+  <section class="about-hero relative min-h-[78vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden py-12 md:py-0">
     <div class="about-hero-bg absolute inset-0 overflow-hidden" aria-hidden="true">
       <img src="/images/sistemas/idocstore-hero.png" alt="" class="about-hero-img img1" loading="lazy" />
       <img src="/images/sistemas/cotizador-hero.png" alt="" class="about-hero-img img2" loading="lazy" />
-      <img src="/images/sistemas/gourmet-arabe-hero.png" alt="" class="about-hero-img img3" loading="lazy" />
+      <img src="/images/menuqr/restaurant-arabe.jpeg" alt="" class="about-hero-img img3" loading="lazy" />
       <div class="about-hero-gradient absolute inset-0"></div>
     </div>
 
     <div class="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full blur-2xl animate-float opacity-20"></div>
     <div class="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full blur-2xl animate-float opacity-15" style="animation-delay: 2s;"></div>
 
-    <div class="relative z-10 max-w-6xl mx-auto px-4">
-      <div class="grid lg:grid-cols-2 gap-12 items-center">
-        <div class="animate-fade-in-left">
-          <h1 class="text-5xl md:text-6xl font-bold mb-6">
-            <span class="text-black">Sobre</span>
+    <div class="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 ">
+      <div class="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+        <div class="animate-fade-in-left order-1">
+          <h1 class="max-w-[18ch] text-4xl sm:text-5xl md:text-6xl font-bold mb-5 md:mb-6 text-left">
+            <span class="text-gray-100">Sobre</span>
 
             <span class="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
               Mí
             </span>
           </h1>
-          <p class="text-xl text-white mb-8 leading-relaxed">
+          <p class="max-w-[34ch] text-base sm:text-lg md:text-xl text-white mb-6 md:mb-8 leading-relaxed text-left">
             Desarrollador web enfocado en sistemas de gestión y automatización, creando soluciones con React y Supabase que optimizan procesos, controlan costos y generan impacto real en negocios.
           </p>
-          <br>
-          <div class="flex flex-col sm:flex-row gap-4">
+
+          <!-- Mobile first: botones compactos y alineados a la izquierda -->
+          <div class="flex md:hidden flex-row flex-wrap items-start gap-2.5">
+            <Button href="mailto:jona.develp@gmail.com" size="sm">
+              Trabajar juntos
+            </Button>
+            <Button href="/proyectos-actuales" variant="ghost" size="sm">
+              Ver Mis Trabajos
+            </Button>
+          </div>
+
+          <!-- Desktop mantiene jerarquía visual actual -->
+          <div class="hidden md:flex flex-row gap-3 sm:gap-4">
             <Button href="mailto:jona.develp@gmail.com" size="xl">
               Trabajar juntos
             </Button>
@@ -43,37 +54,41 @@ import Button from '../components/Button.astro';
           </div>
         </div>
         
-        <div class="animate-fade-in-right">
-          <div class="relative">
-            <div class="w-80 h-80 mx-auto rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 p-1 animate-pulse-glow">
-              <div class="w-full h-full rounded-full overflow-hidden">
-                <img 
-                  src="/jonadevel.jpg" 
-                  alt="Jonathan Guarirapa - Desarrollador Web"
-                  class="w-full h-full object-cover"
-                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                />
-                <div class="w-full h-full bg-nextsite-bg-dark flex items-center justify-center" style="display: none;">
-                  <span class="text-8xl font-bold text-white">JG</span>
-                </div>
-              </div>
+        <div class="animate-fade-in-right order-2">
+          <div class="relative h-[280px] min-[420px]:h-[320px] sm:h-[360px] md:h-[390px] lg:h-[420px] pt-2 md:pt-0">
+            <!-- Glow decorativo detrás -->
+            <div class="absolute z-0 top-1/2 right-2 sm:right-8 lg:right-1/2 lg:translate-x-1/2 -translate-y-1/2 w-[210px] h-[210px] min-[420px]:w-[230px] min-[420px]:h-[230px] sm:w-[270px] sm:h-[270px] md:w-[320px] md:h-[320px] rounded-full bg-gradient-to-br from-cyan-400/25 via-blue-500/20 to-transparent blur-3xl"></div>
+
+            <!-- Círculo base (sin recortar la imagen) -->
+            <div class="absolute z-10 top-1/2 right-3 sm:right-10 lg:right-1/2 lg:translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] min-[420px]:w-[220px] min-[420px]:h-[220px] sm:w-[260px] sm:h-[260px] md:w-[300px] md:h-[300px] rounded-full bg-slate-950/65 border border-white/10 shadow-[0_30px_90px_rgba(8,47,73,0.35)]"></div>
+
+            <!-- Foto sobresaliendo del círculo -->
+            <img 
+              src="/jonadevel.jpg" 
+              alt="Jonathan Guarirapa - Desarrollador Web"
+              class="absolute z-20 top-1/2 right-0 sm:right-6 lg:right-1/2 lg:translate-x-1/2 -translate-y-[52%] w-[235px] h-[235px] min-[420px]:w-[260px] min-[420px]:h-[260px] sm:w-[305px] sm:h-[305px] md:w-[340px] md:h-[340px] lg:w-[360px] lg:h-[360px] max-w-none rounded-full object-cover object-[center_18%] border border-white/20 drop-shadow-[0_26px_30px_rgba(0,0,0,0.45)]"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            />
+            <div class="absolute z-20 top-1/2 right-0 sm:right-6 lg:right-1/2 lg:translate-x-1/2 -translate-y-[52%] w-[235px] h-[235px] min-[420px]:w-[260px] min-[420px]:h-[260px] sm:w-[305px] sm:h-[305px] md:w-[340px] md:h-[340px] lg:w-[360px] lg:h-[360px] bg-nextsite-bg-dark rounded-full hidden items-center justify-center border border-white/20 drop-shadow-[0_26px_30px_rgba(0,0,0,0.45)]">
+              <span class="text-7xl sm:text-8xl font-bold text-white">JG</span>
             </div>
+
             <!-- Floating Elements -->
-            <div class="absolute top-10 -right-10 w-6 h-6 bg-nextsite-accent-blue rounded-full animate-float"></div>
-            <div class="absolute bottom-10 -left-10 w-4 h-4 bg-nextsite-light-blue rounded-full animate-float" style="animation-delay: 1s;"></div>
-            <div class="absolute top-1/2 -right-20 w-3 h-3 bg-white rounded-full animate-float" style="animation-delay: 2s;"></div>
+            <div class="hidden sm:block absolute z-30 top-10 right-4 lg:right-[15%] w-6 h-6 bg-nextsite-accent-blue rounded-full animate-float"></div>
+            <div class="hidden sm:block absolute z-30 bottom-10 right-40 lg:right-[58%] w-4 h-4 bg-nextsite-light-blue rounded-full animate-float" style="animation-delay: 1s;"></div>
+            <div class="hidden sm:block absolute z-30 top-1/2 right-0 lg:right-[12%] w-3 h-3 bg-white rounded-full animate-float" style="animation-delay: 2s;"></div>
           </div>
         </div>
       </div>
     </div>
   </section>
   <br>
-  <section class="py-20 projects-section">
-    <h2 class="text-4xl font-bold text-white mb-8 text-center">
+  <section class="py-14 md:py-20 projects-section">
+    <h2 class="text-3xl md:text-4xl font-bold text-white mb-8 text-center">
       Proyectos Destacados
     </h2>
   
-    <div class="grid md:grid-cols-3 gap-8">
+    <div class="grid md:grid-cols-3 gap-5 md:gap-8">
   
       <a href="/projects/muebleria-cotizador" class="project-card" style="text-decoration:none;">
         <div class="project-card-img-wrapper">
@@ -524,7 +539,25 @@ import Button from '../components/Button.astro';
     .project-card {
       min-height: auto;
     }
-  }
+
+    .projects-section {
+      max-height: none;
+      overflow: visible;
+      padding-top: 2.5rem;
+      padding-bottom: 2.5rem;
+    }
+
+    .project-card {
+      border-radius: 12px;
+    }
+
+    .project-card-img-wrapper {
+      aspect-ratio: 16 / 9;
+      max-height: 220px;
+    }
+
+    .project-card h3 {
+      font-size: 1.15rem;
 
   /* Estilos mejorados */
   .card {
@@ -709,5 +742,86 @@ import Button from '../components/Button.astro';
     border-color: rgba(60, 222, 255, 0.75);
     background: rgba(0,18,38, 0.65);
     color: #b6f7ff;
+  }
+
+  /* Mejores márgenes para móviles */
+  @media (max-width: 768px) {
+    /* Hero section - más padding lateral */
+    .about-hero {
+      padding-left: 1.5rem !important;
+      padding-right: 1.5rem !important;
+    }
+
+    /* Sección experiencia - más padding y márgenes */
+    #mi-historia {
+      padding: 3rem 1.5rem !important;
+      margin: 0 1rem !important;
+    }
+
+    /* Mis valores - más padding */
+    #mis-valores {
+      padding: 2rem 1.5rem !important;
+      margin: 0 1rem !important;
+    }
+
+    /* Mis habilidades - más padding */
+    #mis-habilidades {
+      padding: 3rem 1.5rem !important;
+      margin: 0 1rem !important;
+    }
+
+    /* Cómo trabajo - más padding */
+    #como-trabajo {
+      padding: 2rem 1.5rem !important;
+      margin: 0 1rem !important;
+    }
+
+    /* Información personal - más padding */
+    .py-20.bg-nextsite-bg-darker {
+      padding: 3rem 1.5rem !important;
+      margin: 0 1rem !important;
+    }
+
+    /* CTA final - más padding */
+    .py-20.bg-gradient-to-r.from-cyan-400\/10.to-blue-500\/10 {
+      padding: 3rem 1.5rem !important;
+      margin: 0 1rem !important;
+    }
+
+    .about-hero-img {
+      width: 145%;
+      height: 145%;
+      filter: blur(10px) brightness(0.62) saturate(1.05);
+      opacity: 0.48;
+    }
+
+    .about-hero-img.img1 { left: -30%; top: -20%; }
+    .about-hero-img.img2 { right: -32%; top: -20%; }
+    .about-hero-img.img3 { left: -4%; bottom: -28%; }
+  }
+
+  @media (max-width: 480px) {
+    /* Para móviles muy pequeños - aún más padding */
+    .about-hero {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+
+    .about-hero .relative.z-10,
+    .about-hero h1,
+    .about-hero p {
+      padding-left: 1.1rem !important;
+      padding-right: 1.1rem !important;
+    }
+
+    #mi-historia,
+    #mis-valores,
+    #mis-habilidades,
+    #como-trabajo,
+    .py-20.bg-nextsite-bg-darker,
+    .py-20.bg-gradient-to-r.from-cyan-400\/10.to-blue-500\/10 {
+      padding: 2.5rem 1rem !important;
+      margin: 0 0.5rem !important;
+    }
   }
 </style>
