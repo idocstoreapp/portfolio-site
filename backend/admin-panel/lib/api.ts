@@ -791,7 +791,7 @@ export async function getClients(
 /**
  * Obtiene un cliente por ID con su historial completo
  */
-export async function getClient(id: string): Promise<ClientDetail & { success: boolean }> {
+export async function getClient(id: string): Promise<{ success: boolean; data: ClientDetail }> {
   const response = await fetch(`${BACKEND_URL}/api/clients/${id}`);
 
   if (!response.ok) {
