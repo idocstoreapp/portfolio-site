@@ -260,6 +260,12 @@ export class OrdersService {
       estimated_completion_date: createOrderDto.estimated_completion_date || null,
       internal_notes: createOrderDto.internal_notes || null,
       client_notes: createOrderDto.client_notes || null,
+      order_type: createOrderDto.order_type || 'project',
+      maintenance_type: createOrderDto.maintenance_type || null,
+      maintenance_start_date: createOrderDto.maintenance_start_date || null,
+      maintenance_end_date: createOrderDto.maintenance_end_date || null,
+      hourly_bank_total: createOrderDto.hourly_bank_total || null,
+      related_order_id: createOrderDto.related_order_id || null,
     };
 
     // Insertar orden
@@ -519,6 +525,7 @@ export class OrdersService {
     filters?: {
       status?: OrderStatus;
       projectType?: string;
+      orderType?: string;
       search?: string;
     },
   ): Promise<{ data: OrderDto[]; total: number; page: number; limit: number }> {
@@ -549,6 +556,11 @@ export class OrdersService {
       const searchTerm = `%${filters.search}%`;
       countQuery = countQuery.or(`client_name.ilike."${searchTerm}",client_email.ilike."${searchTerm}",order_number.ilike."${searchTerm}"`);
       dataQuery = dataQuery.or(`client_name.ilike."${searchTerm}",client_email.ilike."${searchTerm}",order_number.ilike."${searchTerm}"`);
+    }
+
+    if (filters?.orderType) {
+      countQuery = countQuery.eq('order_type', filters.orderType);
+      dataQuery = dataQuery.eq('order_type', filters.orderType);
     }
 
     // Obtener total

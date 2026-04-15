@@ -45,10 +45,11 @@ export default function AdminSidebar({ currentPath }: AdminSidebarProps) {
 
   const menuItems = [
     { href: '/admin', label: 'Dashboard', icon: '📊' },
-    { href: '/admin/diagnosticos', label: 'Diagnósticos', icon: '🔍' },
-    { href: '/admin/proyectos', label: 'Proyectos', icon: '📁' },
-    { href: '/admin/prompts-imagenes', label: 'Prompts Imágenes (Preguntas)', icon: '🎨' },
-    { href: '/admin/prompts-imagenes-resultados', label: 'Prompts Imágenes (Resultados)', icon: '📊' },
+    { href: '/admin/clientes', label: 'Clientes', icon: '👥' },
+    { href: '/admin/diagnosticos', label: 'Diagnósticos / Leads', icon: '🔍' },
+    { href: '/admin/proyectos', label: 'Órdenes Activas', icon: '🚀' },
+    { href: '/admin/ordenes/mantenimientos', label: 'Mantenimientos', icon: '🔄' },
+    { href: '/admin/prompts-imagenes', label: 'Prompts Imágenes', icon: '🎨' },
     { href: '/admin/iconos-wizard', label: 'Iconos Wizard', icon: '🎯' },
   ];
 

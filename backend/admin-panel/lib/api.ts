@@ -186,9 +186,21 @@ import type {
   OrderResponse,
   CreateOrderRequest,
   CreateOrderFromDiagnosticRequest,
+  CreateMaintenanceOrderRequest,
   UpdateOrderRequest,
   OrderStatus,
+  OrderType,
+  MaintenanceType,
 } from '@/types/order';
+
+import type {
+  Client,
+  ClientListResponse,
+  ClientResponse,
+  ClientDetail,
+  CreateClientRequest,
+  UpdateClientRequest,
+} from '@/types/client';
 
 /**
  * Obtiene la lista de órdenes con paginación
@@ -720,13 +732,349 @@ export async function deleteChangeOrder(id: string): Promise<{ success: boolean;
   const response = await fetch(`${BACKEND_URL}/api/change-orders/${id}`, {
     method: 'DELETE',
   });
-  
+
   if (!response.ok) {
     throw new Error(`Error deleting change order: ${response.statusText}`);
   }
 
   return response.json();
 }
+
+// ============================================
+// CLIENTS API
+// ============================================
+
+/**
+ * Obtiene la lista de clientes con paginación
+ */
+export async function getClients(
+  page: number = 1,
+  limit: number = 20,
+  filters?: {
+    estado?: string;
+    search?: string;
+  }
+): Promise<ClientListResponse> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+
+  if (filters?.estado) {
+    params.append('estado', filters.estado);
+  }
+  if (filters?.search) {
+    params.append('search', filters.search);
+  }
+
+  const url = `${BACKEND_URL}/api/clients?${params.toString()}`;
+  console.log('🔍 [ADMIN] Fetching clients from:', url);
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ [ADMIN] Error response:', response.status, response.statusText);
+      throw new Error(`Error fetching clients: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log('✅ [ADMIN] Clients fetched:', data.total || 0, 'total');
+    return data;
+  } catch (error) {
+    console.error('❌ [ADMIN] Fetch error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Obtiene un cliente por ID con su historial completo
+ */
+export async function getClient(id: string): Promise<ClientDetail & { success: boolean }> {
+  const response = await fetch(`${BACKEND_URL}/api/clients/${id}`);
+
+  if (!response.ok) {
+    throw new Error(`Error fetching client: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+/**
+ * Crea un nuevo cliente
+ */
+export async function createClient(data: CreateClientRequest): Promise<ClientResponse> {
+  const response = await fetch(`${BACKEND_URL}/api/clients`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.message || `Error creating client: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+/**
+ * Actualiza un cliente
+ */
+export async function updateClient(
+  id: string,
+  data: UpdateClientRequest
+): Promise<ClientResponse> {
+  const response = await fetch(`${BACKEND_URL}/api/clients/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.message || `Error updating client: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+/**
+ * Elimina un cliente
+ */
+export async function deleteClient(id: string): Promise<void> {
+  const response = await fetch(`${BACKEND_URL}/api/clients/${id}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.message || `Error deleting client: ${response.statusText}`);
+  }
+}
+
+/**
+ * Obtiene las métricas de un cliente (total gastado, órdenes, etc.)
+ */
+export async function getClientMetrics(id: string): Promise<{ 
+  success: boolean; 
+  data: {
+    total_orders: number;
+    total_spent: number;
+    active_maintenance_orders: number;
+    last_order_date?: string;
+    orders_by_status: Record<string, number>;
+    orders_by_type: Record<string, number>;
+  }
+}> {
+  const response = await fetch(`${BACKEND_URL}/api/clients/${id}/metrics`);
+
+  if (!response.ok) {
+    throw new Error(`Error fetching client metrics: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+/**
+ * Obtiene el historial de órdenes de un cliente
+ */
+export async function getClientOrders(
+  id: string,
+  page: number = 1,
+  limit: number = 50
+): Promise<{ success: boolean; data: Order[]; total: number }> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+
+  const response = await fetch(`${BACKEND_URL}/api/clients/${id}/orders?${params.toString()}`);
+
+  if (!response.ok) {
+    throw new Error(`Error fetching client orders: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+// ============================================
+// MAINTENANCE ORDERS API
+// ============================================
+
+/**
+ * Crea una orden de mantenimiento
+ */
+export async function createMaintenanceOrder(
+  data: CreateMaintenanceOrderRequest
+): Promise<OrderResponse> {
+  const response = await fetch(`${BACKEND_URL}/api/orders/maintenance`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.message || `Error creating maintenance order: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+/**
+ * Obtiene todas las órdenes de mantenimiento activas
+ */
+export async function getMaintenanceOrders(
+  page: number = 1,
+  limit: number = 20,
+  filters?: {
+    status?: string;
+    maintenanceType?: string;
+    search?: string;
+  }
+): Promise<OrderListResponse> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+
+  if (filters?.status) {
+    params.append('status', filters.status);
+  }
+  if (filters?.maintenanceType) {
+    params.append('maintenanceType', filters.maintenanceType);
+  }
+  if (filters?.search) {
+    params.append('search', filters.search);
+  }
+
+  const url = `${BACKEND_URL}/api/orders/maintenance?${params.toString()}`;
+  console.log('🔍 [ADMIN] Fetching maintenance orders from:', url);
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ [ADMIN] Error response:', response.status, response.statusText);
+      throw new Error(`Error fetching maintenance orders: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log('✅ [ADMIN] Maintenance orders fetched:', data.total || 0, 'total');
+    return data;
+  } catch (error) {
+    console.error('❌ [ADMIN] Fetch error:', error);
+    throw error;
+  }
+}
+
+// ============================================
+// QUICK TEMPLATES API (Órdenes rápidas)
+// ============================================
+
+export interface QuickTemplate {
+  id: string;
+  name: string;
+  description: string;
+  order_type: OrderType;
+  project_type?: string;
+  base_price: number;
+  scope_description: string;
+  payment_terms: string;
+  warranty_text?: string;
+  maintenance_policy?: string;
+  is_active: boolean;
+  display_order: number;
+  created_at: string;
+}
+
+export async function getQuickTemplates(): Promise<{ success: boolean; data: QuickTemplate[] }> {
+  const response = await fetch(`${BACKEND_URL}/api/quick-templates`);
+
+  if (!response.ok) {
+    throw new Error(`Error fetching quick templates: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function createQuickTemplate(template: Partial<QuickTemplate>): Promise<{ success: boolean; data: QuickTemplate }> {
+  const response = await fetch(`${BACKEND_URL}/api/quick-templates`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(template),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error creating quick template: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function updateQuickTemplate(id: string, updates: Partial<QuickTemplate>): Promise<{ success: boolean; data: QuickTemplate }> {
+  const response = await fetch(`${BACKEND_URL}/api/quick-templates/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error updating quick template: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function deleteQuickTemplate(id: string): Promise<{ success: boolean; message: string }> {
+  const response = await fetch(`${BACKEND_URL}/api/quick-templates/${id}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error deleting quick template: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+/**
+ * Crea una orden desde un template rápido
+ */
+export async function createOrderFromQuickTemplate(
+  templateId: string,
+  clienteId: string,
+  customizations?: Partial<CreateOrderRequest>
+): Promise<OrderResponse> {
+  const response = await fetch(`${BACKEND_URL}/api/orders/from-quick-template`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      quick_template_id: templateId,
+      cliente_id: clienteId,
+      ...customizations,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.message || `Error creating order from quick template: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
 
 
 

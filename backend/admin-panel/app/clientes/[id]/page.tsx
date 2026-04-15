@@ -4,10 +4,9 @@ import { Suspense } from 'react';
 import AuthGuard from '@/components/auth/AuthGuard';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
-import CreateOrderWizard from '@/components/ordenes/CreateOrderWizard';
-import Link from 'next/link';
+import ClientDetailContent from './ClientDetailContent';
 
-export default function NuevaOrdenPage() {
+export default function ClientDetailPage({ params }: { params: { id: string } }) {
   return (
     <AuthGuard>
       <div className="flex min-h-screen bg-gray-50">
@@ -15,22 +14,13 @@ export default function NuevaOrdenPage() {
         <div className="flex-1 ml-64">
           <Header />
           <main className="p-6">
-            <div className="mb-6">
-              <Link
-                href="/ordenes"
-                className="text-gray-600 hover:text-gray-900 mb-4 inline-block"
-              >
-                ← Volver a órdenes
-              </Link>
-            </div>
-
             <Suspense fallback={
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-                <p className="mt-4 text-gray-600">Cargando formulario...</p>
+                <p className="mt-4 text-gray-600">Cargando...</p>
               </div>
             }>
-              <CreateOrderWizard />
+              <ClientDetailContent clientId={params.id} />
             </Suspense>
           </main>
         </div>

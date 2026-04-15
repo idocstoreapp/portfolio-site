@@ -15,6 +15,18 @@ export enum ProjectType {
   OTRO = 'otro',
 }
 
+export enum OrderType {
+  PROJECT = 'project',
+  MAINTENANCE = 'maintenance',
+  SUPPORT = 'support',
+}
+
+export enum MaintenanceType {
+  MONTHLY = 'monthly',
+  ONE_TIME = 'one_time',
+  HOURLY_BANK = 'hourly_bank',
+}
+
 export interface OrderModule {
   id: string;
   order_id: string;
@@ -42,13 +54,22 @@ export interface Order {
   created_at: string;
   updated_at: string;
   order_number: string;
-  
+
   // Relaciones
   diagnostico_id?: string;
   cliente_id?: string;
   solution_template_id?: string;
   created_by?: string;
-  
+
+  // Tipo de orden
+  order_type?: OrderType;
+  maintenance_type?: MaintenanceType;
+  maintenance_start_date?: string;
+  maintenance_end_date?: string;
+  hourly_bank_total?: number;
+  hourly_bank_used?: number;
+  related_order_id?: string;
+
   // Información del cliente
   client_name: string;
   client_email?: string;
@@ -122,7 +143,13 @@ export interface CreateOrderRequest {
   client_email?: string;
   client_phone?: string;
   client_company?: string;
-  project_type: ProjectType;
+  order_type?: OrderType;
+  maintenance_type?: MaintenanceType;
+  maintenance_start_date?: string;
+  maintenance_end_date?: string;
+  hourly_bank_total?: number;
+  related_order_id?: string;
+  project_type?: ProjectType;
   scope_description?: string;
   included_modules?: string[];
   excluded_modules?: string[];
@@ -141,6 +168,20 @@ export interface CreateOrderRequest {
   exclusions_text?: string;
   estimated_start_date?: string;
   estimated_completion_date?: string;
+  internal_notes?: string;
+  client_notes?: string;
+}
+
+export interface CreateMaintenanceOrderRequest {
+  cliente_id: string;
+  related_order_id?: string;
+  maintenance_type: MaintenanceType;
+  scope_description: string;
+  base_price: number;
+  maintenance_start_date?: string;
+  maintenance_end_date?: string;
+  hourly_bank_total?: number;
+  payment_terms?: string;
   internal_notes?: string;
   client_notes?: string;
 }

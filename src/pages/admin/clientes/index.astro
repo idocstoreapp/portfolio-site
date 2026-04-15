@@ -1,0 +1,23 @@
+---
+import Layout from '../../../layouts/AdminLayout.astro';
+import AdminGuard from '../../../components/admin/AdminGuard';
+import AdminSidebar from '../../../components/admin/AdminSidebar';
+import ClientesList from '../../../components/admin/ClientesList';
+
+export const prerender = false;
+const currentPath = Astro.url.pathname;
+---
+
+<Layout 
+  title="Gestión de Clientes | Panel Admin"
+  description="Administra los clientes y leads de tu negocio"
+>
+  <AdminGuard client:load>
+    <div style="position: relative; min-height: 100vh; background: #f9fafb;">
+      <AdminSidebar client:load currentPath={currentPath} />
+      <div style="margin-left: 16rem; min-height: 100vh; width: calc(100% - 16rem); padding: 2rem;">
+        <ClientesList client:load />
+      </div>
+    </div>
+  </AdminGuard>
+</Layout>

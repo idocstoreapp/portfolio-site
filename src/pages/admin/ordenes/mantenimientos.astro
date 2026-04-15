@@ -1,0 +1,23 @@
+---
+import Layout from '../../../../layouts/AdminLayout.astro';
+import AdminGuard from '../../../../components/admin/AdminGuard';
+import AdminSidebar from '../../../../components/admin/AdminSidebar';
+import MantenimientosList from '../../../../components/admin/MantenimientosList';
+
+export const prerender = false;
+const currentPath = '/admin/ordenes/mantenimientos'; // Activo
+---
+
+<Layout 
+  title="Órdenes de Mantenimiento | Panel Admin"
+  description="Gestión de contratos recurrentes y bolsas de horas"
+>
+  <AdminGuard client:load>
+    <div style="position: relative; min-height: 100vh; background: #f9fafb;">
+      <AdminSidebar client:load currentPath={currentPath} />
+      <div style="margin-left: 16rem; min-height: 100vh; width: calc(100% - 16rem); padding: 2rem;">
+        <MantenimientosList client:load />
+      </div>
+    </div>
+  </AdminGuard>
+</Layout>

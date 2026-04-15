@@ -58,6 +58,30 @@ export class CreateOrderDto {
   // Alcance
   @IsString()
   @IsOptional()
+  order_type?: string; // 'project' | 'maintenance' | 'support'
+
+  @IsString()
+  @IsOptional()
+  maintenance_type?: string;
+
+  @IsDateString()
+  @IsOptional()
+  maintenance_start_date?: string;
+
+  @IsDateString()
+  @IsOptional()
+  maintenance_end_date?: string;
+
+  @IsNumber()
+  @IsOptional()
+  hourly_bank_total?: number;
+
+  @IsString()
+  @IsOptional()
+  related_order_id?: string;
+
+  @IsString()
+  @IsOptional()
   scope_description?: string;
 
   @IsArray()

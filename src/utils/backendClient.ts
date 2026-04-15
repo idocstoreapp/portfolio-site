@@ -349,3 +349,136 @@ export async function updateDiagnostic(
     throw error;
   }
 }
+
+// --- CLIENTES API ---
+
+export interface ClientData {
+  id: string;
+  created_at: string;
+  nombre: string;
+  email?: string;
+  telefono?: string;
+  empresa?: string;
+  estado: string; // 'lead' | 'activo' | 'inactivo'
+  notas_internas?: string;
+  tags?: string[];
+  origen?: string;
+  // Métricas agregadas a veces
+  proyectos_totales?: number;
+  total_invertido?: number;
+}
+
+export interface ClientListResponse {
+  success: boolean;
+  data: ClientData[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export async function getClients(
+  page: number = 1,
+  limit: number = 20,
+  filters?: { search?: string; estado?: string }
+): Promise<ClientListResponse> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+
+  if (filters?.search) params.append('search', filters.search);
+  if (filters?.estado) params.append('estado', filters.estado);
+
+  const response = await fetch(`${BACKEND_URL}/api/clients?${params.toString()}`);
+  if (!response.ok) throw new Error('Error fetching clients');
+  return response.json();
+}
+
+export async function getClient(id: string): Promise<{success: boolean; data: ClientData}> {
+  const response = await fetch(`${BACKEND_URL}/api/clients/${id}`);
+  if (!response.ok) throw new Error('Error fetching client');
+  return response.json();
+}
+
+export async function createClient(data: Partial<ClientData>): Promise<{success: boolean; data: ClientData}> {
+  const response = await fetch(`${BACKEND_URL}/api/clients`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) throw new Error('Error creating client');
+  return response.json();
+}
+
+export async function updateClient(id: string, data: Partial<ClientData>): Promise<{success: boolean; data: ClientData}> {
+  const response = await fetch(`${BACKEND_URL}/api/clients/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) throw new Error('Error updating client');
+  return response.json();
+}
+
+export async function getClientMetrics(id: string): Promise<{success: boolean; data: any}> {
+  const response = await fetch(`${BACKEND_URL}/api/clients/${id}/metrics`);
+  if (!response.ok) throw new Error('Error fetching client metrics');
+  return response.json();
+}
+
+export async function getClientOrders(id: string): Promise<{success: boolean; data: any[]}> {
+  const response = await fetch(`${BACKEND_URL}/api/clients/${id}/orders`);
+  if (!response.ok) throw new Error('Error fetching client orders');
+  return response.json();
+}
+
+export async function getClientNotes(id: string): Promise<{success: boolean; data: any[]}> {
+  const response = await fetch(`${BACKEND_URL}/api/clients/${id}/notes`);
+  if (!response.ok) throw new Error('Error fetching client notes');
+  return response.json();
+}
+
+// --- ORDERS API (NUEVOS MÉTODOS SIMPLES) ---
+
+export async function getOrders(
+  page: number = 1,
+  limit: number = 20,
+  filters?: { status?: string; projectType?: string; search?: string }
+): Promise<any> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+
+  if (filters?.status) params.append('status', filters.status);
+  if (filters?.projectType) params.append('projectType', filters.projectType);
+  if (filters?.search) params.append('search', filters.search);
+
+  const response = await fetch(`${BACKEND_URL}/api/orders?${params.toString()}`);
+  if (!response.ok) throw new Error('Error fetching orders');
+  return response.json();
+}
+
+export async function createOrder(data: any): Promise<any> {
+  const response = await fetch(`${BACKEND_URL}/api/orders`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) throw new Error('Error creating order');
+  return response.json();
+}
+
+// --- TEMPLATES API ---
+
+export async function getTemplates(): Promise<{success: boolean; data: any[]}> {
+  const response = await fetch(`${BACKEND_URL}/api/solution-templates`);
+  if (!response.ok) throw new Error('Error fetching templates');
+  return response.json();
+}
+
+export async function getTemplateWithModules(id: string): Promise<{success: boolean; data: any}> {
+  const response = await fetch(`${BACKEND_URL}/api/solution-templates/${id}/with-modules`);
+  if (!response.ok) throw new Error('Error fetching template details');
+  return response.json();
+}

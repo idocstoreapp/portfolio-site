@@ -51,6 +51,7 @@ export class OrdersController {
     @Query('limit') limit?: string,
     @Query('status') status?: OrderStatus,
     @Query('projectType') projectType?: string,
+    @Query('orderType') orderType?: string,
     @Query('search') search?: string,
   ) {
     const pageNum = page ? parseInt(page, 10) : 1;
@@ -59,6 +60,7 @@ export class OrdersController {
     const result = await this.ordersService.getAllOrders(pageNum, limitNum, {
       status,
       projectType,
+      orderType,
       search,
     });
 

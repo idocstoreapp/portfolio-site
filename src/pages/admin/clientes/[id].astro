@@ -1,0 +1,24 @@
+---
+import Layout from '../../../../layouts/AdminLayout.astro';
+import AdminGuard from '../../../../components/admin/AdminGuard';
+import AdminSidebar from '../../../../components/admin/AdminSidebar';
+import ClienteDetail from '../../../../components/admin/ClienteDetail';
+
+export const prerender = false;
+const currentPath = '/admin/clientes'; // Para mantener activo el sidebar
+const { id } = Astro.params;
+---
+
+<Layout 
+  title="Detalle del Cliente | Panel Admin"
+  description="Historial y detalles del cliente"
+>
+  <AdminGuard client:load>
+    <div style="position: relative; min-height: 100vh; background: #f9fafb;">
+      <AdminSidebar client:load currentPath={currentPath} />
+      <div style="margin-left: 16rem; min-height: 100vh; width: calc(100% - 16rem); padding: 2rem;">
+        <ClienteDetail client:load clienteId={id as string} />
+      </div>
+    </div>
+  </AdminGuard>
+</Layout>

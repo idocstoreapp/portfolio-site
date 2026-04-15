@@ -19,7 +19,9 @@ export default function Sidebar() {
     { href: '/leads', label: 'Lead Scraper (Buscar negocios)', icon: '🔎' },
     { href: '/leads-list', label: 'Leads (Embudo)', icon: '👥' },
     { href: '/diagnosticos', label: 'Diagnósticos', icon: '🔍' },
+    { href: '/clientes', label: 'Clientes', icon: '👤' },
     { href: '/ordenes', label: 'Órdenes de trabajo', icon: '📋' },
+    { href: '/ordenes/mantenimientos', label: 'Mantenimientos', icon: '🔄' },
   ];
   const herramientasItems = [
     { href: '/plantillas-propuesta', label: 'Plantillas PDF', icon: '📄' },
