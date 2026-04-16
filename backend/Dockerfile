@@ -7,7 +7,7 @@ COPY package*.json ./
 COPY tsconfig.json ./
 COPY nest-cli.json ./
 
-# Instalar todas las dependencias (incluyendo devDependencies para el build)
+# Instalar todas las dependencias
 RUN npm ci
 
 # Copiar código fuente
@@ -16,13 +16,25 @@ COPY . .
 # Compilar TypeScript
 RUN npm run build
 
-# Verificar que el build fue exitoso (tsconfig rootDir=src → salida dist/main.js)
-RUN ls -la dist/ && test -f dist/main.js || (echo "Build failed - dist/main.js not found" && exit 1)
+# Verificar build
+RUN ls -la dist/ && test -f dist/main.js || (echo "Build failed" && exit 1)
 
 # Imagen de producción
 FROM node:18-alpine
 
 WORKDIR /app
+
+# ====== AÑADIDO PARA PUPPETEER (RENDER.COM CERO PROBLEMAS) ======
+RUN apk update && apk add --no-cache \
+      chromium \
+      nss \
+      freetype \
+      harfbuzz \
+      ca-certificates \
+      ttf-freefont
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+# =================================================================
 
 # Copiar solo archivos necesarios para producción
 COPY package*.json ./
@@ -34,5 +46,5 @@ COPY --from=builder /app/dist ./dist
 # Exponer puerto
 EXPOSE 3000
 
-# Comando de inicio (tsconfig rootDir=src → dist/main.js)
+# Comando de inicio
 CMD ["node", "dist/main"]
