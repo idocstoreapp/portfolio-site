@@ -6,7 +6,7 @@ export class ClientsService {
   constructor(private supabaseService: SupabaseService) {}
 
   async getAllClients(page: number = 1, limit: number = 20, search?: string, estado?: string) {
-    const supabase = this.supabaseService.getClient();
+    const supabase = this.supabaseService.getAdminClient();
     const from = (page - 1) * limit;
     const to = from + limit - 1;
 
@@ -53,7 +53,7 @@ export class ClientsService {
   }
 
   async getClientById(id: string) {
-    const supabase = this.supabaseService.getClient();
+    const supabase = this.supabaseService.getAdminClient();
     
     const { data, error } = await supabase
       .from('clientes')
@@ -73,7 +73,7 @@ export class ClientsService {
   }
 
   async createClient(clientData: any) {
-    const supabase = this.supabaseService.getClient();
+    const supabase = this.supabaseService.getAdminClient();
     
     const { data, error } = await supabase
       .from('clientes')
@@ -89,7 +89,7 @@ export class ClientsService {
   }
 
   async updateClient(id: string, clientData: any) {
-    const supabase = this.supabaseService.getClient();
+    const supabase = this.supabaseService.getAdminClient();
     
     const { data, error } = await supabase
       .from('clientes')
@@ -110,7 +110,7 @@ export class ClientsService {
   }
 
   async deleteClient(id: string) {
-    const supabase = this.supabaseService.getClient();
+    const supabase = this.supabaseService.getAdminClient();
     
     const { error } = await supabase
       .from('clientes')
@@ -125,7 +125,7 @@ export class ClientsService {
   }
 
   async getClientMetrics(id: string) {
-    const supabase = this.supabaseService.getClient();
+    const supabase = this.supabaseService.getAdminClient();
     
     // Llamar a la función de métricas
     const { data, error } = await supabase
@@ -145,7 +145,7 @@ export class ClientsService {
   }
 
   async getClientOrders(id: string) {
-    const supabase = this.supabaseService.getClient();
+    const supabase = this.supabaseService.getAdminClient();
     
     const { data, error } = await supabase
       .from('orders')
@@ -161,7 +161,7 @@ export class ClientsService {
   }
 
   async getClientNotes(id: string) {
-    const supabase = this.supabaseService.getClient();
+    const supabase = this.supabaseService.getAdminClient();
     
     const { data, error } = await supabase
       .from('client_notes')
@@ -177,7 +177,7 @@ export class ClientsService {
   }
 
   async createClientNote(clienteId: string, noteData: any, createdBy?: string) {
-    const supabase = this.supabaseService.getClient();
+    const supabase = this.supabaseService.getAdminClient();
     
     const { data, error } = await supabase
       .from('client_notes')
@@ -197,7 +197,7 @@ export class ClientsService {
   }
 
   async getClientInteractions(id: string) {
-    const supabase = this.supabaseService.getClient();
+    const supabase = this.supabaseService.getAdminClient();
     
     const { data, error } = await supabase
       .from('client_interactions')
@@ -213,7 +213,7 @@ export class ClientsService {
   }
 
   async createClientInteraction(clienteId: string, interactionData: any, createdBy?: string) {
-    const supabase = this.supabaseService.getClient();
+    const supabase = this.supabaseService.getAdminClient();
     
     const { data, error } = await supabase
       .from('client_interactions')
@@ -233,7 +233,7 @@ export class ClientsService {
   }
 
   async getClientPayments(id: string) {
-    const supabase = this.supabaseService.getClient();
+    const supabase = this.supabaseService.getAdminClient();
     
     const { data, error } = await supabase
       .from('payments')
@@ -249,7 +249,7 @@ export class ClientsService {
   }
 
   async createPayment(paymentData: any) {
-    const supabase = this.supabaseService.getClient();
+    const supabase = this.supabaseService.getAdminClient();
     
     const { data, error } = await supabase
       .from('payments')
@@ -265,7 +265,7 @@ export class ClientsService {
   }
 
   async updatePayment(id: string, paymentData: any) {
-    const supabase = this.supabaseService.getClient();
+    const supabase = this.supabaseService.getAdminClient();
     
     const { data, error } = await supabase
       .from('payments')
